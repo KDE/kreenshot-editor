@@ -19,13 +19,13 @@ steps
 2. have command line parser to give an image
 3. build one component (widget) that will be used in a separated main component
 
+main-application
+----------------
+- command line options to give image and cursor (optional)
+- show editor-component
+
 editor-component
 ----------------
 - display image
 - show toolbars for editing
 - set (including an optional cursor) and get image
-
-main-window
------------
-- show editor-component
-- command line options to give image and cursor (optional)
