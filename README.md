@@ -19,6 +19,11 @@ NEXT steps
 2. have command line parser to give an image
 3. build one component (widget) that will be used in a separated main component
 
+TODO
+----
+- ‘unique_ptr’ in namespace ‘std’ does not name a type
+- show custom editor widget in MainWindow
+
 DEV
 ---
 Debug with: kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png

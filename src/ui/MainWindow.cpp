@@ -18,6 +18,7 @@
  */
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include <QPushButton>
 
 MainWindow::MainWindow()
 {
@@ -38,4 +39,8 @@ void MainWindow::setupActions()
 
 void MainWindow::setupUi()
 {
+    //_ui->containerEditor->st
+    auto testButton = new QPushButton("Hallo");
+    testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    _ui->containerEditor->addWidget(testButton);
 }

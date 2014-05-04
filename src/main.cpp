@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     }
 
     MainWindow mainWindow;
-    mainWindow.resize(640, 480);
+    //mainWindow.resize(640, 480);
     mainWindow.show();
 
     return app.exec();

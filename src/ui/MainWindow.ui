@@ -6,20 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
-    <height>460</height>
+    <width>791</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>kreenshot-editor</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QGridLayout" name="containerEditor"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>662</width>
+     <width>791</width>
      <height>19</height>
     </rect>
    </property>
@@ -55,6 +61,21 @@
    <addaction name="separator"/>
    <addaction name="aSave"/>
    <addaction name="separator"/>
+  </widget>
+  <widget class="QDockWidget" name="containerToolbox">
+   <property name="minimumSize">
+    <size>
+     <width>150</width>
+     <height>35</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
   </widget>
   <action name="aOpen">
    <property name="icon">
