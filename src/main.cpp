@@ -20,6 +20,7 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QDebug>
+#include "ui/MainWindow.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.setApplicationDescription("Image editor for screenshots");
+    parser.setApplicationDescription("Image editor for screenshots, (C) 2014");
 
     parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
 
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
         if (!image2xStr.isEmpty()) {
             bool ok;
             image2x = image2xStr.toInt(&ok);
-            if (!ok) throw std::runtime_error("wrong argument (cannot parse x value)");
+            if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse x value)").toUtf8().constData());
         }
         qDebug() << "image2x:" << image2x;
 
@@ -82,7 +83,7 @@ int main(int argc, char *argv[])
         if (!image2yStr.isEmpty()) {
             bool ok;
             image2y = image2yStr.toInt(&ok);
-            if (!ok) throw std::runtime_error("wrong argument (cannot parse y value)");
+            if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse y value)").toUtf8().constData());
         }
         qDebug() << "image2y:" << image2y;
     }
@@ -90,6 +91,10 @@ int main(int argc, char *argv[])
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;
         parser.showHelp(1);
     }
+
+    MainWindow mainWindow;
+    mainWindow.resize(640, 480);
+    mainWindow.show();
 
     return app.exec();
 }

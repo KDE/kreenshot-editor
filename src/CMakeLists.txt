@@ -11,19 +11,24 @@ find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets)
 
 include_directories(
     .
-#    ${CMAKE_SOURCE_DIR}/src/include
+    ui
+    # TODO: later:
+    ${CMAKE_SOURCE_DIR}/src/generated-include
 )
 
 set(kreenshot-editor_SOURCES
     main.cpp
+    ui/MainWindow.cpp
 )
 
-#set(tikzkit_FORMS MainWindow.ui)
-#qt5_wrap_ui(tikzkit_FORMS_HEADERS ${tikzkit_FORMS})
+set(kreenshot-editor_FORMS ui/MainWindow.ui)
+qt5_wrap_ui(kreenshot-editor_FORMS_HEADERS ${kreenshot-editor_FORMS})
+
+add_definitions("-std=c++11")
 
 add_executable(kreenshot-editor
     ${kreenshot-editor_SOURCES}
-    # ${kreenshot-editor_FORMS_HEADERS}
+    ${kreenshot-editor_FORMS_HEADERS}
 )
 
 target_link_libraries(kreenshot-editor
@@ -32,5 +37,7 @@ target_link_libraries(kreenshot-editor
     #qtikzcore
     #qtikzui
 )
+
+# add_subdirectory(libkreenshoteditor)
 
 # kate: indent-width 4; replace-tabs on;
