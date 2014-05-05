@@ -16,6 +16,7 @@ include_directories(
 set(libkreenshoteditor_SOURCES
     kreenshoteditor.cpp
     ui/maineditorwidget.cpp
+    core/item.cpp
     core/itemsmanager.cpp
 )
 

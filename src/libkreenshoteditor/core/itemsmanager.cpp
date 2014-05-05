@@ -27,3 +27,8 @@ ItemsManager::~ItemsManager()
 {
 
 }
+
+void ItemsManager::addDemoItems()
+{
+    
+}
