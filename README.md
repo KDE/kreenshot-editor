@@ -23,10 +23,11 @@ TODO
 ----
 - ‘unique_ptr’ in namespace ‘std’ does not name a type
 - show custom editor widget in MainWindow
+- is QImage reference counted?
 
 DEV
 ---
-Debug with: kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
+Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
 
 main-application
 ----------------

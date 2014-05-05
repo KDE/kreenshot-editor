@@ -20,25 +20,30 @@
 #define UI_MAIN_EDITOR_WIDGET_H
 
 #include <QWidget>
+#include "../kreenshoteditor.h"
 
 class QPaintEvent;
+class MainEditorWidgetImpl;
 
 class MainEditorWidget : public QWidget
 {
     Q_OBJECT
 
-    public:
-        MainEditorWidget();
-        virtual ~MainEditorWidget();
+public:
+    MainEditorWidget(KreenshotEditor* kreenshotEditor);
+    virtual ~MainEditorWidget();
 
-    public Q_SLOTS:
+public Q_SLOTS:
 //         void saveFile();
 //         void loadFile();
 
-    protected:
-        void paintEvent(QPaintEvent*);
+protected:
+    void paintEvent(QPaintEvent*);
+
+private:
+    MainEditorWidgetImpl* d;
 };
 
 #endif // UI_MAIN_EDITOR_WIDGET_H
 
-// kate: indent-width 4; replace-tabs on;
+// kate: indent-mode cstyle; replace-tabs on;

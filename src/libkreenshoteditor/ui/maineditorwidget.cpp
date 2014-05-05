@@ -19,19 +19,31 @@
 #include "maineditorwidget.h"
 #include <QPainter>
 
-MainEditorWidget::MainEditorWidget()
+class MainEditorWidgetImpl
 {
+public:
+    KreenshotEditor* kreenshotEditor;
+};
+
+MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
+{
+    d = new MainEditorWidgetImpl();
+    d->kreenshotEditor = kreenshotEditor;
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMinimumSize(50, 50);
 }
 
 MainEditorWidget::~MainEditorWidget()
 {
-
+    delete d;
 }
 
 void MainEditorWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
+
+    const QImage& baseImage = d->kreenshotEditor->getBaseImage();
+    painter.drawImage(QPoint(0, 0), baseImage);
+
     painter.drawRect(10, 20, 30, 40);
 }

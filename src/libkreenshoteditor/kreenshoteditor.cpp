@@ -38,12 +38,17 @@ KreenshotEditor::~KreenshotEditor()
 
 void KreenshotEditor::setBaseImage(const QImage& image)
 {
+    d->baseImage = image;
 }
 
+const QImage& KreenshotEditor::getBaseImage()
+{
+    return d->baseImage;
+}
 
 MainEditorWidget* KreenshotEditor::createMainEditorWidget()
 {
-    auto mainEditorWidget = new MainEditorWidget();
+    auto mainEditorWidget = new MainEditorWidget(this);
     return mainEditorWidget;
 }
 

@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef KREENSHOTEDITOR_H
+#define KREENSHOTEDITOR_H
 
 class MainEditorWidget;
 class QImage;
@@ -27,10 +29,14 @@ public:
     KreenshotEditor();
     virtual ~KreenshotEditor();
 
+    // TODO: is QImage reference counted?
     void setBaseImage(const QImage& image);
+    const QImage& getBaseImage();
 
     MainEditorWidget* createMainEditorWidget();
 
 private:
     KreenshotEditorImpl* d;
 };
+
+#endif // KREENSHOTEDITOR_H
