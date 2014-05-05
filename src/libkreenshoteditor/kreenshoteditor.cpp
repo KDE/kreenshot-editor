@@ -18,6 +18,7 @@
  */
 #include "kreenshoteditor.h"
 #include <QImage>
+#include <QScrollArea>
 #include "ui/maineditorwidget.h"
 
 class KreenshotEditorImpl
@@ -46,9 +47,15 @@ const QImage& KreenshotEditor::getBaseImage()
     return d->baseImage;
 }
 
-MainEditorWidget* KreenshotEditor::createMainEditorWidget()
+QWidget* KreenshotEditor::createMainEditorWidget()
 {
     auto mainEditorWidget = new MainEditorWidget(this);
-    return mainEditorWidget;
+
+    auto scrollArea = new QScrollArea();
+    scrollArea->setBackgroundRole(QPalette::Background);
+    //scrollArea->setBackgroundRole(QPalette::Dark);
+    scrollArea->setWidget(mainEditorWidget);
+
+    return scrollArea;
 }
 

@@ -18,19 +18,52 @@
  */
 #include "maineditorwidget.h"
 #include <QPainter>
+#include <QGraphicsDropShadowEffect>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 class MainEditorWidgetImpl
 {
 public:
     KreenshotEditor* kreenshotEditor;
+
+    QGraphicsView graphicsView;
+    QGraphicsScene scene;
+
+public:
+    void createDemoScene()
+    {
+        auto dropShadow = new QGraphicsDropShadowEffect();
+        dropShadow->setColor(Qt::black);
+        dropShadow->setOffset(QPoint(3, 3));
+        dropShadow->setBlurRadius(10);
+
+        auto rectItem = new QGraphicsRectItem();
+        rectItem->setRect(110, 100, 150, 100);
+        rectItem->setGraphicsEffect(dropShadow);
+        rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+        scene.addItem(rectItem);
+        scene.addText("Hello, world!");
+
+        graphicsView.setScene(&scene);
+    }
 };
 
 MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 {
     d = new MainEditorWidgetImpl();
     d->kreenshotEditor = kreenshotEditor;
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setMinimumSize(50, 50);
+
+    // use this if not using QScrollArea:
+    // setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // setMinimumSize(50, 50);
+
+    // for QScrollArea:
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setMinimumSize(kreenshotEditor->getBaseImage().size());
+
+    d->createDemoScene();
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -46,4 +79,9 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
     painter.drawImage(QPoint(0, 0), baseImage);
 
     painter.drawRect(10, 20, 30, 40);
+
+    painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
+    painter.drawRoundRect(100, 200, 100, 200, 10, 10);
+
+    d->graphicsView.render(&painter);
 }

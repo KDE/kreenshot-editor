@@ -21,6 +21,7 @@
 
 class MainEditorWidget;
 class QImage;
+class QWidget;
 class KreenshotEditorImpl;
 
 class KreenshotEditor
@@ -33,7 +34,7 @@ public:
     void setBaseImage(const QImage& image);
     const QImage& getBaseImage();
 
-    MainEditorWidget* createMainEditorWidget();
+    QWidget* createMainEditorWidget();
 
 private:
     KreenshotEditorImpl* d;
