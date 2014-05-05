@@ -17,11 +17,13 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "maineditorwidget.h"
+#include "core/itemsmanager.h"
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QDebug>
 
 class MainEditorWidgetImpl
 {
@@ -32,19 +34,77 @@ public:
     QGraphicsScene scene;
 
 public:
+    /**
+     * recreate the scene to reflect the current kreenshotEditor->itemsManager
+     *
+     * TODO: 1. draw demo the items
+     *       2. with this as base implement basic mouse hover highlighting!
+     */
+    void refreshScene()
+    {
+        // TODO: create using kreenshotEditor->itemsManager()
+
+        // for each         kreenshotEditor->itemsManager().items()
+        Item item;
+        if (item.typeId == "rect") {
+
+        }
+        else if (item.typeId == "ellipse") {
+
+        }
+        else if (item.typeId == "text") {
+
+        }
+    }
+
     void createDemoScene()
     {
-        auto dropShadow = new QGraphicsDropShadowEffect();
-        dropShadow->setColor(Qt::black);
-        dropShadow->setOffset(QPoint(3, 3));
-        dropShadow->setBlurRadius(10);
+        const QImage& baseImage = kreenshotEditor->getBaseImage();
+        QRect rect(0, 0, baseImage.width(), baseImage.height());
+        qDebug() << rect;
 
-        auto rectItem = new QGraphicsRectItem();
-        rectItem->setRect(110, 100, 150, 100);
-        rectItem->setGraphicsEffect(dropShadow);
-        rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-        scene.addItem(rectItem);
+        scene.setSceneRect(rect);
+
+        {
+            auto dropShadow = new QGraphicsDropShadowEffect();
+            dropShadow->setColor(Qt::black);
+            dropShadow->setOffset(QPoint(3, 3));
+            dropShadow->setBlurRadius(10);
+
+            auto rectItem = new QGraphicsRectItem();
+            rectItem->setRect(120, 100, 150, 100);
+            rectItem->setGraphicsEffect(dropShadow);
+            rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+            scene.addItem(rectItem);
+        }
+
+        {
+            auto rect2Item = new QGraphicsRectItem();
+            rect2Item->setRect(10, 5, 30, 40);
+            //rect2Item->setGraphicsEffect(dropShadow);
+            //rect2Item->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+            scene.addItem(rect2Item);
+        }
+
         scene.addText("Hello, world!");
+
+        {
+            auto dropShadow = new QGraphicsDropShadowEffect();
+            dropShadow->setColor(Qt::black);
+            dropShadow->setOffset(QPoint(2, 2));
+            dropShadow->setBlurRadius(5);
+
+            auto textItem = new QGraphicsTextItem("With drop shadow");
+            textItem->setPos(30, 60);
+            textItem->setGraphicsEffect(dropShadow);
+            scene.addItem(textItem);
+        }
+
+        {
+            auto textItem = new QGraphicsTextItem("TODO: With white glow background");
+            textItem->setPos(30, 80);
+            scene.addItem(textItem);
+        }
 
         graphicsView.setScene(&scene);
     }
@@ -61,9 +121,10 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 
     // for QScrollArea:
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(kreenshotEditor->getBaseImage().size());
+    setMinimumSize(d->kreenshotEditor->getBaseImage().size());
 
-    d->createDemoScene();
+    d->createDemoScene(); // TODO: remove
+    d->kreenshotEditor->itemsManager().addDemoItems();
 }
 
 MainEditorWidget::~MainEditorWidget()

@@ -30,5 +30,25 @@ ItemsManager::~ItemsManager()
 
 void ItemsManager::addDemoItems()
 {
+    //TODO
     
+    {
+        Item item("line");
+        _items.push_back(item);
+    }
+
+    {
+        Item item("rect");
+        _items.push_back(item);
+    }
+
+    {
+        Item item("ellipse");
+        _items.push_back(item);
+    }
+}
+
+const std::vector< Item >& ItemsManager::items()
+{
+    return _items;
 }

@@ -19,6 +19,10 @@
 #ifndef ITEMSMANAGER_H
 #define ITEMSMANAGER_H
 
+#include "item.h"
+
+#include <vector>
+
 /**
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
  * Manages Z-Order.
@@ -31,7 +35,10 @@ public:
 
     void addDemoItems();
 
+    const std::vector<Item>& items();
+
 private:
+    std::vector<Item> _items;
 
 };
 

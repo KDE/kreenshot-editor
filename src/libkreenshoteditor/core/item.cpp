@@ -23,9 +23,9 @@ Item::Item()
 
 }
 
-Item::Item(QString itemType)
+Item::Item(QString typeId)
 {
-
+    this->typeId = typeId;
 }
 
 Item::~Item()
@@ -35,5 +35,5 @@ Item::~Item()
 
 void Item::setRect(QRect rect)
 {
-
+    // TODO
 }

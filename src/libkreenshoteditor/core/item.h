@@ -48,12 +48,14 @@ public:
      * obfuscate
      * image
      */
-    Item(QString itemType);
+    Item(QString typeId);
     virtual ~Item();
 
     void setRect(QRect rect);
 
 public:
+    QString typeId;
+
     // not everything applies for every itemType
 
     LineColorProperty* lineColor;

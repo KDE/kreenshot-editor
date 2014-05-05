@@ -23,6 +23,7 @@ class MainEditorWidget;
 class QImage;
 class QWidget;
 class KreenshotEditorImpl;
+class ItemsManager;
 
 class KreenshotEditor
 {
@@ -35,6 +36,8 @@ public:
     const QImage& getBaseImage();
 
     QWidget* createMainEditorWidget();
+
+    ItemsManager& itemsManager();
 
 private:
     KreenshotEditorImpl* d;

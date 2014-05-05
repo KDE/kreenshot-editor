@@ -20,11 +20,14 @@
 #include <QImage>
 #include <QScrollArea>
 #include "ui/maineditorwidget.h"
+#include "core/itemsmanager.h"
 
 class KreenshotEditorImpl
 {
 public:
     QImage baseImage;
+
+    ItemsManager itemsManager;
 };
 
 KreenshotEditor::KreenshotEditor()
@@ -59,3 +62,7 @@ QWidget* KreenshotEditor::createMainEditorWidget()
     return scrollArea;
 }
 
+ItemsManager& KreenshotEditor::itemsManager()
+{
+    return d->itemsManager;
+}
