@@ -19,11 +19,15 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <QPushButton>
+#include "libkreenshoteditor/kreenshoteditor.h"
+#include "libkreenshoteditor/ui/maineditorwidget.h"
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(KreenshotEditor* kreenshotEditor)
 {
     _ui = new Ui::MainWindow();
     _ui->setupUi(this);
+
+    _kreenshotEditor = kreenshotEditor;
 
     setupUi();
 }
@@ -39,8 +43,9 @@ void MainWindow::setupActions()
 
 void MainWindow::setupUi()
 {
-    //_ui->containerEditor->st
-    auto testButton = new QPushButton("Hallo");
-    testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    _ui->containerEditor->addWidget(testButton);
+//     auto testButton = new QPushButton("Hallo");
+//     testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//     _ui->containerEditor->addWidget(testButton);
+
+    _ui->containerEditor->addWidget(_kreenshotEditor->createMainEditorWidget());
 }

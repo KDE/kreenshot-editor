@@ -16,42 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_MAIN_WINDOW_H
-#define UI_MAIN_WINDOW_H
+#include "kreenshoteditor.h"
+#include <QImage>
+#include "ui/maineditorwidget.h"
 
-#include <QMainWindow>
-
-namespace Ui {
-    class MainWindow;
-};
-
-class KreenshotEditor;
-
-class MainWindow : public QMainWindow
+class KreenshotEditorImpl
 {
-    Q_OBJECT
-
-    public:
-        MainWindow(KreenshotEditor* kreenshotEditor);
-        virtual ~MainWindow();
-
-    public Q_SLOTS:
-//         void saveFile();
-//         void loadFile();
-
-    protected:
-        void setupActions();
-        void setupUi();
-
-    private:
-        Ui::MainWindow* _ui;
-        // std::unique_ptr<Ui::MainWindow> _ui; // TODO:  ‘unique_ptr’ in namespace ‘std’ does not name a type
-
-        KreenshotEditor* _kreenshotEditor;
-
-//         tikz::ui::LinePropertyWidget * m_linePropertyWidget;
+public:
+    QImage baseImage;
 };
 
-#endif // UI_MAIN_WINDOW_H
+KreenshotEditor::KreenshotEditor()
+{
+    d = new KreenshotEditorImpl();
+}
 
-// kate: indent-width 4; replace-tabs on;
+KreenshotEditor::~KreenshotEditor()
+{
+    delete d;
+}
+
+void KreenshotEditor::setBaseImage(const QImage& image)
+{
+}
+
+
+MainEditorWidget* KreenshotEditor::createMainEditorWidget()
+{
+    auto mainEditorWidget = new MainEditorWidget();
+    return mainEditorWidget;
+}
+

@@ -16,42 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_MAIN_WINDOW_H
-#define UI_MAIN_WINDOW_H
+#ifndef UI_MAIN_EDITOR_WIDGET_H
+#define UI_MAIN_EDITOR_WIDGET_H
 
-#include <QMainWindow>
+#include <QWidget>
 
-namespace Ui {
-    class MainWindow;
-};
+class QPaintEvent;
 
-class KreenshotEditor;
-
-class MainWindow : public QMainWindow
+class MainEditorWidget : public QWidget
 {
     Q_OBJECT
 
     public:
-        MainWindow(KreenshotEditor* kreenshotEditor);
-        virtual ~MainWindow();
+        MainEditorWidget();
+        virtual ~MainEditorWidget();
 
     public Q_SLOTS:
 //         void saveFile();
 //         void loadFile();
 
     protected:
-        void setupActions();
-        void setupUi();
-
-    private:
-        Ui::MainWindow* _ui;
-        // std::unique_ptr<Ui::MainWindow> _ui; // TODO:  ‘unique_ptr’ in namespace ‘std’ does not name a type
-
-        KreenshotEditor* _kreenshotEditor;
-
-//         tikz::ui::LinePropertyWidget * m_linePropertyWidget;
+        void paintEvent(QPaintEvent*);
 };
 
-#endif // UI_MAIN_WINDOW_H
+#endif // UI_MAIN_EDITOR_WIDGET_H
 
 // kate: indent-width 4; replace-tabs on;

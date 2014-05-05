@@ -21,19 +21,39 @@
 #include <QCommandLineOption>
 #include <QDebug>
 #include "ui/MainWindow.h"
+#include "libkreenshoteditor/kreenshoteditor.h"
 
 #include <iostream>
 #include <stdexcept>
 
 #define tr(arg) QObject::tr(arg)
 
+class Arguments
+{
+public:
+    QString baseImagePath;
+};
+
+Arguments parseArgumentsOrExit(QApplication& app);
+
 int main(int argc, char *argv[])
 {
     const QString version = "0.1";
-
     QApplication app(argc, argv);
-
     QCoreApplication::setApplicationVersion(version);
+    auto arguments = parseArgumentsOrExit(app);
+
+    KreenshotEditor kreenshotEditor;
+    kreenshotEditor.setBaseImage(QImage(arguments.baseImagePath));
+    MainWindow mainWindow(&kreenshotEditor);
+    //mainWindow.resize(640, 480);
+    mainWindow.show();
+
+    return app.exec();
+}
+
+Arguments parseArgumentsOrExit(QApplication& app)
+{
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
@@ -42,18 +62,23 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
 
     //QCommandLineOption deviceOption(QStringList() << "i" << "image", "file path of image to be loaded", "file path");
-    QCommandLineOption image2Option(QStringList() << tr("image2"), tr("file path to (optional) secondary image to be inserted as object"), tr("file path"));
+    QCommandLineOption image2Option(QStringList() << "image2", tr("file path to (optional) secondary image to be inserted as object"), tr("file path"));
     parser.addOption(image2Option);
 
-    QCommandLineOption image2xOption(QStringList() << tr("image2x"), tr("x coordinate (upper left corner) of the secondary image. Default value is 0."), tr("x in pixel"));
+    QCommandLineOption image2xOption(QStringList() << "image2x", tr("x coordinate (upper left corner) of the secondary image. Default value is 0."), tr("x in pixel"));
     parser.addOption(image2xOption);
 
-    QCommandLineOption image2yOption(QStringList() << tr("image2y"), tr("y coordinate. Default value is 0."), tr("y in pixel"));
+    QCommandLineOption image2yOption(QStringList() << "image2y", tr("y coordinate. Default value is 0."), tr("y in pixel"));
     parser.addOption(image2yOption);
+
+    QCommandLineOption windowTitleOption(QStringList() << "window-title", tr("Window title of the captured window"), tr("text"));
+    parser.addOption(windowTitleOption);
 
     parser.process(app);
 
     const QStringList args = parser.positionalArguments();
+
+    Arguments arguments;
 
     try {
         if (args.length() != 1) {
@@ -61,8 +86,8 @@ int main(int argc, char *argv[])
             throw std::runtime_error("1 positional argument expected");
         }
 
-        QString imageFilepath = args[0];
-        qDebug() << "imageFilepath:" << imageFilepath;
+        arguments.baseImagePath = args[0];
+        qDebug() << "imageFilepath:" << arguments.baseImagePath;
 
         QString image2Filepath = parser.value(image2Option);
         qDebug() << "image2Filepath:" << image2Filepath;
@@ -89,12 +114,8 @@ int main(int argc, char *argv[])
     }
     catch (const std::runtime_error& e) {
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;
-        parser.showHelp(1);
+        parser.showHelp(1); // exits application
     }
 
-    MainWindow mainWindow;
-    //mainWindow.resize(640, 480);
-    mainWindow.show();
-
-    return app.exec();
+    return arguments;
 }

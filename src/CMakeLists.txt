@@ -12,6 +12,7 @@ find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets)
 include_directories(
     .
     ui
+    # ../libkreenshoteditor # TODO:
     # TODO: later:
     ${CMAKE_SOURCE_DIR}/src/generated-include
 )
@@ -34,10 +35,9 @@ add_executable(kreenshot-editor
 target_link_libraries(kreenshot-editor
     Qt5::Core
     Qt5::Widgets
-    #qtikzcore
-    #qtikzui
+    libkreenshoteditor
 )
 
-# add_subdirectory(libkreenshoteditor)
+add_subdirectory(libkreenshoteditor)
 
 # kate: indent-width 4; replace-tabs on;
