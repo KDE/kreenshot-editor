@@ -19,10 +19,10 @@ include_directories(
 
 set(kreenshot-editor_SOURCES
     main.cpp
-    ui/MainWindow.cpp
+    ui/mainwindow.cpp
 )
 
-set(kreenshot-editor_FORMS ui/MainWindow.ui)
+set(kreenshot-editor_FORMS ui/mainwindow.ui)
 qt5_wrap_ui(kreenshot-editor_FORMS_HEADERS ${kreenshot-editor_FORMS})
 
 add_definitions("-std=c++11")

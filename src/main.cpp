@@ -20,7 +20,7 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QDebug>
-#include "ui/MainWindow.h"
+#include "ui/mainwindow.h"
 #include "libkreenshoteditor/kreenshoteditor.h"
 
 #include <iostream>

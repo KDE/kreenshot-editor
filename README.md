@@ -42,15 +42,15 @@ editor-component
 
 TODO
 ----
-- Shape
+- Item
 - DrawingArea
 - BackgroundImage
-- On the DrawingArea there are Shapes on the BackgroundImage.
-- Select a Shape
+- On the DrawingArea there are Items on the BackgroundImage.
+- Select a Item
   - Handles for resizing appear
   - Controls for common properties appear
      - most recently used or pinned colors
      - slider for line width
      - slider for font size
      - slider for arrow tip typ?
-- Hover over a Shape => highlighing and ability to move Shape
+- Hover over an Item => highlighing and ability to move the Item

@@ -16,36 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
-#include <QPushButton>
-#include "libkreenshoteditor/kreenshoteditor.h"
-#include "libkreenshoteditor/ui/maineditorwidget.h"
+#include "itemsmanager.h"
 
-MainWindow::MainWindow(KreenshotEditor* kreenshotEditor)
+ItemsManager::ItemsManager()
 {
-    _ui = new Ui::MainWindow();
-    _ui->setupUi(this);
 
-    _kreenshotEditor = kreenshotEditor;
-
-    setupUi();
 }
 
-MainWindow::~MainWindow()
+ItemsManager::~ItemsManager()
 {
-    delete _ui;
-}
 
-void MainWindow::setupActions()
-{
-}
-
-void MainWindow::setupUi()
-{
-//     auto testButton = new QPushButton("Hallo");
-//     testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//     _ui->containerEditor->addWidget(testButton);
-
-    _ui->containerEditor->addWidget(_kreenshotEditor->createMainEditorWidget());
 }
