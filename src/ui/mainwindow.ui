@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
-    <height>475</height>
+    <width>774</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>791</width>
+     <width>774</width>
      <height>19</height>
     </rect>
    </property>
@@ -65,8 +65,8 @@
   <widget class="QDockWidget" name="containerToolbox">
    <property name="minimumSize">
     <size>
-     <width>150</width>
-     <height>130</height>
+     <width>219</width>
+     <height>471</height>
     </size>
    </property>
    <property name="features">
@@ -78,36 +78,154 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Manage items:</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
       <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>Select shape(s)</string>
+        <string>Select</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="Line" name="line">
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-       <property name="midLineWidth">
-        <number>0</number>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
        </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Draw item:</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Rectangle</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>TODO: save and restore properties for each item tool</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Ellipse or circle</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Line or arrow</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="text">
+        <string>Highlight</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="text">
+        <string>Obfuscate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Adjust properties of selected item(s):</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>   show those valid for current item(s)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Draw rectangle</string>
+      <widget class="QSlider" name="horizontalSlider_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="text">
-        <string>Draw ellipse</string>
+      <widget class="QSpinBox" name="spinBox">
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFontComboBox" name="fontComboBox">
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
        </property>
       </widget>
      </item>

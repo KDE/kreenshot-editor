@@ -38,6 +38,9 @@ editor-component
 ----------------
 - display image
 - show toolbars for editing
+    - define toolbars by creating "prototype items" with default settings
+    - make it possible for each toolbar entry to save the current configuration
+        - dropdown menu (show basic properties as string like line width, color etc)
 - set (including an optional cursor) and get image
 
 TODO

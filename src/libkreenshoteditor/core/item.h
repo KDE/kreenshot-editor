@@ -57,6 +57,7 @@ public:
     QString typeId;
 
     // not everything applies for every itemType
+    // what is not possible is null
 
     LineColorProperty* lineColor;
     LineStyleProperty* lineStyle; // dotted, dashed, solid, width
