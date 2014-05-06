@@ -34,16 +34,33 @@ void ItemsManager::addDemoItems()
     
     {
         Item item("line");
+        item.setRect(QRect(10, 20, 30, 40));
         _items.push_back(item);
     }
 
     {
         Item item("rect");
+        item.setRect(QRect(30, 30, 40, 30));
         _items.push_back(item);
     }
 
     {
         Item item("ellipse");
+        item.setRect(QRect(10, 40, 40, 40));
+        _items.push_back(item);
+    }
+
+    {
+        Item item("ellipse");
+        item.setRect(QRect(10, 80, 70, 40));
+        _items.push_back(item);
+    }
+
+    {
+        Item item("text");
+        item.setRect(QRect(10, 90, 100, 20));
+        item.text = TextProperty::create();
+        item.text->text = "Hello From ItemsManager";
         _items.push_back(item);
     }
 }

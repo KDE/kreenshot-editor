@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QRect>
+#include <memory>
 
 class LineColorProperty;
 class LineStyleProperty;
@@ -52,6 +53,7 @@ public:
     virtual ~Item();
 
     void setRect(QRect rect);
+    QRect rect();
 
 public:
     QString typeId;
@@ -64,14 +66,26 @@ public:
     DropShadowProperty* dropShadow; // color, blur, offset
     RectStyleProperty* rectStyle; // rounded or not (applies also to the text rect if not null)
     FillProperty* fillColor; // fill color, percent opacity
-    TextProperty* text; // text string, autowrap, font, size, color, (for border see lineColor)
+    std::shared_ptr<TextProperty> text; // text string, autowrap, font, size, color, (for border see lineColor)
     ObfuscateProperty* obfuscateStyle; // pixelize size, blur radius
     ArrowProperty* arrowFront; // size of arrow (or start just with mere existence, size controlled by lineStyle)
     ArrowProperty* arrowBack;
     ImageProperty* image; // image data (e. g. the cursor)
 
 private:
+    QRect _rect;
 
+};
+
+class TextProperty
+{
+public:
+    static std::shared_ptr<TextProperty> create() {
+        return std::shared_ptr<TextProperty>(new TextProperty);
+    }
+
+public:
+    QString text;
 };
 
 #endif // ITEM_H

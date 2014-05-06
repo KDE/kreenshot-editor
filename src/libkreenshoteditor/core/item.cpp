@@ -35,5 +35,10 @@ Item::~Item()
 
 void Item::setRect(QRect rect)
 {
-    // TODO
+    _rect = rect;
+}
+
+QRect Item::rect()
+{
+    return _rect;
 }

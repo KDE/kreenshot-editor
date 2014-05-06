@@ -34,6 +34,19 @@ public:
     QGraphicsScene scene;
 
 public:
+    // todo: optimize?
+    QRect getBaseRect() {
+        const QImage& baseImage = kreenshotEditor->getBaseImage();
+        QRect rect(0, 0, baseImage.width(), baseImage.height());
+        qDebug() << rect;
+        return rect;
+    }
+
+    void initScene() {
+        QRect rect = getBaseRect();
+        scene.setSceneRect(rect);
+        graphicsView.setScene(&scene);
+    }
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
      *
@@ -42,27 +55,45 @@ public:
      */
     void refreshScene()
     {
-        // TODO: create using kreenshotEditor->itemsManager()
+        scene.clear();
 
-        // for each         kreenshotEditor->itemsManager().items()
-        Item item;
-        if (item.typeId == "rect") {
+        foreach (Item item, kreenshotEditor->itemsManager().items()) {
 
-        }
-        else if (item.typeId == "ellipse") {
+            if (item.typeId == "rect") {
+                auto dropShadow = new QGraphicsDropShadowEffect();
+                dropShadow->setColor(Qt::black);
+                dropShadow->setOffset(QPoint(3, 3));
+                dropShadow->setBlurRadius(10);
 
-        }
-        else if (item.typeId == "text") {
+                auto rectItem = new QGraphicsRectItem();
+                rectItem->setRect(item.rect());
+                rectItem->setGraphicsEffect(dropShadow);
+                rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                scene.addItem(rectItem);
+            }
+            else if (item.typeId == "ellipse") {
+                auto ellipseItem = new QGraphicsEllipseItem();
+                ellipseItem->setRect(item.rect());
+                ellipseItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                scene.addItem(ellipseItem);
+            }
+            else if (item.typeId == "text") {
+                auto dropShadow = new QGraphicsDropShadowEffect();
+                dropShadow->setColor(Qt::black);
+                dropShadow->setOffset(QPoint(2, 2));
+                dropShadow->setBlurRadius(5);
 
+                auto textItem = new QGraphicsTextItem("With drop shadow");
+                textItem->setPos(30, 60);
+                textItem->setGraphicsEffect(dropShadow);
+                scene.addItem(textItem);
+            }
         }
     }
 
     void createDemoScene()
     {
-        const QImage& baseImage = kreenshotEditor->getBaseImage();
-        QRect rect(0, 0, baseImage.width(), baseImage.height());
-        qDebug() << rect;
-
+        QRect rect = getBaseRect();
         scene.setSceneRect(rect);
 
         {
@@ -123,8 +154,9 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(d->kreenshotEditor->getBaseImage().size());
 
-    d->createDemoScene(); // TODO: remove
+    //d->createDemoScene(); // TODO: remove
     d->kreenshotEditor->itemsManager().addDemoItems();
+    d->initScene();
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -134,15 +166,17 @@ MainEditorWidget::~MainEditorWidget()
 
 void MainEditorWidget::paintEvent(QPaintEvent*)
 {
+    d->refreshScene();
+
     QPainter painter(this);
 
     const QImage& baseImage = d->kreenshotEditor->getBaseImage();
     painter.drawImage(QPoint(0, 0), baseImage);
 
-    painter.drawRect(10, 20, 30, 40);
-
-    painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
-    painter.drawRoundRect(100, 200, 100, 200, 10, 10);
+//     painter.drawRect(10, 20, 30, 40);
+//
+//     painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
+//     painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
     d->graphicsView.render(&painter);
 }
