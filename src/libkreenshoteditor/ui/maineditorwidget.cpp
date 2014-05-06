@@ -39,6 +39,8 @@ public:
     std::map<std::shared_ptr<Item>, bool> mouseOverMap;
     const int mouseOverMargin = 2;
 
+    std::map<std::shared_ptr<Item>, bool> selectedMap;
+
 public:
     // todo: optimize?
     QRect getBaseRect() {
@@ -109,7 +111,14 @@ public:
 
             // highlight: // TODO: drawRoundRect => move this away from the scene but directly to the painter!
             auto mouseOverMapItem = mouseOverMap.find(item);
-            if (mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true) {
+            bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
+
+            // selected indicator: TODO: draw handles
+            auto selectedMapItem = selectedMap.find(item);
+            bool isSelected = selectedMapItem != selectedMap.end() && selectedMapItem->second == true;
+
+
+            if (isMouseOver && !isSelected) {
                 //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
 
                 // removes any other effect which is not desired:
@@ -122,6 +131,14 @@ public:
                 //rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 rectItem->setPen(QPen(Qt::transparent));
                 rectItem->setBrush(QBrush(Qt::Dense7Pattern));
+                scene.addItem(rectItem);
+            }
+
+            if (isSelected) {
+                auto rectItem = new QGraphicsRectItem();
+                rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
+                rectItem->setPen(QPen(Qt::darkGray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                //rectItem->setBrush(QBrush(Qt::Dense7Pattern));
                 scene.addItem(rectItem);
             }
         }
@@ -138,6 +155,25 @@ public:
 
         foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
             mouseOverMap[item] = item->rect().contains(pos);
+        }
+    }
+
+    void mouseLeftButtonClick(QPoint pos, bool toggle)
+    {
+        if (!toggle) {
+            selectedMap.clear();
+        }
+
+        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
+            bool hit = item->rect().contains(pos);
+            if (!toggle) {
+                selectedMap[item] = hit;
+            }
+            else {
+                if (hit) {
+                    selectedMap[item] = !selectedMap[item];
+                }
+            }
         }
     }
 
@@ -249,3 +285,12 @@ void MainEditorWidget::leaveEvent(QEvent* event)
 
     QWidget::leaveEvent(event);
 }
+
+void MainEditorWidget::mousePressEvent(QMouseEvent* event)
+{
+    d->mouseLeftButtonClick(event->pos(), event->modifiers() & Qt::ControlModifier);
+    update(); // schedules repaint
+
+    QWidget::mousePressEvent(event);
+}
+

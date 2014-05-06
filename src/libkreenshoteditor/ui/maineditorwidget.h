@@ -42,6 +42,7 @@ protected:
 
     void mouseMoveEvent(QMouseEvent*);
     void leaveEvent(QEvent*);
+    void mousePressEvent(QMouseEvent*);
 
 private:
     MainEditorWidgetImpl* d;
