@@ -31,10 +31,10 @@ ItemsManager::~ItemsManager()
 void ItemsManager::addDemoItems()
 {
     //TODO
-    
+
     {
         auto item = Item::create("line");
-        item->setRect(QRect(10, 20, 30, 40));
+        item->setLine(QLine(QPoint(10, 20), QPoint(30, 40)));
         _items.push_back(item);
     }
 
@@ -68,6 +68,18 @@ void ItemsManager::addDemoItems()
         item->setRect(QRect(10, 120, 100, 20));
         item->text = TextProperty::create();
         item->text->text = "Hello From ItemsManager";
+        _items.push_back(item);
+    }
+
+    {
+        auto item = Item::create("rect");
+        item->setRect(QRect(200, 200, 50, 50));
+        _items.push_back(item);
+    }
+
+    {
+        auto item = Item::create("rect");
+        item->setRect(QRect(962-10, 556-10, 10, 10));
         _items.push_back(item);
     }
 }

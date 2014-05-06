@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QRect>
+#include <QLine>
 #include <memory>
 
 class LineColorProperty;
@@ -41,7 +42,7 @@ class Item
 public:
     Item();
     /**
-     * line (= arrow)
+     * line (= arrow) TODO: line is not fully defined by a rect!
      * rect
      * ellipse
      * text
@@ -53,7 +54,22 @@ public:
     virtual ~Item();
 
     void setRect(QRect rect);
+
+    /**
+     * only used for "line"
+     */
+    void setLine(QLine line);
+
+    /**
+     * the bounding rect (also for "line")
+     */
     QRect rect();
+
+    /**
+     * only used for "line"
+     */
+    QLine line();
+
 
 public:
     static std::shared_ptr<Item> create(QString typeId);
@@ -77,7 +93,7 @@ public:
 
 private:
     QRect _rect;
-
+    QLine _line;
 };
 
 class TextProperty

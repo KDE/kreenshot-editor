@@ -33,10 +33,10 @@ class MainEditorWidgetImpl
 public:
     KreenshotEditor* kreenshotEditor;
 
-    QGraphicsView graphicsView;
+    // QGraphicsView graphicsView;// causes coordinate offsets and is not needed
     QGraphicsScene scene;
 
-    std::map<Item*, bool> mouseOverMap;
+    std::map<std::shared_ptr<Item>, bool> mouseOverMap;
     const int mouseOverMargin = 2;
 
 public:
@@ -51,13 +51,9 @@ public:
     void initScene() {
         QRect rect = getBaseRect();
         scene.setSceneRect(rect);
-        graphicsView.setScene(&scene);
     }
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
-     *
-     * TODO: 1. done
-     *       2. with this as base implement basic mouse hover highlighting!
      */
     void refreshScene()
     {
@@ -65,7 +61,7 @@ public:
 
         foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
 
-            QGraphicsItem* grItem = nullptr;
+            //QGraphicsItem* grItem = nullptr;
 
             //qDebug() << "item: " << item->rect();
 
@@ -82,14 +78,21 @@ public:
                 rectItem->setGraphicsEffect(dropShadow);
                 rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(rectItem);
-                grItem = rectItem;
+                //grItem = rectItem;
+            }
+            else if (item->typeId == "line") {
+                auto grItem = new QGraphicsLineItem();
+                grItem->setLine(item->line());
+                grItem->setPen(QPen(Qt::red, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                scene.addItem(grItem);
+                //grItem = ellipseItem;
             }
             else if (item->typeId == "ellipse") {
                 auto ellipseItem = new QGraphicsEllipseItem();
                 ellipseItem->setRect(item->rect());
                 ellipseItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(ellipseItem);
-                grItem = ellipseItem;
+                //grItem = ellipseItem;
             }
             else if (item->typeId == "text") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
@@ -101,11 +104,11 @@ public:
                 textItem->setPos(item->rect().x(), item->rect().y());
                 textItem->setGraphicsEffect(dropShadow);
                 scene.addItem(textItem);
-                grItem = textItem;
+                //grItem = textItem;
             }
 
             // highlight: // TODO: drawRoundRect => move this away from the scene but directly to the painter!
-            auto mouseOverMapItem = mouseOverMap.find(item.get());
+            auto mouseOverMapItem = mouseOverMap.find(item);
             if (mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true) {
                 //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
 
@@ -116,7 +119,9 @@ public:
 
                 auto rectItem = new QGraphicsRectItem();
                 rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
-                rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                //rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                rectItem->setPen(QPen(Qt::transparent));
+                rectItem->setBrush(QBrush(Qt::Dense7Pattern));
                 scene.addItem(rectItem);
             }
         }
@@ -132,7 +137,7 @@ public:
         mouseOverMap.clear();
 
         foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
-            mouseOverMap[item.get()] = item->rect().contains(pos);
+            mouseOverMap[item] = item->rect().contains(pos);
         }
     }
 
@@ -181,8 +186,6 @@ public:
             textItem->setPos(30, 80);
             scene.addItem(textItem);
         }
-
-        graphicsView.setScene(&scene);
     }
 };
 
@@ -197,7 +200,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 
     // for QScrollArea:
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(d->kreenshotEditor->getBaseImage().size());
+    setMinimumSize(d->getBaseRect().size());
 
     //d->createDemoScene();
     d->kreenshotEditor->itemsManager().addDemoItems();
@@ -220,17 +223,18 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
     const QImage& baseImage = d->kreenshotEditor->getBaseImage();
     painter.drawImage(QPoint(0, 0), baseImage);
 
-//     painter.drawRect(10, 20, 30, 40);
-//
-//     painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
-//     painter.drawRoundRect(100, 200, 100, 200, 10, 10);
+    //painter.drawRect(205, 205, 30, 30);
 
-    d->graphicsView.render(&painter);
+    //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
+    //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
+
+    d->scene.render(&painter);
 }
 
 void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)
 {
     //qDebug() << "mouseMoveEvent";
+    //qDebug() << event->pos();
 
     d->mouseOverMapUpdate(event->pos());
     update(); // schedules repaint

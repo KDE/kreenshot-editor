@@ -45,5 +45,18 @@ void Item::setRect(QRect rect)
 
 QRect Item::rect()
 {
-    return _rect;
+    if (_line.isNull())
+        return _rect;
+    else
+        return QRect(_line.p1(), _line.p2());
+}
+
+void Item::setLine(QLine line)
+{
+    _line = line;
+}
+
+QLine Item::line()
+{
+    return _line;
 }
