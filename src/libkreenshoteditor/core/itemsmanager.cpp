@@ -57,6 +57,13 @@ void ItemsManager::addDemoItems()
     }
 
     {
+        auto item = Item::create("rect");
+        item->setRect(QRect(0, 0, 10, 10));
+        _items.push_back(item);
+    }
+
+
+    {
         auto item = Item::create("text");
         item->setRect(QRect(10, 120, 100, 20));
         item->text = TextProperty::create();

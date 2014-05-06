@@ -21,6 +21,7 @@ NEXT steps
 
 TODO
 ----
+- nullable QPoint for function parameter?
 - ‘unique_ptr’ in namespace ‘std’ does not name a type
 - show custom editor widget in MainWindow
 - is QImage reference counted?

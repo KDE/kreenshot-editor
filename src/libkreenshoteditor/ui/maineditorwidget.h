@@ -40,6 +40,9 @@ public Q_SLOTS:
 protected:
     void paintEvent(QPaintEvent*);
 
+    void mouseMoveEvent(QMouseEvent*);
+    void leaveEvent(QEvent*);
+
 private:
     MainEditorWidgetImpl* d;
 };

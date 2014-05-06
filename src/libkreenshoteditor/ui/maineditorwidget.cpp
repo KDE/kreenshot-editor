@@ -24,6 +24,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QDebug>
+#include <QMouseEvent>
+#include <QMargins>
+#include <memory>
 
 class MainEditorWidgetImpl
 {
@@ -33,7 +36,8 @@ public:
     QGraphicsView graphicsView;
     QGraphicsScene scene;
 
-    //std::map<
+    std::map<Item*, bool> mouseOverMap;
+    const int mouseOverMargin = 2;
 
 public:
     // todo: optimize?
@@ -61,6 +65,12 @@ public:
 
         foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
 
+            QGraphicsItem* grItem = nullptr;
+
+            //qDebug() << "item: " << item->rect();
+
+            // draw
+            //
             if (item->typeId == "rect") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
                 dropShadow->setColor(Qt::black);
@@ -72,12 +82,14 @@ public:
                 rectItem->setGraphicsEffect(dropShadow);
                 rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(rectItem);
+                grItem = rectItem;
             }
             else if (item->typeId == "ellipse") {
                 auto ellipseItem = new QGraphicsEllipseItem();
                 ellipseItem->setRect(item->rect());
                 ellipseItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(ellipseItem);
+                grItem = ellipseItem;
             }
             else if (item->typeId == "text") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
@@ -89,7 +101,38 @@ public:
                 textItem->setPos(item->rect().x(), item->rect().y());
                 textItem->setGraphicsEffect(dropShadow);
                 scene.addItem(textItem);
+                grItem = textItem;
             }
+
+            // highlight: // TODO: drawRoundRect => move this away from the scene but directly to the painter!
+            auto mouseOverMapItem = mouseOverMap.find(item.get());
+            if (mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true) {
+                //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
+
+                // removes any other effect which is not desired:
+                //auto effect = new QGraphicsColorizeEffect();
+                //effect->setColor(Qt::blue);
+                //grItem->setGraphicsEffect(effect);
+
+                auto rectItem = new QGraphicsRectItem();
+                rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
+                rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                scene.addItem(rectItem);
+            }
+        }
+    }
+
+    void mouseOverMapClear()
+    {
+        mouseOverMap.clear();
+    }
+
+    void mouseOverMapUpdate(QPoint pos)
+    {
+        mouseOverMap.clear();
+
+        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
+            mouseOverMap[item.get()] = item->rect().contains(pos);
         }
     }
 
@@ -159,6 +202,8 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
     //d->createDemoScene();
     d->kreenshotEditor->itemsManager().addDemoItems();
     d->initScene();
+
+    setMouseTracking(true); // to enable mouseMoveEvent
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -181,4 +226,22 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
 //     painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
     d->graphicsView.render(&painter);
+}
+
+void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)
+{
+    //qDebug() << "mouseMoveEvent";
+
+    d->mouseOverMapUpdate(event->pos());
+    update(); // schedules repaint
+
+    QWidget::mouseMoveEvent(event);
+}
+
+void MainEditorWidget::leaveEvent(QEvent* event)
+{
+    d->mouseOverMapClear();
+    update(); // schedules repaint
+
+    QWidget::leaveEvent(event);
 }
