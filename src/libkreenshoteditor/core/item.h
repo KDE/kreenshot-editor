@@ -56,6 +56,9 @@ public:
     QRect rect();
 
 public:
+    static std::shared_ptr<Item> create(QString typeId);
+
+public:
     QString typeId;
 
     // not everything applies for every itemType

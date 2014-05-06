@@ -33,6 +33,8 @@ public:
     QGraphicsView graphicsView;
     QGraphicsScene scene;
 
+    //std::map<
+
 public:
     // todo: optimize?
     QRect getBaseRect() {
@@ -50,41 +52,41 @@ public:
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
      *
-     * TODO: 1. draw demo the items
+     * TODO: 1. done
      *       2. with this as base implement basic mouse hover highlighting!
      */
     void refreshScene()
     {
         scene.clear();
 
-        foreach (Item item, kreenshotEditor->itemsManager().items()) {
+        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
 
-            if (item.typeId == "rect") {
+            if (item->typeId == "rect") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
                 dropShadow->setColor(Qt::black);
                 dropShadow->setOffset(QPoint(3, 3));
                 dropShadow->setBlurRadius(10);
 
                 auto rectItem = new QGraphicsRectItem();
-                rectItem->setRect(item.rect());
+                rectItem->setRect(item->rect());
                 rectItem->setGraphicsEffect(dropShadow);
                 rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(rectItem);
             }
-            else if (item.typeId == "ellipse") {
+            else if (item->typeId == "ellipse") {
                 auto ellipseItem = new QGraphicsEllipseItem();
-                ellipseItem->setRect(item.rect());
+                ellipseItem->setRect(item->rect());
                 ellipseItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(ellipseItem);
             }
-            else if (item.typeId == "text") {
+            else if (item->typeId == "text") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
                 dropShadow->setColor(Qt::black);
                 dropShadow->setOffset(QPoint(2, 2));
                 dropShadow->setBlurRadius(5);
 
                 auto textItem = new QGraphicsTextItem("With drop shadow");
-                textItem->setPos(30, 60);
+                textItem->setPos(item->rect().x(), item->rect().y());
                 textItem->setGraphicsEffect(dropShadow);
                 scene.addItem(textItem);
             }
@@ -154,7 +156,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(d->kreenshotEditor->getBaseImage().size());
 
-    //d->createDemoScene(); // TODO: remove
+    //d->createDemoScene();
     d->kreenshotEditor->itemsManager().addDemoItems();
     d->initScene();
 }

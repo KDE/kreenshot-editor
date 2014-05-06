@@ -33,39 +33,39 @@ void ItemsManager::addDemoItems()
     //TODO
     
     {
-        Item item("line");
-        item.setRect(QRect(10, 20, 30, 40));
+        auto item = Item::create("line");
+        item->setRect(QRect(10, 20, 30, 40));
         _items.push_back(item);
     }
 
     {
-        Item item("rect");
-        item.setRect(QRect(30, 30, 40, 30));
+        auto item = Item::create("rect");
+        item->setRect(QRect(30, 30, 40, 30));
         _items.push_back(item);
     }
 
     {
-        Item item("ellipse");
-        item.setRect(QRect(10, 40, 40, 40));
+        auto item = Item::create("ellipse");
+        item->setRect(QRect(10, 40, 40, 40));
         _items.push_back(item);
     }
 
     {
-        Item item("ellipse");
-        item.setRect(QRect(10, 80, 70, 40));
+        auto item = Item::create("ellipse");
+        item->setRect(QRect(10, 80, 70, 40));
         _items.push_back(item);
     }
 
     {
-        Item item("text");
-        item.setRect(QRect(10, 90, 100, 20));
-        item.text = TextProperty::create();
-        item.text->text = "Hello From ItemsManager";
+        auto item = Item::create("text");
+        item->setRect(QRect(10, 120, 100, 20));
+        item->text = TextProperty::create();
+        item->text->text = "Hello From ItemsManager";
         _items.push_back(item);
     }
 }
 
-const std::vector< Item >& ItemsManager::items()
+const std::vector< std::shared_ptr<Item> >& ItemsManager::items()
 {
     return _items;
 }

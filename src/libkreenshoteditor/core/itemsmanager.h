@@ -22,6 +22,7 @@
 #include "item.h"
 
 #include <vector>
+#include <memory>
 
 /**
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
@@ -35,10 +36,10 @@ public:
 
     void addDemoItems();
 
-    const std::vector<Item>& items();
+    const std::vector<std::shared_ptr<Item>>& items();
 
 private:
-    std::vector<Item> _items;
+    std::vector<std::shared_ptr<Item>> _items;
 
 };
 
