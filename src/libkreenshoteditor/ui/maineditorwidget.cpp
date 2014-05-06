@@ -28,6 +28,13 @@
 #include <QMargins>
 #include <memory>
 
+// TODO
+class ItemVisual {
+public:
+    bool mouseOver;
+    bool selected;
+};
+
 class MainEditorWidgetImpl
 {
 public:
@@ -41,6 +48,9 @@ public:
 
     std::map<std::shared_ptr<Item>, bool> selectedMap;
 
+    // currently only one item can be moved at a time
+    Item* movedItem;
+
 public:
     // todo: optimize?
     QRect getBaseRect() {
@@ -53,6 +63,7 @@ public:
     void initScene() {
         QRect rect = getBaseRect();
         scene.setSceneRect(rect);
+        movedItem = nullptr;
     }
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
@@ -144,12 +155,12 @@ public:
         }
     }
 
-    void mouseOverMapClear()
+    void onMouseLeave()
     {
         mouseOverMap.clear();
     }
 
-    void mouseOverMapUpdate(QPoint pos)
+    void onMouseMove(QPoint pos)
     {
         mouseOverMap.clear();
 
@@ -158,7 +169,7 @@ public:
         }
     }
 
-    void mouseLeftButtonClick(QPoint pos, bool toggle)
+    void onMouseLeftButtonPress(QPoint pos, bool toggle)
     {
         if (!toggle) {
             selectedMap.clear();
@@ -168,6 +179,10 @@ public:
             bool hit = item->rect().contains(pos);
             if (!toggle) {
                 selectedMap[item] = hit;
+
+                if (hit) {
+                    movedItem = item.get();
+                }
             }
             else {
                 if (hit) {
@@ -175,6 +190,19 @@ public:
                 }
             }
         }
+    }
+
+    void onMouseMoveNoCtrlKey(QPoint pos) {
+        if (movedItem != nullptr) {
+            QRect rect = movedItem->rect();
+            rect.moveCenter(pos);
+            movedItem->setRect(rect);
+        }
+    }
+
+    void onMouseRelease(QPoint pos) {
+        onMouseMoveNoCtrlKey(pos);
+        movedItem = nullptr;
     }
 
     void createDemoScene()
@@ -272,7 +300,10 @@ void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)
     //qDebug() << "mouseMoveEvent";
     //qDebug() << event->pos();
 
-    d->mouseOverMapUpdate(event->pos());
+    d->onMouseMove(event->pos());
+    if (!(event->modifiers() & Qt::ControlModifier)) {
+        d->onMouseMoveNoCtrlKey(event->pos());
+    }
     update(); // schedules repaint
 
     QWidget::mouseMoveEvent(event);
@@ -280,7 +311,7 @@ void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)
 
 void MainEditorWidget::leaveEvent(QEvent* event)
 {
-    d->mouseOverMapClear();
+    d->onMouseLeave();
     update(); // schedules repaint
 
     QWidget::leaveEvent(event);
@@ -288,9 +319,18 @@ void MainEditorWidget::leaveEvent(QEvent* event)
 
 void MainEditorWidget::mousePressEvent(QMouseEvent* event)
 {
-    d->mouseLeftButtonClick(event->pos(), event->modifiers() & Qt::ControlModifier);
-    update(); // schedules repaint
+    if (event->buttons() & Qt::LeftButton) {
+        d->onMouseLeftButtonPress(event->pos(), event->modifiers() & Qt::ControlModifier);
+        update(); // schedules repaint
+    }
 
     QWidget::mousePressEvent(event);
 }
 
+void MainEditorWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    d->onMouseRelease(event->pos());
+    update(); // schedules repaint
+
+    QWidget::mouseReleaseEvent(event);
+}
