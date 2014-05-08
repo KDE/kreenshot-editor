@@ -54,12 +54,17 @@ QWidget* KreenshotEditor::createMainEditorWidget()
 {
     auto mainEditorWidget = new MainEditorWidget(this);
 
-    auto scrollArea = new QScrollArea();
-    scrollArea->setBackgroundRole(QPalette::Background);
-    //scrollArea->setBackgroundRole(QPalette::Dark);
-    scrollArea->setWidget(mainEditorWidget);
-
-    return scrollArea;
+    bool oldQScrollAreaLogic = false;
+    if (oldQScrollAreaLogic) {
+        auto scrollArea = new QScrollArea();
+        scrollArea->setBackgroundRole(QPalette::Background);
+        //scrollArea->setBackgroundRole(QPalette::Dark);
+        scrollArea->setWidget(mainEditorWidget);
+        return scrollArea;
+    }
+    else {
+        return mainEditorWidget;
+    }
 }
 
 ItemsManager& KreenshotEditor::itemsManager()

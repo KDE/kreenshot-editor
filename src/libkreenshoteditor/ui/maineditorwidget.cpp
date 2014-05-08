@@ -23,6 +23,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QGridLayout>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMargins>
@@ -40,16 +41,15 @@ class MainEditorWidgetImpl
 public:
     KreenshotEditor* kreenshotEditor;
 
-    // QGraphicsView graphicsView;// causes coordinate offsets and is not needed
     QGraphicsScene scene;
 
     std::map<ItemPtr, bool> mouseOverMap;
     const int mouseOverMargin = 2;
 
-    std::map<ItemPtr, bool> selectedMap;
+    std::map<ItemPtr, bool> selectedMap; // TODO: maybe using a vector is better?
 
     // currently only one item can be moved at a time
-    Item* itemOnTheMove;
+    ItemPtr itemOnTheMove;
     QPoint itemOnTheMoveInitialMousePosTopLeft;
 
 public:
@@ -61,9 +61,23 @@ public:
         return rect;
     }
 
-    void initScene() {
+    void initScene(QGraphicsView* graphicsView) {
         QRect rect = getBaseRect();
         scene.setSceneRect(rect);
+
+        graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+        //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
+        graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
+
+        graphicsView->setScene(&scene);
+
+        // scroll to 0,0:
+        //graphicsView->scroll(-100, -100); // ???
+        // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents); // ???
+        // graphicsView->ensureVisible(0, 0, 1, 1); // ??? should scroll the view to 0,0 but does not?
+        graphicsView->setSceneRect(0, 0, 1, 1); // scroll to 0, 0, todo: does this have any other impact???
+
         itemOnTheMove = nullptr;
     }
     /**
@@ -72,6 +86,11 @@ public:
     void refreshScene()
     {
         scene.clear();
+
+        QPixmap pixmap;
+        pixmap.convertFromImage(kreenshotEditor->getBaseImage());
+        auto baseImageItem = new QGraphicsPixmapItem(pixmap);
+        scene.addItem(baseImageItem);
 
         foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
 
@@ -89,6 +108,8 @@ public:
 
                 auto rectItem = new QGraphicsRectItem();
                 rectItem->setRect(item->rect());
+                rectItem->setFlag(QGraphicsItem::ItemIsMovable);
+                rectItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 rectItem->setGraphicsEffect(dropShadow);
                 rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(rectItem);
@@ -185,7 +206,7 @@ public:
                 selectedMap[item] = hit;
 
                 if (hit) {
-                    itemOnTheMove = item.get();
+                    itemOnTheMove = item;
                     itemOnTheMoveInitialMousePosTopLeft = pos - itemOnTheMove->rect().topLeft();
                     break; // select the top-most one
                 }
@@ -276,19 +297,30 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
     d = MainEditorWidgetImplPtr(new MainEditorWidgetImpl());
     d->kreenshotEditor = kreenshotEditor;
 
-    // use this if not using QScrollArea:
-    // setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    // setMinimumSize(50, 50);
+    bool oldScrollAreaCode = false;
 
-    // for QScrollArea:
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(d->getBaseRect().size());
+    if (oldScrollAreaCode) {
+        // for QScrollArea:
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        setMinimumSize(d->getBaseRect().size());
+    }
+    else {
+        // use this if not using QScrollArea:
+        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        setMinimumSize(50, 50);
+    }
+
+    setMouseTracking(true); // to enable mouseMoveEvent
+
+    auto layout = new QGridLayout();
+    this->setLayout(layout);
+    _graphicsView = new QGraphicsView();
+    layout->addWidget(_graphicsView, 0, 0);
+    layout->setMargin(0);
 
     //d->createDemoScene();
     d->kreenshotEditor->itemsManager().addDemoItems();
-    d->initScene();
-
-    setMouseTracking(true); // to enable mouseMoveEvent
+    d->initScene(_graphicsView);
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -301,9 +333,10 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
     d->refreshScene();
 
     QPainter painter(this);
+    // QPainter painterImage(QImage); // TODO: use this to render to image and then to save to file
 
-    const QImage& baseImage = d->kreenshotEditor->getBaseImage();
-    painter.drawImage(QPoint(0, 0), baseImage);
+//     auto baseImage = d->kreenshotEditor->getBaseImage();
+//     painter.drawImage(QPoint(0, 0), baseImage);
 
     //painter.drawRect(205, 205, 30, 30);
 
@@ -311,6 +344,7 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
     //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
     d->scene.render(&painter);
+    //d->graphicsView.render(&painter); // does not work like this
 }
 
 void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)

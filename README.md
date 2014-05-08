@@ -31,6 +31,10 @@ TODO
 - show custom editor widget in MainWindow
 - is QImage reference counted?
 
+TODO2
+-----
+- statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
+
 DEV
 ---
 Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png

@@ -24,6 +24,7 @@
 #include "../kreenshoteditor.h"
 
 class QPaintEvent;
+class QGraphicsView;
 class MainEditorWidgetImpl;
 typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
 
@@ -48,6 +49,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent*);
 
 private:
+    QGraphicsView* _graphicsView;
+
     MainEditorWidgetImplPtr d;
 };
 
