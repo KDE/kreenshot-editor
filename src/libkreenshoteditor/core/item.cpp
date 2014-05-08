@@ -33,9 +33,9 @@ Item::~Item()
 
 }
 
-std::shared_ptr<Item> Item::create(QString typeId)
+ItemPtr Item::create(QString typeId)
 {
-    return std::shared_ptr<Item>(new Item(typeId));
+    return ItemPtr(new Item(typeId));
 }
 
 void Item::setRect(QRect rect)

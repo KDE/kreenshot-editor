@@ -20,10 +20,12 @@
 #define UI_MAIN_EDITOR_WIDGET_H
 
 #include <QWidget>
+#include <memory>
 #include "../kreenshoteditor.h"
 
 class QPaintEvent;
 class MainEditorWidgetImpl;
+typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
 
 class MainEditorWidget : public QWidget
 {
@@ -46,7 +48,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent*);
 
 private:
-    MainEditorWidgetImpl* d;
+    MainEditorWidgetImplPtr d;
 };
 
 #endif // UI_MAIN_EDITOR_WIDGET_H

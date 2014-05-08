@@ -32,12 +32,12 @@ public:
 
 KreenshotEditor::KreenshotEditor()
 {
-    d = new KreenshotEditorImpl();
+    d = KreenshotEditorImplPtr(new KreenshotEditorImpl());
 }
 
 KreenshotEditor::~KreenshotEditor()
 {
-    delete d;
+
 }
 
 void KreenshotEditor::setBaseImage(const QImage& image)

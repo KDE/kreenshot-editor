@@ -43,10 +43,10 @@ public:
     // QGraphicsView graphicsView;// causes coordinate offsets and is not needed
     QGraphicsScene scene;
 
-    std::map<std::shared_ptr<Item>, bool> mouseOverMap;
+    std::map<ItemPtr, bool> mouseOverMap;
     const int mouseOverMargin = 2;
 
-    std::map<std::shared_ptr<Item>, bool> selectedMap;
+    std::map<ItemPtr, bool> selectedMap;
 
     // currently only one item can be moved at a time
     Item* itemOnTheMove;
@@ -73,7 +73,7 @@ public:
     {
         scene.clear();
 
-        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
 
             //QGraphicsItem* grItem = nullptr;
 
@@ -164,7 +164,7 @@ public:
     {
         mouseOverMap.clear();
 
-        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
             bool isOver = item->rect().contains(pos);
             mouseOverMap[item] = isOver;
             if (isOver) {
@@ -179,7 +179,7 @@ public:
             selectedMap.clear();
         }
 
-        foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
             bool hit = item->rect().contains(pos);
             if (!toggle) {
                 selectedMap[item] = hit;
@@ -273,7 +273,7 @@ public:
 
 MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 {
-    d = new MainEditorWidgetImpl();
+    d = MainEditorWidgetImplPtr(new MainEditorWidgetImpl());
     d->kreenshotEditor = kreenshotEditor;
 
     // use this if not using QScrollArea:
@@ -293,7 +293,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 
 MainEditorWidget::~MainEditorWidget()
 {
-    delete d;
+
 }
 
 void MainEditorWidget::paintEvent(QPaintEvent*)

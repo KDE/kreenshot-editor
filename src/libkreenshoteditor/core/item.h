@@ -107,4 +107,6 @@ public:
     QString text;
 };
 
+typedef std::shared_ptr<Item> ItemPtr;
+
 #endif // ITEM_H

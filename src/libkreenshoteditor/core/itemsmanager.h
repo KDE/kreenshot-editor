@@ -36,10 +36,10 @@ public:
 
     void addDemoItems();
 
-    const std::vector<std::shared_ptr<Item>>& items();
+    const std::vector<ItemPtr>& items();
 
 private:
-    std::vector<std::shared_ptr<Item>> _items;
+    std::vector<ItemPtr> _items;
 
 };
 

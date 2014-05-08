@@ -19,10 +19,13 @@
 #ifndef KREENSHOTEDITOR_H
 #define KREENSHOTEDITOR_H
 
+#include <memory>
+
 class MainEditorWidget;
 class QImage;
 class QWidget;
 class KreenshotEditorImpl;
+typedef std::shared_ptr<KreenshotEditorImpl> KreenshotEditorImplPtr;
 class ItemsManager;
 
 class KreenshotEditor
@@ -40,7 +43,7 @@ public:
     ItemsManager& itemsManager();
 
 private:
-    KreenshotEditorImpl* d;
+    KreenshotEditorImplPtr d;
 };
 
 #endif // KREENSHOTEDITOR_H

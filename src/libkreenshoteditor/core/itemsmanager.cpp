@@ -84,7 +84,7 @@ void ItemsManager::addDemoItems()
     }
 }
 
-const std::vector< std::shared_ptr<Item> >& ItemsManager::items()
+const std::vector<ItemPtr>& ItemsManager::items()
 {
     return _items;
 }

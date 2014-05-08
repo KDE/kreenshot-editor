@@ -28,7 +28,6 @@ TODO
 - click on empty space chooses Select tool
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 - nullable QPoint for function parameter?
-- ‘unique_ptr’ in namespace ‘std’ does not name a type
 - show custom editor widget in MainWindow
 - is QImage reference counted?
 
