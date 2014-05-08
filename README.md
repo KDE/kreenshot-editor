@@ -21,6 +21,12 @@ NEXT steps
 
 TODO
 ----
+- add handles for rect resizing and line repositioning (as extra class)
+    - Ctrl for propertional
+- Draw rect tool
+- draw arrow
+- click on empty space chooses Select tool
+- The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 - nullable QPoint for function parameter?
 - ‘unique_ptr’ in namespace ‘std’ does not name a type
 - show custom editor widget in MainWindow

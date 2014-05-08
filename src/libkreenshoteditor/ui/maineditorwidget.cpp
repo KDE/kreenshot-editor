@@ -49,7 +49,8 @@ public:
     std::map<std::shared_ptr<Item>, bool> selectedMap;
 
     // currently only one item can be moved at a time
-    Item* movedItem;
+    Item* itemOnTheMove;
+    QPoint itemOnTheMoveInitialMousePosTopLeft;
 
 public:
     // todo: optimize?
@@ -63,7 +64,7 @@ public:
     void initScene() {
         QRect rect = getBaseRect();
         scene.setSceneRect(rect);
-        movedItem = nullptr;
+        itemOnTheMove = nullptr;
     }
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
@@ -120,15 +121,13 @@ public:
                 //grItem = textItem;
             }
 
-            // highlight: // TODO: drawRoundRect => move this away from the scene but directly to the painter!
             auto mouseOverMapItem = mouseOverMap.find(item);
             bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
 
-            // selected indicator: TODO: draw handles
             auto selectedMapItem = selectedMap.find(item);
             bool isSelected = selectedMapItem != selectedMap.end() && selectedMapItem->second == true;
 
-
+            // highlight: // TODO: for "drawRoundRect" move this away from the scene but directly to the painter!
             if (isMouseOver && !isSelected) {
                 //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
 
@@ -145,6 +144,7 @@ public:
                 scene.addItem(rectItem);
             }
 
+            // selected indicator: TODO: draw handles (as extra class?)
             if (isSelected) {
                 auto rectItem = new QGraphicsRectItem();
                 rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
@@ -165,7 +165,11 @@ public:
         mouseOverMap.clear();
 
         foreach (std::shared_ptr<Item> item, kreenshotEditor->itemsManager().items()) {
-            mouseOverMap[item] = item->rect().contains(pos);
+            bool isOver = item->rect().contains(pos);
+            mouseOverMap[item] = isOver;
+            if (isOver) {
+                break; // only match the top most item if there are more than one
+            }
         }
     }
 
@@ -181,7 +185,9 @@ public:
                 selectedMap[item] = hit;
 
                 if (hit) {
-                    movedItem = item.get();
+                    itemOnTheMove = item.get();
+                    itemOnTheMoveInitialMousePosTopLeft = pos - itemOnTheMove->rect().topLeft();
+                    break; // select the top-most one
                 }
             }
             else {
@@ -193,16 +199,16 @@ public:
     }
 
     void onMouseMoveNoCtrlKey(QPoint pos) {
-        if (movedItem != nullptr) {
-            QRect rect = movedItem->rect();
-            rect.moveCenter(pos);
-            movedItem->setRect(rect);
+        if (itemOnTheMove != nullptr) {
+            QRect rect = itemOnTheMove->rect();
+            rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
+            itemOnTheMove->setRect(rect);
         }
     }
 
     void onMouseRelease(QPoint pos) {
         onMouseMoveNoCtrlKey(pos);
-        movedItem = nullptr;
+        itemOnTheMove = nullptr;
     }
 
     void createDemoScene()
