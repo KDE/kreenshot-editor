@@ -200,9 +200,21 @@ public:
 
     void onMouseMoveNoCtrlKey(QPoint pos) {
         if (itemOnTheMove != nullptr) {
-            QRect rect = itemOnTheMove->rect();
-            rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
-            itemOnTheMove->setRect(rect);
+            if (itemOnTheMove->line().isNull()) { // move a rectangle item
+                QRect rect = itemOnTheMove->rect();
+                rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
+                itemOnTheMove->setRect(rect);
+            }
+            else { // move a line item
+                QLine line = itemOnTheMove->line();
+                QPoint p1 = line.p1();
+                QPoint p2 = line.p2();
+                QPoint diff = p2 - p1;
+                p1 = pos - itemOnTheMoveInitialMousePosTopLeft;
+                p2 = p1 + diff;
+                line.setPoints(p1, p2);
+                itemOnTheMove->setLine(line);
+            }
         }
     }
 
