@@ -22,6 +22,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
 #include <QGridLayout>
 #include <QDebug>
@@ -34,6 +35,46 @@ class ItemVisual {
 public:
     bool mouseOver;
     bool selected;
+};
+
+/**
+ * multiselection will break the logic and currently the multiselection is weired
+ */
+class MyQGraphicsRectItem : public QGraphicsRectItem
+{
+public:
+    MyQGraphicsRectItem(ItemPtr item)
+    {
+        _item = item;
+    }
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event)
+    {
+        qDebug() << "mousePressEvent";
+        _itemOnTheMoveInitialMousePosTopLeft = event->scenePos().toPoint() - _item->rect().topLeft();
+
+        QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+    {
+        qDebug() << "mouseReleaseEvent";
+        QRect rect = _item->rect();
+        rect.moveTopLeft(event->scenePos().toPoint() - _itemOnTheMoveInitialMousePosTopLeft);
+        _item->setRect(rect);
+
+//         if (wasMoved()) {
+//             //do something and accept the event
+//         } else {
+            // to the base class
+            QGraphicsItem::mouseReleaseEvent(event);
+//         }
+    }
+
+private:
+    ItemPtr _item;
+    QPoint _itemOnTheMoveInitialMousePosTopLeft;
 };
 
 class MainEditorWidgetImpl
@@ -106,7 +147,7 @@ public:
                 dropShadow->setOffset(QPoint(3, 3));
                 dropShadow->setBlurRadius(10);
 
-                auto rectItem = new QGraphicsRectItem();
+                auto rectItem = new MyQGraphicsRectItem(item);
                 rectItem->setRect(item->rect());
                 rectItem->setFlag(QGraphicsItem::ItemIsMovable);
                 rectItem->setFlag(QGraphicsItem::ItemIsSelectable);
@@ -220,23 +261,23 @@ public:
     }
 
     void onMouseMoveNoCtrlKey(QPoint pos) {
-        if (itemOnTheMove != nullptr) {
-            if (itemOnTheMove->line().isNull()) { // move a rectangle item
-                QRect rect = itemOnTheMove->rect();
-                rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
-                itemOnTheMove->setRect(rect);
-            }
-            else { // move a line item
-                QLine line = itemOnTheMove->line();
-                QPoint p1 = line.p1();
-                QPoint p2 = line.p2();
-                QPoint diff = p2 - p1;
-                p1 = pos - itemOnTheMoveInitialMousePosTopLeft;
-                p2 = p1 + diff;
-                line.setPoints(p1, p2);
-                itemOnTheMove->setLine(line);
-            }
-        }
+//         if (itemOnTheMove != nullptr) {
+//             if (itemOnTheMove->line().isNull()) { // move a rectangle item
+//                 QRect rect = itemOnTheMove->rect();
+//                 rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
+//                 itemOnTheMove->setRect(rect);
+//             }
+//             else { // move a line item
+//                 QLine line = itemOnTheMove->line();
+//                 QPoint p1 = line.p1();
+//                 QPoint p2 = line.p2();
+//                 QPoint diff = p2 - p1;
+//                 p1 = pos - itemOnTheMoveInitialMousePosTopLeft;
+//                 p2 = p1 + diff;
+//                 line.setPoints(p1, p2);
+//                 itemOnTheMove->setLine(line);
+//             }
+//         }
     }
 
     void onMouseRelease(QPoint pos) {
@@ -314,7 +355,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    _graphicsView = new QGraphicsView();
+    _graphicsView = new MyQGraphicsView();
     layout->addWidget(_graphicsView, 0, 0);
     layout->setMargin(0);
 
