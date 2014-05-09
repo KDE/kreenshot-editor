@@ -21,6 +21,8 @@ NEXT steps
 
 TODO
 ----
+- rename Item to KreenItem
+- add context menu to select tools
 - add handles for rect resizing and line repositioning (as extra class)
     - Ctrl for propertional
 - Draw rect tool

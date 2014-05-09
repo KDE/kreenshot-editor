@@ -19,15 +19,21 @@
 #include "kreenshoteditor.h"
 #include <QImage>
 #include <QScrollArea>
+#include <QMessageBox>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 
 class KreenshotEditorImpl
 {
 public:
-    QImage baseImage;
+    KreenshotEditorImpl()
+    {
+        itemsManager = ItemsManagerPtr(new ItemsManager());
+    }
 
-    ItemsManager itemsManager;
+public:
+    QImage baseImage;
+    ItemsManagerPtr itemsManager;
 };
 
 KreenshotEditor::KreenshotEditor()
@@ -67,7 +73,25 @@ QWidget* KreenshotEditor::createMainEditorWidget()
     }
 }
 
-ItemsManager& KreenshotEditor::itemsManager()
+ItemsManagerPtr KreenshotEditor::itemsManager()
 {
     return d->itemsManager;
+}
+
+void KreenshotEditor::chooseTool()
+{
+    QString senderName = QObject::sender()->objectName();
+
+    if (senderName == "actionToolSelect") {
+        QMessageBox::information(nullptr, "Action", "Select");
+    }
+    else if (senderName == "actionToolRect") {
+        QMessageBox::information(nullptr, "Action", "Rect");
+    }
+    else if (senderName == "actionToolEllipse") {
+        QMessageBox::information(nullptr, "Action", "Ellipse");
+    }
+    else {
+        QMessageBox::information(nullptr, "Not impl", "Not implemented yet");
+    }
 }

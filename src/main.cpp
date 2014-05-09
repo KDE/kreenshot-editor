@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(version);
     auto arguments = parseArgumentsOrExit(app);
 
-    KreenshotEditor kreenshotEditor;
-    kreenshotEditor.setBaseImage(QImage(arguments.baseImagePath));
-    MainWindow mainWindow(&kreenshotEditor);
+    auto kreenshotEditor = KreenshotEditorPtr(new KreenshotEditor());
+    kreenshotEditor->setBaseImage(QImage(arguments.baseImagePath));
+    MainWindow mainWindow(kreenshotEditor);
     //mainWindow.resize(640, 480);
     mainWindow.show();
 

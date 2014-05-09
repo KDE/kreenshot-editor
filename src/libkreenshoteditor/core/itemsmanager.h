@@ -43,4 +43,6 @@ private:
 
 };
 
+typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
+
 #endif // ITEMSMANAGER_H

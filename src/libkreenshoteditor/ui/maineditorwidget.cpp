@@ -133,7 +133,7 @@ public:
         auto baseImageItem = new QGraphicsPixmapItem(pixmap);
         scene.addItem(baseImageItem);
 
-        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
 
             //QGraphicsItem* grItem = nullptr;
 
@@ -226,7 +226,7 @@ public:
     {
         mouseOverMap.clear();
 
-        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
             bool isOver = item->rect().contains(pos);
             mouseOverMap[item] = isOver;
             if (isOver) {
@@ -241,7 +241,7 @@ public:
             selectedMap.clear();
         }
 
-        foreach (ItemPtr item, kreenshotEditor->itemsManager().items()) {
+        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
             bool hit = item->rect().contains(pos);
             if (!toggle) {
                 selectedMap[item] = hit;
@@ -360,7 +360,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
     layout->setMargin(0);
 
     //d->createDemoScene();
-    d->kreenshotEditor->itemsManager().addDemoItems();
+    d->kreenshotEditor->itemsManager()->addDemoItems();
     d->initScene(_graphicsView);
 }
 

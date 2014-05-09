@@ -20,36 +20,43 @@
 #define UI_MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <memory>
 
 namespace Ui {
     class MainWindow;
+    typedef std::shared_ptr<MainWindow> MainWindowPtr;
 };
 
 class KreenshotEditor;
+typedef std::shared_ptr<KreenshotEditor> KreenshotEditorPtr;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     public:
-        MainWindow(KreenshotEditor* kreenshotEditor);
+        MainWindow(KreenshotEditorPtr kreenshotEditor);
         virtual ~MainWindow();
 
     public Q_SLOTS:
-//         void saveFile();
-//         void loadFile();
+         void fileNew();
+         void fileOpen();
+         void fileSave();
+         void fileSaveAs();
+         void editUndo();
+         void editRedo();
+         void editPreferences();
+         void helpAbout();
 
     protected:
         void setupActions();
         void setupUi();
 
     private:
-        Ui::MainWindow* _ui;
-        // std::unique_ptr<Ui::MainWindow> _ui; // TODO:  ‘unique_ptr’ in namespace ‘std’ does not name a type
+        Ui::MainWindowPtr _ui;
+        KreenshotEditorPtr _kreenshotEditor;
 
-        KreenshotEditor* _kreenshotEditor;
-
-//         tikz::ui::LinePropertyWidget * m_linePropertyWidget;
+//         tikz::ui::LinePropertyWidget * m_linePropertyWidget; // todo: remove when done
 };
 
 #endif // UI_MAIN_WINDOW_H
