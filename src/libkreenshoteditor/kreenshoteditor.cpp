@@ -30,11 +30,13 @@ public:
     KreenshotEditorImpl()
     {
         itemsManager = ItemsManagerPtr(new ItemsManager());
+        mainEditorWidget = nullptr;
     }
 
 public:
     QImage baseImage;
     ItemsManagerPtr itemsManager;
+    MainEditorWidget* mainEditorWidget;
 };
 
 KreenshotEditor::KreenshotEditor()
@@ -57,50 +59,29 @@ const QImage& KreenshotEditor::getBaseImage()
     return d->baseImage;
 }
 
-QWidget* KreenshotEditor::createMainEditorWidget()
+MainEditorWidget* KreenshotEditor::getMainEditorWidget()
 {
-    auto mainEditorWidget = new MainEditorWidget(shared_from_this());
-    //auto mainEditorWidget = new MainEditorWidget(this);
+    if (d->mainEditorWidget == nullptr) {
+        auto mainEditorWidget = new MainEditorWidget(shared_from_this());
+        //auto mainEditorWidget = new MainEditorWidget(this);
 
-    bool oldQScrollAreaLogic = false;
-    if (oldQScrollAreaLogic) {
-        auto scrollArea = new QScrollArea();
-        scrollArea->setBackgroundRole(QPalette::Background);
-        //scrollArea->setBackgroundRole(QPalette::Dark);
-        scrollArea->setWidget(mainEditorWidget);
-        return scrollArea;
+//         bool oldQScrollAreaLogic = false;
+//         if (oldQScrollAreaLogic) {
+//             auto scrollArea = new QScrollArea();
+//             scrollArea->setBackgroundRole(QPalette::Background);
+//             //scrollArea->setBackgroundRole(QPalette::Dark);
+//             scrollArea->setWidget(mainEditorWidget);
+//             d->mainEditorWidget = scrollArea;
+//         }
+//         else {
+            d->mainEditorWidget = mainEditorWidget;
+//         }
     }
-    else {
-        return mainEditorWidget;
-    }
+
+    return d->mainEditorWidget;
 }
 
 ItemsManagerPtr KreenshotEditor::itemsManager()
 {
     return d->itemsManager;
-}
-
-void KreenshotEditor::requestTool(QString toolId)
-{
-    if (toolId == "select") {
-        //QMessageBox::information(nullptr, "Action", "Select");
-    }
-    else if (toolId == "rect") {
-        //QMessageBox::information(nullptr, "Action", "Rect");
-    }
-    else if (toolId == "ellipse") {
-        //QMessageBox::information(nullptr, "Action", "Ellipse");
-    }
-    else if (toolId == "line") {
-        //QMessageBox::information(nullptr, "Action", "Ellipse");
-    }
-    else {
-        QString message = QString("Unknown tool id '%1'").arg(toolId);
-        qDebug() << message;
-        QMessageBox::information(nullptr, "Not impl", message);
-        emit toolChosen("select");
-        return;
-    }
-
-    emit toolChosen(toolId);
 }

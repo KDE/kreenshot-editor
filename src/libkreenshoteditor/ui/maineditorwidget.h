@@ -47,9 +47,11 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
+Q_SIGNALS:
+    void toolChosen(QString toolId);
+
 public Q_SLOTS:
-//         void saveFile();
-//         void loadFile();
+    void requestTool(QString toolId);
 
 protected:
     void paintEvent(QPaintEvent*);

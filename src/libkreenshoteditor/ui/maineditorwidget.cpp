@@ -21,6 +21,7 @@
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsItem>
+#include <QMessageBox>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
@@ -426,4 +427,29 @@ void MainEditorWidget::mouseReleaseEvent(QMouseEvent* event)
     update(); // schedules repaint
 
     QWidget::mouseReleaseEvent(event);
+}
+
+void MainEditorWidget::requestTool(QString toolId)
+{
+    if (toolId == "select") {
+        //QMessageBox::information(nullptr, "Action", "Select");
+    }
+    else if (toolId == "rect") {
+        //QMessageBox::information(nullptr, "Action", "Rect");
+    }
+    else if (toolId == "ellipse") {
+        //QMessageBox::information(nullptr, "Action", "Ellipse");
+    }
+    else if (toolId == "line") {
+        //QMessageBox::information(nullptr, "Action", "Ellipse");
+    }
+    else {
+        QString message = QString("Unknown tool id '%1'").arg(toolId);
+        qDebug() << message;
+        QMessageBox::information(this, "Not impl", message);
+        emit toolChosen("select");
+        return;
+    }
+
+    emit toolChosen(toolId);
 }

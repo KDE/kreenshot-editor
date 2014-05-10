@@ -107,7 +107,7 @@ MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
     setupUi();
     setupActions();
 
-    d->kreenshotEditor->requestTool("select");
+    d->kreenshotEditor->getMainEditorWidget()->requestTool("select");
 }
 
 MainWindow::~MainWindow()
@@ -121,7 +121,7 @@ void MainWindow::setupUi()
 //     testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //     _ui->containerEditor->addWidget(testButton);
 
-    d->ui->containerEditor->addWidget(d->kreenshotEditor->createMainEditorWidget());
+    d->ui->containerEditor->addWidget(d->kreenshotEditor->getMainEditorWidget());
 
     d->setupIcons();
 }
@@ -143,7 +143,7 @@ void MainWindow::setupActions()
     connect(d->ui->actionToolEllipse, SIGNAL(triggered()), this, SLOT(requestTool()));
     connect(d->ui->actionToolLine, SIGNAL(triggered()), this, SLOT(requestTool()));
 
-    connect(d->kreenshotEditor.get(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
+    connect(d->kreenshotEditor->getMainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
 }
 
 void MainWindow::editPreferences()
@@ -193,7 +193,7 @@ void MainWindow::requestTool()
     QString message = QString("MainWindow::requestTool: tool id '%1'. Received from action '%2'").arg(toolId).arg(senderName);
     qDebug() << message;
 
-    d->kreenshotEditor->requestTool(toolId);
+    d->kreenshotEditor->getMainEditorWidget()->requestTool(toolId);
 }
 
 void MainWindow::toolChosen(QString toolId)

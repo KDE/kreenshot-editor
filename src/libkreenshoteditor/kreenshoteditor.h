@@ -33,9 +33,10 @@ class ItemsManager;
 typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
 
 // http://stackoverflow.com/questions/11711034/stdshared-ptr-of-this
-class KreenshotEditor : public QObject, public std::enable_shared_from_this<KreenshotEditor>
+class KreenshotEditor : //public QObject,
+                        public std::enable_shared_from_this<KreenshotEditor>
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     KreenshotEditor();
@@ -45,15 +46,12 @@ public:
     void setBaseImage(const QImage& image);
     const QImage& getBaseImage();
 
-    QWidget* createMainEditorWidget();
+    /**
+     * singleton
+     */
+    MainEditorWidget* getMainEditorWidget();
 
     ItemsManagerPtr itemsManager();
-
-Q_SIGNALS:
-    void toolChosen(QString toolId);
-
-public Q_SLOTS:
-    void requestTool(QString toolId);
 
 private:
     KreenshotEditorImplPtr d;
