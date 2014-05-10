@@ -56,6 +56,9 @@ void ItemsManager::addDemoItems()
     {
         auto item = Item::create("ellipse");
         item->setRect(QRect(10, 80, 70, 40));
+        item->lineColor()->color = Qt::blue;
+        item->lineStyle()->width = 2;
+        item->lineStyle()->penStyle = Qt::DashLine;
         _items.push_back(item);
     }
 
@@ -64,6 +67,7 @@ void ItemsManager::addDemoItems()
         item->setRect(QRect(0, 0, 10, 10));
         item->lineStyle()->width = 1;
         item->lineStyle()->penStyle = Qt::SolidLine;
+        item->dropShadow()->enabled = false;
         _items.push_back(item);
     }
 

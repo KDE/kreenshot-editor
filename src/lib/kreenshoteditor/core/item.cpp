@@ -56,7 +56,7 @@ ItemPtr Item::create(QString typeId)
         item->lineColor()->color = Qt::black;
         item->lineStyle()->width = 2;
         item->lineStyle()->penStyle = Qt::SolidLine;
-        item->dropShadow()->enabled = false;
+        item->dropShadow()->enabled = true;
     }
     else {
         qDebug() << "Item::create: TODO for this item";

@@ -41,34 +41,38 @@ public:
 /**
  * multiselection will break the logic
  */
-class KreenQGraphicsRectItem : public QGraphicsRectItem
+class KreenQGraphicsItemHelper
 {
 public:
-    KreenQGraphicsRectItem(ItemPtr item)
+    KreenQGraphicsItemHelper(QAbstractGraphicsShapeItem* graphicsItem, ItemPtr item)
     {
         _item = item;
+        _graphicsItem = graphicsItem;
+    }
+protected:
+    void configurePen()
+    {
+        _graphicsItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
+    }
 
-        if (item->dropShadow() != nullptr && item->dropShadow()->enabled) {
+    void configureDropShadow()
+    {
+        if (_item->dropShadow() != nullptr && _item->dropShadow()->enabled) {
             auto dropShadow = new QGraphicsDropShadowEffect();
             dropShadow->setColor(Qt::black);
             dropShadow->setOffset(QPoint(3, 3));
             dropShadow->setBlurRadius(10);
-            setGraphicsEffect(dropShadow);
+            _graphicsItem->setGraphicsEffect(dropShadow);
         }
-
-        setPen(QPen(item->lineColor()->color, item->lineStyle()->width, item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
     }
 
-protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event)
+    bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
     {
         qDebug() << "mousePressEvent";
         _itemOnTheMoveInitialMousePosTopLeft = event->scenePos().toPoint() - _item->rect().topLeft();
-
-        QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+    bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
     {
         qDebug() << "mouseReleaseEvent";
         QRect rect = _item->rect();
@@ -79,13 +83,60 @@ protected:
 //             //do something and accept the event
 //         } else {
             // to the base class
-            QGraphicsItem::mouseReleaseEvent(event);
+            // QGraphicsItem::mouseReleaseEvent(event);
 //         }
     }
 
-private:
+protected:
     ItemPtr _item;
+
+private:
+    QAbstractGraphicsShapeItem* _graphicsItem;
     QPoint _itemOnTheMoveInitialMousePosTopLeft;
+};
+
+class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemHelper
+{
+public:
+    KreenQGraphicsRectItem(ItemPtr item) : KreenQGraphicsItemHelper(this, item)
+    {
+        configureDropShadow();
+        configurePen();
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
+};
+
+class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemHelper
+{
+public:
+    KreenQGraphicsEllipseItem(ItemPtr item) : KreenQGraphicsItemHelper(this, item)
+    {
+        configureDropShadow();
+        configurePen();
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
 };
 
 class MainEditorWidgetImpl
@@ -169,9 +220,10 @@ public:
                 //grItem = ellipseItem;
             }
             else if (item->typeId == "ellipse") {
-                auto ellipseItem = new QGraphicsEllipseItem();
+                auto ellipseItem = new KreenQGraphicsEllipseItem(item);
                 ellipseItem->setRect(item->rect());
-                ellipseItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                ellipseItem->setFlag(QGraphicsItem::ItemIsMovable);
+                ellipseItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 scene.addItem(ellipseItem);
                 //grItem = ellipseItem;
             }

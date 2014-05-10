@@ -52,7 +52,7 @@ class Item
 public:
     Item();
     /**
-     * line (= arrow) TODO: line is not fully defined by a rect!
+     * line (= arrow)
      * rect
      * ellipse
      * text
@@ -82,6 +82,9 @@ public:
 
 
 public:
+    /**
+     * creates a new Item with default values for all properties available for this item
+     */
     static std::shared_ptr<Item> create(QString typeId);
 
 public:
