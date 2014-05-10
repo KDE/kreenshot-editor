@@ -40,8 +40,9 @@ TODO
 - draw arrow
 - click on empty space chooses Select tool
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
+
+- where to store data files like default background image?
 - nullable QPoint for function parameter?
-- show custom editor widget in MainWindow
 - is QImage reference counted?
 
 TODO2

@@ -35,9 +35,9 @@ add_executable(kreenshot-editor
 target_link_libraries(kreenshot-editor
     Qt5::Core
     Qt5::Widgets
-    libkreenshoteditor
+    kreenshoteditor
 )
 
-add_subdirectory(libkreenshoteditor)
+add_subdirectory(lib/kreenshoteditor)
 
 # kate: indent-width 4; replace-tabs on;

@@ -21,8 +21,8 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QMessageBox>
-#include "libkreenshoteditor/kreenshoteditor.h"
-#include "libkreenshoteditor/ui/maineditorwidget.h"
+#include "lib/kreenshoteditor/kreenshoteditor.h"
+#include "lib/kreenshoteditor/ui/maineditorwidget.h"
 
 class MainWindowImpl
 {

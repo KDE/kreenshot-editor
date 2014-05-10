@@ -1,4 +1,4 @@
-project(libkreenshoteditor)
+project(kreenshoteditor)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -13,7 +13,7 @@ include_directories(
     .
 )
 
-set(libkreenshoteditor_SOURCES
+set(kreenshoteditor_SOURCES
     kreenshoteditor.cpp
     ui/maineditorwidget.cpp
     core/item.cpp
@@ -23,12 +23,12 @@ set(libkreenshoteditor_SOURCES
 # set(kreenshot-editor-ui_FORMS MainWindow.ui)
 # qt5_wrap_ui(kreenshot-editor-ui_FORMS_HEADERS ${kreenshot-editor-ui_FORMS})
 
-add_library(libkreenshoteditor SHARED
-    ${libkreenshoteditor_SOURCES}
+add_library(kreenshoteditor SHARED
+    ${kreenshoteditor_SOURCES}
 #    tikzmoc
 )
 
-target_link_libraries(libkreenshoteditor
+target_link_libraries(kreenshoteditor
      Qt5::Core
      Qt5::Widgets
 )
