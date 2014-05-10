@@ -39,12 +39,12 @@ public:
 };
 
 /**
- * multiselection will break the logic and currently the multiselection is weired
+ * multiselection will break the logic
  */
-class MyQGraphicsRectItem : public QGraphicsRectItem
+class KreenQGraphicsRectItem : public QGraphicsRectItem
 {
 public:
-    MyQGraphicsRectItem(ItemPtr item)
+    KreenQGraphicsRectItem(ItemPtr item)
     {
         _item = item;
     }
@@ -149,7 +149,7 @@ public:
                 dropShadow->setOffset(QPoint(3, 3));
                 dropShadow->setBlurRadius(10);
 
-                auto rectItem = new MyQGraphicsRectItem(item);
+                auto rectItem = new KreenQGraphicsRectItem(item);
                 rectItem->setRect(item->rect());
                 rectItem->setFlag(QGraphicsItem::ItemIsMovable);
                 rectItem->setFlag(QGraphicsItem::ItemIsSelectable);

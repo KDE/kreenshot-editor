@@ -22,11 +22,21 @@
 #include <QString>
 #include <QRect>
 #include <QLine>
+#include <QColor>
 #include <memory>
 
+class ItemProperty;
+typedef std::shared_ptr<ItemProperty> ItemPropertyPtr;
+
 class LineColorProperty;
+typedef std::shared_ptr<LineColorProperty> LineColorPropertyPtr;
+
 class LineStyleProperty;
+typedef std::shared_ptr<LineStyleProperty> LineStylePropertyPtr;
+
 class DropShadowProperty;
+typedef std::shared_ptr<DropShadowProperty> DropShadowPropertyPtr;
+
 class RectStyleProperty;
 class FillProperty;
 class TextProperty;
@@ -80,9 +90,9 @@ public:
     // not everything applies for every itemType
     // what is not possible is null
 
-    LineColorProperty* lineColor;
-    LineStyleProperty* lineStyle; // dotted, dashed, solid, width
-    DropShadowProperty* dropShadow; // color, blur, offset
+    LineColorPropertyPtr lineColor();
+    LineStylePropertyPtr lineStyle(); // dotted, dashed, solid, width
+    DropShadowPropertyPtr dropShadow(); // color, blur, offset
     RectStyleProperty* rectStyle; // rounded or not (applies also to the text rect if not null)
     FillProperty* fillColor; // fill color, percent opacity
     std::shared_ptr<TextProperty> text; // text string, autowrap, font, size, color, (for border see lineColor)
@@ -94,6 +104,8 @@ public:
 private:
     QRect _rect;
     QLine _line;
+
+    std::vector<ItemPropertyPtr> _properties;
 };
 
 class TextProperty
@@ -108,5 +120,38 @@ public:
 };
 
 typedef std::shared_ptr<Item> ItemPtr;
+
+class ItemProperty
+{
+public:
+    ItemProperty(QString name) { this->name = name; }
+public:
+    QString name;
+};
+
+class LineColorProperty : public ItemProperty
+{
+public:
+    LineColorProperty() : ItemProperty("lineColor") { }
+public:
+    QColor color;
+};
+
+class LineStyleProperty : public ItemProperty
+{
+public:
+    LineStyleProperty() : ItemProperty("lineStyle") { }
+public:
+    Qt::PenStyle penStyle;
+};
+
+class DropShadowProperty : public ItemProperty
+{
+public:
+    DropShadowProperty() : ItemProperty("dropShadow") { }
+public:
+    bool hasShadow;
+};
+
 
 #endif // ITEM_H

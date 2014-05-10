@@ -17,6 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "item.h"
+#include <QDebug>
+#include <algorithm>
 
 Item::Item()
 {
@@ -35,7 +37,22 @@ Item::~Item()
 
 ItemPtr Item::create(QString typeId)
 {
-    return ItemPtr(new Item(typeId));
+    auto item = ItemPtr(new Item(typeId));
+    if (typeId == "rect") {
+        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
+        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
+        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+    }
+    else if (typeId == "ellipse") {
+        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
+        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
+        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+    }
+    else {
+        qDebug() << "Item::create: TODO for this item";
+    }
+
+    return item;
 }
 
 void Item::setRect(QRect rect)
@@ -59,4 +76,26 @@ void Item::setLine(QLine line)
 QLine Item::line()
 {
     return _line;
+}
+
+ItemPropertyPtr propFromVectorOrNull(QString propName, std::vector<ItemPropertyPtr> _properties)
+{
+    auto result = std::find_if(_properties.begin(), _properties.end(),
+                               [propName](ItemPropertyPtr arg) { return arg->name == propName; });
+    return result != _properties.end() ? *result : nullptr;
+}
+
+LineColorPropertyPtr Item::lineColor()
+{
+    return std::static_pointer_cast<LineColorProperty>(propFromVectorOrNull("lineColor", _properties));
+}
+
+LineStylePropertyPtr Item::lineStyle()
+{
+    return std::static_pointer_cast<LineStyleProperty>(propFromVectorOrNull("lineStyle", _properties));
+}
+
+DropShadowPropertyPtr Item::dropShadow()
+{
+    return std::static_pointer_cast<DropShadowProperty>(propFromVectorOrNull("dropShadow", _properties));
 }
