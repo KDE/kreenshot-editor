@@ -142,6 +142,7 @@ class LineStyleProperty : public ItemProperty
 public:
     LineStyleProperty() : ItemProperty("lineStyle") { }
 public:
+    int width;
     Qt::PenStyle penStyle;
 };
 
@@ -150,7 +151,7 @@ class DropShadowProperty : public ItemProperty
 public:
     DropShadowProperty() : ItemProperty("dropShadow") { }
 public:
-    bool hasShadow;
+    bool enabled;
 };
 
 

@@ -47,6 +47,16 @@ public:
     KreenQGraphicsRectItem(ItemPtr item)
     {
         _item = item;
+
+        if (item->dropShadow() != nullptr && item->dropShadow()->enabled) {
+            auto dropShadow = new QGraphicsDropShadowEffect();
+            dropShadow->setColor(Qt::black);
+            dropShadow->setOffset(QPoint(3, 3));
+            dropShadow->setBlurRadius(10);
+            setGraphicsEffect(dropShadow);
+        }
+
+        setPen(QPen(item->lineColor()->color, item->lineStyle()->width, item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
     }
 
 protected:
@@ -144,17 +154,10 @@ public:
             // draw
             //
             if (item->typeId == "rect") {
-                auto dropShadow = new QGraphicsDropShadowEffect();
-                dropShadow->setColor(Qt::black);
-                dropShadow->setOffset(QPoint(3, 3));
-                dropShadow->setBlurRadius(10);
-
                 auto rectItem = new KreenQGraphicsRectItem(item);
                 rectItem->setRect(item->rect());
                 rectItem->setFlag(QGraphicsItem::ItemIsMovable);
                 rectItem->setFlag(QGraphicsItem::ItemIsSelectable);
-                rectItem->setGraphicsEffect(dropShadow);
-                rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
                 scene.addItem(rectItem);
                 //grItem = rectItem;
             }

@@ -41,6 +41,9 @@ void ItemsManager::addDemoItems()
     {
         auto item = Item::create("rect");
         item->setRect(QRect(30, 30, 40, 30));
+        item->lineColor()->color = Qt::darkGreen;
+        item->lineStyle()->width = 3;
+        item->lineStyle()->penStyle = Qt::DotLine;
         _items.push_back(item);
     }
 
@@ -59,6 +62,8 @@ void ItemsManager::addDemoItems()
     {
         auto item = Item::create("rect");
         item->setRect(QRect(0, 0, 10, 10));
+        item->lineStyle()->width = 1;
+        item->lineStyle()->penStyle = Qt::SolidLine;
         _items.push_back(item);
     }
 

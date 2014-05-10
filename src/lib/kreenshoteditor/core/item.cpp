@@ -42,11 +42,21 @@ ItemPtr Item::create(QString typeId)
         item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
         item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
         item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+
+        item->lineColor()->color = Qt::red;
+        item->lineStyle()->width = 2;
+        item->lineStyle()->penStyle = Qt::SolidLine;
+        item->dropShadow()->enabled = true;
     }
     else if (typeId == "ellipse") {
         item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
         item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
         item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+
+        item->lineColor()->color = Qt::black;
+        item->lineStyle()->width = 2;
+        item->lineStyle()->penStyle = Qt::SolidLine;
+        item->dropShadow()->enabled = false;
     }
     else {
         qDebug() << "Item::create: TODO for this item";
@@ -81,7 +91,9 @@ QLine Item::line()
 ItemPropertyPtr propFromVectorOrNull(QString propName, std::vector<ItemPropertyPtr> _properties)
 {
     auto result = std::find_if(_properties.begin(), _properties.end(),
-                               [propName](ItemPropertyPtr arg) { return arg->name == propName; });
+    [propName](ItemPropertyPtr arg) {
+        return arg->name == propName;
+    });
     return result != _properties.end() ? *result : nullptr;
 }
 
