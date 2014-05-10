@@ -20,20 +20,10 @@
 #define UI_MAIN_EDITOR_WIDGET_H
 
 #include <QWidget>
-#include <QGraphicsView> // TODO move away
 #include <memory>
 #include "../kreenshoteditor.h"
 
-// TODO: move away
-class MyQGraphicsView : public QGraphicsView
-{
-    virtual void enterEvent(QEvent* event)
-    {
-        // for not to have to click once before one can start moving items
-        this->setFocus();
-    }
-};
-
+class MyQGraphicsView;
 class QPaintEvent;
 class QGraphicsView;
 class MainEditorWidgetImpl;
@@ -55,11 +45,6 @@ public Q_SLOTS:
 
 protected:
     void paintEvent(QPaintEvent*);
-
-    void mouseMoveEvent(QMouseEvent*);
-    void leaveEvent(QEvent*);
-    void mousePressEvent(QMouseEvent*);
-    void mouseReleaseEvent(QMouseEvent*);
 
 private:
     MyQGraphicsView* _graphicsView;

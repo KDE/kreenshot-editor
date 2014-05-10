@@ -30,7 +30,7 @@ Component 2: image-editor
 TODO
 ----
 - ToolManager: 1. Select tool, 2. Draw item tool, 3. later: crop etc. tool
-- Make other items movable
+- Make other items movable / enable hover visual 
 
 - rename Item to KreenItem
 - add context menu to select tools

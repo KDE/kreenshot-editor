@@ -30,112 +30,28 @@
 #include <QMouseEvent>
 #include <QMargins>
 #include <memory>
+#include "kreenqgraphicsitemsimpl.h"
 
 // TODO
 class ItemVisual {
 public:
-    bool mouseOver;
-    bool selected;
+    // bool mouseOver; // TODO later
+    // bool selected;
 };
 
-/**
- * multiselection will break the logic
- */
-class KreenQGraphicsItemHelper
+class MyQGraphicsView : public QGraphicsView
 {
-public:
-    KreenQGraphicsItemHelper(QAbstractGraphicsShapeItem* graphicsItem, ItemPtr item)
+    virtual void enterEvent(QEvent* event)
     {
-        _item = item;
-        _graphicsItem = graphicsItem;
-    }
-protected:
-    void configurePen()
-    {
-        _graphicsItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
+        // for not to have to click once before one can start moving items
+        this->setFocus();
     }
 
-    void configureDropShadow()
+    virtual void mouseReleaseEvent(QMouseEvent* event)
     {
-        if (_item->dropShadow() != nullptr && _item->dropShadow()->enabled) {
-            auto dropShadow = new QGraphicsDropShadowEffect();
-            dropShadow->setColor(Qt::black);
-            dropShadow->setOffset(QPoint(3, 3));
-            dropShadow->setBlurRadius(10);
-            _graphicsItem->setGraphicsEffect(dropShadow);
-        }
-    }
-
-    bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
-    {
-        qDebug() << "mousePressEvent";
-        _itemOnTheMoveInitialMousePosTopLeft = event->scenePos().toPoint() - _item->rect().topLeft();
-    }
-
-    bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
-    {
-        qDebug() << "mouseReleaseEvent";
-        QRect rect = _item->rect();
-        rect.moveTopLeft(event->scenePos().toPoint() - _itemOnTheMoveInitialMousePosTopLeft);
-        _item->setRect(rect);
-
-//         if (wasMoved()) {
-//             //do something and accept the event
-//         } else {
-            // to the base class
-            // QGraphicsItem::mouseReleaseEvent(event);
-//         }
-    }
-
-protected:
-    ItemPtr _item;
-
-private:
-    QAbstractGraphicsShapeItem* _graphicsItem;
-    QPoint _itemOnTheMoveInitialMousePosTopLeft;
-};
-
-class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemHelper
-{
-public:
-    KreenQGraphicsRectItem(ItemPtr item) : KreenQGraphicsItemHelper(this, item)
-    {
-        configureDropShadow();
-        configurePen();
-    }
-
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
-    {
-        if (mousePressEventImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-    {
-        if (mouseReleaseEventImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-};
-
-class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemHelper
-{
-public:
-    KreenQGraphicsEllipseItem(ItemPtr item) : KreenQGraphicsItemHelper(this, item)
-    {
-        configureDropShadow();
-        configurePen();
-    }
-
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
-    {
-        if (mousePressEventImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-    {
-        if (mouseReleaseEventImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
+        QGraphicsView::mouseReleaseEvent(event);
+        //qDebug() << "mouseReleaseEvent: update from model";
+        //this->update();
     }
 };
 
@@ -143,17 +59,17 @@ class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
-
     QGraphicsScene scene;
+    MyQGraphicsView* graphicsView;
 
-    std::map<ItemPtr, bool> mouseOverMap;
-    const int mouseOverMargin = 2;
+//     std::map<ItemPtr, bool> mouseOverMap;
+//     const int mouseOverMargin = 2;
 
-    std::map<ItemPtr, bool> selectedMap; // TODO: maybe using a vector is better?
+//    std::map<ItemPtr, bool> selectedMap; // TODO: maybe using a vector is better?
 
     // currently only one item can be moved at a time
-    ItemPtr itemOnTheMove;
-    QPoint itemOnTheMoveInitialMousePosTopLeft;
+//    ItemPtr itemOnTheMove;
+//    QPoint itemOnTheMoveInitialMousePosTopLeft;
 
 public:
     // todo: optimize?
@@ -182,12 +98,15 @@ public:
         // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
         // graphicsView->ensureVisible(0, 0, 1, 1);
 
-        itemOnTheMove = nullptr;
+        // itemOnTheMove = nullptr; // todo: remove later
+
+        createSceneFromModel();
     }
+
     /**
      * recreate the scene to reflect the current kreenshotEditor->itemsManager
      */
-    void refreshScene()
+    void createSceneFromModel()
     {
         scene.clear();
 
@@ -206,9 +125,6 @@ public:
             //
             if (item->typeId == "rect") {
                 auto rectItem = new KreenQGraphicsRectItem(item);
-                rectItem->setRect(item->rect());
-                rectItem->setFlag(QGraphicsItem::ItemIsMovable);
-                rectItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 scene.addItem(rectItem);
                 //grItem = rectItem;
             }
@@ -221,9 +137,6 @@ public:
             }
             else if (item->typeId == "ellipse") {
                 auto ellipseItem = new KreenQGraphicsEllipseItem(item);
-                ellipseItem->setRect(item->rect());
-                ellipseItem->setFlag(QGraphicsItem::ItemIsMovable);
-                ellipseItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 scene.addItem(ellipseItem);
                 //grItem = ellipseItem;
             }
@@ -240,82 +153,121 @@ public:
                 //grItem = textItem;
             }
 
-            auto mouseOverMapItem = mouseOverMap.find(item);
-            bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
-
-            auto selectedMapItem = selectedMap.find(item);
-            bool isSelected = selectedMapItem != selectedMap.end() && selectedMapItem->second == true;
-
-            // highlight: // TODO: for "drawRoundRect" move this away from the scene but directly to the painter!
-            if (isMouseOver && !isSelected) {
-                //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
-
-                // removes any other effect which is not desired:
-                //auto effect = new QGraphicsColorizeEffect();
-                //effect->setColor(Qt::blue);
-                //grItem->setGraphicsEffect(effect);
-
-                auto rectItem = new QGraphicsRectItem();
-                rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
-                //rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-                rectItem->setPen(QPen(Qt::transparent));
-                rectItem->setBrush(QBrush(Qt::Dense7Pattern));
-                scene.addItem(rectItem);
-            }
-
-            // selected indicator: TODO: draw handles (as extra class?)
-            if (isSelected) {
-                auto rectItem = new QGraphicsRectItem();
-                rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
-                rectItem->setPen(QPen(Qt::darkGray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-                //rectItem->setBrush(QBrush(Qt::Dense7Pattern));
-                scene.addItem(rectItem);
-            }
+            // todo: remove later
+//             auto mouseOverMapItem = mouseOverMap.find(item);
+//             bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
+//
+//             auto selectedMapItem = selectedMap.find(item);
+//             bool isSelected = selectedMapItem != selectedMap.end() && selectedMapItem->second == true;
+//
+//             // highlight: // TODO: for "drawRoundRect" move this away from the scene but directly to the painter!
+//             if (isMouseOver && !isSelected) {
+//                 //qDebug() << "item: " << item->rect() << "mouseOverMapItem";
+//
+//                 // removes any other effect which is not desired:
+//                 //auto effect = new QGraphicsColorizeEffect();
+//                 //effect->setColor(Qt::blue);
+//                 //grItem->setGraphicsEffect(effect);
+//
+//                 auto rectItem = new QGraphicsRectItem();
+//                 rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
+//                 //rectItem->setPen(QPen(Qt::gray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+//                 rectItem->setPen(QPen(Qt::transparent));
+//                 rectItem->setBrush(QBrush(Qt::Dense7Pattern));
+//                 scene.addItem(rectItem);
+//             }
+//
+//             // selected indicator: TODO: draw handles (as extra class?)
+//             if (isSelected) {
+//                 auto rectItem = new QGraphicsRectItem();
+//                 rectItem->setRect(item->rect().marginsAdded(QMargins(mouseOverMargin, mouseOverMargin, mouseOverMargin, mouseOverMargin)));
+//                 rectItem->setPen(QPen(Qt::darkGray, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+//                 //rectItem->setBrush(QBrush(Qt::Dense7Pattern));
+//                 scene.addItem(rectItem);
+//             }
         }
+
+        updateItemGeometryFromModel();
     }
 
-    void onMouseLeave()
+    /**
+     * update positions / TMP
+     */
+    void updateItemGeometryFromModel()
     {
-        mouseOverMap.clear();
-    }
-
-    void onMouseMove(QPoint pos)
-    {
-        mouseOverMap.clear();
-
-        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-            bool isOver = item->rect().contains(pos);
-            mouseOverMap[item] = isOver;
-            if (isOver) {
-                break; // only match the top most item if there are more than one
+        foreach(auto gritem, graphicsView->items()) {
+            //qDebug() << "muh";
+            auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
+            if (gritemBase != nullptr)
+            {
+                //qDebug() << "updateGeometryFromModel";
+                gritemBase->updateGeometryFromModel();
             }
         }
+        //foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
+/*
+            if (item->typeId == "rect") {
+                rectItem->setRect(item->rect());
+            }
+            else if (item->typeId == "line") {
+                auto grItem = new QGraphicsLineItem();
+                grItem->setLine(item->line());
+                grItem->setPen(QPen(Qt::red, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+                scene.addItem(grItem);
+                //grItem = ellipseItem;
+            }
+            else if (item->typeId == "ellipse") {
+                ellipseItem->setRect(item->rect());
+            }
+            else if (item->typeId == "text") {
+                textItem->setPos(item->rect().x(), item->rect().y());
+            }
+        }*/
     }
 
-    void onMouseLeftButtonPress(QPoint pos, bool toggle)
-    {
-        if (!toggle) {
-            selectedMap.clear();
-        }
+    // todo: remove later
+//     void onMouseLeave()
+//     {
+//         mouseOverMap.clear();
+//     }
+//
+//     void onMouseMove(QPoint pos)
+//     {
+//         mouseOverMap.clear();
+//
+//         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
+//             bool isOver = item->rect().contains(pos);
+//             mouseOverMap[item] = isOver;
+//             if (isOver) {
+//                 break; // only match the top most item if there are more than one
+//             }
+//         }
+//     }
 
-        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-            bool hit = item->rect().contains(pos);
-            if (!toggle) {
-                selectedMap[item] = hit;
-
-                if (hit) {
-                    itemOnTheMove = item;
-                    itemOnTheMoveInitialMousePosTopLeft = pos - itemOnTheMove->rect().topLeft();
-                    break; // select the top-most one
-                }
-            }
-            else {
-                if (hit) {
-                    selectedMap[item] = !selectedMap[item];
-                }
-            }
-        }
-    }
+//     void onMouseLeftButtonPress(QPoint pos, bool toggle)
+//     {
+//         if (!toggle) {
+//             selectedMap.clear();
+//         }
+//
+//         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
+//             bool hit = item->rect().contains(pos);
+//             if (!toggle) {
+//                 selectedMap[item] = hit;
+//
+//                 if (hit) {
+//                     itemOnTheMove = item;
+//                     itemOnTheMoveInitialMousePosTopLeft = pos - itemOnTheMove->rect().topLeft();
+//                     break; // select the top-most one
+//                 }
+//             }
+//             else {
+//                 if (hit) {
+//                     selectedMap[item] = !selectedMap[item];
+//                 }
+//             }
+//         }
+//     }
 
     void onMouseMoveNoCtrlKey(QPoint pos) {
 //         if (itemOnTheMove != nullptr) {
@@ -337,10 +289,10 @@ public:
 //         }
     }
 
-    void onMouseRelease(QPoint pos) {
-        onMouseMoveNoCtrlKey(pos);
-        itemOnTheMove = nullptr;
-    }
+//     void onMouseRelease(QPoint pos) {
+//         onMouseMoveNoCtrlKey(pos);
+//         itemOnTheMove = nullptr;
+//     }
 
     void createDemoScene()
     {
@@ -417,6 +369,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     layout->setMargin(0);
 
     //d->createDemoScene();
+    d->graphicsView = _graphicsView;
     d->kreenshotEditor->itemsManager()->addDemoItems();
     d->initScene(_graphicsView);
 }
@@ -426,10 +379,9 @@ MainEditorWidget::~MainEditorWidget()
 
 }
 
+// todo: remove
 void MainEditorWidget::paintEvent(QPaintEvent*)
 {
-    d->refreshScene();
-
     QPainter painter(this);
     // QPainter painterImage(QImage); // TODO: use this to render to image and then to save to file
 
@@ -441,48 +393,8 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
     //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
     //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
-    d->scene.render(&painter);
+    //d->scene.render(&painter);
     //d->graphicsView.render(&painter); // does not work like this
-}
-
-void MainEditorWidget::mouseMoveEvent(QMouseEvent* event)
-{
-    //qDebug() << "mouseMoveEvent";
-    //qDebug() << event->pos();
-
-    d->onMouseMove(event->pos());
-    if (!(event->modifiers() & Qt::ControlModifier)) {
-        d->onMouseMoveNoCtrlKey(event->pos());
-    }
-    update(); // schedules repaint
-
-    QWidget::mouseMoveEvent(event);
-}
-
-void MainEditorWidget::leaveEvent(QEvent* event)
-{
-    d->onMouseLeave();
-    update(); // schedules repaint
-
-    QWidget::leaveEvent(event);
-}
-
-void MainEditorWidget::mousePressEvent(QMouseEvent* event)
-{
-    if (event->buttons() & Qt::LeftButton) {
-        d->onMouseLeftButtonPress(event->pos(), event->modifiers() & Qt::ControlModifier);
-        update(); // schedules repaint
-    }
-
-    QWidget::mousePressEvent(event);
-}
-
-void MainEditorWidget::mouseReleaseEvent(QMouseEvent* event)
-{
-    d->onMouseRelease(event->pos());
-    update(); // schedules repaint
-
-    QWidget::mouseReleaseEvent(event);
 }
 
 void MainEditorWidget::requestTool(QString toolId)
@@ -500,7 +412,7 @@ void MainEditorWidget::requestTool(QString toolId)
         //QMessageBox::information(nullptr, "Action", "Ellipse");
     }
     else {
-        QString message = QString("Unknown tool id '%1'").arg(toolId);
+        QString message = QString("TODO / Unknown tool id '%1'").arg(toolId);
         qDebug() << message;
         QMessageBox::information(this, "Not impl", message);
         emit toolChosen("select");
