@@ -27,24 +27,24 @@
 class MainWindowImpl
 {
 public:
-    QPushButton* pushButtonToolFromId(QString toolId)
+    QAction* toolActionFromId(QString toolId)
     {
         // alphabetically
 
         if (toolId == "ellipse") {
-            return ui->pushButtonToolEllipse;
+            return ui->actionToolEllipse;
         }
-        else if (toolId == "highlight") {
-            return ui->pushButtonToolHighlight;
-        }
+//         else if (toolId == "highlight") {
+//             return ui->pushButtonToolHighlight;
+//         }
         else if (toolId == "line") {
-            return ui->pushButtonToolLine;
+            return ui->actionToolLine;
         }
         else if (toolId == "rect") {
-            return ui->pushButtonToolRect;
+            return ui->actionToolRect;
         }
         else if (toolId == "select") {
-            return ui->pushButtonToolSelect;
+            return ui->actionToolSelect;
         }
         else {
             qDebug() << "TODO...........";
@@ -52,9 +52,9 @@ public:
         }
     }
 
-    std::vector<QPushButton*> allToolButtons()
+    std::vector<QAction*> allToolActions()
     {
-        std::vector<QPushButton*> list;
+        std::vector<QAction*> list;
 
         // alphabetically
 
@@ -66,13 +66,17 @@ public:
 //         list.push_back(ui->actionRedo);
 //         list.push_back(ui->actionSave);
 //         list.push_back(ui->actionSaveAs);
-        list.push_back(ui->pushButtonToolEllipse);
-        list.push_back(ui->pushButtonToolHighlight);
-        list.push_back(ui->pushButtonToolLine);
-        list.push_back(ui->pushButtonToolObfuscate);
-        list.push_back(ui->pushButtonToolRect);
-        list.push_back(ui->pushButtonToolSelect);
-        list.push_back(ui->pushButtonToolText);
+//         list.push_back(ui->pushButtonToolEllipse);
+//         list.push_back(ui->pushButtonToolHighlight);
+//         list.push_back(ui->pushButtonToolLine);
+//         list.push_back(ui->pushButtonToolObfuscate);
+//         list.push_back(ui->pushButtonToolRect);
+//         list.push_back(ui->pushButtonToolSelect);
+//         list.push_back(ui->pushButtonToolText);
+        list.push_back(ui->actionToolEllipse);
+        list.push_back(ui->actionToolLine);
+        list.push_back(ui->actionToolRect);
+        list.push_back(ui->actionToolSelect);
         return list;
     }
 
@@ -90,6 +94,8 @@ MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
 
     setupUi();
     setupActions();
+
+    d->kreenshotEditor->requestTool("select");
 }
 
 MainWindow::~MainWindow()
@@ -124,7 +130,6 @@ void MainWindow::setupActions()
     connect(d->ui->actionToolLine, SIGNAL(triggered()), this, SLOT(requestTool()));
 
     connect(d->kreenshotEditor.get(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
-
 }
 
 void MainWindow::editPreferences()
@@ -180,11 +185,11 @@ void MainWindow::requestTool()
 void MainWindow::toolChosen(QString toolId)
 {
     qDebug() << "MainWindow::toolChosen: " << toolId;
-    foreach (auto pushButtonTool, d->allToolButtons()) {
+    foreach (auto toolAction, d->allToolActions()) {
         //qDebug() << "uncheck";
-        pushButtonTool->setChecked(false);
+        toolAction->setChecked(false);
     }
 
-     auto pushButtonTool = d->pushButtonToolFromId(toolId);
-     pushButtonTool->setChecked(true);
+     auto toolAction = d->toolActionFromId(toolId);
+     toolAction->setChecked(true);
 }

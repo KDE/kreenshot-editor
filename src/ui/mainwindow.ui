@@ -380,7 +380,7 @@
         <bool>true</bool>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -556,6 +556,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="edit-select"/>
+   </property>
    <property name="text">
     <string>Select</string>
    </property>
@@ -566,6 +569,9 @@
   <action name="actionToolRect">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="draw-rectangle"/>
    </property>
    <property name="text">
     <string>Rectangle</string>
@@ -578,6 +584,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="draw-circle"/>
+   </property>
    <property name="text">
     <string>Ellipse or circle</string>
    </property>
@@ -588,6 +597,9 @@
   <action name="actionToolLine">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="draw-arrow-forward"/>
    </property>
    <property name="text">
     <string>Line or arrow</string>
@@ -681,7 +693,7 @@
   </connection>
   <connection>
    <sender>actionToolEllipse</sender>
-   <signal>triggered(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>pushButtonToolEllipse</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
@@ -697,7 +709,7 @@
   </connection>
   <connection>
    <sender>actionToolLine</sender>
-   <signal>triggered(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>pushButtonToolLine</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
@@ -713,7 +725,7 @@
   </connection>
   <connection>
    <sender>actionToolRect</sender>
-   <signal>triggered(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>pushButtonToolRect</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
@@ -729,7 +741,7 @@
   </connection>
   <connection>
    <sender>actionToolSelect</sender>
-   <signal>triggered(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>pushButtonToolSelect</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
