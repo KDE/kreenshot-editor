@@ -95,7 +95,7 @@
    <property name="minimumSize">
     <size>
      <width>307</width>
-     <height>605</height>
+     <height>612</height>
     </size>
    </property>
    <property name="features">
@@ -137,9 +137,6 @@
        <property name="text">
         <string>Rectangle</string>
        </property>
-       <property name="icon">
-        <iconset theme="draw-rectangle"/>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -160,9 +157,6 @@
        <property name="text">
         <string>Ellipse or circle</string>
        </property>
-       <property name="icon">
-        <iconset theme="draw-circle"/>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -182,9 +176,6 @@
       <widget class="QPushButton" name="pushButtonToolLine">
        <property name="text">
         <string>Line or arrow</string>
-       </property>
-       <property name="icon">
-        <iconset theme="draw-arrow-forward"/>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -373,9 +364,6 @@
        <property name="text">
         <string>Select</string>
        </property>
-       <property name="icon">
-        <iconset theme="edit-select"/>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -395,6 +383,13 @@
       <widget class="QSlider" name="horizontalSlider_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="3">
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Rip out</string>
        </property>
       </widget>
      </item>
@@ -435,13 +430,6 @@
          <width>300</width>
          <height>16777215</height>
         </size>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0" colspan="3">
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Rip out</string>
        </property>
       </widget>
      </item>

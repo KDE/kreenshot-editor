@@ -27,6 +27,18 @@
 class MainWindowImpl
 {
 public:
+    /**
+     * define icons at one place (actions in the designer) and assign them here to the toolbox buttons
+     */
+    void setupIcons()
+    {
+        ui->pushButtonToolEllipse->setIcon(ui->actionToolEllipse->icon());
+        //ui->pushButtonToolHighlight->setIcon(ui->actionToolHighlight->icon());
+        ui->pushButtonToolLine->setIcon(ui->actionToolLine->icon());
+        ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
+        ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
+    }
+
     QAction* toolActionFromId(QString toolId)
     {
         // alphabetically
@@ -110,6 +122,8 @@ void MainWindow::setupUi()
 //     _ui->containerEditor->addWidget(testButton);
 
     d->ui->containerEditor->addWidget(d->kreenshotEditor->createMainEditorWidget());
+
+    d->setupIcons();
 }
 
 void MainWindow::setupActions()
