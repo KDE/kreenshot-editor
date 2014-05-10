@@ -80,23 +80,27 @@ ItemsManagerPtr KreenshotEditor::itemsManager()
     return d->itemsManager;
 }
 
-void KreenshotEditor::requestTool()
+void KreenshotEditor::requestTool(QString toolId)
 {
-    QString senderName = QObject::sender()->objectName();
-    QString toolId = senderName.replace("actionTool", "").toLower();
-
     if (toolId == "select") {
-        QMessageBox::information(nullptr, "Action", "Select");
+        //QMessageBox::information(nullptr, "Action", "Select");
     }
     else if (toolId == "rect") {
-        QMessageBox::information(nullptr, "Action", "Rect");
+        //QMessageBox::information(nullptr, "Action", "Rect");
     }
     else if (toolId == "ellipse") {
-        QMessageBox::information(nullptr, "Action", "Ellipse");
+        //QMessageBox::information(nullptr, "Action", "Ellipse");
+    }
+    else if (toolId == "line") {
+        //QMessageBox::information(nullptr, "Action", "Ellipse");
     }
     else {
-        QString message = QString("Unknown tool id '%1'. Received from action '%2'").arg(toolId).arg(senderName);
+        QString message = QString("Unknown tool id '%1'").arg(toolId);
         qDebug() << message;
         QMessageBox::information(nullptr, "Not impl", message);
+        emit toolChosen("select");
+        return;
     }
+
+    emit toolChosen(toolId);
 }

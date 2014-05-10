@@ -53,10 +53,7 @@ Q_SIGNALS:
     void toolChosen(QString toolId);
 
 public Q_SLOTS:
-    /**
-     * Works with convention based action names
-     */
-    void requestTool();
+    void requestTool(QString toolId);
 
 private:
     KreenshotEditorImplPtr d;

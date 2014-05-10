@@ -54,6 +54,11 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="separator"/>
+    <addaction name="actionToolSelect"/>
+    <addaction name="actionToolRect"/>
+    <addaction name="actionToolEllipse"/>
+    <addaction name="actionToolLine"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
    <addaction name="menu_File"/>
@@ -548,18 +553,47 @@
    </property>
   </action>
   <action name="actionToolSelect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>actionToolSelect</string>
+    <string>Select</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+`</string>
    </property>
   </action>
   <action name="actionToolRect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>actionToolRect</string>
+    <string>Rectangle</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
    </property>
   </action>
   <action name="actionToolEllipse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>actionToolEllipse</string>
+    <string>Ellipse or circle</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="actionToolLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Line or arrow</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
    </property>
   </action>
  </widget>
@@ -583,7 +617,7 @@
   </connection>
   <connection>
    <sender>pushButtonToolSelect</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>actionToolSelect</receiver>
    <slot>trigger()</slot>
    <hints>
@@ -599,7 +633,7 @@
   </connection>
   <connection>
    <sender>pushButtonToolRect</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>actionToolRect</receiver>
    <slot>trigger()</slot>
    <hints>
@@ -615,7 +649,7 @@
   </connection>
   <connection>
    <sender>pushButtonToolEllipse</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>actionToolEllipse</receiver>
    <slot>trigger()</slot>
    <hints>
@@ -626,6 +660,86 @@
     <hint type="destinationlabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonToolLine</sender>
+   <signal>clicked()</signal>
+   <receiver>actionToolLine</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolEllipse</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>pushButtonToolEllipse</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>127</x>
+     <y>219</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolLine</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>pushButtonToolLine</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>127</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolRect</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>pushButtonToolRect</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>127</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolSelect</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>pushButtonToolSelect</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>113</y>
     </hint>
    </hints>
   </connection>

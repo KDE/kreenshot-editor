@@ -19,6 +19,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPushButton>
+#include <QDebug>
 #include <QMessageBox>
 #include "libkreenshoteditor/kreenshoteditor.h"
 #include "libkreenshoteditor/ui/maineditorwidget.h"
@@ -26,11 +27,53 @@
 class MainWindowImpl
 {
 public:
-    QAction* toolActionFromId(QString toolId)
+    QPushButton* pushButtonToolFromId(QString toolId)
     {
-        if (toolId == "select") {
-            return ui->actionToolSelect;
+        // alphabetically
+
+        if (toolId == "ellipse") {
+            return ui->pushButtonToolEllipse;
         }
+        else if (toolId == "highlight") {
+            return ui->pushButtonToolHighlight;
+        }
+        else if (toolId == "line") {
+            return ui->pushButtonToolLine;
+        }
+        else if (toolId == "rect") {
+            return ui->pushButtonToolRect;
+        }
+        else if (toolId == "select") {
+            return ui->pushButtonToolSelect;
+        }
+        else {
+            qDebug() << "TODO...........";
+            return nullptr;
+        }
+    }
+
+    std::vector<QPushButton*> allToolButtons()
+    {
+        std::vector<QPushButton*> list;
+
+        // alphabetically
+
+//         list.push_back(ui->actionAbout);
+//         list.push_back(ui->actionNew);
+//         list.push_back(ui->actionOpen);
+//         list.push_back(ui->actionPreferences);
+//         list.push_back(ui->actionQuit);
+//         list.push_back(ui->actionRedo);
+//         list.push_back(ui->actionSave);
+//         list.push_back(ui->actionSaveAs);
+        list.push_back(ui->pushButtonToolEllipse);
+        list.push_back(ui->pushButtonToolHighlight);
+        list.push_back(ui->pushButtonToolLine);
+        list.push_back(ui->pushButtonToolObfuscate);
+        list.push_back(ui->pushButtonToolRect);
+        list.push_back(ui->pushButtonToolSelect);
+        list.push_back(ui->pushButtonToolText);
+        return list;
     }
 
 public:
@@ -75,9 +118,13 @@ void MainWindow::setupActions()
     connect(d->ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
-    connect(d->ui->actionToolSelect, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
-    connect(d->ui->actionToolRect, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
-    connect(d->ui->actionToolEllipse, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
+    connect(d->ui->actionToolSelect, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolRect, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolEllipse, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolLine, SIGNAL(triggered()), this, SLOT(requestTool()));
+
+    connect(d->kreenshotEditor.get(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
+
 }
 
 void MainWindow::editPreferences()
@@ -120,7 +167,24 @@ void MainWindow::helpAbout()
     QMessageBox::information(this, "Not impl", "Not implemented yet");
 }
 
+void MainWindow::requestTool()
+{
+    QString senderName = QObject::sender()->objectName();
+    QString toolId = senderName.replace("actionTool", "").toLower();
+    QString message = QString("MainWindow::requestTool: tool id '%1'. Received from action '%2'").arg(toolId).arg(senderName);
+    qDebug() << message;
+
+    d->kreenshotEditor->requestTool(toolId);
+}
+
 void MainWindow::toolChosen(QString toolId)
 {
-    // TODO
+    qDebug() << "MainWindow::toolChosen: " << toolId;
+    foreach (auto pushButtonTool, d->allToolButtons()) {
+        //qDebug() << "uncheck";
+        pushButtonTool->setChecked(false);
+    }
+
+     auto pushButtonTool = d->pushButtonToolFromId(toolId);
+     pushButtonTool->setChecked(true);
 }
