@@ -44,7 +44,7 @@ class MainEditorWidget : public QWidget
     Q_OBJECT
 
 public:
-    MainEditorWidget(KreenshotEditor* kreenshotEditor);
+    MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
 public Q_SLOTS:

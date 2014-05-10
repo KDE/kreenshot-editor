@@ -80,7 +80,7 @@ private:
 class MainEditorWidgetImpl
 {
 public:
-    KreenshotEditor* kreenshotEditor;
+    KreenshotEditorPtr kreenshotEditor;
 
     QGraphicsScene scene;
 
@@ -333,7 +333,7 @@ public:
     }
 };
 
-MainEditorWidget::MainEditorWidget(KreenshotEditor* kreenshotEditor)
+MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 {
     d = MainEditorWidgetImplPtr(new MainEditorWidgetImpl());
     d->kreenshotEditor = kreenshotEditor;

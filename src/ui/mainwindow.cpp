@@ -23,12 +23,27 @@
 #include "libkreenshoteditor/kreenshoteditor.h"
 #include "libkreenshoteditor/ui/maineditorwidget.h"
 
+class MainWindowImpl
+{
+public:
+    QAction* toolActionFromId(QString toolId)
+    {
+        if (toolId == "select") {
+            return ui->actionToolSelect;
+        }
+    }
+
+public:
+    KreenshotEditorPtr kreenshotEditor;
+    Ui::MainWindow* ui;
+};
+
 MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
 {
-    _ui = Ui::MainWindowPtr(new Ui::MainWindow());
-    _ui->setupUi(this);
-
-    _kreenshotEditor = kreenshotEditor;
+    d = MainWindowImplPtr(new MainWindowImpl());
+    d->kreenshotEditor = kreenshotEditor;
+    d->ui = new Ui::MainWindow();
+    d->ui->setupUi(this);
 
     setupUi();
     setupActions();
@@ -36,7 +51,7 @@ MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
 
 MainWindow::~MainWindow()
 {
-
+    delete d->ui;
 }
 
 void MainWindow::setupUi()
@@ -45,24 +60,24 @@ void MainWindow::setupUi()
 //     testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //     _ui->containerEditor->addWidget(testButton);
 
-    _ui->containerEditor->addWidget(_kreenshotEditor->createMainEditorWidget());
+    d->ui->containerEditor->addWidget(d->kreenshotEditor->createMainEditorWidget());
 }
 
 void MainWindow::setupActions()
 {
     // as listed in the Action Editor:
-    connect(_ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    connect(_ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
+    connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
     // actionQuit via Action Editor
-    connect(_ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    connect(_ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-    connect(_ui->actionUndo, SIGNAL(triggered()), this, SLOT(editUndo()));
-    connect(_ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
-    connect(_ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
-    connect(_ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
-    connect(_ui->actionToolSelect, SIGNAL(triggered()), _kreenshotEditor.get(), SLOT(chooseTool()));
-    connect(_ui->actionToolRect, SIGNAL(triggered()), _kreenshotEditor.get(), SLOT(chooseTool()));
-    connect(_ui->actionToolEllipse, SIGNAL(triggered()), _kreenshotEditor.get(), SLOT(chooseTool()));
+    connect(d->ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    connect(d->ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    connect(d->ui->actionUndo, SIGNAL(triggered()), this, SLOT(editUndo()));
+    connect(d->ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
+    connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
+    connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    connect(d->ui->actionToolSelect, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
+    connect(d->ui->actionToolRect, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
+    connect(d->ui->actionToolEllipse, SIGNAL(triggered()), d->kreenshotEditor.get(), SLOT(requestTool()));
 }
 
 void MainWindow::editPreferences()
@@ -103,4 +118,9 @@ void MainWindow::fileSaveAs()
 void MainWindow::helpAbout()
 {
     QMessageBox::information(this, "Not impl", "Not implemented yet");
+}
+
+void MainWindow::toolChosen(QString toolId)
+{
+    // TODO
 }

@@ -1,23 +1,31 @@
 kreenshot-editor
 ================
 
-kreenshot-editor is incubating
+kreenshot-editor is incubating.
 
-build
+Build
 -----
 $ mkdir build; cd build; cmake ..
 $ make
 
-run
+Run
 ---
 in directory build:
 $ ./src/kreenshot-editor
 
-NEXT steps
-----------
-1. Read QT quick tutorial and build project upon it
-2. have command line parser to give an image
-3. build one component (widget) that will be used in a separated main component
+Component 1: main-application
+-----------------------------
+- command line options to give image and cursor (optional)
+- show editor-component
+
+Component 2: image-editor
+-------------------------
+- display image
+- show toolbars for editing
+    - define toolbars by creating "prototype items" with default settings
+    - make it possible for each toolbar entry to save the current configuration
+        - dropdown menu (show basic properties as string like line width, color etc)
+- set (including an optional cursor) and get image
 
 TODO
 ----
@@ -41,26 +49,8 @@ DEV
 ---
 Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
 
-main-application
-----------------
-- command line options to give image and cursor (optional)
-- show editor-component
-
-editor-component
-----------------
-- display image
-- show toolbars for editing
-    - define toolbars by creating "prototype items" with default settings
-    - make it possible for each toolbar entry to save the current configuration
-        - dropdown menu (show basic properties as string like line width, color etc)
-- set (including an optional cursor) and get image
-
 TODO
 ----
-- Item
-- DrawingArea
-- BackgroundImage
-- On the DrawingArea there are Items on the BackgroundImage.
 - Select a Item
   - Handles for resizing appear
   - Controls for common properties appear
@@ -68,4 +58,11 @@ TODO
      - slider for line width
      - slider for font size
      - slider for arrow tip typ?
+
+DONE
+----
+- Item
+- DrawingArea
+- BackgroundImage
+- On the DrawingArea there are Items on the BackgroundImage.
 - Hover over an Item => highlighing and ability to move the Item

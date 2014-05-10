@@ -23,42 +23,46 @@
 #include <memory>
 
 namespace Ui {
-    class MainWindow;
-    typedef std::shared_ptr<MainWindow> MainWindowPtr;
+class MainWindow;
+typedef std::shared_ptr<MainWindow> MainWindowPtr;
 };
 
 class KreenshotEditor;
 typedef std::shared_ptr<KreenshotEditor> KreenshotEditorPtr;
 
+class MainWindowImpl;
+typedef std::shared_ptr<MainWindowImpl> MainWindowImplPtr;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    public:
-        MainWindow(KreenshotEditorPtr kreenshotEditor);
-        virtual ~MainWindow();
+public:
+    MainWindow(KreenshotEditorPtr kreenshotEditor);
+    virtual ~MainWindow();
 
-    public Q_SLOTS:
-         void fileNew();
-         void fileOpen();
-         void fileSave();
-         void fileSaveAs();
-         void editUndo();
-         void editRedo();
-         void editPreferences();
-         void helpAbout();
+public Q_SLOTS:
+    void fileNew();
+    void fileOpen();
+    void fileSave();
+    void fileSaveAs();
+    void editUndo();
+    void editRedo();
+    void editPreferences();
+    void helpAbout();
 
-    protected:
-        void setupActions();
-        void setupUi();
+    void toolChosen(QString toolId);
 
-    private:
-        Ui::MainWindowPtr _ui;
-        KreenshotEditorPtr _kreenshotEditor;
+public:
+    void setupActions();
+    void setupUi();
+
+private:
+    MainWindowImplPtr d;
 
 //         tikz::ui::LinePropertyWidget * m_linePropertyWidget; // todo: remove when done
 };
 
 #endif // UI_MAIN_WINDOW_H
 
-// kate: indent-width 4; replace-tabs on;
+// kate: indent-mode cstyle; replace-tabs on;

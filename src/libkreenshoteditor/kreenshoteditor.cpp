@@ -20,6 +20,7 @@
 #include <QImage>
 #include <QScrollArea>
 #include <QMessageBox>
+#include <QDebug>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 
@@ -58,7 +59,8 @@ const QImage& KreenshotEditor::getBaseImage()
 
 QWidget* KreenshotEditor::createMainEditorWidget()
 {
-    auto mainEditorWidget = new MainEditorWidget(this);
+    auto mainEditorWidget = new MainEditorWidget(shared_from_this());
+    //auto mainEditorWidget = new MainEditorWidget(this);
 
     bool oldQScrollAreaLogic = false;
     if (oldQScrollAreaLogic) {
@@ -78,20 +80,23 @@ ItemsManagerPtr KreenshotEditor::itemsManager()
     return d->itemsManager;
 }
 
-void KreenshotEditor::chooseTool()
+void KreenshotEditor::requestTool()
 {
     QString senderName = QObject::sender()->objectName();
+    QString toolId = senderName.replace("actionTool", "").toLower();
 
-    if (senderName == "actionToolSelect") {
+    if (toolId == "select") {
         QMessageBox::information(nullptr, "Action", "Select");
     }
-    else if (senderName == "actionToolRect") {
+    else if (toolId == "rect") {
         QMessageBox::information(nullptr, "Action", "Rect");
     }
-    else if (senderName == "actionToolEllipse") {
+    else if (toolId == "ellipse") {
         QMessageBox::information(nullptr, "Action", "Ellipse");
     }
     else {
-        QMessageBox::information(nullptr, "Not impl", "Not implemented yet");
+        QString message = QString("Unknown tool id '%1'. Received from action '%2'").arg(toolId).arg(senderName);
+        qDebug() << message;
+        QMessageBox::information(nullptr, "Not impl", message);
     }
 }
