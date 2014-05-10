@@ -112,13 +112,14 @@ public:
         //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
         graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
 
+        graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
         graphicsView->setScene(&scene);
+        graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
 
-        // scroll to 0,0:
-        //graphicsView->scroll(-100, -100); // ???
-        // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents); // ???
-        // graphicsView->ensureVisible(0, 0, 1, 1); // ??? should scroll the view to 0,0 but does not?
-        graphicsView->setSceneRect(0, 0, 1, 1); // scroll to 0, 0, todo: does this have any other impact???
+        // scroll to 0,0 / does all not work:
+        //graphicsView->scroll(-100, -100);
+        // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+        // graphicsView->ensureVisible(0, 0, 1, 1);
 
         itemOnTheMove = nullptr;
     }
