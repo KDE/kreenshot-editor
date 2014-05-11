@@ -50,7 +50,11 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void updateItemsGeometryFromModel();
 
-    void addItemToModel(ItemPtr item);
+    /**
+     * a draw item like rect is added to model
+     * an operation item like op-crop is handled otherwise
+     */
+    void handleNewItem(ItemPtr item);
 
 protected:
     void paintEvent(QPaintEvent*);

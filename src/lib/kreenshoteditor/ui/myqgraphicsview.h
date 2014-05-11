@@ -48,6 +48,9 @@ public:
 Q_SIGNALS:
     void mouseReleased();
 
+    /**
+     * this can be drawn item like rect or an operation op-crop
+     */
     void itemCreated(ItemPtr item);
 
 protected:
@@ -61,7 +64,7 @@ protected:
     {
         qDebug() << "mousePressEvent";
 
-        _startPoint = event->pos(); // todo: map coo?
+        _creatingItemStartPoint = event->pos(); // todo: map coo?
 
         if (_toolManager->chosenTool == DrawRect) {
             ItemPtr item = Item::create("rect");
@@ -92,7 +95,7 @@ protected:
         if (_creatingItem != nullptr) {
             //qDebug() << "mouseMoveEvent";
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
-            grItemBase->updateVisualGeometryFromPoints(_startPoint, event->pos());
+            grItemBase->updateVisualGeometryFromPoints(_creatingItemStartPoint, event->pos());
         }
 
         QGraphicsView::mouseMoveEvent(event);
@@ -107,23 +110,28 @@ protected:
             grItemBase->updateModelFromVisualGeometry();
 
             _creatingItem = nullptr;
-            emit itemCreated(grItemBase->item());
-            return;
+            if (!grItemBase->item()->rect().isNull()) {
+                qDebug() << "emit itemCreated";
+                emit itemCreated(grItemBase->item());
+                return;
+            }
+            else {
+                qDebug() << "rect is null, discard";
+            }
         }
 
         QGraphicsView::mouseReleaseEvent(event);
 
         qDebug() << "emit mouseReleased";
-        emit mouseReleased();
+        emit mouseReleased(); // used to update from model to have instant visual feedback iif something is wrong with model/view mappine
     }
 
 private:
     QGraphicsScene* _scene;
     ToolManagerPtr _toolManager;
-    //ItemsManagerPtr _itemsManager;
 
-    QGraphicsItem* _creatingItem; // TMP
-    QPoint _startPoint;
+    QGraphicsItem* _creatingItem;
+    QPoint _creatingItemStartPoint;
 };
 
 #endif // MYQGRAPHICSVIEW

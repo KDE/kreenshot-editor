@@ -49,10 +49,16 @@ public:
     MyQGraphicsView* graphicsView;
     ToolManagerPtr toolManager;
 
+    /**
+     * not nullptr if there is an image operation item (like crop) waiting for the user
+     */
+    ItemPtr imageOperationItem;
+
 public:
     MainEditorWidgetImpl()
     {
         toolManager = ToolManagerPtr(new ToolManager());
+        imageOperationItem = nullptr;
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -139,6 +145,11 @@ public:
 //             }
         }
 
+        if (imageOperationItem != nullptr) {
+            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(imageOperationItem, &scene);
+            scene.addItem(kgrItem);
+        }
+
         updateItemsGeometryFromModel();
     }
 
@@ -172,6 +183,11 @@ public:
     {
         toolManager->chosenTool = tool;
         updateItemsBehaviourFromChosenTool();
+    }
+
+    bool imageOperationItemActive()
+    {
+        return imageOperationItem != nullptr;
     }
 
     void createDemoScene()
@@ -256,7 +272,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
     connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
-    connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(addItemToModel(ItemPtr)));
+    connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -319,10 +335,16 @@ void MainEditorWidget::updateItemsGeometryFromModel()
     d->updateItemsGeometryFromModel();
 }
 
-void MainEditorWidget::addItemToModel(ItemPtr item)
+void MainEditorWidget::handleNewItem(ItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
-    d->kreenshotEditor->itemsManager()->addItem(item);
+    if (!item->typeId.startsWith("op-")) {
+        d->kreenshotEditor->itemsManager()->addItem(item);
+    }
+    else {
+        d->imageOperationItem = item;
+    }
+
     d->createSceneFromModel();
 }
 

@@ -22,8 +22,11 @@
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>
 #include <QGraphicsProxyWidget>
+#include <QGraphicsLinearLayout>
+#include <QFrame>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QHBoxLayout>
 #include <cmath>
 #include <algorithm>
 #include "../core/item.h"
@@ -65,6 +68,14 @@ public:
      * used when creating an item
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
+
+    /**
+     * when user is releases the mouse button when creating an item
+     */
+    virtual void setIsCreating(bool creating)
+    {
+        _isCreating = creating;
+    }
 
 protected:
     /**
@@ -153,6 +164,11 @@ protected:
 
 protected:
     ItemPtr _item;
+
+    /**
+     * user is still moving the mouse with pressed button
+     */
+    bool _isCreating;
 
 private:
     QGraphicsItem* _graphicsItem;
@@ -396,6 +412,20 @@ public:
     {
         this->setPen(QPen(Qt::black, 1, Qt::DotLine));
         //this-set // set everything else dark
+
+        if (!_isCreating) {
+            // TODO: center
+            auto okButton = new QPushButton("Crop (Enter)");
+            auto cancelButton = new QPushButton("Cancel (Esc)");
+            auto hLayout = new QHBoxLayout();
+            hLayout->addWidget(okButton);
+            hLayout->addWidget(cancelButton);
+            auto frame = new QFrame();
+            frame->setLayout(hLayout);
+
+            auto widgetProxy = new QGraphicsProxyWidget(this);
+            widgetProxy->setWidget(frame);
+        }
     }
 
     virtual void updateVisualGeometryFromModel()
