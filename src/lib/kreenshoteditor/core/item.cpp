@@ -68,8 +68,21 @@ ItemPtr Item::create(QString typeId)
         item->lineStyle()->penStyle = Qt::SolidLine;
         item->dropShadow()->enabled = true;
     }
+    else if (typeId == "text") {
+        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
+        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
+        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+        // TODO: fillColor, text
+
+        item->lineColor()->color = Qt::magenta; // TODO: or transparent for "no border rect"
+        item->lineStyle()->width = 2;
+        item->lineStyle()->penStyle = Qt::SolidLine;
+        // TODO: fillcolor solid
+        item->dropShadow()->enabled = true;
+    }
     else {
-        qDebug() << "Item::create: !!!!!!!!! TODO for this item";
+        qDebug() << "Item::create: unknown typeId" << typeId;
+        Q_ASSERT_X(false, "Item::create", "Unknown typeId");
     }
 
     return item;

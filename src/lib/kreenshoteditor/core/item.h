@@ -98,7 +98,7 @@ public:
     DropShadowPropertyPtr dropShadow(); // color, blur, offset
     RectStyleProperty* rectStyle; // rounded or not (applies also to the text rect if not null)
     FillProperty* fillColor; // fill color, percent opacity
-    std::shared_ptr<TextProperty> text; // text string, autowrap, font, size, color, (for border see lineColor)
+    std::shared_ptr<TextProperty> text; // text string, autowrap, font, size, color, (for border see lineColor), valign, halign
     ObfuscateProperty* obfuscateStyle; // pixelize size, blur radius
     ArrowProperty* arrowFront; // size of arrow (or start just with mere existence, size controlled by lineStyle)
     ArrowProperty* arrowBack;
