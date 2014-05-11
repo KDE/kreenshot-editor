@@ -29,7 +29,7 @@ public:
     /**
      * scene: to get all selected items
      */
-    KreenQGraphicsItemBase(QAbstractGraphicsShapeItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
+    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
     {
         _item = item;
         _graphicsItem = graphicsItem;
@@ -45,14 +45,27 @@ public:
     virtual void setGeometryToModel() = 0;
 
 protected:
-    void configurePen()
+    void configurePen(QAbstractGraphicsShapeItem* grItem)
     {
-        _graphicsItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
+        // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
+        Q_ASSERT(_item->lineColor());
+        Q_ASSERT(_item->lineStyle());
+        grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
+    }
+
+    void configurePen(QGraphicsLineItem* grItem)
+    {
+        // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
+        Q_ASSERT(_item->lineColor());
+        Q_ASSERT(_item->lineStyle());
+        grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
     }
 
     void configureDropShadow()
     {
-        if (_item->dropShadow() != nullptr && _item->dropShadow()->enabled) {
+        // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
+        Q_ASSERT(_item->dropShadow());
+        if (_item->dropShadow()->enabled) {
             auto dropShadow = new QGraphicsDropShadowEffect();
             dropShadow->setColor(Qt::black);
             dropShadow->setOffset(QPoint(3, 3));
@@ -115,7 +128,7 @@ protected:
     ItemPtr _item;
 
 private:
-    QAbstractGraphicsShapeItem* _graphicsItem;
+    QGraphicsItem* _graphicsItem;
     QGraphicsScene* _scene;
 };
 
@@ -130,7 +143,7 @@ public:
     virtual void configureFromModel()
     {
         configureDropShadow();
-        configurePen();
+        configurePen(this);
     }
 
     virtual void updateGeometryFromModel()
@@ -176,7 +189,7 @@ public:
     virtual void configureFromModel()
     {
         configureDropShadow();
-        configurePen();
+        configurePen(this);
     }
 
     virtual void updateGeometryFromModel()
@@ -190,6 +203,52 @@ public:
         QPoint scenePos = this->scenePos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
+    }
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    {
+        itemChangeImpl(change, value);
+        return QGraphicsItem::itemChange(change, value);
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
+};
+
+class KreenQGraphicsLineItem : public QGraphicsLineItem, public KreenQGraphicsItemBase
+{
+public:
+    KreenQGraphicsLineItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    {
+        configureFromModel();
+    }
+
+    virtual void configureFromModel()
+    {
+        configureDropShadow();
+        configurePen(this);
+    }
+
+    virtual void updateGeometryFromModel()
+    {
+        this->setLine(_item->line());
+        //this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void setGeometryToModel()
+    {
+        //QPoint scenePos = this->scenePos().toPoint();
+        QLine line = this->line().toLine();
+        _item->setLine(line);
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)

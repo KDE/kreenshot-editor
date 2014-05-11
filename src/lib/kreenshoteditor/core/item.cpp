@@ -58,8 +58,18 @@ ItemPtr Item::create(QString typeId)
         item->lineStyle()->penStyle = Qt::SolidLine;
         item->dropShadow()->enabled = true;
     }
+    else if (typeId == "line") {
+        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
+        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
+        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+
+        item->lineColor()->color = Qt::green;
+        item->lineStyle()->width = 2;
+        item->lineStyle()->penStyle = Qt::SolidLine;
+        item->dropShadow()->enabled = true;
+    }
     else {
-        qDebug() << "Item::create: TODO for this item";
+        qDebug() << "Item::create: !!!!!!!!! TODO for this item";
     }
 
     return item;

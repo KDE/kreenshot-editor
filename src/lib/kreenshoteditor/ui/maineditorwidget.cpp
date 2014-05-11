@@ -97,19 +97,14 @@ public:
             if (item->typeId == "rect") {
                 auto rectItem = new KreenQGraphicsRectItem(item, &scene);
                 scene.addItem(rectItem);
-                //grItem = rectItem;
             }
             else if (item->typeId == "line") {
-                auto grItem = new QGraphicsLineItem();
-                grItem->setLine(item->line());
-                grItem->setPen(QPen(Qt::red, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-                scene.addItem(grItem);
-                //grItem = ellipseItem;
+                 auto grItem = new KreenQGraphicsLineItem(item, &scene);
+                 scene.addItem(grItem);
             }
             else if (item->typeId == "ellipse") {
                 auto ellipseItem = new KreenQGraphicsEllipseItem(item, &scene);
                 scene.addItem(ellipseItem);
-                //grItem = ellipseItem;
             }
             else if (item->typeId == "text") {
                 auto dropShadow = new QGraphicsDropShadowEffect();
@@ -166,9 +161,9 @@ public:
      */
     void updateItemsGeometryFromModel()
     {
-        foreach(auto gritem, graphicsView->items()) {
+        foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
-            auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
+            auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (gritemBase != nullptr) { // there might also be other items
                 //qDebug() << "updateGeometryFromModel";
                 gritemBase->updateGeometryFromModel();
