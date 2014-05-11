@@ -112,6 +112,11 @@ protected:
         }
     }
 
+    QRect sceneRect()
+    {
+        return _scene->sceneRect().toRect();
+    }
+
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
     {
         //QPoint origPos = event->scenePos().toPoint();
@@ -422,7 +427,21 @@ public:
         this->setRect(0, 0, rect.width(), rect.height());
         this->setPos(rect.x(), rect.y());
 
-        if (_interactionWidget == nullptr) {
+        if (_interactionWidget == nullptr) { // TODO: rename this variable
+            std::vector<QGraphicsRectItem*> dimRects;
+            // 1  2   4
+            // 1      4
+            // 1  3   4
+            dimRects.push_back(new QGraphicsRectItem(-rect.x(), -rect.y(), rect.x(), sceneRect().height(), this)); // 1
+            dimRects.push_back(new QGraphicsRectItem(0, -rect.y(), rect.width(), rect.y(), this)); // 2
+            dimRects.push_back(new QGraphicsRectItem(0, rect.height(), rect.width(), sceneRect().height() - rect.height() - rect.y(), this)); // 3
+            dimRects.push_back(new QGraphicsRectItem(rect.width(), -rect.y(), sceneRect().width() - rect.width() - rect.x(), sceneRect().height(), this)); // 4
+
+            foreach (auto dimRect, dimRects) {
+                dimRect->setBrush(QBrush(QColor(0, 0, 0, 128)));
+                dimRect->setPen(Qt::NoPen);
+            }
+
             if (!_isCreating) {
                 qDebug() << "crop create proxywidget";
                 // TODO: center and make frame transparent
