@@ -261,7 +261,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    _graphicsView = new MyQGraphicsView();
+    _graphicsView = new MyQGraphicsView(&d->scene);
     layout->addWidget(_graphicsView, 0, 0);
     layout->setMargin(0);
 

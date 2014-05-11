@@ -29,7 +29,9 @@ Component 2: image-editor
 
 TODO
 ----
-- ToolManager: 1. Select tool, 2. Draw item tool
+- ToolManager: 1. Select tool,
+    2. Draw item tool 
+        with moving: rect, ellipse, line, text, highlight, obfuscate
 - save image to file
 - save settings to file
 - enable more item properties (see item.h/cpp)

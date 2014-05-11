@@ -22,16 +22,20 @@
 #include <QWidget>
 #include <QGraphicsView>
 #include <QDebug>
+#include <QGraphicsScene>
 #include <memory>
 #include "../kreenshoteditor.h"
+#include "kreenqgraphicsitemsimpl.h"
 
 class MyQGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    MyQGraphicsView()
+    MyQGraphicsView(QGraphicsScene* scene)
     {
+        _scene = scene;
+        _creatingItem = nullptr;
     }
 
 Q_SIGNALS:
@@ -44,12 +48,45 @@ protected:
         this->setFocus();
     }
 
+    virtual void mousePressEvent(QMouseEvent* event)
+    {
+        qDebug() << "mousePressEvent";
+
+        ItemPtr item = Item::create("rect");
+        _creatingItem = new KreenQGraphicsRectItem(item, _scene);
+        _creatingItem->setRect(50, 50, 100, 100);
+        _scene->addItem(_creatingItem);
+
+        QGraphicsView::mousePressEvent(event);
+    }
+
+    virtual void mouseMoveEvent(QMouseEvent* event)
+    {
+        qDebug() << "mouseMoveEvent";
+        if (_creatingItem != nullptr) {
+            QRectF rect = _creatingItem->rect();
+            rect.setRight(rect.right() + 2);
+            _creatingItem->setRect(rect);
+        }
+
+        QGraphicsView::mouseMoveEvent(event);
+    }
+
     virtual void mouseReleaseEvent(QMouseEvent* event)
     {
+        if (_creatingItem != nullptr) {
+            _scene->removeItem(_creatingItem);
+        }
+
         QGraphicsView::mouseReleaseEvent(event);
+
         qDebug() << "mouseReleaseEvent: update from model";
         emit mouseReleased();
     }
+
+private:
+    QGraphicsScene* _scene;
+    KreenQGraphicsRectItem* _creatingItem; // TMP
 };
 
 #endif // MYQGRAPHICSVIEW

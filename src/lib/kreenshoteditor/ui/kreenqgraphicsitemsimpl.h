@@ -18,7 +18,10 @@
  */
 #ifndef UI_KREENQGRAPHICSITEMS_H
 #define UI_KREENQGRAPHICSITEMS_H
+
 #include <QGraphicsDropShadowEffect>
+#include <QAbstractGraphicsShapeItem>
+#include "../core/item.h"
 
 /**
  * multiselection will break the logic
