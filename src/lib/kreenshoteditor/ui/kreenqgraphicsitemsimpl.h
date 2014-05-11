@@ -412,26 +412,36 @@ public:
     {
         this->setPen(QPen(Qt::black, 1, Qt::DotLine));
         //this-set // set everything else dark
-
-        if (!_isCreating) {
-            // TODO: center
-            auto okButton = new QPushButton("Crop (Enter)");
-            auto cancelButton = new QPushButton("Cancel (Esc)");
-            auto hLayout = new QHBoxLayout();
-            hLayout->addWidget(okButton);
-            hLayout->addWidget(cancelButton);
-            auto frame = new QFrame();
-            frame->setLayout(hLayout);
-
-            auto widgetProxy = new QGraphicsProxyWidget(this);
-            widgetProxy->setWidget(frame);
-        }
     }
 
     virtual void updateVisualGeometryFromModel()
     {
-        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
-        this->setPos(_item->rect().x(), _item->rect().y());
+        qDebug() << "crop updateVisualGeometryFromModel";
+
+        QRect rect = _item->rect();
+        this->setRect(0, 0, rect.width(), rect.height());
+        this->setPos(rect.x(), rect.y());
+
+        if (_interactionWidget == nullptr) {
+            if (!_isCreating) {
+                qDebug() << "crop create proxywidget";
+                // TODO: center and make frame transparent
+                auto okButton = new QPushButton("Crop (Enter)");
+                auto cancelButton = new QPushButton("Cancel (Esc)");
+                auto hLayout = new QHBoxLayout();
+                hLayout->addWidget(okButton);
+                hLayout->addWidget(cancelButton);
+                auto frame = new QFrame();
+                frame->setLayout(hLayout);
+
+                auto widgetProxy = new QGraphicsProxyWidget(this);
+                widgetProxy->setWidget(frame);
+                _interactionWidget = widgetProxy;
+                // _interactionWidget->setPos(10, 10); // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
+            }
+        }
+
+        //_interactionWidget->setPos(10, 10); // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
     }
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
@@ -446,6 +456,9 @@ public:
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
+
+private:
+    QGraphicsProxyWidget* _interactionWidget = nullptr;
 };
 
 

@@ -46,6 +46,8 @@ public:
     }
 
 Q_SIGNALS:
+    void tmpRemoveImageOperation();
+
     void mouseReleased();
 
     /**
@@ -82,6 +84,8 @@ protected:
             _scene->addItem(_creatingItem);
         }
         else if (_toolManager->chosenTool == OperationCrop) {
+            emit tmpRemoveImageOperation();
+            
             ItemPtr item = Item::create("op-crop");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
             _scene->addItem(_creatingItem);
@@ -93,6 +97,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* event)
     {
         if (_creatingItem != nullptr) {
+
             //qDebug() << "mouseMoveEvent";
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
             grItemBase->updateVisualGeometryFromPoints(_creatingItemStartPoint, event->pos());

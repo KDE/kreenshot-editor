@@ -52,7 +52,7 @@ public:
     /**
      * not nullptr if there is an image operation item (like crop) waiting for the user
      */
-    ItemPtr imageOperationItem;
+    QGraphicsItem* imageOperationItem;
 
 public:
     MainEditorWidgetImpl()
@@ -146,11 +146,30 @@ public:
         }
 
         if (imageOperationItem != nullptr) {
-            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(imageOperationItem, &scene);
-            scene.addItem(kgrItem);
+            qDebug() << "scene.addItem(imageOperationItem)";
+            scene.addItem(imageOperationItem);
         }
 
         updateItemsGeometryFromModel();
+    }
+
+    void updateSceneWithImageOperationItem(ItemPtr item)
+    {
+        qDebug() << "updateSceneWithImageOperationItem";
+
+        if (imageOperationItem != nullptr) {
+            scene.removeItem(imageOperationItem);
+            imageOperationItem = nullptr;
+        }
+
+        if (item != nullptr) {
+            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
+            scene.addItem(kgrItem);
+            imageOperationItem = kgrItem;
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
+            grItemBase->setIsCreating(false);
+            grItemBase->updateVisualGeometryFromModel();
+        }
     }
 
     /**
@@ -160,10 +179,17 @@ public:
     {
         foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
+
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
-                //qDebug() << "updateGeometryFromModel";
-                grItemBase->updateVisualGeometryFromModel();
+
+                //if (!grItemBase->item()->typeId.startsWith("op-")) {
+                    //qDebug() << "updateGeometryFromModel";
+                    grItemBase->updateVisualGeometryFromModel();
+//                 }
+//                 else {
+//                     qDebug() << "updateItemsGeometryFromModel: ignore because of op- item";
+//                 }
             }
         }
     }
@@ -272,6 +298,9 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
     connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
+
+    connect(_graphicsView, SIGNAL(tmpRemoveImageOperation()), this, SLOT(tmpRemoveImageOperationTool())); // TMP
+
     connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
 }
 
@@ -326,6 +355,11 @@ void MainEditorWidget::requestTool(QString toolId)
         return;
     }
 
+    // remove current image operation if another tool is selected
+    if (!toolId.startsWith("op-")) {
+        d->updateSceneWithImageOperationItem(nullptr);
+    }
+
     emit toolChosen(toolId);
 }
 
@@ -335,17 +369,21 @@ void MainEditorWidget::updateItemsGeometryFromModel()
     d->updateItemsGeometryFromModel();
 }
 
+void MainEditorWidget::tmpRemoveImageOperationTool()
+{
+    d->updateSceneWithImageOperationItem(nullptr);
+}
+
 void MainEditorWidget::handleNewItem(ItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
         d->kreenshotEditor->itemsManager()->addItem(item);
+        d->createSceneFromModel();
     }
     else {
-        d->imageOperationItem = item;
+        d->updateSceneWithImageOperationItem(item);
     }
-
-    d->createSceneFromModel();
 }
 
 void MainEditorWidget::saveToFile(QString filepath)
