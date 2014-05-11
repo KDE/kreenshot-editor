@@ -31,29 +31,12 @@
 #include <QMargins>
 #include <memory>
 #include "kreenqgraphicsitemsimpl.h"
+#include "myqgraphicsview.h"
 
-// TODO
-class ItemVisual {
-public:
+//class ItemVisual {
+//public:
     // bool mouseOver; // TODO later
-    // bool selected;
-};
-
-class MyQGraphicsView : public QGraphicsView
-{
-    virtual void enterEvent(QEvent* event)
-    {
-        // for not to have to click once before one can start moving items
-        this->setFocus();
-    }
-
-    virtual void mouseReleaseEvent(QMouseEvent* event)
-    {
-        QGraphicsView::mouseReleaseEvent(event);
-        //qDebug() << "mouseReleaseEvent: update from model";
-        //this->update();
-    }
-};
+//};
 
 class MainEditorWidgetImpl
 {
@@ -187,20 +170,20 @@ public:
 //             }
         }
 
-        updateItemGeometryFromModel();
+        updateItemsGeometryFromModel();
     }
 
     /**
      * update positions / TMP
      */
-    void updateItemGeometryFromModel()
+    void updateItemsGeometryFromModel()
     {
         foreach(auto gritem, graphicsView->items()) {
             //qDebug() << "muh";
             auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
             if (gritemBase != nullptr)
             {
-                //qDebug() << "updateGeometryFromModel";
+                qDebug() << "updateGeometryFromModel";
                 gritemBase->updateGeometryFromModel();
             }
         }
@@ -372,6 +355,10 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     d->graphicsView = _graphicsView;
     d->kreenshotEditor->itemsManager()->addDemoItems();
     d->initScene(_graphicsView);
+
+    // makes sure that every time the mouse is released the whole scene is update from model
+    // to check if everything is ok (e. g. with multiselection moves)
+    connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateFromModel()));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -383,6 +370,7 @@ MainEditorWidget::~MainEditorWidget()
 void MainEditorWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
+
     // QPainter painterImage(QImage); // TODO: use this to render to image and then to save to file
 
 //     auto baseImage = d->kreenshotEditor->getBaseImage();
@@ -421,3 +409,9 @@ void MainEditorWidget::requestTool(QString toolId)
 
     emit toolChosen(toolId);
 }
+
+void MainEditorWidget::updateFromModel()
+{
+    d->updateItemsGeometryFromModel();
+}
+

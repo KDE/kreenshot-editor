@@ -16,6 +16,7 @@ include_directories(
 set(kreenshoteditor_SOURCES
     kreenshoteditor.cpp
     ui/maineditorwidget.cpp
+    ui/myqgraphicsview.cpp
     core/item.cpp
     core/itemsmanager.cpp
 )

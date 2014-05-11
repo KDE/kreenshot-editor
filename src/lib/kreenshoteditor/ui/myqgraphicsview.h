@@ -16,45 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_MAIN_EDITOR_WIDGET_H
-#define UI_MAIN_EDITOR_WIDGET_H
+#ifndef UI_MYQGRAPHICSVIEW_H
+#define UI_MYQGRAPHICSVIEW_H
 
 #include <QWidget>
+#include <QGraphicsView>
+#include <QDebug>
 #include <memory>
 #include "../kreenshoteditor.h"
 
-class MyQGraphicsView;
-class QPaintEvent;
-class QGraphicsView;
-class MainEditorWidgetImpl;
-typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
-
-class MainEditorWidget : public QWidget
+class MyQGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
-    virtual ~MainEditorWidget();
+    MyQGraphicsView()
+    {
+    }
 
 Q_SIGNALS:
-    void toolChosen(QString toolId);
-
-public Q_SLOTS:
-    void requestTool(QString toolId);
-
-protected Q_SLOTS:
-    void updateFromModel();
+    void mouseReleased();
 
 protected:
-    void paintEvent(QPaintEvent*);
+    virtual void enterEvent(QEvent* event)
+    {
+        // for not to have to click once before one can start moving items
+        this->setFocus();
+    }
 
-private:
-    MyQGraphicsView* _graphicsView;
-
-    MainEditorWidgetImplPtr d;
+    virtual void mouseReleaseEvent(QMouseEvent* event)
+    {
+        QGraphicsView::mouseReleaseEvent(event);
+        qDebug() << "mouseReleaseEvent: update from model";
+        emit mouseReleased();
+    }
 };
 
-#endif // UI_MAIN_EDITOR_WIDGET_H
+#endif // MYQGRAPHICSVIEW
 
 // kate: indent-mode cstyle; replace-tabs on;

@@ -59,25 +59,21 @@ protected:
 
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
     {
-        // qDebug() << _graphicsItem->scenePos(); // (0, 0)
-
          QPoint origPos = event->scenePos().toPoint();
-         //_graphicsItem->rect();
-         _initialMousePosTopLeft = origPos - _item->rect().topLeft();
-         qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << " initTopLeft: " << _initialMousePosTopLeft << "item rect: " << _item->rect();
-
+         qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
          return true;
     }
 
     bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
     {
         QPoint newPos = event->scenePos().toPoint();
-        QRect rect = _item->rect();
-        rect.moveTopLeft(newPos - _initialMousePosTopLeft);
-        qDebug() << "2. mouseReleaseEvent:" << "newPos: " << newPos << "initTopLeft:  " << _initialMousePosTopLeft << "item rect: " << _item->rect();
-        updateGeometryFromModel();
-        qDebug() << "3. after updateGeometryFromModel: " << "item rect: " << _item->rect();
-//
+        setGeometryToModel();
+        qDebug() << "  2. mouseReleaseEvent:" << "newPos: " << newPos << "item rect: " << _item->rect();
+
+        // test
+//         updateGeometryFromModel();
+//         qDebug() << "  3. after updateGeometryFromModel: " << "item rect: " << _item->rect();
+
 // //         if (wasMoved()) {
 // //             //do something and accept the event
 // //         } else {
@@ -92,13 +88,10 @@ protected:
     void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
     {
         //qDebug() << "itemChangeImpl: " << change;
-
         if (change == QGraphicsItem::ItemPositionChange) {
             //qDebug() << "itemChangeImpl: " << change;
-
             //QPoint origPos = _graphicsItem->pos().toPoint();
             //QPoint newPos = value.toPoint();
-
             //updateGeometryFromModel();
         }
     }
@@ -108,7 +101,6 @@ protected:
 
 private:
     QAbstractGraphicsShapeItem* _graphicsItem;
-    QPoint _initialMousePosTopLeft;
 };
 
 class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
@@ -127,12 +119,15 @@ public:
 
     virtual void updateGeometryFromModel()
     {
-        this->setRect(_item->rect());
+        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
+        this->setPos(_item->rect().x(), _item->rect().y());
     }
 
     virtual void setGeometryToModel()
     {
-        _item->setRect(this->rect().toRect());
+        QPoint scenePos = this->scenePos().toPoint();
+        QRect grRect = this->rect().toRect();
+        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
@@ -170,12 +165,15 @@ public:
 
     virtual void updateGeometryFromModel()
     {
-        this->setRect(_item->rect());
+        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
+        this->setPos(_item->rect().x(), _item->rect().y());
     }
 
     virtual void setGeometryToModel()
     {
-        _item->setRect(this->rect().toRect());
+        QPoint scenePos = this->scenePos().toPoint();
+        QRect grRect = this->rect().toRect();
+        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
