@@ -171,65 +171,6 @@ public:
         }
     }
 
-    // todo: remove later
-//     void onMouseMove(QPoint pos)
-//     {
-//         mouseOverMap.clear();
-//
-//         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-//             bool isOver = item->rect().contains(pos);
-//             mouseOverMap[item] = isOver;
-//             if (isOver) {
-//                 break; // only match the top most item if there are more than one
-//             }
-//         }
-//     }
-
-//     void onMouseLeftButtonPress(QPoint pos, bool toggle)
-//     {
-//         if (!toggle) {
-//             selectedMap.clear();
-//         }
-//
-//         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-//             bool hit = item->rect().contains(pos);
-//             if (!toggle) {
-//                 selectedMap[item] = hit;
-//
-//                 if (hit) {
-//                     itemOnTheMove = item;
-//                     itemOnTheMoveInitialMousePosTopLeft = pos - itemOnTheMove->rect().topLeft();
-//                     break; // select the top-most one
-//                 }
-//             }
-//             else {
-//                 if (hit) {
-//                     selectedMap[item] = !selectedMap[item];
-//                 }
-//             }
-//         }
-//     }
-
-    void onMouseMoveNoCtrlKey(QPoint pos) {
-//         if (itemOnTheMove != nullptr) {
-//             if (itemOnTheMove->line().isNull()) { // move a rectangle item
-//                 QRect rect = itemOnTheMove->rect();
-//                 rect.moveTopLeft(pos - itemOnTheMoveInitialMousePosTopLeft);
-//                 itemOnTheMove->setRect(rect);
-//             }
-//             else { // move a line item
-//                 QLine line = itemOnTheMove->line();
-//                 QPoint p1 = line.p1();
-//                 QPoint p2 = line.p2();
-//                 QPoint diff = p2 - p1;
-//                 p1 = pos - itemOnTheMoveInitialMousePosTopLeft;
-//                 p2 = p1 + diff;
-//                 line.setPoints(p1, p2);
-//                 itemOnTheMove->setLine(line);
-//             }
-//         }
-    }
-
     void createDemoScene()
     {
         QRect rect = getBaseRect();
