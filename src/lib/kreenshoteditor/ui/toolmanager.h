@@ -26,6 +26,7 @@ enum ToolEnum
     Select = 0,
     DrawRect,
     DrawEllipse,
+    DrawLine,
     DrawText,
     // ...
     Crop

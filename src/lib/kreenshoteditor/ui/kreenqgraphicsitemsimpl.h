@@ -21,6 +21,8 @@
 
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>
+#include <cmath>
+#include <algorithm>
 #include "../core/item.h"
 
 /**
@@ -48,6 +50,11 @@ public:
     }
 
     virtual void updateVisualGeometryFromModel() = 0;
+
+    /**
+     * used when creating an item
+     */
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
 
 protected:
     virtual void configureFromModel() = 0;
@@ -160,6 +167,12 @@ public:
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    {
+        this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
+        this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
+    }
+
     virtual void updateModelFromVisualGeometry()
     {
         QPoint scenePos = this->scenePos().toPoint();
@@ -206,6 +219,12 @@ public:
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    {
+        this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
+        this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
+    }
+
     virtual void updateModelFromVisualGeometry()
     {
         QPoint scenePos = this->scenePos().toPoint();
@@ -249,7 +268,11 @@ public:
     virtual void updateVisualGeometryFromModel()
     {
         this->setLine(_item->line());
-        //this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    {
+        this->setLine(QLine(startPoint, endPoint));
     }
 
     virtual void updateModelFromVisualGeometry()
@@ -300,6 +323,11 @@ public:
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    {
+
     }
 
     virtual void updateModelFromVisualGeometry()

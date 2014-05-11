@@ -55,17 +55,21 @@ protected:
     {
         qDebug() << "mousePressEvent";
 
+        _startPoint = event->pos(); // todo: map coo?
+
         if (_toolManager->chosenTool == DrawRect) {
             ItemPtr item = Item::create("rect");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            _startPoint = event->pos(); // TODO: map coo???
-            //_creatingItem->setRect(50, 50, 100, 100);
             _scene->addItem(_creatingItem);
         }
         else if (_toolManager->chosenTool == DrawEllipse) {
             ItemPtr item = Item::create("ellipse");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            //_creatingItem->setRect(50, 50, 100, 100);
+            _scene->addItem(_creatingItem);
+        }
+        else if (_toolManager->chosenTool == DrawLine) {
+            ItemPtr item = Item::create("line");
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
             _scene->addItem(_creatingItem);
         }
 
@@ -75,10 +79,9 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* event)
     {
         if (_creatingItem != nullptr) {
-            qDebug() << "mouseMoveEvent";
-            //QRectF rect = _creatingItem->rect();
-            //rect.setRight(rect.right() + 2);
-            //_creatingItem->setRect(rect);
+            //qDebug() << "mouseMoveEvent";
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
+            grItemBase->updateVisualGeometryFromPoints(_startPoint, event->pos());
         }
 
         QGraphicsView::mouseMoveEvent(event);

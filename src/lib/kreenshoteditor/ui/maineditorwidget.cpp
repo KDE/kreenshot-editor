@@ -292,9 +292,11 @@ void MainEditorWidget::requestTool(QString toolId)
         d->setChosenTool(ToolEnum::DrawEllipse);
     }
     else if (toolId == "line") {
-        //QMessageBox::information(nullptr, "Action", "Ellipse");
+        d->setChosenTool(ToolEnum::DrawLine);
     }
     else {
+        d->setChosenTool(ToolEnum::Select);
+
         QString message = QString("TODO / Unknown tool id '%1'").arg(toolId);
         qDebug() << message;
         QMessageBox::information(this, "Not impl", message);
