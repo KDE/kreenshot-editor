@@ -58,6 +58,12 @@
     <addaction name="actionToolRect"/>
     <addaction name="actionToolEllipse"/>
     <addaction name="actionToolLine"/>
+    <addaction name="actionToolText"/>
+    <addaction name="actionToolHighlight"/>
+    <addaction name="actionToolObfuscate"/>
+    <addaction name="separator"/>
+    <addaction name="actionToolCrop"/>
+    <addaction name="actionToolRipOut"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
@@ -197,11 +203,6 @@
        <property name="text">
         <string>Text</string>
        </property>
-       <property name="icon">
-        <iconset theme="draw-text">
-         <normaloff/>
-        </iconset>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -222,11 +223,6 @@
        <property name="text">
         <string>Highlight</string>
        </property>
-       <property name="icon">
-        <iconset theme="im-status-message-edit">
-         <normaloff/>
-        </iconset>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -246,11 +242,6 @@
       <widget class="QPushButton" name="pushButtonToolObfuscate">
        <property name="text">
         <string>Obfuscate</string>
-       </property>
-       <property name="icon">
-        <iconset theme="image-missing">
-         <normaloff/>
-        </iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -393,7 +384,7 @@
       </widget>
      </item>
      <item row="12" column="0" colspan="3">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButtonToolRipOut">
        <property name="text">
         <string>Rip out</string>
        </property>
@@ -407,7 +398,7 @@
       </widget>
      </item>
      <item row="11" column="0" colspan="3">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButtonToolCrop">
        <property name="text">
         <string>Crop</string>
        </property>
@@ -639,6 +630,73 @@
     <string>Ctrl+3</string>
    </property>
   </action>
+  <action name="actionToolText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="draw-text">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="actionToolHighlight">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="im-status-message-edit">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Highlight</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+5</string>
+   </property>
+  </action>
+  <action name="actionToolObfuscate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="image-missing">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Obfuscate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+6</string>
+   </property>
+  </action>
+  <action name="actionToolCrop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Crop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
+   </property>
+  </action>
+  <action name="actionToolRipOut">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rip out</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -655,134 +713,6 @@
     <hint type="destinationlabel">
      <x>399</x>
      <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonToolSelect</sender>
-   <signal>clicked()</signal>
-   <receiver>actionToolSelect</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>168</x>
-     <y>113</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonToolRect</sender>
-   <signal>clicked()</signal>
-   <receiver>actionToolRect</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonToolEllipse</sender>
-   <signal>clicked()</signal>
-   <receiver>actionToolEllipse</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>219</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonToolLine</sender>
-   <signal>clicked()</signal>
-   <receiver>actionToolLine</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>249</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionToolEllipse</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButtonToolEllipse</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>219</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionToolLine</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButtonToolLine</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionToolRect</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButtonToolRect</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>189</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionToolSelect</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButtonToolSelect</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>168</x>
-     <y>113</y>
     </hint>
    </hints>
   </connection>

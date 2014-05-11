@@ -32,11 +32,15 @@ public:
      */
     void setupIcons()
     {
-        ui->pushButtonToolEllipse->setIcon(ui->actionToolEllipse->icon());
-        //ui->pushButtonToolHighlight->setIcon(ui->actionToolHighlight->icon());
-        ui->pushButtonToolLine->setIcon(ui->actionToolLine->icon());
-        ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
         ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
+        ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
+        ui->pushButtonToolEllipse->setIcon(ui->actionToolEllipse->icon());
+        ui->pushButtonToolLine->setIcon(ui->actionToolLine->icon());
+        ui->pushButtonToolText->setIcon(ui->actionToolText->icon());
+        ui->pushButtonToolHighlight->setIcon(ui->actionToolHighlight->icon());
+        ui->pushButtonToolObfuscate->setIcon(ui->actionToolObfuscate->icon());
+        ui->pushButtonToolCrop->setIcon(ui->actionToolCrop->icon());
+        ui->pushButtonToolRipOut->setIcon(ui->actionToolRipOut->icon());
     }
 
     QAction* toolActionFromId(QString toolId)
@@ -68,27 +72,15 @@ public:
     {
         std::vector<QAction*> list;
 
-        // alphabetically
-
-//         list.push_back(ui->actionAbout);
-//         list.push_back(ui->actionNew);
-//         list.push_back(ui->actionOpen);
-//         list.push_back(ui->actionPreferences);
-//         list.push_back(ui->actionQuit);
-//         list.push_back(ui->actionRedo);
-//         list.push_back(ui->actionSave);
-//         list.push_back(ui->actionSaveAs);
-//         list.push_back(ui->pushButtonToolEllipse);
-//         list.push_back(ui->pushButtonToolHighlight);
-//         list.push_back(ui->pushButtonToolLine);
-//         list.push_back(ui->pushButtonToolObfuscate);
-//         list.push_back(ui->pushButtonToolRect);
-//         list.push_back(ui->pushButtonToolSelect);
-//         list.push_back(ui->pushButtonToolText);
+        list.push_back(ui->actionToolSelect);
+        list.push_back(ui->actionToolRect);
         list.push_back(ui->actionToolEllipse);
         list.push_back(ui->actionToolLine);
-        list.push_back(ui->actionToolRect);
-        list.push_back(ui->actionToolSelect);
+        list.push_back(ui->actionToolText);
+        list.push_back(ui->actionToolHighlight);
+        list.push_back(ui->actionToolObfuscate);
+        list.push_back(ui->actionToolCrop);
+        list.push_back(ui->actionToolRipOut);
         return list;
     }
 
@@ -128,6 +120,28 @@ void MainWindow::setupUi()
 
 void MainWindow::setupActions()
 {
+    // button to action
+    connect(d->ui->pushButtonToolSelect, SIGNAL(clicked()), d->ui->actionToolSelect, SLOT(trigger()));
+    connect(d->ui->pushButtonToolRect, SIGNAL(clicked()), d->ui->actionToolRect, SLOT(trigger()));
+    connect(d->ui->pushButtonToolEllipse, SIGNAL(clicked()), d->ui->actionToolEllipse, SLOT(trigger()));
+    connect(d->ui->pushButtonToolLine, SIGNAL(clicked()), d->ui->actionToolLine, SLOT(trigger()));
+    connect(d->ui->pushButtonToolText, SIGNAL(clicked()), d->ui->actionToolText, SLOT(trigger()));
+    connect(d->ui->pushButtonToolHighlight, SIGNAL(clicked()), d->ui->actionToolHighlight, SLOT(trigger()));
+    connect(d->ui->pushButtonToolObfuscate, SIGNAL(clicked()), d->ui->actionToolObfuscate, SLOT(trigger()));
+    connect(d->ui->pushButtonToolCrop, SIGNAL(clicked()), d->ui->actionToolCrop, SLOT(trigger()));
+    connect(d->ui->pushButtonToolRipOut, SIGNAL(clicked()), d->ui->actionToolRipOut, SLOT(trigger()));
+
+    // action to button
+    connect(d->ui->actionToolSelect, SIGNAL(toggled(bool)), d->ui->pushButtonToolSelect, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolRect, SIGNAL(toggled(bool)), d->ui->pushButtonToolRect, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolEllipse, SIGNAL(toggled(bool)), d->ui->pushButtonToolEllipse, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolLine, SIGNAL(toggled(bool)), d->ui->pushButtonToolLine, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolText, SIGNAL(toggled(bool)), d->ui->pushButtonToolText, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolHighlight, SIGNAL(toggled(bool)), d->ui->pushButtonToolHighlight, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolObfuscate, SIGNAL(toggled(bool)), d->ui->pushButtonToolObfuscate, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolCrop, SIGNAL(toggled(bool)), d->ui->pushButtonToolCrop, SLOT(setChecked(bool)));
+    connect(d->ui->actionToolRipOut, SIGNAL(toggled(bool)), d->ui->pushButtonToolRipOut, SLOT(setChecked(bool)));
+
     // as listed in the Action Editor:
     connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
@@ -142,6 +156,11 @@ void MainWindow::setupActions()
     connect(d->ui->actionToolRect, SIGNAL(triggered()), this, SLOT(requestTool()));
     connect(d->ui->actionToolEllipse, SIGNAL(triggered()), this, SLOT(requestTool()));
     connect(d->ui->actionToolLine, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolText, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolHighlight, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolObfuscate, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolCrop, SIGNAL(triggered()), this, SLOT(requestTool()));
+    connect(d->ui->actionToolRipOut, SIGNAL(triggered()), this, SLOT(requestTool()));
 
     connect(d->kreenshotEditor->getMainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
 }
