@@ -21,20 +21,23 @@
 
 #include <QWidget>
 #include <QGraphicsView>
+#include <QMouseEvent>
 #include <QDebug>
 #include <QGraphicsScene>
 #include <memory>
 #include "../kreenshoteditor.h"
 #include "kreenqgraphicsitemsimpl.h"
+#include "toolmanager.h"
 
 class MyQGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    MyQGraphicsView(QGraphicsScene* scene)
+    MyQGraphicsView(QGraphicsScene* scene, ToolManagerPtr toolManager)
     {
         _scene = scene;
+        _toolManager = toolManager;
         _creatingItem = nullptr;
     }
 
@@ -52,21 +55,30 @@ protected:
     {
         qDebug() << "mousePressEvent";
 
-        ItemPtr item = Item::create("rect");
-        _creatingItem = new KreenQGraphicsRectItem(item, _scene);
-        _creatingItem->setRect(50, 50, 100, 100);
-        _scene->addItem(_creatingItem);
+        if (_toolManager->chosenTool == DrawRect) {
+            ItemPtr item = Item::create("rect");
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+            _startPoint = event->pos(); // TODO: map coo???
+            //_creatingItem->setRect(50, 50, 100, 100);
+            _scene->addItem(_creatingItem);
+        }
+        else if (_toolManager->chosenTool == DrawEllipse) {
+            ItemPtr item = Item::create("ellipse");
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+            //_creatingItem->setRect(50, 50, 100, 100);
+            _scene->addItem(_creatingItem);
+        }
 
         QGraphicsView::mousePressEvent(event);
     }
 
     virtual void mouseMoveEvent(QMouseEvent* event)
     {
-        qDebug() << "mouseMoveEvent";
         if (_creatingItem != nullptr) {
-            QRectF rect = _creatingItem->rect();
-            rect.setRight(rect.right() + 2);
-            _creatingItem->setRect(rect);
+            qDebug() << "mouseMoveEvent";
+            //QRectF rect = _creatingItem->rect();
+            //rect.setRight(rect.right() + 2);
+            //_creatingItem->setRect(rect);
         }
 
         QGraphicsView::mouseMoveEvent(event);
@@ -76,6 +88,10 @@ protected:
     {
         if (_creatingItem != nullptr) {
             _scene->removeItem(_creatingItem);
+
+            // TODO: add to item to model
+
+            _creatingItem = nullptr;
         }
 
         QGraphicsView::mouseReleaseEvent(event);
@@ -86,7 +102,10 @@ protected:
 
 private:
     QGraphicsScene* _scene;
-    KreenQGraphicsRectItem* _creatingItem; // TMP
+    ToolManagerPtr _toolManager;
+
+    QGraphicsItem* _creatingItem; // TMP
+    QPoint _startPoint;
 };
 
 #endif // MYQGRAPHICSVIEW

@@ -32,21 +32,12 @@
 #include <memory>
 #include "kreenqgraphicsitemsimpl.h"
 #include "myqgraphicsview.h"
+#include "toolmanager.h"
 
 //class ItemVisual {
 //public:
     // bool mouseOver; // TODO later
 //};
-
-enum ToolEnum
-{
-    Select = 0,
-    DrawRect,
-    DrawEllipse,
-    DrawText,
-    // ...
-    Crop
-};
 
 class MainEditorWidgetImpl
 {
@@ -54,7 +45,13 @@ public:
     KreenshotEditorPtr kreenshotEditor;
     QGraphicsScene scene;
     MyQGraphicsView* graphicsView;
-    ToolEnum chosenTool;
+    ToolManagerPtr toolManager;
+
+public:
+    MainEditorWidgetImpl()
+    {
+        toolManager = ToolManagerPtr(new ToolManager());
+    }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
 //     const int mouseOverMargin = 2; // TODO later
@@ -103,24 +100,8 @@ public:
 
         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
 
-            // create items
-            //
-            if (item->typeId == "rect") {
-                auto kgrItem = new KreenQGraphicsRectItem(item, &scene);
-                scene.addItem(kgrItem);
-            }
-            else if (item->typeId == "line") {
-                 auto kgrItem = new KreenQGraphicsLineItem(item, &scene);
-                 scene.addItem(kgrItem);
-            }
-            else if (item->typeId == "ellipse") {
-                auto kgrItem = new KreenQGraphicsEllipseItem(item, &scene);
-                scene.addItem(kgrItem);
-            }
-            else if (item->typeId == "text") {
-                auto kgrItem = new KreenGraphicsTextRectItem(item, &scene);
-                scene.addItem(kgrItem);
-            }
+            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
+            scene.addItem(kgrItem);
 
             // todo: remove later
 //             auto mouseOverMapItem = mouseOverMap.find(item);
@@ -169,7 +150,7 @@ public:
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
                 //qDebug() << "updateGeometryFromModel";
-                grItemBase->updateGeometryFromModel();
+                grItemBase->updateVisualGeometryFromModel();
             }
         }
     }
@@ -180,14 +161,14 @@ public:
             //qDebug() << "muh";
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
-                grItemBase->setMovable(chosenTool == ToolEnum::Select);
+                grItemBase->setMovable(toolManager->chosenTool == ToolEnum::Select);
             }
         }
     }
 
     void setChosenTool(ToolEnum tool)
     {
-        chosenTool = tool;
+        toolManager->chosenTool = tool;
         updateItemsBehaviourFromChosenTool();
     }
 
@@ -261,7 +242,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    _graphicsView = new MyQGraphicsView(&d->scene);
+    _graphicsView = new MyQGraphicsView(&d->scene, d->toolManager);
     layout->addWidget(_graphicsView, 0, 0);
     layout->setMargin(0);
 

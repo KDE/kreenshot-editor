@@ -26,6 +26,7 @@
 class MyQGraphicsView;
 class QPaintEvent;
 class QGraphicsView;
+
 class MainEditorWidgetImpl;
 typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
 

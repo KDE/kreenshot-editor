@@ -30,7 +30,7 @@ Component 2: image-editor
 TODO
 ----
 - ToolManager: 1. Select tool,
-    2. Draw item tool 
+    2. Draw item tool
         with moving: rect, ellipse, line, text, highlight, obfuscate
 - save image to file
 - save settings to file
@@ -68,6 +68,12 @@ TODO
      - slider for line width
      - slider for font size
      - slider for arrow tip typ?
+
+Related tools
+-------------
+These tools have similar image editor capabilities:
+- shutter (written in Perl)
+- hotshots (written in QT)
 
 DONE
 ----

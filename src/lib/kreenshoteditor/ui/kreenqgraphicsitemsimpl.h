@@ -38,21 +38,20 @@ public:
         _graphicsItem = graphicsItem;
         _scene = scene;
 
-        _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable);
-        _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable);
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     }
 
     void setMovable(bool isMovable)
     {
+        _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
         _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
     }
 
-    virtual void updateGeometryFromModel() = 0;
+    virtual void updateVisualGeometryFromModel() = 0;
 
 protected:
     virtual void configureFromModel() = 0;
-    virtual void setGeometryToModel() = 0;
+    virtual void updateModelFromVisualGeometry() = 0;
 
     void configurePen(QAbstractGraphicsShapeItem* grItem)
     {
@@ -94,11 +93,11 @@ protected:
     {
         //QPoint newPos = event->scenePos().toPoint();
 
-        qDebug() << "setGeometryToModel() for all selected items";
+        qDebug() << "updateModelFromVisualGeometry() for all selected items";
         foreach (auto gritem, _scene->selectedItems()) {
             auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
             if (gritemBase != nullptr) { // there might also be other items
-                gritemBase->setGeometryToModel();
+                gritemBase->updateModelFromVisualGeometry();
             }
             else {
                 qDebug() << "?? who was it";
@@ -108,8 +107,8 @@ protected:
         //qDebug() << "  2. mouseReleaseEvent:" << "newPos: " << newPos << "item rect: " << _item->rect();
 
         // test
-//         updateGeometryFromModel();
-//         qDebug() << "  3. after updateGeometryFromModel: " << "item rect: " << _item->rect();
+//         updateVisualGeometryFromModel();
+//         qDebug() << "  3. after updateVisualGeometryFromModel: " << "item rect: " << _item->rect();
 
 // //         if (wasMoved()) {
 // //             //do something and accept the event
@@ -129,7 +128,7 @@ protected:
             //qDebug() << "itemChangeImpl: " << change;
             //QPoint origPos = _graphicsItem->pos().toPoint();
             //QPoint newPos = value.toPoint();
-            //updateGeometryFromModel();
+            //updateVisualGeometryFromModel();
         }
     }
 
@@ -155,13 +154,13 @@ public:
         configurePen(this);
     }
 
-    virtual void updateGeometryFromModel()
+    virtual void updateVisualGeometryFromModel()
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void setGeometryToModel()
+    virtual void updateModelFromVisualGeometry()
     {
         QPoint scenePos = this->scenePos().toPoint();
         QRect grRect = this->rect().toRect();
@@ -201,13 +200,13 @@ public:
         configurePen(this);
     }
 
-    virtual void updateGeometryFromModel()
+    virtual void updateVisualGeometryFromModel()
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void setGeometryToModel()
+    virtual void updateModelFromVisualGeometry()
     {
         QPoint scenePos = this->scenePos().toPoint();
         QRect grRect = this->rect().toRect();
@@ -247,13 +246,13 @@ public:
         configurePen(this);
     }
 
-    virtual void updateGeometryFromModel()
+    virtual void updateVisualGeometryFromModel()
     {
         this->setLine(_item->line());
         //this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void setGeometryToModel()
+    virtual void updateModelFromVisualGeometry()
     {
         //QPoint scenePos = this->scenePos().toPoint();
         QLine line = this->line().toLine();
@@ -297,13 +296,13 @@ public:
         textGrItem->setPos(5, 5);
     }
 
-    virtual void updateGeometryFromModel()
+    virtual void updateVisualGeometryFromModel()
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void setGeometryToModel()
+    virtual void updateModelFromVisualGeometry()
     {
         QPoint scenePos = this->scenePos().toPoint();
         QRect grRect = this->rect().toRect();
