@@ -296,7 +296,7 @@ void MainEditorWidget::requestTool(QString toolId)
         d->setChosenTool(ToolEnum::DrawLine);
     }
     else {
-        //d->setChosenTool(ToolEnum::Select); // not needed
+        d->setChosenTool(ToolEnum::Select); // needed
 
         QString message = QString("TODO / Unknown tool id '%1'").arg(toolId);
         qDebug() << message;

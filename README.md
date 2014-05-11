@@ -36,6 +36,7 @@ TODO
 - enable hover visual
 - makes sure line has a bigger catch area when trying to move
 - ToolManager: Draw item tool: text, highlight, obfuscate
+- key movement of items
 
 - crop etc. tool
 - rename Item to KreenItem

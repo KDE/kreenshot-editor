@@ -32,38 +32,83 @@ public:
      */
     void setupIcons()
     {
-        ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
-        ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
-        ui->pushButtonToolEllipse->setIcon(ui->actionToolEllipse->icon());
-        ui->pushButtonToolLine->setIcon(ui->actionToolLine->icon());
-        ui->pushButtonToolText->setIcon(ui->actionToolText->icon());
-        ui->pushButtonToolHighlight->setIcon(ui->actionToolHighlight->icon());
-        ui->pushButtonToolObfuscate->setIcon(ui->actionToolObfuscate->icon());
-        ui->pushButtonToolCrop->setIcon(ui->actionToolCrop->icon());
-        ui->pushButtonToolRipOut->setIcon(ui->actionToolRipOut->icon());
+        foreach (auto action, allToolActions()) {
+            QString toolId = actionToToolId(action);
+            toolboxButtonFromId(toolId)->setIcon(toolActionFromId(toolId)->icon());
+        }
+//         ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
+//         ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
+//         ...
     }
 
     QAction* toolActionFromId(QString toolId)
     {
-        // alphabetically
-
-        if (toolId == "ellipse") {
-            return ui->actionToolEllipse;
-        }
-//         else if (toolId == "highlight") {
-//             return ui->pushButtonToolHighlight;
-//         }
-        else if (toolId == "line") {
-            return ui->actionToolLine;
+        if (toolId == "select") {
+            return ui->actionToolSelect;
         }
         else if (toolId == "rect") {
             return ui->actionToolRect;
         }
-        else if (toolId == "select") {
-            return ui->actionToolSelect;
+        else if (toolId == "ellipse") {
+            return ui->actionToolEllipse;
+        }
+        else if (toolId == "line") {
+            return ui->actionToolLine;
+        }
+        else if (toolId == "text") {
+            return ui->actionToolText;
+        }
+        else if (toolId == "highlight") {
+            return ui->actionToolHighlight;
+        }
+        else if (toolId == "obfuscate") {
+            return ui->actionToolObfuscate;
+        }
+        else if (toolId == "crop") {
+            return ui->actionToolCrop;
+        }
+        else if (toolId == "ripout") {
+            return ui->actionToolRipOut;
         }
         else {
-            qDebug() << "TODO...........";
+            qDebug() << "toolActionFromId: TODO...........";
+            Q_ASSERT(false);
+            return nullptr;
+        }
+    }
+
+    QPushButton* toolboxButtonFromId(QString toolId)
+    {
+        if (toolId == "select") {
+            return ui->pushButtonToolSelect;
+        }
+        else if (toolId == "rect") {
+            return ui->pushButtonToolRect;
+        }
+        else if (toolId == "ellipse") {
+            return ui->pushButtonToolEllipse;
+        }
+        else if (toolId == "line") {
+            return ui->pushButtonToolLine;
+        }
+        else if (toolId == "text") {
+            return ui->pushButtonToolText;
+        }
+        else if (toolId == "highlight") {
+            return ui->pushButtonToolHighlight;
+        }
+        else if (toolId == "obfuscate") {
+            return ui->pushButtonToolObfuscate;
+        }
+        else if (toolId == "crop") {
+            return ui->pushButtonToolCrop;
+        }
+        else if (toolId == "ripout") {
+            return ui->pushButtonToolRipOut;
+        }
+        else {
+            qDebug() << "toolboxButtonFromId: TODO...........";
+            Q_ASSERT(false);
             return nullptr;
         }
     }
@@ -82,6 +127,13 @@ public:
         list.push_back(ui->actionToolCrop);
         list.push_back(ui->actionToolRipOut);
         return list;
+    }
+
+    QString actionToToolId(QObject* action)
+    {
+        QString senderName = action->objectName();
+        QString toolId = senderName.replace("actionTool", "").toLower();
+        return toolId;
     }
 
 public:
@@ -120,29 +172,29 @@ void MainWindow::setupUi()
 
 void MainWindow::setupActions()
 {
-    // button to action
-    connect(d->ui->pushButtonToolSelect, SIGNAL(clicked()), d->ui->actionToolSelect, SLOT(trigger()));
-    connect(d->ui->pushButtonToolRect, SIGNAL(clicked()), d->ui->actionToolRect, SLOT(trigger()));
-    connect(d->ui->pushButtonToolEllipse, SIGNAL(clicked()), d->ui->actionToolEllipse, SLOT(trigger()));
-    connect(d->ui->pushButtonToolLine, SIGNAL(clicked()), d->ui->actionToolLine, SLOT(trigger()));
-    connect(d->ui->pushButtonToolText, SIGNAL(clicked()), d->ui->actionToolText, SLOT(trigger()));
-    connect(d->ui->pushButtonToolHighlight, SIGNAL(clicked()), d->ui->actionToolHighlight, SLOT(trigger()));
-    connect(d->ui->pushButtonToolObfuscate, SIGNAL(clicked()), d->ui->actionToolObfuscate, SLOT(trigger()));
-    connect(d->ui->pushButtonToolCrop, SIGNAL(clicked()), d->ui->actionToolCrop, SLOT(trigger()));
-    connect(d->ui->pushButtonToolRipOut, SIGNAL(clicked()), d->ui->actionToolRipOut, SLOT(trigger()));
+    foreach (auto action, d->allToolActions()) {
+        QString toolId = d->actionToToolId(action);
 
-    // action to button
-    connect(d->ui->actionToolSelect, SIGNAL(toggled(bool)), d->ui->pushButtonToolSelect, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolRect, SIGNAL(toggled(bool)), d->ui->pushButtonToolRect, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolEllipse, SIGNAL(toggled(bool)), d->ui->pushButtonToolEllipse, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolLine, SIGNAL(toggled(bool)), d->ui->pushButtonToolLine, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolText, SIGNAL(toggled(bool)), d->ui->pushButtonToolText, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolHighlight, SIGNAL(toggled(bool)), d->ui->pushButtonToolHighlight, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolObfuscate, SIGNAL(toggled(bool)), d->ui->pushButtonToolObfuscate, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolCrop, SIGNAL(toggled(bool)), d->ui->pushButtonToolCrop, SLOT(setChecked(bool)));
-    connect(d->ui->actionToolRipOut, SIGNAL(toggled(bool)), d->ui->pushButtonToolRipOut, SLOT(setChecked(bool)));
+        // button click to action
+        connect(d->toolboxButtonFromId(toolId), SIGNAL(clicked()), d->toolActionFromId(toolId), SLOT(trigger()));
 
-    // as listed in the Action Editor:
+        // action toogled to button
+        connect(d->toolActionFromId(toolId), SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
+
+        // select action to request
+        connect(d->toolActionFromId(toolId), SIGNAL(triggered()), this, SLOT(requestTool()));
+    }
+
+    //connect(d->ui->pushButtonToolSelect, SIGNAL(clicked()), d->ui->actionToolSelect, SLOT(trigger()));
+    //connect(d->ui->pushButtonToolRect, SIGNAL(clicked()), d->ui->actionToolRect, SLOT(trigger()));
+    // ...
+    //connect(d->ui->actionToolSelect, SIGNAL(toggled(bool)), d->ui->pushButtonToolSelect, SLOT(setChecked(bool)));
+    //connect(d->ui->actionToolRect, SIGNAL(toggled(bool)), d->ui->pushButtonToolRect, SLOT(setChecked(bool)));
+    // ..
+    //connect(d->ui->actionToolSelect, SIGNAL(triggered()), this, SLOT(requestTool()));
+    //connect(d->ui->actionToolRect, SIGNAL(triggered()), this, SLOT(requestTool()));
+    // ...
+
     connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
     // actionQuit via Action Editor
@@ -152,15 +204,6 @@ void MainWindow::setupActions()
     connect(d->ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
-    connect(d->ui->actionToolSelect, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolRect, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolEllipse, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolLine, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolText, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolHighlight, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolObfuscate, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolCrop, SIGNAL(triggered()), this, SLOT(requestTool()));
-    connect(d->ui->actionToolRipOut, SIGNAL(triggered()), this, SLOT(requestTool()));
 
     connect(d->kreenshotEditor->getMainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
 }
@@ -207,9 +250,8 @@ void MainWindow::helpAbout()
 
 void MainWindow::requestTool()
 {
-    QString senderName = QObject::sender()->objectName();
-    QString toolId = senderName.replace("actionTool", "").toLower();
-    QString message = QString("MainWindow::requestTool: tool id '%1'. Received from action '%2'").arg(toolId).arg(senderName);
+    QString toolId = d->actionToToolId(QObject::sender());
+    QString message = QString("MainWindow::requestTool: tool id '%1'. Received from action '%2'").arg(toolId).arg(QObject::sender()->objectName());
     qDebug() << message;
 
     d->kreenshotEditor->getMainEditorWidget()->requestTool(toolId);
