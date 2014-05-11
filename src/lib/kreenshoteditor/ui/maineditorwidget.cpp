@@ -45,14 +45,8 @@ public:
     QGraphicsScene scene;
     MyQGraphicsView* graphicsView;
 
-//     std::map<ItemPtr, bool> mouseOverMap;
-//     const int mouseOverMargin = 2;
-
-//    std::map<ItemPtr, bool> selectedMap; // TODO: maybe using a vector is better?
-
-    // currently only one item can be moved at a time
-//    ItemPtr itemOnTheMove;
-//    QPoint itemOnTheMoveInitialMousePosTopLeft;
+//     std::map<ItemPtr, bool> mouseOverMap; // TODO later
+//     const int mouseOverMargin = 2; // TODO later
 
 public:
     // todo: optimize?
@@ -81,8 +75,6 @@ public:
         // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
         // graphicsView->ensureVisible(0, 0, 1, 1);
 
-        // itemOnTheMove = nullptr; // todo: remove later
-
         createSceneFromModel();
     }
 
@@ -100,11 +92,7 @@ public:
 
         foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
 
-            //QGraphicsItem* grItem = nullptr;
-
-            //qDebug() << "item: " << item->rect();
-
-            // draw
+            // create items
             //
             if (item->typeId == "rect") {
                 auto rectItem = new KreenQGraphicsRectItem(item);
@@ -174,46 +162,22 @@ public:
     }
 
     /**
-     * update positions / TMP
+     * update positions and sizes from model
      */
     void updateItemsGeometryFromModel()
     {
         foreach(auto gritem, graphicsView->items()) {
             //qDebug() << "muh";
             auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
-            if (gritemBase != nullptr)
+            if (gritemBase != nullptr) // there might also be other items
             {
-                qDebug() << "updateGeometryFromModel";
+                //qDebug() << "updateGeometryFromModel";
                 gritemBase->updateGeometryFromModel();
             }
         }
-        //foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-/*
-            if (item->typeId == "rect") {
-                rectItem->setRect(item->rect());
-            }
-            else if (item->typeId == "line") {
-                auto grItem = new QGraphicsLineItem();
-                grItem->setLine(item->line());
-                grItem->setPen(QPen(Qt::red, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-                scene.addItem(grItem);
-                //grItem = ellipseItem;
-            }
-            else if (item->typeId == "ellipse") {
-                ellipseItem->setRect(item->rect());
-            }
-            else if (item->typeId == "text") {
-                textItem->setPos(item->rect().x(), item->rect().y());
-            }
-        }*/
     }
 
     // todo: remove later
-//     void onMouseLeave()
-//     {
-//         mouseOverMap.clear();
-//     }
-//
 //     void onMouseMove(QPoint pos)
 //     {
 //         mouseOverMap.clear();
@@ -271,11 +235,6 @@ public:
 //             }
 //         }
     }
-
-//     void onMouseRelease(QPoint pos) {
-//         onMouseMoveNoCtrlKey(pos);
-//         itemOnTheMove = nullptr;
-//     }
 
     void createDemoScene()
     {
@@ -414,4 +373,3 @@ void MainEditorWidget::updateFromModel()
 {
     d->updateItemsGeometryFromModel();
 }
-
