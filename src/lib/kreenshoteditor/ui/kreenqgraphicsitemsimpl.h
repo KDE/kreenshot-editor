@@ -40,11 +40,17 @@ public:
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     }
 
-    virtual void configureFromModel() = 0;
+    void setMovable(bool isMovable)
+    {
+        _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
+    }
+
     virtual void updateGeometryFromModel() = 0;
-    virtual void setGeometryToModel() = 0;
 
 protected:
+    virtual void configureFromModel() = 0;
+    virtual void setGeometryToModel() = 0;
+
     void configurePen(QAbstractGraphicsShapeItem* grItem)
     {
         // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
@@ -61,15 +67,15 @@ protected:
         grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
     }
 
-    void configureDropShadow()
+    void configureDropShadow(QPoint offset = QPoint(3, 3), qreal blurRadius = 10)
     {
         // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
         Q_ASSERT(_item->dropShadow());
         if (_item->dropShadow()->enabled) {
             auto dropShadow = new QGraphicsDropShadowEffect();
             dropShadow->setColor(Qt::black);
-            dropShadow->setOffset(QPoint(3, 3));
-            dropShadow->setBlurRadius(10);
+            dropShadow->setOffset(offset);
+            dropShadow->setBlurRadius(blurRadius);
             _graphicsItem->setGraphicsEffect(dropShadow);
         }
     }
@@ -249,6 +255,56 @@ public:
         //QPoint scenePos = this->scenePos().toPoint();
         QLine line = this->line().toLine();
         _item->setLine(line);
+    }
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    {
+        itemChangeImpl(change, value);
+        return QGraphicsItem::itemChange(change, value);
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
+};
+
+class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
+{
+public:
+    KreenGraphicsTextRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    {
+        configureFromModel();
+        setFlag(QGraphicsItem::ItemClipsChildrenToShape); // do not draw text larger than the rect
+    }
+
+    virtual void configureFromModel()
+    {
+        configureDropShadow(QPoint(2, 2), 5); // ok?
+        // configurePen(this); // TODO: configure font etc
+
+        auto textGrItem = new QGraphicsTextItem("With drop shadow TODO: apply attributes; multiline; edit; don't display if outside rect", this);
+        textGrItem->setPos(5, 5);
+    }
+
+    virtual void updateGeometryFromModel()
+    {
+        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
+        this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void setGeometryToModel()
+    {
+        QPoint scenePos = this->scenePos().toPoint();
+        QRect grRect = this->rect().toRect();
+        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)

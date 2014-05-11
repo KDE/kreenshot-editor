@@ -74,7 +74,7 @@ void ItemsManager::addDemoItems()
 
     {
         auto item = Item::create("text");
-        item->setRect(QRect(10, 120, 100, 20));
+        item->setRect(QRect(10, 120, 200, 40));
         item->text = TextProperty::create();
         item->text->text = "Hello From ItemsManager";
         _items.push_back(item);

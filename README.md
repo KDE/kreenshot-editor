@@ -30,6 +30,8 @@ Component 2: image-editor
 TODO
 ----
 - ToolManager: 1. Select tool, 2. Draw item tool
+- save image to file
+- save settings to file
 - enable more item properties (see item.h/cpp)
 - enable hover visual
 

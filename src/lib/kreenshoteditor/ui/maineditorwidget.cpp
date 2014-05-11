@@ -38,12 +38,23 @@
     // bool mouseOver; // TODO later
 //};
 
+enum ToolEnum
+{
+    Select = 0,
+    DrawRect,
+    DrawEllipse,
+    DrawText,
+    // ...
+    Crop
+};
+
 class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
     QGraphicsScene scene;
     MyQGraphicsView* graphicsView;
+    ToolEnum chosenTool;
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
 //     const int mouseOverMargin = 2; // TODO later
@@ -95,28 +106,20 @@ public:
             // create items
             //
             if (item->typeId == "rect") {
-                auto rectItem = new KreenQGraphicsRectItem(item, &scene);
-                scene.addItem(rectItem);
+                auto kgrItem = new KreenQGraphicsRectItem(item, &scene);
+                scene.addItem(kgrItem);
             }
             else if (item->typeId == "line") {
-                 auto grItem = new KreenQGraphicsLineItem(item, &scene);
-                 scene.addItem(grItem);
+                 auto kgrItem = new KreenQGraphicsLineItem(item, &scene);
+                 scene.addItem(kgrItem);
             }
             else if (item->typeId == "ellipse") {
-                auto ellipseItem = new KreenQGraphicsEllipseItem(item, &scene);
-                scene.addItem(ellipseItem);
+                auto kgrItem = new KreenQGraphicsEllipseItem(item, &scene);
+                scene.addItem(kgrItem);
             }
             else if (item->typeId == "text") {
-                auto dropShadow = new QGraphicsDropShadowEffect();
-                dropShadow->setColor(Qt::black);
-                dropShadow->setOffset(QPoint(2, 2));
-                dropShadow->setBlurRadius(5);
-
-                auto textItem = new QGraphicsTextItem("With drop shadow");
-                textItem->setPos(item->rect().x(), item->rect().y());
-                textItem->setGraphicsEffect(dropShadow);
-                scene.addItem(textItem);
-                //grItem = textItem;
+                auto kgrItem = new KreenGraphicsTextRectItem(item, &scene);
+                scene.addItem(kgrItem);
             }
 
             // todo: remove later
@@ -163,12 +166,29 @@ public:
     {
         foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
-            auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
-            if (gritemBase != nullptr) { // there might also be other items
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            if (grItemBase != nullptr) { // there might also be other items
                 //qDebug() << "updateGeometryFromModel";
-                gritemBase->updateGeometryFromModel();
+                grItemBase->updateGeometryFromModel();
             }
         }
+    }
+
+    void updateItemsBehaviourFromChosenTool()
+    {
+        foreach(auto grItem, graphicsView->items()) {
+            //qDebug() << "muh";
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            if (grItemBase != nullptr) { // there might also be other items
+                grItemBase->setMovable(chosenTool == ToolEnum::Select);
+            }
+        }
+    }
+
+    void setChosenTool(ToolEnum tool)
+    {
+        chosenTool = tool;
+        updateItemsBehaviourFromChosenTool();
     }
 
     void createDemoScene()
@@ -282,13 +302,13 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
 void MainEditorWidget::requestTool(QString toolId)
 {
     if (toolId == "select") {
-        //QMessageBox::information(nullptr, "Action", "Select");
+        d->setChosenTool(ToolEnum::Select);
     }
     else if (toolId == "rect") {
-        //QMessageBox::information(nullptr, "Action", "Rect");
+        d->setChosenTool(ToolEnum::DrawRect);
     }
     else if (toolId == "ellipse") {
-        //QMessageBox::information(nullptr, "Action", "Ellipse");
+        d->setChosenTool(ToolEnum::DrawEllipse);
     }
     else if (toolId == "line") {
         //QMessageBox::information(nullptr, "Action", "Ellipse");
