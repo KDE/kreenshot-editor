@@ -49,8 +49,6 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void updateItemsGeometryFromModel();
-    
-    void tmpRemoveImageOperationTool();
 
     /**
      * a draw item like rect is added to model

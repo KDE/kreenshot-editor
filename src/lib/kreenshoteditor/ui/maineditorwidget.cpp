@@ -110,13 +110,14 @@ public:
 
             auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
             scene.addItem(kgrItem);
+        }
+
+        updateItemsGeometryFromModel();
+    }
 
             // todo: remove later
 //             auto mouseOverMapItem = mouseOverMap.find(item);
 //             bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
-//
-//             auto selectedMapItem = selectedMap.find(item);
-//             bool isSelected = selectedMapItem != selectedMap.end() && selectedMapItem->second == true;
 //
 //             // highlight: // TODO: for "drawRoundRect" move this away from the scene but directly to the painter!
 //             if (isMouseOver && !isSelected) {
@@ -143,19 +144,12 @@ public:
 //                 //rectItem->setBrush(QBrush(Qt::Dense7Pattern));
 //                 scene.addItem(rectItem);
 //             }
-        }
-
-        if (imageOperationItem != nullptr) {
-            qDebug() << "scene.addItem(imageOperationItem)";
-            scene.addItem(imageOperationItem);
-        }
-
-        updateItemsGeometryFromModel();
-    }
 
     void updateSceneWithImageOperationItem(ItemPtr item)
     {
         qDebug() << "updateSceneWithImageOperationItem";
+
+        toolManager->isImageOperationActive = item != nullptr;
 
         if (imageOperationItem != nullptr) {
             scene.removeItem(imageOperationItem);
@@ -163,6 +157,11 @@ public:
         }
 
         if (item != nullptr) {
+
+//             auto dimRect = new QGraphicsRectItem();
+//             //dimRect->setBrush();
+//             scene.addItem(dimRect);
+
             auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
             scene.addItem(kgrItem);
             imageOperationItem = kgrItem;
@@ -299,8 +298,6 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     // to check if everything is ok (e. g. with multiselection moves)
     connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
 
-    connect(_graphicsView, SIGNAL(tmpRemoveImageOperation()), this, SLOT(tmpRemoveImageOperationTool())); // TMP
-
     connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
 }
 
@@ -367,11 +364,6 @@ void MainEditorWidget::updateItemsGeometryFromModel()
 {
     qDebug() << "updateItemsGeometryFromModel";
     d->updateItemsGeometryFromModel();
-}
-
-void MainEditorWidget::tmpRemoveImageOperationTool()
-{
-    d->updateSceneWithImageOperationItem(nullptr);
 }
 
 void MainEditorWidget::handleNewItem(ItemPtr item)

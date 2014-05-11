@@ -67,6 +67,8 @@ public:
 
 public:
     ToolEnum chosenTool;
+
+    bool isImageOperationActive = false;
 };
 
 typedef std::shared_ptr<ToolManager> ToolManagerPtr;

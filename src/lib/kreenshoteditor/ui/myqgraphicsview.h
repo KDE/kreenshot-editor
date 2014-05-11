@@ -46,8 +46,6 @@ public:
     }
 
 Q_SIGNALS:
-    void tmpRemoveImageOperation();
-
     void mouseReleased();
 
     /**
@@ -68,27 +66,27 @@ protected:
 
         _creatingItemStartPoint = event->pos(); // todo: map coo?
 
-        if (_toolManager->chosenTool == DrawRect) {
-            ItemPtr item = Item::create("rect");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            _scene->addItem(_creatingItem);
-        }
-        else if (_toolManager->chosenTool == DrawEllipse) {
-            ItemPtr item = Item::create("ellipse");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            _scene->addItem(_creatingItem);
-        }
-        else if (_toolManager->chosenTool == DrawLine) {
-            ItemPtr item = Item::create("line");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            _scene->addItem(_creatingItem);
-        }
-        else if (_toolManager->chosenTool == OperationCrop) {
-            emit tmpRemoveImageOperation();
-            
-            ItemPtr item = Item::create("op-crop");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
-            _scene->addItem(_creatingItem);
+        if (!_toolManager->isImageOperationActive) {
+            if (_toolManager->chosenTool == DrawRect) {
+                ItemPtr item = Item::create("rect");
+                _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+                _scene->addItem(_creatingItem);
+            }
+            else if (_toolManager->chosenTool == DrawEllipse) {
+                ItemPtr item = Item::create("ellipse");
+                _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+                _scene->addItem(_creatingItem);
+            }
+            else if (_toolManager->chosenTool == DrawLine) {
+                ItemPtr item = Item::create("line");
+                _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+                _scene->addItem(_creatingItem);
+            }
+            else if (_toolManager->chosenTool == OperationCrop) {
+                ItemPtr item = Item::create("op-crop");
+                _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+                _scene->addItem(_creatingItem);
+            }
         }
 
         QGraphicsView::mousePressEvent(event);
