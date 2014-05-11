@@ -26,10 +26,14 @@
 class KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsItemBase(QAbstractGraphicsShapeItem* graphicsItem, ItemPtr item)
+    /**
+     * scene: to get all selected items
+     */
+    KreenQGraphicsItemBase(QAbstractGraphicsShapeItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
     {
         _item = item;
         _graphicsItem = graphicsItem;
+        _scene = scene;
 
         _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable);
         _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable);
@@ -59,16 +63,27 @@ protected:
 
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
     {
-         QPoint origPos = event->scenePos().toPoint();
-         qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
+         //QPoint origPos = event->scenePos().toPoint();
+         //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
          return true;
     }
 
     bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
     {
-        QPoint newPos = event->scenePos().toPoint();
-        setGeometryToModel();
-        qDebug() << "  2. mouseReleaseEvent:" << "newPos: " << newPos << "item rect: " << _item->rect();
+        //QPoint newPos = event->scenePos().toPoint();
+
+        qDebug() << "setGeometryToModel() for all selected items";
+        foreach (auto gritem, _scene->selectedItems()) {
+            auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
+            if (gritemBase != nullptr) { // there might also be other items
+                gritemBase->setGeometryToModel();
+            }
+            else {
+                qDebug() << "?? who was it";
+            }
+        }
+
+        //qDebug() << "  2. mouseReleaseEvent:" << "newPos: " << newPos << "item rect: " << _item->rect();
 
         // test
 //         updateGeometryFromModel();
@@ -101,12 +116,13 @@ protected:
 
 private:
     QAbstractGraphicsShapeItem* _graphicsItem;
+    QGraphicsScene* _scene;
 };
 
 class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsRectItem(ItemPtr item) : KreenQGraphicsItemBase(this, item)
+    KreenQGraphicsRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         configureFromModel();
     }
@@ -152,7 +168,7 @@ public:
 class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsEllipseItem(ItemPtr item) : KreenQGraphicsItemBase(this, item)
+    KreenQGraphicsEllipseItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         configureFromModel();
     }

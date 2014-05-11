@@ -95,7 +95,7 @@ public:
             // create items
             //
             if (item->typeId == "rect") {
-                auto rectItem = new KreenQGraphicsRectItem(item);
+                auto rectItem = new KreenQGraphicsRectItem(item, &scene);
                 scene.addItem(rectItem);
                 //grItem = rectItem;
             }
@@ -107,7 +107,7 @@ public:
                 //grItem = ellipseItem;
             }
             else if (item->typeId == "ellipse") {
-                auto ellipseItem = new KreenQGraphicsEllipseItem(item);
+                auto ellipseItem = new KreenQGraphicsEllipseItem(item, &scene);
                 scene.addItem(ellipseItem);
                 //grItem = ellipseItem;
             }
@@ -169,8 +169,7 @@ public:
         foreach(auto gritem, graphicsView->items()) {
             //qDebug() << "muh";
             auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
-            if (gritemBase != nullptr) // there might also be other items
-            {
+            if (gritemBase != nullptr) { // there might also be other items
                 //qDebug() << "updateGeometryFromModel";
                 gritemBase->updateGeometryFromModel();
             }
