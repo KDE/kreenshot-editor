@@ -29,7 +29,7 @@ enum ToolEnum
     DrawLine,
     DrawText,
     // ...
-    Crop
+    OperationCrop
 };
 
 class ToolManager
@@ -54,6 +54,14 @@ public:
         else if (item->typeId == "text") {
             auto kgrItem = new KreenGraphicsTextRectItem(item, scene);
             return kgrItem;
+        }
+        else if (item->typeId == "op-crop") {
+            auto kgrItem = new KreenGraphicsOperationCropItem(item, scene);
+            return kgrItem;
+        }
+        else {
+            qDebug() << "unknown item->typeId: " << item->typeId;
+            Q_ASSERT(false);
         }
     }
 

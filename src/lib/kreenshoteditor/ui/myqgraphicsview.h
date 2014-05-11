@@ -78,6 +78,11 @@ protected:
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
             _scene->addItem(_creatingItem);
         }
+        else if (_toolManager->chosenTool == OperationCrop) {
+            ItemPtr item = Item::create("op-crop");
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, _scene);
+            _scene->addItem(_creatingItem);
+        }
 
         QGraphicsView::mousePressEvent(event);
     }

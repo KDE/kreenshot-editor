@@ -21,6 +21,9 @@
 
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>
+#include <QGraphicsProxyWidget>
+#include <QLineEdit>
+#include <QPushButton>
 #include <cmath>
 #include <algorithm>
 #include "../core/item.h"
@@ -64,7 +67,10 @@ public:
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
 
 protected:
-    virtual void configureFromModel() = 0;
+    /**
+     * call this in the ctor of derived class
+     */
+    virtual void initAndConfigureFromModel() = 0;
 
     void configurePen(QAbstractGraphicsShapeItem* grItem)
     {
@@ -158,10 +164,10 @@ class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsIt
 public:
     KreenQGraphicsRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
-        configureFromModel();
+        initAndConfigureFromModel();
     }
 
-    virtual void configureFromModel()
+    virtual void initAndConfigureFromModel()
     {
         configureDropShadow();
         configurePen(this);
@@ -210,10 +216,10 @@ class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGrap
 public:
     KreenQGraphicsEllipseItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
-        configureFromModel();
+        initAndConfigureFromModel();
     }
 
-    virtual void configureFromModel()
+    virtual void initAndConfigureFromModel()
     {
         configureDropShadow();
         configurePen(this);
@@ -269,10 +275,10 @@ class KreenQGraphicsLineItem : public QGraphicsLineItem, public KreenQGraphicsIt
 public:
     KreenQGraphicsLineItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
-        configureFromModel();
+        initAndConfigureFromModel();
     }
 
-    virtual void configureFromModel()
+    virtual void initAndConfigureFromModel()
     {
         configureDropShadow();
         configurePen(this);
@@ -319,17 +325,24 @@ class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenQGraphic
 public:
     KreenGraphicsTextRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
-        configureFromModel();
-        setFlag(QGraphicsItem::ItemClipsChildrenToShape); // do not draw text larger than the rect
+        initAndConfigureFromModel();
     }
 
-    virtual void configureFromModel()
+    virtual void initAndConfigureFromModel()
     {
+        setFlag(QGraphicsItem::ItemClipsChildrenToShape); // do not draw text larger than the rect
+
         configureDropShadow(QPoint(2, 2), 5); // ok?
         // configurePen(this); // TODO: configure font etc
 
         auto textGrItem = new QGraphicsTextItem("With drop shadow TODO: apply attributes; multiline; edit; don't display if outside rect", this);
         textGrItem->setPos(5, 5);
+
+        // later
+//         auto proxyTest = new QGraphicsProxyWidget(this);
+//         auto lineEdit = new QLineEdit();
+//         lineEdit->resize(50, 30);
+//         proxyTest->setWidget(lineEdit);
     }
 
     virtual void updateVisualGeometryFromModel()
@@ -368,6 +381,43 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 };
+
+// ...
+
+class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
+{
+public:
+    KreenGraphicsOperationCropItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    {
+        initAndConfigureFromModel();
+    }
+
+    virtual void initAndConfigureFromModel()
+    {
+        this->setPen(QPen(Qt::black, 1, Qt::DotLine));
+        //this-set // set everything else dark
+    }
+
+    virtual void updateVisualGeometryFromModel()
+    {
+        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
+        this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    {
+        this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
+        this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
+    }
+
+    virtual void updateModelFromVisualGeometry()
+    {
+        QPoint scenePos = this->scenePos().toPoint();
+        QRect grRect = this->rect().toRect();
+        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
+    }
+};
+
 
 #endif // UI_KREENQGRAPHICSITEMS_H
 

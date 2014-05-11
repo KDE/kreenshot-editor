@@ -38,6 +38,7 @@ Item::~Item()
 ItemPtr Item::create(QString typeId)
 {
     auto item = ItemPtr(new Item(typeId));
+
     if (typeId == "rect") {
         item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
         item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
@@ -79,6 +80,9 @@ ItemPtr Item::create(QString typeId)
         item->lineStyle()->penStyle = Qt::SolidLine;
         // TODO: fillcolor solid
         item->dropShadow()->enabled = true;
+    }
+    else if (typeId == "op-crop") {
+        // no settings
     }
     else {
         qDebug() << "Item::create: unknown typeId" << typeId;

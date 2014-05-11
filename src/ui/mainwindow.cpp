@@ -29,14 +29,35 @@
 class MainWindowImpl
 {
 public:
+    void setupActionIds()
+    {
+        ui->actionToolSelect->setData("select");
+        ui->actionToolRect->setData("rect");
+        ui->actionToolEllipse->setData("ellipse");
+        ui->actionToolLine->setData("line");
+        ui->actionToolText->setData("text");
+        ui->actionToolHighlight->setData("highlight");
+        ui->actionToolObfuscate->setData("obfuscate");
+        ui->actionToolCrop->setData("op-crop");
+        ui->actionToolRipOut->setData("op-ripout");
+    }
+
     /**
      * define icons at one place (actions in the designer) and assign them here to the toolbox buttons
+     * define other properties at one place so they do not have to set by the QT designer
      */
-    void setupIcons()
+    void setupToolActionRelatedWidgetProperties()
     {
         foreach (auto action, allToolActions()) {
+
+            action->setCheckable(true);
+
             QString toolId = actionToToolId(action);
-            toolboxButtonFromId(toolId)->setIcon(toolActionFromId(toolId)->icon());
+            toolboxButtonFromId(toolId)->setIcon(action->icon());
+            if (!toolboxButtonFromId(toolId)->isCheckable()) {
+                qDebug() << "forgot to set checkable true... let me do it for you";
+                toolboxButtonFromId(toolId)->setCheckable(true); // to avoid that the button "flips back"
+            }
         }
 //         ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
 //         ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
@@ -66,14 +87,14 @@ public:
         else if (toolId == "obfuscate") {
             return ui->actionToolObfuscate;
         }
-        else if (toolId == "crop") {
+        else if (toolId == "op-crop") {
             return ui->actionToolCrop;
         }
-        else if (toolId == "ripout") {
+        else if (toolId == "op-ripout") {
             return ui->actionToolRipOut;
         }
         else {
-            qDebug() << "toolActionFromId: TODO...........";
+            qDebug() << "toolActionFromId: TODO  ..." << toolId;
             Q_ASSERT(false);
             return nullptr;
         }
@@ -102,14 +123,14 @@ public:
         else if (toolId == "obfuscate") {
             return ui->pushButtonToolObfuscate;
         }
-        else if (toolId == "crop") {
+        else if (toolId == "op-crop") {
             return ui->pushButtonToolCrop;
         }
-        else if (toolId == "ripout") {
+        else if (toolId == "op-ripout") {
             return ui->pushButtonToolRipOut;
         }
         else {
-            qDebug() << "toolboxButtonFromId: TODO...........";
+            qDebug() << "toolboxButtonFromId: TODO..." << toolId;
             Q_ASSERT(false);
             return nullptr;
         }
@@ -131,10 +152,23 @@ public:
         return list;
     }
 
-    QString actionToToolId(QObject* action)
+    /**
+     * by action object name
+     */
+//     QString actionToTool(QObject* action)
+//     {
+//         QString senderName = action->objectName();
+//         QString toolId = senderName.replace("actionTool", "").toLower();
+//         return toolId;
+//     }
+
+    /**
+     * by action data
+     */
+    QString actionToToolId(QAction* action)
     {
-        QString senderName = action->objectName();
-        QString toolId = senderName.replace("actionTool", "").toLower();
+        QString toolId = action->data().toString();
+        Q_ASSERT_X(!toolId.isEmpty(), "actionToToolId", "Hint: setupActions must be called once before using this method");
         return toolId;
     }
 
@@ -169,7 +203,9 @@ void MainWindow::setupUi()
 
     d->ui->containerEditor->addWidget(d->kreenshotEditor->getMainEditorWidget());
 
-    d->setupIcons();
+    d->setupActionIds();
+
+    d->setupToolActionRelatedWidgetProperties();
 }
 
 void MainWindow::setupActions()
@@ -256,8 +292,12 @@ void MainWindow::helpAbout()
 
 void MainWindow::requestTool()
 {
-    QString toolId = d->actionToToolId(QObject::sender());
-    QString message = QString("MainWindow::requestTool: tool id '%1'. Received from action '%2'").arg(toolId).arg(QObject::sender()->objectName());
+    QString className = QObject::sender()->metaObject()->className();
+    qDebug() << className;
+    Q_ASSERT(className == "QAction");
+
+    QString toolId = d->actionToToolId((QAction*)QObject::sender());
+    QString message = QString("MainWindow::requestTool: tool id '%1'").arg(toolId);
     qDebug() << message;
 
     d->kreenshotEditor->getMainEditorWidget()->requestTool(toolId);

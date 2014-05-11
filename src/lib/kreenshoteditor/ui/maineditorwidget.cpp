@@ -297,6 +297,9 @@ void MainEditorWidget::requestTool(QString toolId)
     else if (toolId == "line") {
         d->setChosenTool(ToolEnum::DrawLine);
     }
+    else if (toolId == "op-crop") {
+        d->setChosenTool(ToolEnum::OperationCrop);
+    }
     else {
         d->setChosenTool(ToolEnum::Select); // needed
 

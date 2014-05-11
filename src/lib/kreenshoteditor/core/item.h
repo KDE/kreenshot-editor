@@ -59,6 +59,8 @@ public:
      * highlight (should affect only background)
      * obfuscate
      * image
+     * op-crop
+     * op-ripout
      */
     Item(QString typeId);
     virtual ~Item();
