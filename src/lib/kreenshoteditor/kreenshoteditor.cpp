@@ -85,3 +85,8 @@ ItemsManagerPtr KreenshotEditor::itemsManager()
 {
     return d->itemsManager;
 }
+
+void KreenshotEditor::saveToFile(QString filepath)
+{
+    d->mainEditorWidget->saveToFile(filepath);
+}

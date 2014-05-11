@@ -39,6 +39,8 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
+    void saveToFile(QString filepath);
+
 Q_SIGNALS:
     void toolChosen(QString toolId);
 

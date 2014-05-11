@@ -46,6 +46,8 @@ public:
     void setBaseImage(const QImage& image);
     const QImage& getBaseImage();
 
+    void saveToFile(QString filepath);
+
     /**
      * singleton
      */

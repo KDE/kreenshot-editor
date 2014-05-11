@@ -21,6 +21,8 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QUrl>
 #include "lib/kreenshoteditor/kreenshoteditor.h"
 #include "lib/kreenshoteditor/ui/maineditorwidget.h"
 
@@ -240,7 +242,11 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
+    // TODO: dialog
+    QString path = "/tmp/aaa.png";
+    d->kreenshotEditor->saveToFile(path);
+    QMessageBox::information(this, "Not impl", "saved to" + path);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::helpAbout()

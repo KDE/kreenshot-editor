@@ -29,6 +29,8 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMargins>
+#include <QImageReader>
+#include <QImageWriter>
 #include <memory>
 #include "kreenqgraphicsitemsimpl.h"
 #include "myqgraphicsview.h"
@@ -57,7 +59,7 @@ public:
 //     const int mouseOverMargin = 2; // TODO later
 
 public:
-    // todo: optimize?
+    // todo: optimize this method?
     QRect getBaseRect() {
         const QImage& baseImage = kreenshotEditor->getBaseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
@@ -319,4 +321,20 @@ void MainEditorWidget::addItemToModel(ItemPtr item)
     qDebug() << "add item: " << item->rect();
     d->kreenshotEditor->itemsManager()->addItem(item);
     d->createSceneFromModel();
+}
+
+void MainEditorWidget::saveToFile(QString filepath)
+{
+    qDebug() << filepath;
+    qDebug() << QImageReader::supportedImageFormats();
+    qDebug() << "MainEditorWidget::saveToFile(QString filepath): " << filepath;
+    QImage image = d->kreenshotEditor->getBaseImage().copy();
+    //qDebug() << image.isNull();
+    QPainter painterImage(&image);
+    painterImage.setRenderHint(QPainter::Antialiasing);
+    d->scene.render(&painterImage);
+    //qDebug() << image.save(filepath, "png"); // returns false;
+    QImageWriter writer(filepath);
+    writer.write(image);
+    qDebug() << writer.error() << writer.errorString();
 }
