@@ -238,6 +238,13 @@ public:
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
+//     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+//     {
+//         painter->setRenderHint(QPainter::Antialiasing);
+//         QGraphicsEllipseItem::paint(painter, option, widget);
+//         painter->setRenderHint(QPainter::Antialiasing, false);
+//     }
+
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
     {
         itemChangeImpl(change, value);

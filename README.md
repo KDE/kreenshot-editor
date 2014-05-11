@@ -29,13 +29,13 @@ Component 2: image-editor
 
 TODO
 ----
-- ToolManager: 1. Select tool,
-    2. Draw item tool
-        with moving: rect, ellipse, line, text, highlight, obfuscate
+- change cursor when drawing
 - save image to file
 - save settings to file
 - enable more item properties (see item.h/cpp)
 - enable hover visual
+- makes sure line has a bigger catch area when trying to move
+- ToolManager: Draw item tool: text, highlight, obfuscate
 
 - crop etc. tool
 - rename Item to KreenItem

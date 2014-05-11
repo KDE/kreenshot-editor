@@ -41,6 +41,8 @@ public:
         _toolManager = toolManager;
         _creatingItem = nullptr;
         //_itemsManager = itemsManager;
+
+        setRenderHint(QPainter::Antialiasing);
     }
 
 Q_SIGNALS:
