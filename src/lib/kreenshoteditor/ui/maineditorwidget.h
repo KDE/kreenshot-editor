@@ -22,6 +22,7 @@
 #include <QWidget>
 #include <memory>
 #include "../kreenshoteditor.h"
+#include "../core/item.h"
 
 class MyQGraphicsView;
 class QPaintEvent;
@@ -45,7 +46,9 @@ public Q_SLOTS:
     void requestTool(QString toolId);
 
 protected Q_SLOTS:
-    void updateFromModel();
+    void updateItemsGeometryFromModel();
+
+    void addItemToModel(ItemPtr item);
 
 protected:
     void paintEvent(QPaintEvent*);

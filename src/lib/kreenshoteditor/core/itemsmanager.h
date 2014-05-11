@@ -34,6 +34,8 @@ public:
     ItemsManager();
     virtual ~ItemsManager();
 
+    void addItem(ItemPtr item);
+
     void addDemoItems();
 
     const std::vector<ItemPtr>& items();

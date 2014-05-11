@@ -36,7 +36,7 @@
 
 //class ItemVisual {
 //public:
-    // bool mouseOver; // TODO later
+// bool mouseOver; // TODO later
 //};
 
 class MainEditorWidgetImpl
@@ -242,7 +242,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    _graphicsView = new MyQGraphicsView(&d->scene, d->toolManager);
+    _graphicsView = new MyQGraphicsView(&d->scene, d->toolManager /*, kreenshotEditor->itemsManager()*/);
     layout->addWidget(_graphicsView, 0, 0);
     layout->setMargin(0);
 
@@ -253,7 +253,8 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
-    connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateFromModel()));
+    connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
+    connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(addItemToModel(ItemPtr)));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -307,7 +308,15 @@ void MainEditorWidget::requestTool(QString toolId)
     emit toolChosen(toolId);
 }
 
-void MainEditorWidget::updateFromModel()
+void MainEditorWidget::updateItemsGeometryFromModel()
 {
+    qDebug() << "updateItemsGeometryFromModel";
     d->updateItemsGeometryFromModel();
+}
+
+void MainEditorWidget::addItemToModel(ItemPtr item)
+{
+    qDebug() << "add item: " << item->rect();
+    d->kreenshotEditor->itemsManager()->addItem(item);
+    d->createSceneFromModel();
 }

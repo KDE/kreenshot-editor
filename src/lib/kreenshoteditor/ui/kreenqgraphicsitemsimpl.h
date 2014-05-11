@@ -43,11 +43,18 @@ public:
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     }
 
+    ItemPtr item()
+    {
+        return _item;
+    }
+
     void setMovable(bool isMovable)
     {
         _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
         _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
     }
+
+    virtual void updateModelFromVisualGeometry() = 0;
 
     virtual void updateVisualGeometryFromModel() = 0;
 
@@ -58,7 +65,6 @@ public:
 
 protected:
     virtual void configureFromModel() = 0;
-    virtual void updateModelFromVisualGeometry() = 0;
 
     void configurePen(QAbstractGraphicsShapeItem* grItem)
     {
@@ -91,9 +97,9 @@ protected:
 
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
     {
-         //QPoint origPos = event->scenePos().toPoint();
-         //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
-         return true;
+        //QPoint origPos = event->scenePos().toPoint();
+        //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
+        return true;
     }
 
     bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)

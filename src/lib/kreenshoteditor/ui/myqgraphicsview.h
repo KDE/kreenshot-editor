@@ -28,21 +28,25 @@
 #include "../kreenshoteditor.h"
 #include "kreenqgraphicsitemsimpl.h"
 #include "toolmanager.h"
+#include "../core/itemsmanager.h"
 
 class MyQGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    MyQGraphicsView(QGraphicsScene* scene, ToolManagerPtr toolManager)
+    MyQGraphicsView(QGraphicsScene* scene, ToolManagerPtr toolManager /*, ItemsManagerPtr itemsManager*/)
     {
         _scene = scene;
         _toolManager = toolManager;
         _creatingItem = nullptr;
+        //_itemsManager = itemsManager;
     }
 
 Q_SIGNALS:
     void mouseReleased();
+
+    void itemCreated(ItemPtr item);
 
 protected:
     virtual void enterEvent(QEvent* event)
@@ -92,20 +96,24 @@ protected:
         if (_creatingItem != nullptr) {
             _scene->removeItem(_creatingItem);
 
-            // TODO: add to item to model
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
+            grItemBase->updateModelFromVisualGeometry();
 
             _creatingItem = nullptr;
+            emit itemCreated(grItemBase->item());
+            return;
         }
 
         QGraphicsView::mouseReleaseEvent(event);
 
-        qDebug() << "mouseReleaseEvent: update from model";
+        qDebug() << "emit mouseReleased";
         emit mouseReleased();
     }
 
 private:
     QGraphicsScene* _scene;
     ToolManagerPtr _toolManager;
+    //ItemsManagerPtr _itemsManager;
 
     QGraphicsItem* _creatingItem; // TMP
     QPoint _startPoint;

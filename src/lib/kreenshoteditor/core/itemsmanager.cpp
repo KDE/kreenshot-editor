@@ -28,6 +28,11 @@ ItemsManager::~ItemsManager()
 
 }
 
+void ItemsManager::addItem(ItemPtr item)
+{
+    _items.push_back(item);
+}
+
 void ItemsManager::addDemoItems()
 {
     //TODO
