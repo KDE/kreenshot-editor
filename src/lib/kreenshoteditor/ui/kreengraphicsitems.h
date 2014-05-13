@@ -44,19 +44,19 @@ public:
 
 Q_SIGNALS:
     void operationAccepted();
+    void operationCanceled();
 
 public:
     /**
-     * scene: to get all selected items
+     * scene: to get:
+     *  - scene rect
+     *  - all selected items
      */
-    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene
-    /* , QWidget* slotTarget  //  WORK WITH SIGNALS: 1. create cpp file for moccing, 2. make this Q_OBJECT, 3. define signal, 4. connect signal elsewher*/
-    )
+    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
     {
         _item = item;
         _graphicsItem = graphicsItem;
         _scene = scene;
-        //_slotTarget = slotTarget;
 
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     }
@@ -87,11 +87,6 @@ public:
     virtual void setIsCreating(bool creating)
     {
         _isCreating = creating;
-    }
-
-    virtual QPushButton* getAcceptButton()
-    {
-        return nullptr;
     }
 
 protected:
@@ -134,10 +129,16 @@ protected:
         return _scene->sceneRect().toRect();
     }
 
-    void connectAcceptButton(QPushButton* acceptButton)
+    void connectImageOperationAcceptButton(QPushButton* acceptButton)
     {
-        qDebug() << "connectAcceptButton";
+        qDebug() << "connectImageOperationAcceptButton";
         connect(acceptButton, SIGNAL(clicked()), this, SLOT(operationAcceptedSlot()));
+    }
+
+    void connectImageOperationCancelButton(QPushButton* button)
+    {
+        qDebug() << "connectImageOperationAcceptButton";
+        connect(button, SIGNAL(clicked()), this, SLOT(operationCanceledSlot()));
     }
 
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
@@ -194,7 +195,13 @@ protected Q_SLOTS:
     void operationAcceptedSlot()
     {
         qDebug() << "emit operationAccepted";
-        emit operationAccepted(); // TODO: emit!!! connect elsewhere !!!!!
+        emit operationAccepted();
+    }
+
+    void operationCanceledSlot()
+    {
+        qDebug() << "emit operationCanceled";
+        emit operationCanceled();
     }
 
 protected:
@@ -204,8 +211,6 @@ protected:
      * user is still moving the mouse with pressed button
      */
     bool _isCreating;
-
-    //QWidget* _slotTarget;
 
 private:
     QGraphicsItem* _graphicsItem;
@@ -478,9 +483,9 @@ public:
                 qDebug() << "crop create proxywidget";
                 // TODO: center and make frame transparent
                 auto okButton = new QPushButton("Crop (Enter)");
-                //_acceptButton = okButton;
-                connectAcceptButton(okButton); // from base
+                connectImageOperationAcceptButton(okButton); // from base
                 auto cancelButton = new QPushButton("Cancel (Esc)");
+                connectImageOperationCancelButton(cancelButton); // from base
                 auto hLayout = new QHBoxLayout();
                 hLayout->addWidget(okButton);
                 hLayout->addWidget(cancelButton);
@@ -510,14 +515,8 @@ public:
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-//     virtual QPushButton* getAcceptButton()
-//     {
-//         return _acceptButton;
-//     }
-
 private:
     QGraphicsProxyWidget* _interactionWidget = nullptr;
-    //QPushButton* _acceptButton;
 };
 
 

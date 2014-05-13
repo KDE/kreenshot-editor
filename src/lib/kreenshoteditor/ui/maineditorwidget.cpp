@@ -304,6 +304,7 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
         grItemBase->setIsCreating(false);
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(imageOperationAccepted()));
+        connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(imageOperationCanceled()));
     }
 }
 
@@ -373,6 +374,11 @@ void MainEditorWidget::imageOperationAccepted()
 //     auto baseImage = d->kreenshotEditor->getBaseImage();
 //     d->kreenshotEditor->setBaseImage(baseImage.copy(QRect(10, 10, 100, 100)));
 //     initScene(d->graphicsView); // causes crash
+}
+
+void MainEditorWidget::imageOperationCanceled()
+{
+    updateSceneWithImageOperationItem(nullptr);
 }
 
 void MainEditorWidget::handleNewItem(ItemPtr item)

@@ -51,6 +51,7 @@ protected Q_SLOTS:
     void updateItemsGeometryFromModel();
     void updateSceneWithImageOperationItem(ItemPtr item);
     void imageOperationAccepted();
+    void imageOperationCanceled();
 
     /**
      * a draw item like rect is added to model
