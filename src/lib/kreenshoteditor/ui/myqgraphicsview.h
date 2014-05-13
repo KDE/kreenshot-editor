@@ -26,7 +26,7 @@
 #include <QGraphicsScene>
 #include <memory>
 #include "../kreenshoteditor.h"
-#include "kreenqgraphicsitemsimpl.h"
+#include "kreengraphicsitems.h"
 #include "toolmanager.h"
 #include "../core/itemsmanager.h"
 

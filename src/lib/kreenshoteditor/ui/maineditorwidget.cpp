@@ -32,7 +32,7 @@
 #include <QImageReader>
 #include <QImageWriter>
 #include <memory>
-#include "kreenqgraphicsitemsimpl.h"
+#include "kreengraphicsitems.h"
 #include "myqgraphicsview.h"
 #include "toolmanager.h"
 
@@ -73,48 +73,6 @@ public:
         return rect;
     }
 
-    void initScene(QGraphicsView* graphicsView) {
-        QRect rect = getBaseRect();
-        scene.setSceneRect(rect);
-
-        graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-        //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
-        graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
-
-        graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
-        graphicsView->setScene(&scene);
-        graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
-
-        // scroll to 0,0 / does all not work:
-        //graphicsView->scroll(-100, -100);
-        // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-        // graphicsView->ensureVisible(0, 0, 1, 1);
-
-        createSceneFromModel();
-    }
-
-    /**
-     * recreate the scene to reflect the current kreenshotEditor->itemsManager
-     */
-    void createSceneFromModel()
-    {
-        scene.clear();
-
-        QPixmap pixmap;
-        pixmap.convertFromImage(kreenshotEditor->getBaseImage());
-        auto baseImageItem = new QGraphicsPixmapItem(pixmap);
-        scene.addItem(baseImageItem);
-
-        foreach (ItemPtr item, kreenshotEditor->itemsManager()->items()) {
-
-            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
-            scene.addItem(kgrItem);
-        }
-
-        updateItemsGeometryFromModel();
-    }
-
             // todo: remove later
 //             auto mouseOverMapItem = mouseOverMap.find(item);
 //             bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
@@ -144,32 +102,6 @@ public:
 //                 //rectItem->setBrush(QBrush(Qt::Dense7Pattern));
 //                 scene.addItem(rectItem);
 //             }
-
-    void updateSceneWithImageOperationItem(ItemPtr item)
-    {
-        qDebug() << "updateSceneWithImageOperationItem";
-
-        toolManager->isImageOperationActive = item != nullptr;
-
-        if (imageOperationItem != nullptr) {
-            scene.removeItem(imageOperationItem);
-            imageOperationItem = nullptr;
-        }
-
-        if (item != nullptr) {
-
-//             auto dimRect = new QGraphicsRectItem();
-//             //dimRect->setBrush();
-//             scene.addItem(dimRect);
-
-            auto kgrItem = toolManager->createGraphicsItemFromKreenItem(item, &scene);
-            scene.addItem(kgrItem);
-            imageOperationItem = kgrItem;
-            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
-            grItemBase->setIsCreating(false);
-            grItemBase->updateVisualGeometryFromModel();
-        }
-    }
 
     /**
      * update positions and sizes from model
@@ -292,7 +224,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     //d->createDemoScene();
     d->graphicsView = _graphicsView;
     d->kreenshotEditor->itemsManager()->addDemoItems();
-    d->initScene(_graphicsView);
+    initScene(_graphicsView);
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
@@ -304,6 +236,75 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 MainEditorWidget::~MainEditorWidget()
 {
 
+}
+
+void MainEditorWidget::initScene(QGraphicsView* graphicsView) {
+    QRect rect = d->getBaseRect();
+    d->scene.setSceneRect(rect);
+
+    graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+    //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
+    graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
+
+    graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
+    graphicsView->setScene(&d->scene);
+    graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
+
+    // scroll to 0,0 / does all not work:
+    //graphicsView->scroll(-100, -100);
+    // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    // graphicsView->ensureVisible(0, 0, 1, 1);
+
+    createSceneFromModel();
+}
+
+/**
+    * recreate the scene to reflect the current kreenshotEditor->itemsManager
+    */
+void MainEditorWidget::createSceneFromModel()
+{
+    d->scene.clear();
+
+    QPixmap pixmap;
+    pixmap.convertFromImage(d->kreenshotEditor->getBaseImage());
+    auto baseImageItem = new QGraphicsPixmapItem(pixmap);
+    d->scene.addItem(baseImageItem);
+
+    foreach (ItemPtr item, d->kreenshotEditor->itemsManager()->items()) {
+
+        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, &d->scene);
+        d->scene.addItem(kgrItem);
+    }
+
+    d->updateItemsGeometryFromModel();
+}
+
+void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
+{
+    qDebug() << "updateSceneWithImageOperationItem";
+
+    d->toolManager->isImageOperationActive = item != nullptr;
+
+    if (d->imageOperationItem != nullptr) {
+        d->scene.removeItem(d->imageOperationItem);
+        d->imageOperationItem = nullptr;
+    }
+
+    if (item != nullptr) {
+
+//             auto dimRect = new QGraphicsRectItem();
+//             //dimRect->setBrush();
+//             scene.addItem(dimRect);
+
+        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, &d->scene);
+        d->scene.addItem(kgrItem);
+        d->imageOperationItem = kgrItem;
+        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
+        grItemBase->setIsCreating(false);
+        grItemBase->updateVisualGeometryFromModel();
+        connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(imageOperationAccepted()));
+    }
 }
 
 // todo: remove
@@ -354,7 +355,7 @@ void MainEditorWidget::requestTool(QString toolId)
 
     // remove current image operation if another tool is selected
     if (!toolId.startsWith("op-")) {
-        d->updateSceneWithImageOperationItem(nullptr);
+        updateSceneWithImageOperationItem(nullptr);
     }
 
     emit toolChosen(toolId);
@@ -366,15 +367,23 @@ void MainEditorWidget::updateItemsGeometryFromModel()
     d->updateItemsGeometryFromModel();
 }
 
+void MainEditorWidget::imageOperationAccepted()
+{
+    qDebug() << "............TODO: MainEditorWidget::imageOperationAccepted()";
+//     auto baseImage = d->kreenshotEditor->getBaseImage();
+//     d->kreenshotEditor->setBaseImage(baseImage.copy(QRect(10, 10, 100, 100)));
+//     initScene(d->graphicsView); // causes crash
+}
+
 void MainEditorWidget::handleNewItem(ItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
         d->kreenshotEditor->itemsManager()->addItem(item);
-        d->createSceneFromModel();
+        createSceneFromModel();
     }
     else {
-        d->updateSceneWithImageOperationItem(item);
+        updateSceneWithImageOperationItem(item);
     }
 }
 

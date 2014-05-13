@@ -49,6 +49,8 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void updateItemsGeometryFromModel();
+    void updateSceneWithImageOperationItem(ItemPtr item);
+    void imageOperationAccepted();
 
     /**
      * a draw item like rect is added to model
@@ -57,6 +59,9 @@ protected Q_SLOTS:
     void handleNewItem(ItemPtr item);
 
 protected:
+    void initScene(QGraphicsView* graphicsView);
+    void createSceneFromModel();
+
     void paintEvent(QPaintEvent*);
 
 private:

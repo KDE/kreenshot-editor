@@ -24,6 +24,8 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
 #include <QFrame>
+#include <QGraphicsScene> // move to cpp file
+#include <QDebug> // move to cpp file
 #include <QLineEdit>
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -34,17 +36,27 @@
 /**
  * multiselection will break the logic
  */
-class KreenQGraphicsItemBase
+class KreenQGraphicsItemBase : public QObject
 {
+    Q_OBJECT // to have signal/slots
+
+public:
+
+Q_SIGNALS:
+    void operationAccepted();
+
 public:
     /**
      * scene: to get all selected items
      */
-    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
+    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene
+    /* , QWidget* slotTarget  //  WORK WITH SIGNALS: 1. create cpp file for moccing, 2. make this Q_OBJECT, 3. define signal, 4. connect signal elsewher*/
+    )
     {
         _item = item;
         _graphicsItem = graphicsItem;
         _scene = scene;
+        //_slotTarget = slotTarget;
 
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     }
@@ -75,6 +87,11 @@ public:
     virtual void setIsCreating(bool creating)
     {
         _isCreating = creating;
+    }
+
+    virtual QPushButton* getAcceptButton()
+    {
+        return nullptr;
     }
 
 protected:
@@ -115,6 +132,12 @@ protected:
     QRect sceneRect()
     {
         return _scene->sceneRect().toRect();
+    }
+
+    void connectAcceptButton(QPushButton* acceptButton)
+    {
+        qDebug() << "connectAcceptButton";
+        connect(acceptButton, SIGNAL(clicked()), this, SLOT(operationAcceptedSlot()));
     }
 
     bool mousePressEventImpl(QGraphicsSceneMouseEvent* event)
@@ -167,6 +190,13 @@ protected:
         }
     }
 
+protected Q_SLOTS:
+    void operationAcceptedSlot()
+    {
+        qDebug() << "emit operationAccepted";
+        emit operationAccepted(); // TODO: emit!!! connect elsewhere !!!!!
+    }
+
 protected:
     ItemPtr _item;
 
@@ -174,6 +204,8 @@ protected:
      * user is still moving the mouse with pressed button
      */
     bool _isCreating;
+
+    //QWidget* _slotTarget;
 
 private:
     QGraphicsItem* _graphicsItem;
@@ -446,6 +478,8 @@ public:
                 qDebug() << "crop create proxywidget";
                 // TODO: center and make frame transparent
                 auto okButton = new QPushButton("Crop (Enter)");
+                //_acceptButton = okButton;
+                connectAcceptButton(okButton); // from base
                 auto cancelButton = new QPushButton("Cancel (Esc)");
                 auto hLayout = new QHBoxLayout();
                 hLayout->addWidget(okButton);
@@ -476,8 +510,14 @@ public:
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
+//     virtual QPushButton* getAcceptButton()
+//     {
+//         return _acceptButton;
+//     }
+
 private:
     QGraphicsProxyWidget* _interactionWidget = nullptr;
+    //QPushButton* _acceptButton;
 };
 
 

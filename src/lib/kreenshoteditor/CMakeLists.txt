@@ -17,6 +17,7 @@ set(kreenshoteditor_SOURCES
     kreenshoteditor.cpp
     ui/maineditorwidget.cpp
     ui/myqgraphicsview.cpp
+    ui/kreengraphicsitems.cpp
     core/item.cpp
     core/itemsmanager.cpp
 )

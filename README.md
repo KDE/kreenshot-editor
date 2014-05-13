@@ -29,6 +29,8 @@ Component 2: image-editor
 
 TODO
 ----
+- write filename in title and full path in status bar (<path> [change...])
+- drawing should respect proper coordinates when scroll is not 0,0 (how to best use the scene coordinates?)
 - change cursor when drawing
 - save image to file
 - save settings to file
