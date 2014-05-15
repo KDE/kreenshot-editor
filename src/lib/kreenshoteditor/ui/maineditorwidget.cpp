@@ -133,15 +133,9 @@ public:
             //qDebug() << "muh";
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
-                grItemBase->setMovable(toolManager->chosenTool == ToolEnum::Select);
+                grItemBase->setMovable(toolManager->chosenTool() == ToolEnum::Select);
             }
         }
-    }
-
-    void setChosenTool(ToolEnum tool)
-    {
-        toolManager->chosenTool = tool;
-        updateItemsBehaviourFromChosenTool();
     }
 
     bool imageOperationItemActive()
@@ -285,7 +279,7 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
-    d->toolManager->isImageOperationActive = item != nullptr;
+    d->toolManager->setImageOperationActive(item != nullptr);
 
     if (d->imageOperationItem != nullptr) {
         d->scene->removeItem(d->imageOperationItem);
@@ -330,30 +324,34 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
 
 void MainEditorWidget::requestTool(QString toolId)
 {
+    ToolEnum toolEnum;
+
     if (toolId == "select") {
-        d->setChosenTool(ToolEnum::Select);
+        toolEnum = ToolEnum::Select;
     }
     else if (toolId == "rect") {
-        d->setChosenTool(ToolEnum::DrawRect);
+        toolEnum = ToolEnum::DrawRect;
     }
     else if (toolId == "ellipse") {
-        d->setChosenTool(ToolEnum::DrawEllipse);
+        toolEnum = ToolEnum::DrawEllipse;
     }
     else if (toolId == "line") {
-        d->setChosenTool(ToolEnum::DrawLine);
+        toolEnum = ToolEnum::DrawLine;
     }
     else if (toolId == "op-crop") {
-        d->setChosenTool(ToolEnum::OperationCrop);
+        toolEnum = ToolEnum::OperationCrop;
     }
     else {
-        d->setChosenTool(ToolEnum::Select); // needed
+        toolEnum = ToolEnum::Select;
+        toolId = "select";
 
         QString message = QString("TODO / Unknown tool id '%1'").arg(toolId);
         qDebug() << message;
         QMessageBox::information(this, "Not impl", message);
-        emit toolChosen("select");
-        return;
     }
+
+    d->toolManager->setChosenTool(toolEnum, this);
+    d->updateItemsBehaviourFromChosenTool();
 
     // remove current image operation if another tool is selected
     if (!toolId.startsWith("op-")) {

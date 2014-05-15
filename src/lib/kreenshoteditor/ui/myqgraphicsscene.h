@@ -59,26 +59,35 @@ protected:
 
         _creatingItemStartPoint = event->scenePos().toPoint();
 
-        if (!_toolManager->isImageOperationActive) {
-            if (_toolManager->chosenTool == DrawRect) {
+        if (!_toolManager->isImageOperationActive()) {
+            ToolEnum tool = _toolManager->chosenTool();
+
+            if (tool == Select) {
+                // do nothing
+            }
+            else if (tool == DrawRect) {
                 ItemPtr item = Item::create("rect");
                 _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
                 this->addItem(_creatingItem);
             }
-            else if (_toolManager->chosenTool == DrawEllipse) {
+            else if (tool == DrawEllipse) {
                 ItemPtr item = Item::create("ellipse");
                 _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
                 this->addItem(_creatingItem);
             }
-            else if (_toolManager->chosenTool == DrawLine) {
+            else if (tool == DrawLine) {
                 ItemPtr item = Item::create("line");
                 _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
                 this->addItem(_creatingItem);
             }
-            else if (_toolManager->chosenTool == OperationCrop) {
+            else if (tool == OperationCrop) {
                 ItemPtr item = Item::create("op-crop");
                 _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
                 this->addItem(_creatingItem);
+            }
+            else {
+                qDebug() << "Unknown tool: " << tool;
+                Q_ASSERT(false);
             }
         }
 

@@ -66,9 +66,58 @@ public:
     }
 
 public:
-    ToolEnum chosenTool;
+    ToolEnum chosenTool()
+    {
+        return _chosenTool;
+    }
 
-    bool isImageOperationActive = false;
+    void setChosenTool(ToolEnum tool, QWidget* parent)
+    {
+        _chosenTool = tool;
+        setCursor(parent);
+    }
+
+    bool isImageOperationActive()
+    {
+        return _isImageOperationActive;
+    }
+
+    void setImageOperationActive(bool active)
+    {
+        _isImageOperationActive = active;
+    }
+
+private:
+    void setCursor(QWidget* w)
+    {
+        if (_chosenTool == Select) {
+            w->setCursor(Qt::ArrowCursor);
+        }
+        else if (_chosenTool == DrawRect) {
+            w->setCursor(Qt::CrossCursor);
+        }
+        else if (_chosenTool == DrawLine) {
+            w->setCursor(Qt::CrossCursor);
+        }
+        else if (_chosenTool == DrawEllipse) {
+            w->setCursor(Qt::CrossCursor);
+        }
+        else if (_chosenTool == DrawText) {
+            w->setCursor(Qt::CrossCursor);
+        }
+        else if (_chosenTool == OperationCrop) {
+            w->setCursor(Qt::CrossCursor);
+        }
+        else {
+            qDebug() << "_chosenTool" << _chosenTool;
+            Q_ASSERT(false);
+        }
+    }
+
+private:
+    ToolEnum _chosenTool;
+
+    bool _isImageOperationActive = false;
 };
 
 typedef std::shared_ptr<ToolManager> ToolManagerPtr;
