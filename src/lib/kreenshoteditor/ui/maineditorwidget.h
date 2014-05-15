@@ -60,14 +60,12 @@ protected Q_SLOTS:
     void handleNewItem(ItemPtr item);
 
 protected:
-    void initScene(QGraphicsView* graphicsView);
+    void initScene();
     void createSceneFromModel();
 
     void paintEvent(QPaintEvent*);
 
 private:
-    MyQGraphicsView* _graphicsView;
-
     MainEditorWidgetImplPtr d;
 };
 

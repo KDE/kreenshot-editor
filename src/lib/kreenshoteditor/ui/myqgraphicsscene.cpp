@@ -16,35 +16,4 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_MYQGRAPHICSVIEW_H
-#define UI_MYQGRAPHICSVIEW_H
-
-#include <QWidget>
-#include <QGraphicsView>
-#include <memory>
-
-class MyQGraphicsView : public QGraphicsView
-{
-    Q_OBJECT
-
-public:
-    MyQGraphicsView()
-    {
-        setRenderHint(QPainter::Antialiasing);
-    }
-
-protected:
-    virtual void enterEvent(QEvent* event)
-    {
-        // for not to have to click once before one can start moving items
-        this->setFocus();
-    }
-
-private:
-};
-
-typedef std::shared_ptr<MyQGraphicsView> MyQGraphicsViewPtr;
-
-#endif // MYQGRAPHICSVIEW
-
-// kate: indent-mode cstyle; replace-tabs on;
+#include "myqgraphicsscene.h"

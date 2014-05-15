@@ -14,12 +14,15 @@ include_directories(
 )
 
 set(kreenshoteditor_SOURCES
-    kreenshoteditor.cpp
-    ui/maineditorwidget.cpp
-    ui/myqgraphicsview.cpp
-    ui/kreengraphicsitems.cpp
     core/item.cpp
     core/itemsmanager.cpp
+
+    ui/kreengraphicsitems.cpp
+    ui/maineditorwidget.cpp
+    ui/myqgraphicsscene.cpp
+    ui/myqgraphicsview.cpp
+
+    kreenshoteditor.cpp
 )
 
 # set(kreenshot-editor-ui_FORMS MainWindow.ui)

@@ -33,6 +33,7 @@
 #include <QImageWriter>
 #include <memory>
 #include "kreengraphicsitems.h"
+#include "myqgraphicsscene.h"
 #include "myqgraphicsview.h"
 #include "toolmanager.h"
 
@@ -45,8 +46,8 @@ class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
-    QGraphicsScene scene;
-    MyQGraphicsView* graphicsView;
+    MyQGraphicsViewPtr graphicsView;
+    MyQGraphicsScenePtr scene;
     ToolManagerPtr toolManager;
 
     /**
@@ -58,6 +59,7 @@ public:
     MainEditorWidgetImpl()
     {
         toolManager = ToolManagerPtr(new ToolManager());
+        scene = MyQGraphicsScenePtr(new MyQGraphicsScene(toolManager));
         imageOperationItem = nullptr;
     }
 
@@ -150,7 +152,7 @@ public:
     void createDemoScene()
     {
         QRect rect = getBaseRect();
-        scene.setSceneRect(rect);
+        scene->setSceneRect(rect);
 
         {
             auto dropShadow = new QGraphicsDropShadowEffect();
@@ -162,7 +164,7 @@ public:
             rectItem->setRect(120, 100, 150, 100);
             rectItem->setGraphicsEffect(dropShadow);
             rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-            scene.addItem(rectItem);
+            scene->addItem(rectItem);
         }
 
         {
@@ -170,10 +172,10 @@ public:
             rect2Item->setRect(10, 5, 30, 40);
             //rect2Item->setGraphicsEffect(dropShadow);
             //rect2Item->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-            scene.addItem(rect2Item);
+            scene->addItem(rect2Item);
         }
 
-        scene.addText("Hello, world!");
+        scene->addText("Hello, world!");
 
         {
             auto dropShadow = new QGraphicsDropShadowEffect();
@@ -184,13 +186,13 @@ public:
             auto textItem = new QGraphicsTextItem("With drop shadow");
             textItem->setPos(30, 60);
             textItem->setGraphicsEffect(dropShadow);
-            scene.addItem(textItem);
+            scene->addItem(textItem);
         }
 
         {
             auto textItem = new QGraphicsTextItem("TODO: With white glow background");
             textItem->setPos(30, 80);
-            scene.addItem(textItem);
+            scene->addItem(textItem);
         }
     }
 };
@@ -217,20 +219,19 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    _graphicsView = new MyQGraphicsView(&d->scene, d->toolManager /*, kreenshotEditor->itemsManager()*/);
-    layout->addWidget(_graphicsView, 0, 0);
+    d->graphicsView = MyQGraphicsViewPtr(new MyQGraphicsView());
+    layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
 
     //d->createDemoScene();
-    d->graphicsView = _graphicsView;
     d->kreenshotEditor->itemsManager()->addDemoItems();
-    initScene(_graphicsView);
+    initScene();
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
-    connect(_graphicsView, SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
+    connect(d->scene.get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
 
-    connect(_graphicsView, SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
+    connect(d->scene.get(), SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -238,18 +239,18 @@ MainEditorWidget::~MainEditorWidget()
 
 }
 
-void MainEditorWidget::initScene(QGraphicsView* graphicsView) {
+void MainEditorWidget::initScene() {
     QRect rect = d->getBaseRect();
-    d->scene.setSceneRect(rect);
+    d->scene->setSceneRect(rect);
 
-    graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    d->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
-    graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
+    d->graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
 
-    graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
-    graphicsView->setScene(&d->scene);
-    graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
+    d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
+    d->graphicsView->setScene(d->scene.get());
+    d->graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
 
     // scroll to 0,0 / does all not work:
     //graphicsView->scroll(-100, -100);
@@ -264,17 +265,17 @@ void MainEditorWidget::initScene(QGraphicsView* graphicsView) {
     */
 void MainEditorWidget::createSceneFromModel()
 {
-    d->scene.clear();
+    d->scene->clear();
 
     QPixmap pixmap;
     pixmap.convertFromImage(d->kreenshotEditor->getBaseImage());
     auto baseImageItem = new QGraphicsPixmapItem(pixmap);
-    d->scene.addItem(baseImageItem);
+    d->scene->addItem(baseImageItem);
 
     foreach (ItemPtr item, d->kreenshotEditor->itemsManager()->items()) {
 
-        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, &d->scene);
-        d->scene.addItem(kgrItem);
+        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, d->scene.get());
+        d->scene->addItem(kgrItem);
     }
 
     d->updateItemsGeometryFromModel();
@@ -287,7 +288,7 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
     d->toolManager->isImageOperationActive = item != nullptr;
 
     if (d->imageOperationItem != nullptr) {
-        d->scene.removeItem(d->imageOperationItem);
+        d->scene->removeItem(d->imageOperationItem);
         d->imageOperationItem = nullptr;
     }
 
@@ -297,8 +298,8 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 //             //dimRect->setBrush();
 //             scene.addItem(dimRect);
 
-        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, &d->scene);
-        d->scene.addItem(kgrItem);
+        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, d->scene.get());
+        d->scene->addItem(kgrItem);
         d->imageOperationItem = kgrItem;
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
         grItemBase->setIsCreating(false);
@@ -402,7 +403,7 @@ void MainEditorWidget::saveToFile(QString filepath)
     //qDebug() << image.isNull();
     QPainter painterImage(&image);
     painterImage.setRenderHint(QPainter::Antialiasing);
-    d->scene.render(&painterImage);
+    d->scene->render(&painterImage);
     //qDebug() << image.save(filepath, "png"); // returns false;
     QImageWriter writer(filepath);
     writer.write(image);
