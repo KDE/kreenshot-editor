@@ -54,7 +54,17 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="separator"/>
+    <addaction name="actionItemDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <widget class="QMenu" name="menuTool">
+    <property name="title">
+     <string>Tool</string>
+    </property>
+    <addaction name="separator"/>
     <addaction name="actionToolSelect"/>
+    <addaction name="separator"/>
     <addaction name="actionToolRect"/>
     <addaction name="actionToolEllipse"/>
     <addaction name="actionToolLine"/>
@@ -64,11 +74,10 @@
     <addaction name="separator"/>
     <addaction name="actionToolCrop"/>
     <addaction name="actionToolRipOut"/>
-    <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTool"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -96,6 +105,8 @@
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
+   <addaction name="separator"/>
+   <addaction name="actionItemDelete"/>
   </widget>
   <widget class="QDockWidget" name="containerToolbox">
    <property name="minimumSize">
@@ -555,6 +566,9 @@
    <property name="text">
     <string>Preferences</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="icon">
@@ -564,6 +578,9 @@
    </property>
    <property name="text">
     <string>About...</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F1</string>
    </property>
   </action>
   <action name="actionToolSelect">
@@ -579,7 +596,7 @@
     <string>Select</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+`</string>
+    <string>Esc</string>
    </property>
   </action>
   <action name="actionToolRect">
@@ -595,7 +612,7 @@
     <string>Rectangle</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+1</string>
+    <string>R</string>
    </property>
   </action>
   <action name="actionToolEllipse">
@@ -611,7 +628,7 @@
     <string>Ellipse or circle</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+2</string>
+    <string>E</string>
    </property>
   </action>
   <action name="actionToolLine">
@@ -627,7 +644,7 @@
     <string>Line or arrow</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+3</string>
+    <string>L</string>
    </property>
   </action>
   <action name="actionToolText">
@@ -643,7 +660,7 @@
     <string>Text</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+4</string>
+    <string>T</string>
    </property>
   </action>
   <action name="actionToolHighlight">
@@ -659,7 +676,7 @@
     <string>Highlight</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+5</string>
+    <string>H</string>
    </property>
   </action>
   <action name="actionToolObfuscate">
@@ -675,7 +692,7 @@
     <string>Obfuscate</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+6</string>
+    <string>O</string>
    </property>
   </action>
   <action name="actionToolCrop">
@@ -695,6 +712,22 @@
    </property>
    <property name="text">
     <string>Rip out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
+  </action>
+  <action name="actionItemDelete">
+   <property name="icon">
+    <iconset theme="edit-delete">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
  </widget>

@@ -240,6 +240,7 @@ void MainWindow::setupActions()
     connect(d->ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
     connect(d->ui->actionUndo, SIGNAL(triggered()), this, SLOT(editUndo()));
     connect(d->ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
+    connect(d->ui->actionItemDelete, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
@@ -252,6 +253,11 @@ void MainWindow::editPreferences()
 }
 
 void MainWindow::editRedo()
+{
+    QMessageBox::information(this, "Not impl", "Not implemented yet");
+}
+
+void MainWindow::selectedItemsDelete()
 {
     QMessageBox::information(this, "Not impl", "Not implemented yet");
 }
