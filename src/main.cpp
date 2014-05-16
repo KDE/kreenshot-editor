@@ -22,6 +22,7 @@
 #include <QDebug>
 #include "ui/mainwindow.h"
 #include "lib/kreenshoteditor/kreenshoteditor.h"
+#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -32,6 +33,8 @@ class Arguments
 {
 public:
     QString baseImagePath;
+    QString description;
+    bool isTreatFileAsNew;
 };
 
 Arguments parseArgumentsOrExit(QApplication& app);
@@ -44,7 +47,16 @@ int main(int argc, char *argv[])
     auto arguments = parseArgumentsOrExit(app);
 
     auto kreenshotEditor = KreenshotEditorPtr(new KreenshotEditor());
-    kreenshotEditor->setBaseImage(QImage(arguments.baseImagePath));
+    if (arguments.isTreatFileAsNew) {
+        kreenshotEditor->setBaseImageData(QImage(arguments.baseImagePath));
+    }
+    else {
+        kreenshotEditor->setBaseImagePath(arguments.baseImagePath);
+    }
+    kreenshotEditor->outputFilenameManager()->initCaptureTime();
+    kreenshotEditor->outputFilenameManager()->setDescription(arguments.description);
+    // TODO later: set pattern from command line (--output-file-pattern)
+
     MainWindow mainWindow(kreenshotEditor);
     //mainWindow.resize(640, 480);
     mainWindow.show();
@@ -54,6 +66,8 @@ int main(int argc, char *argv[])
 
 Arguments parseArgumentsOrExit(QApplication& app)
 {
+    qDebug() << "parseArgumentsOrExit";
+
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
@@ -61,8 +75,11 @@ Arguments parseArgumentsOrExit(QApplication& app)
 
     parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
 
+    QCommandLineOption treatAsNewOption(QStringList() << "treat-as-new", tr("when set the given primary image path will be used as image data source only and not as save target"));
+    parser.addOption(treatAsNewOption);
+
     //QCommandLineOption deviceOption(QStringList() << "i" << "image", "file path of image to be loaded", "file path");
-    QCommandLineOption image2Option(QStringList() << "image2", tr("file path to (optional) secondary image to be inserted as object"), tr("file path"));
+    QCommandLineOption image2Option(QStringList() << "image2", tr("file path to (optional) secondary image to be inserted as object, e. g. captured mouse cursor"), tr("file path"));
     parser.addOption(image2Option);
 
     QCommandLineOption image2xOption(QStringList() << "image2x", tr("x coordinate (upper left corner) of the secondary image. Default value is 0."), tr("x in pixel"));
@@ -71,8 +88,8 @@ Arguments parseArgumentsOrExit(QApplication& app)
     QCommandLineOption image2yOption(QStringList() << "image2y", tr("y coordinate. Default value is 0."), tr("y in pixel"));
     parser.addOption(image2yOption);
 
-    QCommandLineOption windowTitleOption(QStringList() << "window-title", tr("Window title of the captured window"), tr("text"));
-    parser.addOption(windowTitleOption);
+    QCommandLineOption descriptionOption(QStringList() << "description", tr("description, e. g. window title of the captured window"), tr("text"));
+    parser.addOption(descriptionOption);
 
     parser.process(app);
 
@@ -87,30 +104,37 @@ Arguments parseArgumentsOrExit(QApplication& app)
         }
 
         arguments.baseImagePath = args[0];
-        qDebug() << "imageFilepath:" << arguments.baseImagePath;
+        qDebug() << "  imageFilepath:" << arguments.baseImagePath;
 
         QString image2Filepath = parser.value(image2Option);
-        qDebug() << "image2Filepath:" << image2Filepath;
+        qDebug() << "  image2Filepath:" << image2Filepath;
 
         QString image2xStr = parser.value(image2xOption);
-        qDebug() << "image2x:" << image2xStr;
+        qDebug() << "  image2x:" << image2xStr;
         int image2x = 0;
         if (!image2xStr.isEmpty()) {
             bool ok;
             image2x = image2xStr.toInt(&ok);
             if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse x value)").toUtf8().constData());
         }
-        qDebug() << "image2x:" << image2x;
+        qDebug() << "  image2x:" << image2x;
 
         QString image2yStr = parser.value(image2yOption);
-        qDebug() << "image2y:" << image2yStr;
+        qDebug() << "  image2y:" << image2yStr;
         int image2y = 0;
         if (!image2yStr.isEmpty()) {
             bool ok;
             image2y = image2yStr.toInt(&ok);
             if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse y value)").toUtf8().constData());
         }
-        qDebug() << "image2y:" << image2y;
+        qDebug() << "  image2y:" << image2y;
+
+        QString descriptionStr = parser.value(descriptionOption);
+        arguments.description = descriptionStr;
+        qDebug() << "  description:" << arguments.description;
+
+        arguments.isTreatFileAsNew = parser.isSet(treatAsNewOption);
+        qDebug() << "  treatAsNew:" << arguments.isTreatFileAsNew;
     }
     catch (const std::runtime_error& e) {
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;

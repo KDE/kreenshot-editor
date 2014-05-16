@@ -36,29 +36,49 @@ class OutputFilenameManager;
 typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
 
 // http://stackoverflow.com/questions/11711034/stdshared-ptr-of-this
-class KreenshotEditor : //public QObject,
-                        public std::enable_shared_from_this<KreenshotEditor>
+class KreenshotEditor : public std::enable_shared_from_this<KreenshotEditor>
 {
-    //Q_OBJECT
-
 public:
     KreenshotEditor();
+
     virtual ~KreenshotEditor();
 
-    // TODO: is QImage reference counted?
-    void setBaseImage(const QImage& image);
+    /**
+     * Set the image data of the image to be edited.
+     * Since there is no filename given the file is treated as new.
+     */
+    void setBaseImageData(const QImage& image); // TODO: is QImage reference counted?
+
+    /**
+     * Loads the image data from the given path and set default output path to path.
+     */
+    void setBaseImagePath(QString path);
+
+    /**
+     * Returns the base image (without any items).
+     * TODO: currently after a crop operation the cropped image will be returned. Is this ok?
+     */
     const QImage& getBaseImage();
 
-    void saveToFile(QString filepath);
+    /**
+     * if filepath is not set then the settings from outputFilenameManager are used
+     */
+    void saveToFile(QString filepath = QString());
 
     /**
      * singleton
      */
     MainEditorWidget* getMainEditorWidget();
 
+    /**
+     * access to used edited items
+     */
     ItemsManagerPtr itemsManager();
 
-    OutputFilenameManagerPtr OutputFilenameManager();
+    /**
+     * use for initCaptureTime() and setDescription(...)
+     */
+    OutputFilenameManagerPtr outputFilenameManager();
 
 private:
     KreenshotEditorImplPtr d;

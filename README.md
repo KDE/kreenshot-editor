@@ -30,6 +30,9 @@ Component 2: image-editor
 TODO
 ----
 - write filename in title and full path in status bar (<path> [change...])
+    let appear in windows title and in filename --> statusbar / ...edit pattern...
+    [NEW] ...
+    [MODIFIED] ...
 - save image to file
 - save settings to file
 - enable more item properties (see item.h/cpp)

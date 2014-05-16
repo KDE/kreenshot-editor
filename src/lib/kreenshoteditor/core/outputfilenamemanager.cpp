@@ -26,6 +26,8 @@ public:
     QString description;
     QString user;
     QString hostname;
+
+    QString filenamePattern = "~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png";
 };
 
 OutputFilenameManager::OutputFilenameManager()
@@ -57,13 +59,25 @@ void OutputFilenameManager::setDescription(QString text)
     d->description = text;
 }
 
+void OutputFilenameManager::setFilenamePattern(QString pattern)
+{
+    d->filenamePattern = pattern;
+}
+
+
 QString OutputFilenameManager::getFilepath(QString pattern)
 {
-    QString result = pattern;
+    QString result = pattern.isNull() ? d->filenamePattern : pattern;
     QString description = d->description;
     result.replace("${hostname}", d->hostname);
     result.replace("${user}", d->user);
     result.replace("${description}", description);
     result.replace("${description_}", description.replace(" ", "_"));
+    result.replace("${YYYY}", d->captureTime.toString("yyyy"));
+    result.replace("${MM}", d->captureTime.toString("MM"));
+    result.replace("${DD}", d->captureTime.toString("dd"));
+    result.replace("${hh}", d->captureTime.toString("HH"));
+    result.replace("${mm}", d->captureTime.toString("mm"));
+    result.replace("${ss}", d->captureTime.toString("ss"));
     return result;
 }

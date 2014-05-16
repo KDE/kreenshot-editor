@@ -69,9 +69,15 @@ public:
     void setDescription(QString text);
 
     /**
-     * location + filename
+     * set pattern or fixed path
      */
-    QString getFilepath(QString pattern = "~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
+    void setFilenamePattern(QString pattern);
+
+    /**
+     * location + filename
+     * if pattern is not set then the one set by setPattern is used
+     */
+    QString getFilepath(QString pattern = QString());
 
 public:
 

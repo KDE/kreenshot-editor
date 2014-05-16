@@ -52,10 +52,17 @@ KreenshotEditor::~KreenshotEditor()
 
 }
 
-void KreenshotEditor::setBaseImage(const QImage& image)
+void KreenshotEditor::setBaseImageData(const QImage& image)
 {
     d->baseImage = image;
 }
+
+void KreenshotEditor::setBaseImagePath(QString path)
+{
+    d->baseImage = QImage(path);
+    d->outputFilenameManager->setFilenamePattern(path);
+}
+
 
 const QImage& KreenshotEditor::getBaseImage()
 {
@@ -94,7 +101,7 @@ void KreenshotEditor::saveToFile(QString filepath)
     d->mainEditorWidget->saveToFile(filepath);
 }
 
-OutputFilenameManagerPtr KreenshotEditor::OutputFilenameManager()
+OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
 {
     return d->outputFilenameManager;
 }
