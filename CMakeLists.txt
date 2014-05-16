@@ -15,5 +15,5 @@ add_definitions("-std=c++11")
 
 add_subdirectory(src)
 
-#enable_testing()
-#add_subdirectory(tests)
+enable_testing()
+add_subdirectory(tests)

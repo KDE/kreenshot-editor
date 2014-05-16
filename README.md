@@ -72,9 +72,10 @@ TODO
 
 Related tools
 -------------
-These tools have similar image editor capabilities:
-- shutter (written in Perl)
-- hotshots (written in QT)
+These Linux tools have similar image editor capabilities:
+- greenshot (.NET) - the inspirational source for kreenshot-editor
+- shutter (Perl)
+- hotshots (QT)
 
 DONE
 ----
