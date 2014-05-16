@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ITEM_H
-#define ITEM_H
+#ifndef CORE_ITEM_H
+#define CORE_ITEM_H
 
 #include <QString>
 #include <QRect>
@@ -160,4 +160,4 @@ public:
 };
 
 
-#endif // ITEM_H
+#endif // CORE_ITEM_H

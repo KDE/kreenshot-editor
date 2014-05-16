@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ITEMSMANAGER_H
-#define ITEMSMANAGER_H
+#ifndef CORE_ITEMSMANAGER_H
+#define CORE_ITEMSMANAGER_H
 
 #include "item.h"
 
@@ -47,4 +47,4 @@ private:
 
 typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
 
-#endif // ITEMSMANAGER_H
+#endif // CORE_ITEMSMANAGER_H
