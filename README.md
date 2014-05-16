@@ -27,13 +27,13 @@ Component 2: image-editor
         - dropdown menu (show basic properties as string like line width, color etc)
 - set (including an optional cursor) and get image
 
+DEV
+---
+Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
+
 TODO
 ----
-- write filename in title and full path in status bar (<path> [change...])
-    let appear in windows title and in filename --> statusbar / ...edit pattern...
-    [NEW] ...
-    [MODIFIED] ...
-- save image to file
+- save image to file: do not save selection indication rect
 - save settings to file
 - enable more item properties (see item.h/cpp)
 - enable hover visual
@@ -51,20 +51,8 @@ TODO
 - click on empty space chooses Select tool
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 
-- where to store data files like default background image?
-- nullable QPoint for function parameter?
-- is QImage reference counted?
-
-TODO2
+LATER
 -----
-- statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
-
-DEV
----
-Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
-
-TODO
-----
 - Select a Item
   - Handles for resizing appear
   - Controls for common properties appear
@@ -72,6 +60,19 @@ TODO
      - slider for line width
      - slider for font size
      - slider for arrow tip typ?
+- not complete yet:
+    - write filename in title and full path in status bar (<path> [change...])
+        let appear in windows title and in filename --> statusbar / ...edit pattern...
+        [NEW] ...
+        [MODIFIED] ...
+- "Open last file storage location" or "Open storage location"
+
+QUESTIONS
+---------
+- where to store data files like default background image?
+- nullable QPoint for function parameter?
+- is QImage reference counted?
+- statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
 
 Related tools
 -------------
