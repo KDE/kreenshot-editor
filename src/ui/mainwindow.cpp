@@ -25,6 +25,7 @@
 #include <QUrl>
 #include "lib/kreenshoteditor/kreenshoteditor.h"
 #include "lib/kreenshoteditor/ui/maineditorwidget.h"
+#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 class MainWindowImpl
 {
@@ -175,6 +176,7 @@ public:
 public:
     KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
+    QString baseWindowTitle;
 };
 
 MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
@@ -183,9 +185,14 @@ MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
     d->kreenshotEditor = kreenshotEditor;
     d->ui = new Ui::MainWindow();
     d->ui->setupUi(this);
+    d->baseWindowTitle = windowTitle();
 
     setupUi();
     setupActions();
+
+
+    connect(d->kreenshotEditor.get(), SIGNAL(outputFileStatusChanged()), this, SLOT(outputFileStatusChanged()));
+    outputFileStatusChanged();
 
     d->kreenshotEditor->getMainEditorWidget()->requestTool("select");
 }
@@ -294,6 +301,18 @@ void MainWindow::fileSaveAs()
 void MainWindow::helpAbout()
 {
     QMessageBox::information(this, "Not impl", "Not implemented yet");
+}
+
+void MainWindow::outputFileStatusChanged()
+{
+    QString fileStatusPrefix;
+    if (d->kreenshotEditor->isFileNew()) {
+        fileStatusPrefix = tr("[NEW] ");
+    }
+    else if (d->kreenshotEditor->isFileModified()) {
+        fileStatusPrefix = tr("* ");
+    }
+    setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->outputFilenameManager()->getFilepath()).arg(d->baseWindowTitle));
 }
 
 void MainWindow::requestTool()

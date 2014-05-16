@@ -25,6 +25,7 @@
 #include <memory>
 
 /**
+ * The "document"
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
  * Manages Z-Order.
  */

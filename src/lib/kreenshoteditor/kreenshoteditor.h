@@ -35,9 +35,13 @@ typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
 class OutputFilenameManager;
 typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
 
+/**
+ *
+ */
+class KreenshotEditor : public QObject, public std::enable_shared_from_this<KreenshotEditor>
 // http://stackoverflow.com/questions/11711034/stdshared-ptr-of-this
-class KreenshotEditor : public std::enable_shared_from_this<KreenshotEditor>
 {
+    Q_OBJECT
 public:
     KreenshotEditor();
 
@@ -61,7 +65,7 @@ public:
     const QImage& getBaseImage();
 
     /**
-     * if filepath is not set then the settings from outputFilenameManager are used
+     * Ff filepath is not set then the settings from outputFilenameManager are used
      */
     void saveToFile(QString filepath = QString());
 
@@ -71,14 +75,32 @@ public:
     MainEditorWidget* getMainEditorWidget();
 
     /**
-     * access to used edited items
+     * Access to used edited items
      */
     ItemsManagerPtr itemsManager();
 
     /**
-     * use for initCaptureTime() and setDescription(...)
+     * Use for initCaptureTime() and setDescription(...)
      */
     OutputFilenameManagerPtr outputFilenameManager();
+
+    /**
+     * Is file not saved yet?
+     */
+    bool isFileNew();
+
+    /**
+     * TODO
+     *
+     * Is saved file modified? Always false if file is new.
+     */
+    bool isFileModified();
+
+Q_SIGNALS:
+    /**
+     * todo: fire when appropriate
+     */
+    void outputFileStatusChanged();
 
 private:
     KreenshotEditorImplPtr d;

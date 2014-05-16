@@ -21,6 +21,7 @@
 #include <QScrollArea>
 #include <QMessageBox>
 #include <QDebug>
+#include <QFile>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 #include "core/outputfilenamemanager.h"
@@ -106,3 +107,12 @@ OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
     return d->outputFilenameManager;
 }
 
+bool KreenshotEditor::isFileNew()
+{
+    return !QFile::exists(d->outputFilenameManager->getFilepath());
+}
+
+bool KreenshotEditor::isFileModified()
+{
+    return true; // TODO
+}
