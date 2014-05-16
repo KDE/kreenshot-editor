@@ -32,6 +32,9 @@ typedef std::shared_ptr<KreenshotEditorImpl> KreenshotEditorImplPtr;
 class ItemsManager;
 typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
 
+class OutputFilenameManager;
+typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
+
 // http://stackoverflow.com/questions/11711034/stdshared-ptr-of-this
 class KreenshotEditor : //public QObject,
                         public std::enable_shared_from_this<KreenshotEditor>
@@ -54,6 +57,8 @@ public:
     MainEditorWidget* getMainEditorWidget();
 
     ItemsManagerPtr itemsManager();
+
+    OutputFilenameManagerPtr OutputFilenameManager();
 
 private:
     KreenshotEditorImplPtr d;

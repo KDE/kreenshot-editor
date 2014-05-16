@@ -23,6 +23,7 @@
 #include <QDebug>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
+#include "core/outputfilenamemanager.h"
 
 class KreenshotEditorImpl
 {
@@ -30,13 +31,15 @@ public:
     KreenshotEditorImpl()
     {
         itemsManager = ItemsManagerPtr(new ItemsManager());
-        mainEditorWidget = nullptr;
+        outputFilenameManager = OutputFilenameManagerPtr(new OutputFilenameManager());
     }
 
 public:
     QImage baseImage;
     ItemsManagerPtr itemsManager;
-    MainEditorWidget* mainEditorWidget;
+    OutputFilenameManagerPtr outputFilenameManager;
+
+    MainEditorWidget* mainEditorWidget = nullptr;
 };
 
 KreenshotEditor::KreenshotEditor()
@@ -90,3 +93,9 @@ void KreenshotEditor::saveToFile(QString filepath)
 {
     d->mainEditorWidget->saveToFile(filepath);
 }
+
+OutputFilenameManagerPtr KreenshotEditor::OutputFilenameManager()
+{
+    return d->outputFilenameManager;
+}
+

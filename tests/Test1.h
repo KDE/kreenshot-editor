@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDateTime>
-//#include "../src/lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include "../src/lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 class Test1 : public QObject
 {
@@ -49,11 +49,11 @@ private slots:
 
     void testOutputFilenameManager()
     {
-//         OutputFilenameManager mgr;
-//         mgr.initCaptureTime();
-//         mgr.setDescription("Hallo Test");
-//         qDebug() << mgr.getFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}");
-//         qDebug() << mgr.getFilepath("${description}, ${hostname}, ${user}");
+        OutputFilenameManager mgr;
+        mgr.initCaptureTime();
+        mgr.setDescription("Hallo Test");
+        qDebug() << mgr.getFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_},png");
+        qDebug() << mgr.getFilepath("${description}, ${hostname}, ${user}");
     }
 };
 

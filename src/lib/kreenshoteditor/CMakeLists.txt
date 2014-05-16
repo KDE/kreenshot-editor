@@ -7,7 +7,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 # find Qt5 modules
-find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets)
+find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets Network)
 
 include_directories(
     .
@@ -16,6 +16,7 @@ include_directories(
 set(kreenshoteditor_SOURCES
     core/item.cpp
     core/itemsmanager.cpp
+    core/outputfilenamemanager.cpp
 
     ui/kreengraphicsitems.cpp
     ui/maineditorwidget.cpp
@@ -36,6 +37,7 @@ add_library(kreenshoteditor SHARED
 target_link_libraries(kreenshoteditor
      Qt5::Core
      Qt5::Widgets
+     Qt5::Network
 )
 
 # kate: indent-width 4; replace-tabs on;

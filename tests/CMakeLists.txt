@@ -17,7 +17,7 @@ include_directories(
 # Test: Test1
 set(Test1Src Test1.cpp)
 add_executable(Test1 ${Test1Src})
-target_link_libraries(Test1 Qt5::Core Qt5::Test)
+target_link_libraries(Test1 Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME Test1 COMMAND Test1)
 
 # # Test: MetaPos
