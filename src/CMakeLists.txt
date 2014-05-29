@@ -1,4 +1,4 @@
-project(kreenshot-editor)
+project(kreenshoteditorapp)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -17,19 +17,19 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/generated-include
 )
 
-set(kreenshot-editor_SOURCES
+set(kreenshoteditorapp_SOURCES
     main.cpp
     ui/mainwindow.cpp
 )
 
-set(kreenshot-editor_FORMS ui/mainwindow.ui)
-qt5_wrap_ui(kreenshot-editor_FORMS_HEADERS ${kreenshot-editor_FORMS})
+set(kreenshoteditorapp_FORMS ui/mainwindow.ui)
+qt5_wrap_ui(kreenshoteditorapp_FORMS_HEADERS ${kreenshoteditorapp_FORMS})
 
 add_definitions("-std=c++11")
 
 add_executable(kreenshot-editor
-    ${kreenshot-editor_SOURCES}
-    ${kreenshot-editor_FORMS_HEADERS}
+    ${kreenshoteditorapp_SOURCES}
+    ${kreenshoteditorapp_FORMS_HEADERS}
 )
 
 target_link_libraries(kreenshot-editor

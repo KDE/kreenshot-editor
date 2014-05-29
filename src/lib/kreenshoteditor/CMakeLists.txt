@@ -23,15 +23,19 @@ set(kreenshoteditor_SOURCES
     ui/myqgraphicsscene.cpp
     ui/myqgraphicsview.cpp
 
+    ui/settings/preferencesdialog.cpp
+
     kreenshoteditor.cpp
 )
 
-# set(kreenshot-editor-ui_FORMS MainWindow.ui)
-# qt5_wrap_ui(kreenshot-editor-ui_FORMS_HEADERS ${kreenshot-editor-ui_FORMS})
+set(kreenshoteditor_FORMS ui/settings/preferencesdialog.ui)
+message(kreenshoteditor_FORMS=${kreenshoteditor_FORMS})
+qt5_wrap_ui(kreenshoteditor_FORMS_HEADERS ${kreenshoteditor_FORMS})
+message(kreenshoteditor_FORMS_HEADERS=${kreenshoteditor_FORMS_HEADERS})
 
 add_library(kreenshoteditor SHARED
     ${kreenshoteditor_SOURCES}
-#    tikzmoc
+    ${kreenshoteditor_FORMS_HEADERS}
 )
 
 target_link_libraries(kreenshoteditor

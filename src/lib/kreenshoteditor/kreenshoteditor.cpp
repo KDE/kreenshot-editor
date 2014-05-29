@@ -25,6 +25,7 @@
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 #include "core/outputfilenamemanager.h"
+#include "ui/settings/preferencesdialog.h"
 
 class KreenshotEditorImpl
 {
@@ -119,5 +120,8 @@ bool KreenshotEditor::isFileModified()
 
 void KreenshotEditor::showPreferencesDialog()
 {
-
+    PreferencesDialog prefsDialog;
+    if (prefsDialog.exec() != QDialog::Accepted) {
+        return;
+    }
 }

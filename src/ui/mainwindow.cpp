@@ -256,7 +256,7 @@ void MainWindow::setupActions()
 
 void MainWindow::editPreferences()
 {
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
+    d->kreenshotEditor->showPreferencesDialog();
 }
 
 void MainWindow::editRedo()

@@ -71,6 +71,8 @@ public:
 
     /**
      * singleton
+     *
+     * TODO: does shared_ptr makes sense here?
      */
     MainEditorWidget* getMainEditorWidget();
 
