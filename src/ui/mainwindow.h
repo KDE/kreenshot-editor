@@ -66,8 +66,6 @@ public:
 
 private:
     MainWindowImplPtr d;
-
-//         tikz::ui::LinePropertyWidget * m_linePropertyWidget; // todo: remove when done
 };
 
 #endif // UI_MAIN_WINDOW_H

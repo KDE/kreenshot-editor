@@ -53,7 +53,7 @@ KreenshotEditor::~KreenshotEditor()
 
 }
 
-void KreenshotEditor::setBaseImageData(const QImage& image)
+void KreenshotEditor::setBaseImageData(QImage image)
 {
     d->baseImage = image;
 }
@@ -65,7 +65,7 @@ void KreenshotEditor::setBaseImagePath(QString path)
 }
 
 
-const QImage& KreenshotEditor::getBaseImage()
+QImage KreenshotEditor::getBaseImage()
 {
     return d->baseImage;
 }
@@ -115,4 +115,9 @@ bool KreenshotEditor::isFileNew()
 bool KreenshotEditor::isFileModified()
 {
     return true; // TODO
+}
+
+void KreenshotEditor::showPreferencesDialog()
+{
+
 }

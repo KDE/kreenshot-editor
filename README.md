@@ -15,13 +15,14 @@ $ ./src/kreenshot-editor
 
 Component 1: main-application
 -----------------------------
-- command line options to give image and cursor (optional)
+- command line options to give image and optionally captured cursor
 - show editor-component
 
 Component 2: image-editor
 -------------------------
 - display image
-- show toolbars for editing
+- edit image
+- [TODO] show toolbars for editing
     - define toolbars by creating "prototype items" with default settings
     - make it possible for each toolbar entry to save the current configuration
         - dropdown menu (show basic properties as string like line width, color etc)
@@ -33,6 +34,10 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- NEXT: save basic settings like default image output location
+    goal: to set some debug folder without messing in the code itself
+    --> QSettings
+
 - save image to file: do not save selection indication rect
 - save settings to file
 - enable more item properties (see item.h/cpp)
@@ -60,11 +65,12 @@ LATER
      - slider for line width
      - slider for font size
      - slider for arrow tip typ?
-- not complete yet:
+- AFTER UndoManager is complete:
     - write filename in title and full path in status bar (<path> [change...])
         let appear in windows title and in filename --> statusbar / ...edit pattern...
         [NEW] ...
-        [MODIFIED] ...
+        *  ... (see mainwindow.cpp)
+- Create Actions in lib and use in GUI
 - "Open last file storage location" or "Open storage location"
 
 QUESTIONS

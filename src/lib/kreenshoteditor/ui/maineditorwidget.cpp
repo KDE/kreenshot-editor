@@ -69,7 +69,7 @@ public:
 public:
     // todo: optimize this method?
     QRect getBaseRect() {
-        const QImage& baseImage = kreenshotEditor->getBaseImage();
+        QImage baseImage = kreenshotEditor->getBaseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
@@ -240,7 +240,7 @@ void MainEditorWidget::initScene() {
     d->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
-    d->graphicsView->setBackgroundBrush(QBrush(Qt::DiagCrossPattern)); // todo: make nicer
+    d->graphicsView->setBackgroundBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern)); // todo: make nicer
 
     d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
     d->graphicsView->setScene(d->scene.get());

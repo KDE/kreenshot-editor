@@ -51,7 +51,7 @@ public:
      * Set the image data of the image to be edited.
      * Since there is no filename given the file is treated as new.
      */
-    void setBaseImageData(const QImage& image); // TODO: is QImage reference counted?
+    void setBaseImageData(QImage image);
 
     /**
      * Loads the image data from the given path and set default output path to path.
@@ -62,7 +62,7 @@ public:
      * Returns the base image (without any items).
      * TODO: currently after a crop operation the cropped image will be returned. Is this ok?
      */
-    const QImage& getBaseImage();
+    QImage getBaseImage();
 
     /**
      * Ff filepath is not set then the settings from outputFilenameManager are used
@@ -95,6 +95,11 @@ public:
      * Is saved file modified? Always false if file is new.
      */
     bool isFileModified();
+
+    /**
+     * opens the Preferences dialog to let the user view and edit settings
+     */
+    void showPreferencesDialog();
 
 Q_SIGNALS:
     /**
