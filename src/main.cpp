@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(version);
     auto arguments = parseArgumentsOrExit(app);
 
-    auto kreenshotEditor = KreenshotEditorPtr(new KreenshotEditor());
+    auto kreenshotEditor = std::make_shared<KreenshotEditor>();
     if (arguments.isTreatFileAsNew) {
         kreenshotEditor->setBaseImageData(QImage(arguments.baseImagePath));
     }

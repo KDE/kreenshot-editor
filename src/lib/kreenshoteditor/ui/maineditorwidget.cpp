@@ -58,8 +58,8 @@ public:
 public:
     MainEditorWidgetImpl()
     {
-        toolManager = ToolManagerPtr(new ToolManager());
-        scene = MyQGraphicsScenePtr(new MyQGraphicsScene(toolManager));
+        toolManager = std::make_shared<ToolManager>();
+        scene = std::make_shared<MyQGraphicsScene>(toolManager);
         imageOperationItem = nullptr;
     }
 
@@ -193,7 +193,7 @@ public:
 
 MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 {
-    d = MainEditorWidgetImplPtr(new MainEditorWidgetImpl());
+    d = std::make_shared<MainEditorWidgetImpl>();
     d->kreenshotEditor = kreenshotEditor;
 
     bool oldScrollAreaCode = false;
@@ -213,7 +213,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    d->graphicsView = MyQGraphicsViewPtr(new MyQGraphicsView());
+    d->graphicsView = std::make_shared<MyQGraphicsView>();
     layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
 

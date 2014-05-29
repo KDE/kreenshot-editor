@@ -37,12 +37,12 @@ Item::~Item()
 
 ItemPtr Item::create(QString typeId)
 {
-    auto item = ItemPtr(new Item(typeId));
+    auto item = std::make_shared<Item>(typeId);
 
     if (typeId == "rect") {
-        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
-        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
-        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+        item->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::red;
         item->lineStyle()->width = 2;
@@ -50,9 +50,9 @@ ItemPtr Item::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "ellipse") {
-        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
-        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
-        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+        item->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::black;
         item->lineStyle()->width = 2;
@@ -60,9 +60,9 @@ ItemPtr Item::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "line") {
-        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
-        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
-        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+        item->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::green;
         item->lineStyle()->width = 2;
@@ -70,9 +70,9 @@ ItemPtr Item::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "text") {
-        item->_properties.push_back(LineColorPropertyPtr(new LineColorProperty()));
-        item->_properties.push_back(LineStylePropertyPtr(new LineStyleProperty()));
-        item->_properties.push_back(DropShadowPropertyPtr(new DropShadowProperty()));
+        item->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->_properties.push_back(std::make_shared<DropShadowProperty>());
         // TODO: fillColor, text
 
         item->lineColor()->color = Qt::magenta; // TODO: or transparent for "no border rect"

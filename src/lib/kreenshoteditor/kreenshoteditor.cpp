@@ -31,8 +31,8 @@ class KreenshotEditorImpl
 public:
     KreenshotEditorImpl()
     {
-        itemsManager = ItemsManagerPtr(new ItemsManager());
-        outputFilenameManager = OutputFilenameManagerPtr(new OutputFilenameManager());
+        itemsManager = std::make_shared<ItemsManager>();
+        outputFilenameManager = std::make_shared<OutputFilenameManager>();
     }
 
 public:
@@ -45,7 +45,7 @@ public:
 
 KreenshotEditor::KreenshotEditor()
 {
-    d = KreenshotEditorImplPtr(new KreenshotEditorImpl());
+    d = std::make_shared<KreenshotEditorImpl>();
 }
 
 KreenshotEditor::~KreenshotEditor()

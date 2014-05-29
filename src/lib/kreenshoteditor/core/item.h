@@ -117,7 +117,7 @@ class TextProperty
 {
 public:
     static std::shared_ptr<TextProperty> create() {
-        return std::shared_ptr<TextProperty>(new TextProperty);
+        return std::make_shared<TextProperty>();
     }
 
 public:

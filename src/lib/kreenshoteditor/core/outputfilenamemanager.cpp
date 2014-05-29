@@ -32,7 +32,7 @@ public:
 
 OutputFilenameManager::OutputFilenameManager()
 {
-    d = OutputFilenameManagerImplPtr(new OutputFilenameManagerImpl());
+    d = std::make_shared<OutputFilenameManagerImpl>();
 
     d->hostname = QHostInfo().localHostName();
 

@@ -181,7 +181,7 @@ public:
 
 MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
 {
-    d = MainWindowImplPtr(new MainWindowImpl());
+    d = std::make_shared<MainWindowImpl>();
     d->kreenshotEditor = kreenshotEditor;
     d->ui = new Ui::MainWindow();
     d->ui->setupUi(this);
