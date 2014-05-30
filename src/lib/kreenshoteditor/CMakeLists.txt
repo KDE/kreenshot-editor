@@ -23,12 +23,16 @@ set(kreenshoteditor_SOURCES
     ui/myqgraphicsscene.cpp
     ui/myqgraphicsview.cpp
 
+    ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp
 
     kreenshoteditor.cpp
 )
 
-set(kreenshoteditor_FORMS ui/settings/preferencesdialog.ui)
+set(kreenshoteditor_FORMS
+    ui/settings/preferencesdialog.ui
+    ui/settings/pageoutput.ui
+    )
 message(kreenshoteditor_FORMS=${kreenshoteditor_FORMS})
 qt5_wrap_ui(kreenshoteditor_FORMS_HEADERS ${kreenshoteditor_FORMS})
 message(kreenshoteditor_FORMS_HEADERS=${kreenshoteditor_FORMS_HEADERS})

@@ -16,30 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "preferencesdialog.h"
-#include "ui_preferencesdialog.h"
 #include "pageoutput.h"
+#include "ui_pageoutput.h"
 
-PreferencesDialog::PreferencesDialog()
+PageOutput::PageOutput(QWidget* parent)
+ : QWidget(parent)
 {
     setupUi();
     setupActions();
 }
 
-PreferencesDialog::~PreferencesDialog()
+PageOutput::~PageOutput()
 {
 }
 
-void PreferencesDialog::setupUi()
+void PageOutput::setupUi()
 {
-    Ui::dialogSettings ui;
+    Ui::pageOutput ui;
     ui.setupUi(this);
-
-    ui.tabWidgetMain->clear();
-    auto pageOutput = new PageOutput(this);
-    ui.tabWidgetMain->addTab(pageOutput, pageOutput->windowTitle());
 }
 
-void PreferencesDialog::setupActions()
+void PageOutput::setupActions()
 {
 }

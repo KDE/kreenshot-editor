@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "preferencesdialog.h"
-#include "ui_preferencesdialog.h"
-#include "pageoutput.h"
+#ifndef UI_SETTINGS_PAGEOUTPUT_H
+#define UI_SETTINGS_PAGEOUTPUT_H
 
-PreferencesDialog::PreferencesDialog()
+#include <QWidget>
+#include <memory>
+
+class PageOutput : public QWidget
 {
-    setupUi();
-    setupActions();
-}
+    Q_OBJECT
 
-PreferencesDialog::~PreferencesDialog()
-{
-}
+public:
+    PageOutput(QWidget* parent);
+    virtual ~PageOutput();
 
-void PreferencesDialog::setupUi()
-{
-    Ui::dialogSettings ui;
-    ui.setupUi(this);
+public Q_SLOTS:
 
-    ui.tabWidgetMain->clear();
-    auto pageOutput = new PageOutput(this);
-    ui.tabWidgetMain->addTab(pageOutput, pageOutput->windowTitle());
-}
+public:
+    void setupActions();
+    void setupUi();
 
-void PreferencesDialog::setupActions()
-{
-}
+private:
+
+};
+
+#endif // UI_SETTINGS_PAGEOUTPUT_H
+
+// kate: indent-mode cstyle; replace-tabs on;
