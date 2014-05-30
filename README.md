@@ -34,6 +34,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- NEXT: genincludes --> cmake
 - NEXT: save basic settings like default image output location
     goal: to set some debug folder without messing in the code itself
     --> QSettings

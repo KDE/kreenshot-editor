@@ -25,6 +25,7 @@
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 #include "core/outputfilenamemanager.h"
+#include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"
 
 namespace kreen {
@@ -36,12 +37,14 @@ public:
     {
         itemsManager = std::make_shared<ItemsManager>();
         outputFilenameManager = std::make_shared<OutputFilenameManager>();
+        settingsManager = SettingsManager::instance();
     }
 
 public:
     QImage baseImage;
     ItemsManagerPtr itemsManager;
     OutputFilenameManagerPtr outputFilenameManager;
+    SettingsManagerPtr settingsManager;
 
     MainEditorWidget* mainEditorWidget = nullptr;
 };
@@ -49,6 +52,7 @@ public:
 KreenshotEditor::KreenshotEditor()
 {
     d = std::make_shared<KreenshotEditorImpl>();
+    d->settingsManager->load();
 }
 
 KreenshotEditor::~KreenshotEditor()
@@ -121,10 +125,9 @@ bool KreenshotEditor::isFileModified()
 
 void KreenshotEditor::showPreferencesDialog()
 {
-    PreferencesDialog prefsDialog;
-    if (prefsDialog.exec() != QDialog::Accepted) {
-        return;
-    }
+    ui::settings::PreferencesDialog prefsDialog(d->settingsManager);
+    // if (prefsDialog.exec() == QDialog::Accepted) {
+    prefsDialog.exec();
 }
 
 }

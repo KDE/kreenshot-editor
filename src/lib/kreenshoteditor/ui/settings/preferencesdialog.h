@@ -21,24 +21,43 @@
 
 #include <QDialog>
 #include <memory>
+#include "../../core/settingsmanager.h"
 
+namespace kreen {
+namespace ui {
+namespace settings {
+
+using namespace kreen::core;
+
+class PreferencesDialogImpl;
+typedef std::shared_ptr<PreferencesDialogImpl> PreferencesDialogImplPtr;
+
+/**
+ * The accepted signal is handled internally and then the settings are stored
+ */
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    PreferencesDialog();
+    PreferencesDialog(kreen::core::SettingsManagerPtr settingsManager);
     virtual ~PreferencesDialog();
 
-public Q_SLOTS:
-
-public:
-    void setupActions();
-    void setupUi();
+private Q_SLOTS:
+    void pullSettingsFromUiAndSave();
 
 private:
-    //PreferencesDialogImplPtr d;
+    void setupUi();
+
+    void pushSettingsToUi();
+
+private:
+    PreferencesDialogImplPtr d;
 };
+
+}
+}
+}
 
 #endif // UI_SETTINGS_PREFERENCES_H
 

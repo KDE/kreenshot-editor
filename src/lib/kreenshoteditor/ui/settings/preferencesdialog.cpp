@@ -19,11 +19,29 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 #include "pageoutput.h"
+#include "../../core/settingsmanager.h"
 
-PreferencesDialog::PreferencesDialog()
+namespace kreen {
+namespace ui {
+namespace settings {
+
+class PreferencesDialogImpl
 {
+public:
+    SettingsManagerPtr settingsManager;
+    Ui::dialogSettings ui;
+    PageOutput* pageOutput;
+
+private:
+};
+
+PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager)
+{
+    d = std::make_shared<PreferencesDialogImpl>();
+    d->settingsManager = settingsManager;
+
     setupUi();
-    setupActions();
+    pushSettingsToUi();
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -32,14 +50,26 @@ PreferencesDialog::~PreferencesDialog()
 
 void PreferencesDialog::setupUi()
 {
-    Ui::dialogSettings ui;
-    ui.setupUi(this);
+    d->ui.setupUi(this);
 
-    ui.tabWidgetMain->clear();
-    auto pageOutput = new PageOutput(this);
-    ui.tabWidgetMain->addTab(pageOutput, pageOutput->windowTitle());
+    d->ui.tabWidgetMain->clear();
+    d->pageOutput = new PageOutput(this);
+    d->ui.tabWidgetMain->addTab(d->pageOutput, d->pageOutput->windowTitle());
+
+    connect(this, SIGNAL(accepted()), this, SLOT(pullSettingsFromUiAndSave()));
 }
 
-void PreferencesDialog::setupActions()
+void PreferencesDialog::pushSettingsToUi()
 {
+    d->pageOutput->setValues(d->settingsManager->output);
+}
+
+void PreferencesDialog::pullSettingsFromUiAndSave()
+{
+    d->settingsManager->output = d->pageOutput->values();
+    d->settingsManager->save();
+}
+
+}
+}
 }

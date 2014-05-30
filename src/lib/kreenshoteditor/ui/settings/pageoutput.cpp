@@ -18,12 +18,30 @@
  */
 #include "pageoutput.h"
 #include "ui_pageoutput.h"
+#include <QFileDialog>
+#include <QDebug>
+
+namespace kreen {
+namespace ui {
+namespace settings {
+
+class PageOutputImpl
+{
+public:
+    Ui::pageOutput ui;
+
+private:
+    void exp()
+    {
+        //ui.toolButtonChooseDirectory
+    }
+};
 
 PageOutput::PageOutput(QWidget* parent)
  : QWidget(parent)
 {
+    d = std::make_shared<PageOutputImpl>();
     setupUi();
-    setupActions();
 }
 
 PageOutput::~PageOutput()
@@ -32,10 +50,47 @@ PageOutput::~PageOutput()
 
 void PageOutput::setupUi()
 {
-    Ui::pageOutput ui;
-    ui.setupUi(this);
+    d->ui.setupUi(this);
+    connect(d->ui.toolButtonChooseDirectory, SIGNAL(clicked()), this, SLOT(chooseDefaultOutputDirectory()));
+    connect(d->ui.lineEditOutputDirectory, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
+    connect(d->ui.lineEditFilenamePattern, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
 }
 
-void PageOutput::setupActions()
+void PageOutput::setValues(SettingsGroupOutput values)
 {
+    d->ui.lineEditOutputDirectory->setText(values.defaultOutputDirectory);
+    d->ui.lineEditFilenamePattern->setText(values.filenamePattern);
+}
+
+SettingsGroupOutput PageOutput::values()
+{
+    SettingsGroupOutput values;
+    values.defaultOutputDirectory = d->ui.lineEditOutputDirectory->text();
+    values.filenamePattern = d->ui.lineEditFilenamePattern->text();
+    return values;
+}
+
+void PageOutput::chooseDefaultOutputDirectory()
+{
+    QDir currentDir(d->ui.lineEditOutputDirectory->text());
+    if (!currentDir.exists())
+    {
+        currentDir = QDir::home();
+    }
+    qDebug() << currentDir.canonicalPath();
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Default output directory"), currentDir.canonicalPath(), QFileDialog::ShowDirsOnly);
+    qDebug() << dir;
+    if (!dir.isEmpty())
+    {
+        d->ui.lineEditOutputDirectory->setText(dir);
+    }
+}
+
+void PageOutput::updateFilenamePreview()
+{
+    d->ui.labelPreview->setText("aaaaa");
+}
+
+}
+}
 }

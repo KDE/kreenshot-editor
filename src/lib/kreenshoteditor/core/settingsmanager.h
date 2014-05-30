@@ -35,11 +35,14 @@ typedef std::shared_ptr<SettingsManager> SettingsManagerPtr;
 class SettingsManager
 {
 public:
+    /**
+     * singleton
+     */
     static SettingsManagerPtr instance(QString configId = "global");
 
 public:
     virtual ~SettingsManager();
-    
+
     /**
      * load settings from disk
      */
@@ -56,6 +59,9 @@ public:
     void reset();
 
 public:
+    /**
+     * read it, write it or replace it. Only make sure that it only contains values (and no references)
+     */
     SettingsGroupOutput output;
 
 private:

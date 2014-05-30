@@ -21,6 +21,16 @@
 
 #include <QWidget>
 #include <memory>
+#include "../../core/settingsgroupoutput.h"
+
+namespace kreen {
+namespace ui {
+namespace settings {
+
+using namespace kreen::core;
+
+class PageOutputImpl;
+typedef std::shared_ptr<PageOutputImpl> PageOutputImplPtr;
 
 class PageOutput : public QWidget
 {
@@ -30,15 +40,27 @@ public:
     PageOutput(QWidget* parent);
     virtual ~PageOutput();
 
+    void setValues(SettingsGroupOutput values);
+
+    SettingsGroupOutput values();
+
 public Q_SLOTS:
 
-public:
-    void setupActions();
+private Q_SLOTS:
+    void chooseDefaultOutputDirectory();
+    void updateFilenamePreview();
+
+private:
     void setupUi();
 
 private:
+    PageOutputImplPtr d;
 
 };
+
+}
+}
+}
 
 #endif // UI_SETTINGS_PAGEOUTPUT_H
 
