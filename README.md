@@ -57,6 +57,8 @@ TODO
 LATER
 -----
 - OpenSuseBuild service
+- Ctrl+Shift+C: copy image to clipboard
+- Settings: After saving: copy image path to clipboard
 - Select a Item
   - Handles for resizing appear
   - Controls for common properties appear
@@ -69,7 +71,7 @@ LATER
         let appear in windows title and in filename --> statusbar / ...edit pattern...
         [NEW] ...
         *  ... (see mainwindow.cpp)
-- Create Actions in lib and use in GUI
+- Create Actions in lib (instead of UI file) and use in GUI (überlegen: nice ui file vs. good coding)
 - "Open last file storage location" or "Open storage location"
 - use m4 to generate settings class
 

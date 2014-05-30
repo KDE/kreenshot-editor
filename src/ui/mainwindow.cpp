@@ -286,12 +286,13 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
+    // TODO: exception handling or similar!!!
+    d->kreenshotEditor->saveToFile();
 }
 
 void MainWindow::fileSaveAs()
 {
-    // TODO: dialog
+    // TODO: show dialog
     QString path = "/tmp/aaa.png";
     d->kreenshotEditor->saveToFile(path);
     QMessageBox::information(this, "Not impl", "saved to" + path);

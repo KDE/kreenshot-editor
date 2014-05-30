@@ -6,14 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>334</height>
+    <width>632</width>
+    <height>460</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Output</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="6" column="0" colspan="3">
+    <widget class="Line" name="line">
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
@@ -34,7 +44,7 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="lineEditFilenamePattern"/>
    </item>
-   <item row="6" column="1">
+   <item row="9" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -102,6 +112,104 @@ ${description_}    like ${description_} and all spaces are replaced with _
 ${user}    system user
 ${hostname}    machine/PC name</string>
      </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Advanced:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>After save action:</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="5">
+       <widget class="QRadioButton" name="radioButtonAfterSaveClipboardImage">
+        <property name="text">
+         <string>Image</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="checkBoxAfterSaveShowFileBrowser">
+        <property name="text">
+         <string>Show in file browser</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="checkBoxAfterSaveOpenDefaultViewer">
+        <property name="text">
+         <string>Open with default viewer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="6">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="3">
+       <widget class="QRadioButton" name="radioButtonAfterSaveClipboardFilePath">
+        <property name="text">
+         <string>File path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Copy to clipboard:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="radioButtonAfterSaveClipboardNothing">
+        <property name="text">
+         <string>Nothing</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     <zorder>label_6</zorder>
+     <zorder>checkBoxAfterSaveOpenDefaultViewer</zorder>
+     <zorder>checkBoxAfterSaveShowFileBrowser</zorder>
+     <zorder>radioButtonAfterSaveClipboardImage</zorder>
+     <zorder>horizontalSpacer</zorder>
+     <zorder>horizontalSpacer_2</zorder>
+     <zorder>radioButtonAfterSaveClipboardFilePath</zorder>
+     <zorder>radioButtonAfterSaveClipboardNothing</zorder>
     </widget>
    </item>
   </layout>

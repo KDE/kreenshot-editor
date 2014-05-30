@@ -76,7 +76,7 @@ public:
     QImage baseImage();
 
     /**
-     * Ff filepath is not set then the settings from outputFilenameManager are used
+     * If filepath is not set then the settings from outputFilenameManager are used
      */
     void saveToFile(QString filepath = QString());
 

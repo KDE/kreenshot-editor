@@ -34,7 +34,7 @@ public:
 private:
     void exp()
     {
-        //ui.toolButtonChooseDirectory
+        //ui.radioButtonAfterSaveClipboardImage
     }
 };
 
@@ -61,6 +61,10 @@ void PageOutput::setValues(SettingsGroupOutput values)
 {
     d->ui.lineEditOutputDirectory->setText(values.defaultOutputDirectory);
     d->ui.lineEditFilenamePattern->setText(values.filenamePattern);
+    d->ui.checkBoxAfterSaveOpenDefaultViewer->setChecked(values.afterSaveOpenDefaultViewer);
+    d->ui.checkBoxAfterSaveShowFileBrowser->setChecked(values.afterSaveOpenFileBrowser);
+    d->ui.radioButtonAfterSaveClipboardFilePath->setChecked(values.afterSaveClipboardFilepath);
+    d->ui.radioButtonAfterSaveClipboardImage->setChecked(values.afterSaveClipboardImageData);
 }
 
 SettingsGroupOutput PageOutput::values()
@@ -68,6 +72,10 @@ SettingsGroupOutput PageOutput::values()
     SettingsGroupOutput values;
     values.defaultOutputDirectory = d->ui.lineEditOutputDirectory->text();
     values.filenamePattern = d->ui.lineEditFilenamePattern->text();
+    values.afterSaveOpenDefaultViewer = d->ui.checkBoxAfterSaveOpenDefaultViewer->isChecked();
+    values.afterSaveOpenFileBrowser = d->ui.checkBoxAfterSaveShowFileBrowser->isChecked();
+    values.afterSaveClipboardFilepath = d->ui.radioButtonAfterSaveClipboardFilePath->isChecked();
+    values.afterSaveClipboardImageData = d->ui.radioButtonAfterSaveClipboardImage->isChecked();
     return values;
 }
 

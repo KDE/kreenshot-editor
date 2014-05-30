@@ -52,6 +52,10 @@ void SettingsManager::load()
     QSettings settings;
     output.defaultOutputDirectory = settings.value("output/default-output-directory", "~/Pictures/screenshots").toString();
     output.filenamePattern = settings.value("output/filename-pattern", "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png").toString();
+    output.afterSaveOpenDefaultViewer = settings.value("output/after-save/open-default-viewer", false).toBool();
+    output.afterSaveOpenFileBrowser = settings.value("output/after-save/open-filebrowser", false).toBool();
+    output.afterSaveClipboardFilepath = settings.value("output/after-save/clipboard-filepath", false).toBool();
+    output.afterSaveClipboardImageData = settings.value("output/after-save/clipboard-imagedata", false).toBool();
 }
 
 void SettingsManager::save()
@@ -59,6 +63,10 @@ void SettingsManager::save()
     QSettings settings;
     settings.setValue("output/default-output-directory", output.defaultOutputDirectory);
     settings.setValue("output/filename-pattern", output.filenamePattern);
+    settings.setValue("output/after-save/open-default-viewer", output.afterSaveOpenDefaultViewer);
+    settings.setValue("output/after-save/open-filebrowser", output.afterSaveOpenFileBrowser);
+    settings.setValue("output/after-save/clipboard-filepath", output.afterSaveClipboardFilepath);
+    settings.setValue("output/after-save/clipboard-imagedata", output.afterSaveClipboardImageData);
 }
 
 void SettingsManager::reset()
@@ -66,7 +74,6 @@ void SettingsManager::reset()
     QSettings settings;
     settings.clear();
 }
-
 
 }
 }

@@ -38,6 +38,13 @@ public:
     QString defaultOutputDirectory;
     QString filenamePattern;
 
+    bool afterSaveOpenDefaultViewer;
+    bool afterSaveOpenFileBrowser;
+
+    // either or
+    bool afterSaveClipboardFilepath;
+    bool afterSaveClipboardImageData;
+
 private:
 
 };
