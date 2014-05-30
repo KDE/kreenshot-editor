@@ -22,6 +22,7 @@
 #include <QWidget>
 #include <memory>
 #include "../../core/settingsgroupoutput.h"
+#include "../../core/outputfilenamemanager.h"
 
 namespace kreen {
 namespace ui {
@@ -37,7 +38,7 @@ class PageOutput : public QWidget
     Q_OBJECT
 
 public:
-    PageOutput(QWidget* parent);
+    PageOutput(QWidget* parent, OutputFilenameManagerPtr outputFilenameManager);
     virtual ~PageOutput();
 
     void setValues(SettingsGroupOutput values);

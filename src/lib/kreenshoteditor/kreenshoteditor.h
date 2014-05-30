@@ -73,7 +73,7 @@ public:
      * Returns the base image (without any items).
      * TODO: currently after a crop operation the cropped image will be returned. Is this ok?
      */
-    QImage getBaseImage();
+    QImage baseImage();
 
     /**
      * Ff filepath is not set then the settings from outputFilenameManager are used
@@ -85,7 +85,7 @@ public:
      *
      * TODO: does shared_ptr makes sense here?
      */
-    MainEditorWidget* getMainEditorWidget();
+    MainEditorWidget* mainEditorWidget();
 
     /**
      * Access to used edited items

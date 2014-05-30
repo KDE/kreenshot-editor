@@ -29,6 +29,7 @@ class PageOutputImpl
 {
 public:
     Ui::pageOutput ui;
+    OutputFilenameManagerPtr outputFilenameManager;
 
 private:
     void exp()
@@ -37,10 +38,11 @@ private:
     }
 };
 
-PageOutput::PageOutput(QWidget* parent)
+PageOutput::PageOutput(QWidget* parent, OutputFilenameManagerPtr outputFilenameManager)
  : QWidget(parent)
 {
     d = std::make_shared<PageOutputImpl>();
+    d->outputFilenameManager = outputFilenameManager;
     setupUi();
 }
 
@@ -88,7 +90,10 @@ void PageOutput::chooseDefaultOutputDirectory()
 
 void PageOutput::updateFilenamePreview()
 {
-    d->ui.labelPreview->setText("aaaaa");
+    d->outputFilenameManager->initCaptureTime();
+    d->outputFilenameManager->setDescription("Window 1");
+    d->outputFilenameManager->setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
+    d->ui.labelPreview->setText(d->outputFilenameManager->resultingFilepath());
 }
 
 }

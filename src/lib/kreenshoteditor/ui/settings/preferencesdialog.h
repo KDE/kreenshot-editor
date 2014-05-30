@@ -22,6 +22,7 @@
 #include <QDialog>
 #include <memory>
 #include "../../core/settingsmanager.h"
+#include "../../core/outputfilenamemanager.h"
 
 namespace kreen {
 namespace ui {
@@ -40,7 +41,11 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
-    PreferencesDialog(kreen::core::SettingsManagerPtr settingsManager);
+    /**
+     * settingsManager: read and store the settings
+     * outputFilenameManager: for preview
+     */
+    PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameManagerPtr outputFilenameManager);
     virtual ~PreferencesDialog();
 
 private Q_SLOTS:

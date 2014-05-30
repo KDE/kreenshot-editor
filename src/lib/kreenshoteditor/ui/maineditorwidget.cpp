@@ -73,7 +73,7 @@ public:
 public:
     // todo: optimize this method?
     QRect getBaseRect() {
-        QImage baseImage = kreenshotEditor->getBaseImage();
+        QImage baseImage = kreenshotEditor->baseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
@@ -266,7 +266,7 @@ void MainEditorWidget::createSceneFromModel()
     d->scene->clear();
 
     QPixmap pixmap;
-    pixmap.convertFromImage(d->kreenshotEditor->getBaseImage());
+    pixmap.convertFromImage(d->kreenshotEditor->baseImage());
     auto baseImageItem = new QGraphicsPixmapItem(pixmap);
     d->scene->addItem(baseImageItem);
 
@@ -314,7 +314,7 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
 
     // QPainter painterImage(QImage); // TODO: use this to render to image and then to save to file
 
-//     auto baseImage = d->kreenshotEditor->getBaseImage();
+//     auto baseImage = d->kreenshotEditor->baseImage();
 //     painter.drawImage(QPoint(0, 0), baseImage);
 
     //painter.drawRect(205, 205, 30, 30);
@@ -374,7 +374,7 @@ void MainEditorWidget::updateItemsGeometryFromModel()
 void MainEditorWidget::imageOperationAccepted()
 {
     qDebug() << "............TODO: MainEditorWidget::imageOperationAccepted()";
-//     auto baseImage = d->kreenshotEditor->getBaseImage();
+//     auto baseImage = d->kreenshotEditor->baseImage();
 //     d->kreenshotEditor->setBaseImage(baseImage.copy(QRect(10, 10, 100, 100)));
 //     initScene(d->graphicsView); // causes crash
 }
@@ -401,7 +401,7 @@ void MainEditorWidget::saveToFile(QString filepath)
     qDebug() << filepath;
     qDebug() << QImageReader::supportedImageFormats();
     qDebug() << "MainEditorWidget::saveToFile(QString filepath): " << filepath;
-    QImage image = d->kreenshotEditor->getBaseImage().copy();
+    QImage image = d->kreenshotEditor->baseImage().copy();
     //qDebug() << image.isNull();
     QPainter painterImage(&image);
     painterImage.setRenderHint(QPainter::Antialiasing);

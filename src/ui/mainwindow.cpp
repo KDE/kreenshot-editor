@@ -194,7 +194,7 @@ MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
     connect(d->kreenshotEditor.get(), SIGNAL(outputFileStatusChanged()), this, SLOT(outputFileStatusChanged()));
     outputFileStatusChanged();
 
-    d->kreenshotEditor->getMainEditorWidget()->requestTool("select");
+    d->kreenshotEditor->mainEditorWidget()->requestTool("select");
 }
 
 MainWindow::~MainWindow()
@@ -208,7 +208,7 @@ void MainWindow::setupUi()
 //     testButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //     _ui->containerEditor->addWidget(testButton);
 
-    d->ui->containerEditor->addWidget(d->kreenshotEditor->getMainEditorWidget());
+    d->ui->containerEditor->addWidget(d->kreenshotEditor->mainEditorWidget());
 
     d->setupActionIds();
 
@@ -251,7 +251,7 @@ void MainWindow::setupActions()
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
-    connect(d->kreenshotEditor->getMainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
+    connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
 }
 
 void MainWindow::editPreferences()
@@ -312,7 +312,7 @@ void MainWindow::outputFileStatusChanged()
     else if (d->kreenshotEditor->isFileModified()) {
         fileStatusPrefix = tr("* ");
     }
-    setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->outputFilenameManager()->getFilepath()).arg(d->baseWindowTitle));
+    setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->outputFilenameManager()->resultingFilepath()).arg(d->baseWindowTitle));
 }
 
 void MainWindow::requestTool()
@@ -325,7 +325,7 @@ void MainWindow::requestTool()
     QString message = QString("MainWindow::requestTool: tool id '%1'").arg(toolId);
     qDebug() << message;
 
-    d->kreenshotEditor->getMainEditorWidget()->requestTool(toolId);
+    d->kreenshotEditor->mainEditorWidget()->requestTool(toolId);
 }
 
 void MainWindow::toolChosen(QString toolId)

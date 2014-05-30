@@ -68,15 +68,15 @@ void KreenshotEditor::setBaseImageData(QImage image)
 void KreenshotEditor::setBaseImagePath(QString path)
 {
     d->baseImage = QImage(path);
-    d->outputFilenameManager->setFilenamePattern(path);
+    d->outputFilenameManager->setFilepathPattern(path);
 }
 
-QImage KreenshotEditor::getBaseImage()
+QImage KreenshotEditor::baseImage()
 {
     return d->baseImage;
 }
 
-MainEditorWidget* KreenshotEditor::getMainEditorWidget()
+MainEditorWidget* KreenshotEditor::mainEditorWidget()
 {
     if (d->mainEditorWidget == nullptr) {
         auto mainEditorWidget = new MainEditorWidget(shared_from_this());
@@ -115,7 +115,7 @@ OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
 
 bool KreenshotEditor::isFileNew()
 {
-    return !QFile::exists(d->outputFilenameManager->getFilepath());
+    return !QFile::exists(d->outputFilenameManager->resultingFilepath());
 }
 
 bool KreenshotEditor::isFileModified()
@@ -125,7 +125,7 @@ bool KreenshotEditor::isFileModified()
 
 void KreenshotEditor::showPreferencesDialog()
 {
-    ui::settings::PreferencesDialog prefsDialog(d->settingsManager);
+    ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameManager);
     // if (prefsDialog.exec() == QDialog::Accepted) {
     prefsDialog.exec();
 }

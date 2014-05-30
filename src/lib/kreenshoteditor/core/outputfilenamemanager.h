@@ -72,15 +72,15 @@ public:
     void setDescription(QString text);
 
     /**
-     * set pattern or fixed path
+     * set pattern or fixed path (directory AND filename)
      */
-    void setFilenamePattern(QString pattern);
+    void setFilepathPattern(QString pattern);
 
     /**
-     * location + filename
-     * if pattern is not set then the one set by setPattern is used
+     * location + filename as defined by setFilepathPattern()
+     * The pattern argument overrides the setting by setFilepathPattern()
      */
-    QString getFilepath(QString pattern = QString());
+    QString resultingFilepath(QString pattern = QString());
 
 public:
 

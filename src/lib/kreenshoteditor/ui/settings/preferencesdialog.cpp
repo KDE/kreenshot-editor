@@ -29,16 +29,18 @@ class PreferencesDialogImpl
 {
 public:
     SettingsManagerPtr settingsManager;
+    OutputFilenameManagerPtr outputFilenameManager;
     Ui::dialogSettings ui;
     PageOutput* pageOutput;
 
 private:
 };
 
-PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager)
+PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameManagerPtr outputFilenameManager)
 {
     d = std::make_shared<PreferencesDialogImpl>();
     d->settingsManager = settingsManager;
+    d->outputFilenameManager = outputFilenameManager;
 
     setupUi();
     pushSettingsToUi();
@@ -53,7 +55,7 @@ void PreferencesDialog::setupUi()
     d->ui.setupUi(this);
 
     d->ui.tabWidgetMain->clear();
-    d->pageOutput = new PageOutput(this);
+    d->pageOutput = new PageOutput(this, d->outputFilenameManager);
     d->ui.tabWidgetMain->addTab(d->pageOutput, d->pageOutput->windowTitle());
 
     connect(this, SIGNAL(accepted()), this, SLOT(pullSettingsFromUiAndSave()));

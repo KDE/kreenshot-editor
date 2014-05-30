@@ -54,8 +54,8 @@ private slots:
         OutputFilenameManager mgr;
         mgr.initCaptureTime();
         mgr.setDescription("Hallo Test");
-        qDebug() << mgr.getFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
-        qDebug() << mgr.getFilepath("${description}, ${hostname}, ${user}");
+        qDebug() << mgr.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
+        qDebug() << mgr.resultingFilepath("${description}, ${hostname}, ${user}");
     }
 };
 
