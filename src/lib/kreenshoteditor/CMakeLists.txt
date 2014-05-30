@@ -17,7 +17,8 @@ set(kreenshoteditor_SOURCES
     core/item.cpp
     core/itemsmanager.cpp
     core/outputfilenamemanager.cpp
-    core/settings.cpp
+    core/settingsgroupoutput.cpp
+    core/settingsmanager.cpp
 
     ui/kreengraphicsitems.cpp
     ui/maineditorwidget.cpp

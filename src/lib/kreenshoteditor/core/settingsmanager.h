@@ -16,24 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CORE_SETTINGS_H
-#define CORE_SETTINGS_H
+#ifndef CORE_SETTINGSMANAGER_H
+#define CORE_SETTINGSMANAGER_H
 
 #include <vector>
 #include <memory>
 #include <QString>
+#include "settingsgroupoutput.h"
 
 namespace kreen {
 namespace core {
 
+class SettingsManager;
+typedef std::shared_ptr<SettingsManager> SettingsManagerPtr;
+
 /**
  */
-class SettingsDto
+class SettingsManager
 {
 public:
-    SettingsDto(bool isTest);
-    virtual ~SettingsDto();
+    static SettingsManagerPtr instance(QString configId = "global");
 
+public:
+    virtual ~SettingsManager();
+    
     /**
      * load settings from disk
      */
@@ -50,14 +56,21 @@ public:
     void reset();
 
 public:
-    QString output_DefaultOutputDirectory;
-    QString output_FilenamePattern;
+    SettingsGroupOutput output;
 
 private:
+    /**
+     * TODO: later when kreenshoteditor is used as shared library one might have
+     * separate settings per application
+     */
+    SettingsManager(QString configId);
+
+private:
+    static SettingsManagerPtr _instance;
 
 };
 
 }
 }
 
-#endif // CORE_SETTINGS_H
+#endif // CORE_SETTINGSMANAGER_H

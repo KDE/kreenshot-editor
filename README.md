@@ -37,6 +37,7 @@ TODO
 - NEXT: save basic settings like default image output location
     goal: to set some debug folder without messing in the code itself
     --> QSettings
+  - use m4 to generate settings class
 
 - save image to file: do not save selection indication rect
 - save settings to file
@@ -58,6 +59,7 @@ TODO
 
 LATER
 -----
+- OpenSuseBuild service
 - Select a Item
   - Handles for resizing appear
   - Controls for common properties appear

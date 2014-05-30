@@ -23,7 +23,7 @@
 #include <QDebug>
 #include <QString>
 #include <QTest>
-#include "../src/lib/kreenshoteditor/core/settings.h"
+#include "../src/lib/kreenshoteditor/core/settingsmanager.h"
 
 using namespace kreen::core;
 
@@ -38,31 +38,31 @@ public slots:
 private slots:
     void testReset()
     {
-        SettingsDto dto(true);
-        dto.reset();
-        dto.load();
-        QCOMPARE(dto.output_DefaultOutputDirectory, QString("~/Pictures/screenshots"));
-        QCOMPARE(dto.output_FilenamePattern, QString("${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png"));
+        auto settings = SettingsManager::instance("unittest");
+        settings->reset();
+        settings->load();
+        QCOMPARE(settings->output.defaultOutputDirectory, QString("~/Pictures/screenshots"));
+        QCOMPARE(settings->output.filenamePattern, QString("${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png"));
 
-        dto.output_DefaultOutputDirectory = "aaa";
-        dto.output_FilenamePattern = "bbb";
-        dto.save();
+        settings->output.defaultOutputDirectory = "aaa";
+        settings->output.filenamePattern = "bbb";
+        settings->save();
     }
 
     void testSaveLoad()
     {
         {
-            SettingsDto dto(true);
-            dto.output_DefaultOutputDirectory = "aaa";
-            dto.output_FilenamePattern = "bbb";
-            dto.save();
+            auto settings = SettingsManager::instance("unittest");
+            settings->output.defaultOutputDirectory = "aaa";
+            settings->output.filenamePattern = "bbb";
+            settings->save();
         }
 
         {
-            SettingsDto dto(true);
-            dto.load();
-            QCOMPARE(dto.output_DefaultOutputDirectory, QString("aaa"));
-            QCOMPARE(dto.output_FilenamePattern, QString("bbb"));
+            auto settings = SettingsManager::instance("unittest");
+            settings->load();
+            QCOMPARE(settings->output.defaultOutputDirectory, QString("aaa"));
+            QCOMPARE(settings->output.filenamePattern, QString("bbb"));
         }
     }
 };

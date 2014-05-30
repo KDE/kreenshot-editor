@@ -16,43 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "settings.h"
+#include "settingsmanager.h"
 #include <QCoreApplication>
 #include <QSettings>
 
 namespace kreen {
 namespace core {
 
-SettingsDto::SettingsDto(bool isTest)
+SettingsManagerPtr SettingsManager::instance(QString configId)
+{
+    if (!_instance)
+    {
+        _instance = SettingsManagerPtr(new SettingsManager(configId));
+    }
+
+    return _instance;
+}
+
+SettingsManagerPtr SettingsManager::_instance;
+
+SettingsManager::SettingsManager(QString configId)
 {
     //QCoreApplication::setOrganizationName("MySoft");
     QCoreApplication::setOrganizationDomain("kreenshoteditor.org");
-    if (!isTest)
-        QCoreApplication::setApplicationName("kreenshot-editor");
-    else
-        QCoreApplication::setApplicationName("kreenshot-editor-test");
+    QCoreApplication::setApplicationName("kreenshot-editor-" + configId);
 }
 
-SettingsDto::~SettingsDto()
+SettingsManager::~SettingsManager()
 {
 
 }
 
-void SettingsDto::load()
+void SettingsManager::load()
 {
     QSettings settings;
-    output_DefaultOutputDirectory = settings.value("output/default-output-directory", "~/Pictures/screenshots").toString();
-    output_FilenamePattern = settings.value("output/filename-pattern", "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png").toString();
+    output.defaultOutputDirectory = settings.value("output/default-output-directory", "~/Pictures/screenshots").toString();
+    output.filenamePattern = settings.value("output/filename-pattern", "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png").toString();
 }
 
-void SettingsDto::save()
+void SettingsManager::save()
 {
     QSettings settings;
-    settings.setValue("output/default-output-directory", output_DefaultOutputDirectory);
-    settings.setValue("output/filename-pattern", output_FilenamePattern);
+    settings.setValue("output/default-output-directory", output.defaultOutputDirectory);
+    settings.setValue("output/filename-pattern", output.filenamePattern);
 }
 
-void SettingsDto::reset()
+void SettingsManager::reset()
 {
     QSettings settings;
     settings.clear();
