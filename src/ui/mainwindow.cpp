@@ -174,12 +174,12 @@ public:
     }
 
 public:
-    KreenshotEditorPtr kreenshotEditor;
+    kreen::KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
     QString baseWindowTitle;
 };
 
-MainWindow::MainWindow(KreenshotEditorPtr kreenshotEditor)
+MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
 {
     d = std::make_shared<MainWindowImpl>();
     d->kreenshotEditor = kreenshotEditor;

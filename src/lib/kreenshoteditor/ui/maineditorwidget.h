@@ -24,9 +24,15 @@
 #include "../kreenshoteditor.h"
 #include "../core/item.h"
 
-class MyQGraphicsView;
+using namespace kreen::core;
+
 class QPaintEvent;
 class QGraphicsView;
+
+namespace kreen {
+namespace ui {
+
+class MyQGraphicsView;
 
 class MainEditorWidgetImpl;
 typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
@@ -68,6 +74,9 @@ protected:
 private:
     MainEditorWidgetImplPtr d;
 };
+
+}
+}
 
 #endif // UI_MAIN_EDITOR_WIDGET_H
 

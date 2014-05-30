@@ -21,6 +21,9 @@
 
 #include <memory>
 
+namespace kreen {
+namespace ui {
+
 enum ToolEnum
 {
     Select = 0,
@@ -121,6 +124,9 @@ private:
 };
 
 typedef std::shared_ptr<ToolManager> ToolManagerPtr;
+
+}
+}
 
 #endif // UI_KREENQGRAPHICSITEMS_H
 

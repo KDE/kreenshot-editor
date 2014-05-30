@@ -23,6 +23,9 @@
 #include <QString>
 #include <QDateTime>
 
+namespace kreen {
+namespace core {
+
 class OutputFilenameManager;
 typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
 
@@ -85,5 +88,7 @@ private:
     OutputFilenameManagerImplPtr d;
 };
 
+}
+}
 
 #endif // CORE_OUTPUTFILENAMEMANAGER

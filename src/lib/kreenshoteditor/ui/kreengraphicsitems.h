@@ -33,6 +33,11 @@
 #include <algorithm>
 #include "../core/item.h"
 
+using namespace kreen::core;
+
+namespace kreen {
+namespace ui {
+
 /**
  * multiselection will break the logic
  */
@@ -519,6 +524,8 @@ private:
     QGraphicsProxyWidget* _interactionWidget = nullptr;
 };
 
+}
+}
 
 #endif // UI_KREENQGRAPHICSITEMS_H
 

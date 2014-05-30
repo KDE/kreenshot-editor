@@ -22,18 +22,29 @@
 #include <QObject>
 #include <memory>
 
-class MainEditorWidget;
-class QImage;
 class QWidget;
+class QImage;
+
+namespace kreen {
 
 class KreenshotEditorImpl;
 typedef std::shared_ptr<KreenshotEditorImpl> KreenshotEditorImplPtr;
 
+namespace core {
 class ItemsManager;
 typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
 
 class OutputFilenameManager;
 typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
+}
+
+using namespace core;
+
+namespace ui {
+class MainEditorWidget;
+}
+
+using namespace ui;
 
 /**
  *
@@ -114,5 +125,7 @@ private:
 };
 
 typedef std::shared_ptr<KreenshotEditor> KreenshotEditorPtr;
+
+}
 
 #endif // KREENSHOTEDITOR_H

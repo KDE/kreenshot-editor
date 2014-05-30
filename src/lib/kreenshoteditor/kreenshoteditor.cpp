@@ -27,6 +27,8 @@
 #include "core/outputfilenamemanager.h"
 #include "ui/settings/preferencesdialog.h"
 
+namespace kreen {
+
 class KreenshotEditorImpl
 {
 public:
@@ -86,7 +88,7 @@ MainEditorWidget* KreenshotEditor::getMainEditorWidget()
 //             d->mainEditorWidget = scrollArea;
 //         }
 //         else {
-            d->mainEditorWidget = mainEditorWidget;
+        d->mainEditorWidget = mainEditorWidget;
 //         }
     }
 
@@ -124,4 +126,6 @@ void KreenshotEditor::showPreferencesDialog()
     if (prefsDialog.exec() != QDialog::Accepted) {
         return;
     }
+}
+
 }

@@ -24,6 +24,9 @@
 #include <vector>
 #include <memory>
 
+namespace kreen {
+namespace core {
+
 /**
  * The "document"
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
@@ -47,5 +50,8 @@ private:
 };
 
 typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
+
+}
+}
 
 #endif // CORE_ITEMSMANAGER_H

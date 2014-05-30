@@ -37,6 +37,10 @@
 #include "myqgraphicsview.h"
 #include "toolmanager.h"
 
+namespace kreen {
+namespace ui {
+
+
 //class ItemVisual {
 //public:
 // bool mouseOver; // TODO later
@@ -75,7 +79,7 @@ public:
         return rect;
     }
 
-            // todo: remove later
+    // todo: remove later
 //             auto mouseOverMapItem = mouseOverMap.find(item);
 //             bool isMouseOver = mouseOverMapItem != mouseOverMap.end() && mouseOverMapItem->second == true;
 //
@@ -117,8 +121,8 @@ public:
             if (grItemBase != nullptr) { // there might also be other items
 
                 //if (!grItemBase->item()->typeId.startsWith("op-")) {
-                    //qDebug() << "updateGeometryFromModel";
-                    grItemBase->updateVisualGeometryFromModel();
+                //qDebug() << "updateGeometryFromModel";
+                grItemBase->updateVisualGeometryFromModel();
 //                 }
 //                 else {
 //                     qDebug() << "updateItemsGeometryFromModel: ignore because of op- item";
@@ -406,4 +410,7 @@ void MainEditorWidget::saveToFile(QString filepath)
     QImageWriter writer(filepath);
     writer.write(image);
     qDebug() << writer.error() << writer.errorString();
+}
+
+}
 }

@@ -25,6 +25,9 @@
 #include <QColor>
 #include <memory>
 
+namespace kreen {
+namespace core {
+
 class ItemProperty;
 typedef std::shared_ptr<ItemProperty> ItemPropertyPtr;
 
@@ -129,7 +132,9 @@ typedef std::shared_ptr<Item> ItemPtr;
 class ItemProperty
 {
 public:
-    ItemProperty(QString name) { this->name = name; }
+    ItemProperty(QString name) {
+        this->name = name;
+    }
 public:
     QString name;
 };
@@ -159,5 +164,7 @@ public:
     bool enabled;
 };
 
+}
+}
 
 #endif // CORE_ITEM_H

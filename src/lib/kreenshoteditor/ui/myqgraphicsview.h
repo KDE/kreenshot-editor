@@ -23,6 +23,9 @@
 #include <QGraphicsView>
 #include <memory>
 
+namespace kreen {
+namespace ui {
+
 class MyQGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -44,6 +47,9 @@ private:
 };
 
 typedef std::shared_ptr<MyQGraphicsView> MyQGraphicsViewPtr;
+
+}
+}
 
 #endif // MYQGRAPHICSVIEW
 

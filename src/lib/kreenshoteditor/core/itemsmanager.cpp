@@ -18,6 +18,9 @@
  */
 #include "itemsmanager.h"
 
+namespace kreen {
+namespace core {
+
 ItemsManager::ItemsManager()
 {
 
@@ -101,4 +104,7 @@ void ItemsManager::addDemoItems()
 const std::vector<ItemPtr>& ItemsManager::items()
 {
     return _items;
+}
+
+}
 }

@@ -24,6 +24,8 @@
 #include <QDateTime>
 #include "../src/lib/kreenshoteditor/core/outputfilenamemanager.h"
 
+using namespace kreen::core;
+
 class Test1 : public QObject
 {
     Q_OBJECT

@@ -29,6 +29,9 @@
 #include "toolmanager.h"
 #include "../core/itemsmanager.h"
 
+namespace kreen {
+namespace ui {
+
 /**
  * TODO: move all logic from MyQGraphicsView to here to potentially solve the wrong-drawing-when-scrolling-bug
  * and make other things easier
@@ -143,6 +146,9 @@ private:
 };
 
 typedef std::shared_ptr<MyQGraphicsScene> MyQGraphicsScenePtr;
+
+}
+}
 
 #endif // UI_MYQGRAPHICSSCENE_H
 

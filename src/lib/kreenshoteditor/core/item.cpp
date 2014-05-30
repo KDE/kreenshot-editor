@@ -20,6 +20,9 @@
 #include <QDebug>
 #include <algorithm>
 
+namespace kreen {
+namespace core {
+
 Item::Item()
 {
 
@@ -137,4 +140,7 @@ LineStylePropertyPtr Item::lineStyle()
 DropShadowPropertyPtr Item::dropShadow()
 {
     return std::static_pointer_cast<DropShadowProperty>(propFromVectorOrNull("dropShadow", _properties));
+}
+
+}
 }

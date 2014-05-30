@@ -17,3 +17,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsitems.h"
+
+namespace kreen {
+namespace ui {
+
+}
+}

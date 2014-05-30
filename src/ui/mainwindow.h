@@ -25,10 +25,12 @@
 namespace Ui {
 class MainWindow;
 typedef std::shared_ptr<MainWindow> MainWindowPtr;
-};
+}
 
+namespace kreen {
 class KreenshotEditor;
 typedef std::shared_ptr<KreenshotEditor> KreenshotEditorPtr;
+}
 
 class MainWindowImpl;
 typedef std::shared_ptr<MainWindowImpl> MainWindowImplPtr;
@@ -38,7 +40,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(KreenshotEditorPtr kreenshotEditor);
+    MainWindow(kreen::KreenshotEditorPtr kreenshotEditor);
     virtual ~MainWindow();
 
 public Q_SLOTS:

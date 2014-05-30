@@ -19,6 +19,9 @@
 #include "outputfilenamemanager.h"
 #include <QHostInfo>
 
+namespace kreen {
+namespace core {
+
 class OutputFilenameManagerImpl
 {
 public:
@@ -80,4 +83,7 @@ QString OutputFilenameManager::getFilepath(QString pattern)
     result.replace("${mm}", d->captureTime.toString("mm"));
     result.replace("${ss}", d->captureTime.toString("ss"));
     return result;
+}
+
+}
 }
