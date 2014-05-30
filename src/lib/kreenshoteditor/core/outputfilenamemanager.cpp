@@ -30,6 +30,7 @@ public:
     QString user;
     QString hostname;
 
+    // TODO: replace with settings
     QString filenamePattern = "~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png";
 };
 
@@ -66,7 +67,6 @@ void OutputFilenameManager::setFilenamePattern(QString pattern)
 {
     d->filenamePattern = pattern;
 }
-
 
 QString OutputFilenameManager::getFilepath(QString pattern)
 {

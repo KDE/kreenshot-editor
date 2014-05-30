@@ -67,7 +67,6 @@ void KreenshotEditor::setBaseImagePath(QString path)
     d->outputFilenameManager->setFilenamePattern(path);
 }
 
-
 QImage KreenshotEditor::getBaseImage()
 {
     return d->baseImage;

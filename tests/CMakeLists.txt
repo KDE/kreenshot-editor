@@ -20,6 +20,13 @@ add_executable(Test1 ${Test1Src})
 target_link_libraries(Test1 Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME Test1 COMMAND Test1)
 
+# Test: TestSettings
+set(TestSettingsSrc TestSettings.cpp)
+add_executable(TestSettings ${TestSettingsSrc})
+target_link_libraries(TestSettings Qt5::Core Qt5::Test kreenshoteditor)
+add_test(NAME TestSettings COMMAND TestSettings)
+
+
 # # Test: MetaPos
 # set(TestMetaPosSrc TestMetaPos.cpp)
 # add_executable(TestMetaPos ${TestMetaPosSrc})
