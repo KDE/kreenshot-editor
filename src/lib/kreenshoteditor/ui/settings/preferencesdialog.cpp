@@ -55,7 +55,7 @@ void PreferencesDialog::setupUi()
     d->ui.setupUi(this);
 
     d->ui.tabWidgetMain->clear();
-    d->pageOutput = new PageOutput(this, d->outputFilenameManager);
+    d->pageOutput = new PageOutput(this);
     d->ui.tabWidgetMain->addTab(d->pageOutput, d->pageOutput->windowTitle());
 
     connect(this, SIGNAL(accepted()), this, SLOT(pullSettingsFromUiAndSave()));

@@ -35,11 +35,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - NEXT: genincludes --> cmake
-- NEXT: save basic settings like default image output location
-    goal: to set some debug folder without messing in the code itself
-    --> QSettings
-  - use m4 to generate settings class
-
+- fix cursor when cancelling crop tool
 - save image to file: do not save selection indication rect
 - save settings to file
 - enable more item properties (see item.h/cpp)
@@ -75,6 +71,7 @@ LATER
         *  ... (see mainwindow.cpp)
 - Create Actions in lib and use in GUI
 - "Open last file storage location" or "Open storage location"
+- use m4 to generate settings class
 
 QUESTIONS
 ---------
@@ -89,11 +86,3 @@ These Linux tools have similar image editor capabilities:
 - greenshot (.NET) - the inspirational source for kreenshot-editor
 - shutter (Perl)
 - hotshots (QT)
-
-DONE
-----
-- Item
-- DrawingArea
-- BackgroundImage
-- On the DrawingArea there are Items on the BackgroundImage.
-- Hover over an Item => highlighing and ability to move the Item

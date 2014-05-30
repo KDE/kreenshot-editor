@@ -20,6 +20,7 @@
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
+#include "../../core/outputfilenamemanager.h"
 
 namespace kreen {
 namespace ui {
@@ -29,7 +30,6 @@ class PageOutputImpl
 {
 public:
     Ui::pageOutput ui;
-    OutputFilenameManagerPtr outputFilenameManager;
 
 private:
     void exp()
@@ -38,11 +38,10 @@ private:
     }
 };
 
-PageOutput::PageOutput(QWidget* parent, OutputFilenameManagerPtr outputFilenameManager)
+PageOutput::PageOutput(QWidget* parent)
  : QWidget(parent)
 {
     d = std::make_shared<PageOutputImpl>();
-    d->outputFilenameManager = outputFilenameManager;
     setupUi();
 }
 
@@ -90,10 +89,11 @@ void PageOutput::chooseDefaultOutputDirectory()
 
 void PageOutput::updateFilenamePreview()
 {
-    d->outputFilenameManager->initCaptureTime();
-    d->outputFilenameManager->setDescription("Window 1");
-    d->outputFilenameManager->setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
-    d->ui.labelPreview->setText(d->outputFilenameManager->resultingFilepath());
+    OutputFilenameManager outputFilenameManager;
+    outputFilenameManager.initCaptureTime();
+    outputFilenameManager.setDescription("Window 1");
+    outputFilenameManager.setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
+    d->ui.labelPreview->setText(outputFilenameManager.resultingFilepath());
 }
 
 }

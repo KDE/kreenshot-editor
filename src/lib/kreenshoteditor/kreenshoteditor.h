@@ -65,7 +65,7 @@ public:
     void setBaseImageData(QImage image);
 
     /**
-     * Loads the image data from the given path and set default output path to path.
+     * Loads the image data from the given path and set output filepath to path.
      */
     void setBaseImagePath(QString path);
 
@@ -98,7 +98,7 @@ public:
     OutputFilenameManagerPtr outputFilenameManager();
 
     /**
-     * Is file not saved yet?
+     * returns true if the file is not saved yet (not stored on disk yet)
      */
     bool isFileNew();
 

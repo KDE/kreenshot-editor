@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 #include "core/outputfilenamemanager.h"
@@ -40,6 +41,12 @@ public:
         settingsManager = SettingsManager::instance();
     }
 
+    void settingsToOutputFilenameManager()
+    {
+        auto outputSettings = settingsManager->output;
+        outputFilenameManager->setFilepathPattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
+    }
+
 public:
     QImage baseImage;
     ItemsManagerPtr itemsManager;
@@ -52,6 +59,7 @@ public:
 KreenshotEditor::KreenshotEditor()
 {
     d = std::make_shared<KreenshotEditorImpl>();
+
     d->settingsManager->load();
 }
 
@@ -63,6 +71,7 @@ KreenshotEditor::~KreenshotEditor()
 void KreenshotEditor::setBaseImageData(QImage image)
 {
     d->baseImage = image;
+    d->settingsToOutputFilenameManager();
 }
 
 void KreenshotEditor::setBaseImagePath(QString path)
@@ -115,7 +124,9 @@ OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
 
 bool KreenshotEditor::isFileNew()
 {
-    return !QFile::exists(d->outputFilenameManager->resultingFilepath());
+    QString filepath = d->outputFilenameManager->resultingFilepath();
+    qDebug() << filepath;
+    return !QFile::exists(filepath);
 }
 
 bool KreenshotEditor::isFileModified()
@@ -126,8 +137,14 @@ bool KreenshotEditor::isFileModified()
 void KreenshotEditor::showPreferencesDialog()
 {
     ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameManager);
-    // if (prefsDialog.exec() == QDialog::Accepted) {
-    prefsDialog.exec();
+    if (prefsDialog.exec() == QDialog::Accepted) {
+        // only if file is still new (= not stored yet to disk) apply the new file path settings
+        if (isFileNew()) {
+            qDebug() << "settingsToOutputFilenameManager";
+            d->settingsToOutputFilenameManager();
+            emit outputFileStatusChanged();
+        }
+    }
 }
 
 }

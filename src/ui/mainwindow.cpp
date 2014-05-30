@@ -191,8 +191,8 @@ MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
     setupActions();
 
 
-    connect(d->kreenshotEditor.get(), SIGNAL(outputFileStatusChanged()), this, SLOT(outputFileStatusChanged()));
-    outputFileStatusChanged();
+    connect(d->kreenshotEditor.get(), SIGNAL(outputFileStatusChanged()), this, SLOT(updateOutputFileStatus()));
+    updateOutputFileStatus();
 
     d->kreenshotEditor->mainEditorWidget()->requestTool("select");
 }
@@ -303,7 +303,7 @@ void MainWindow::helpAbout()
     QMessageBox::information(this, "Not impl", "Not implemented yet");
 }
 
-void MainWindow::outputFileStatusChanged()
+void MainWindow::updateOutputFileStatus()
 {
     QString fileStatusPrefix;
     if (d->kreenshotEditor->isFileNew()) {
@@ -336,6 +336,6 @@ void MainWindow::toolChosen(QString toolId)
         toolAction->setChecked(false);
     }
 
-     auto toolAction = d->toolActionFromId(toolId);
-     toolAction->setChecked(true);
+    auto toolAction = d->toolActionFromId(toolId);
+    toolAction->setChecked(true);
 }

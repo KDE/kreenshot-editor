@@ -60,7 +60,7 @@ public Q_SLOTS:
     void requestTool();
     void toolChosen(QString toolId);
 
-    void outputFileStatusChanged();
+    void updateOutputFileStatus();
 
 public:
     void setupActions();
