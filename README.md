@@ -34,10 +34,13 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- NEXT: genincludes --> cmake
+- // TODO: tell the document that it's filepath has changed!!!
+- // TODO: file format handling!
+- // TODO: exception handling or similar!!!
+- NEXT: 1. genincludes --> cmake   2. adapt include paths
+    http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
 - fix cursor when cancelling crop tool
 - save image to file: do not save selection indication rect
-- save settings to file
 - enable more item properties (see item.h/cpp)
 - enable hover visual
 - makes sure line has a bigger catch area when trying to move
@@ -58,6 +61,8 @@ LATER
 -----
 - OpenSuseBuild service
 - Ctrl+Shift+C: copy image to clipboard
+- // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
+    - dolphin --select
 - Settings: After saving: copy image path to clipboard
 - Select a Item
   - Handles for resizing appear

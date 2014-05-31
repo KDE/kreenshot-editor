@@ -23,6 +23,10 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
+#include <QDesktopServices>
+#include <QClipboard>
+#include <QApplication>
 #include "ui/maineditorwidget.h"
 #include "core/itemsmanager.h"
 #include "core/outputfilenamemanager.h"
@@ -45,6 +49,28 @@ public:
     {
         auto outputSettings = settingsManager->output;
         outputFilenameManager->setFilepathPattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
+    }
+
+    void afterSaveAction(QString filepath)
+    {
+        if (settingsManager->output.afterSaveOpenDefaultViewer) {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(filepath));
+        }
+
+        if (settingsManager->output.afterSaveOpenFileBrowser) {
+            QDesktopServices::openUrl(QFileInfo(filepath).dir().absolutePath());
+
+            // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
+        }
+
+        if (settingsManager->output.afterSaveClipboardFilepath) {
+            QClipboard *clipboard = QApplication::clipboard();
+            clipboard->setText(filepath);
+        } else if (settingsManager->output.afterSaveClipboardImageData) {
+            QImage image(filepath);
+            QClipboard *clipboard = QApplication::clipboard();
+            clipboard->setImage(image);
+        }
     }
 
 public:
@@ -114,7 +140,20 @@ ItemsManagerPtr KreenshotEditor::itemsManager()
 
 void KreenshotEditor::saveToFile(QString filepath)
 {
-    d->mainEditorWidget->saveToFile(filepath);
+    QString targetFilepath;
+    if (filepath.isEmpty()) {
+        targetFilepath = outputFilenameManager()->resultingFilepath();
+    }
+
+    qDebug() << targetFilepath;
+
+    d->mainEditorWidget->saveToFile(targetFilepath);
+
+    // TODO: tell the document that it's filepath has changed!!!
+
+    d->afterSaveAction(targetFilepath);
+
+    emit outputFileStatusChanged();
 }
 
 OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()

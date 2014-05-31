@@ -21,8 +21,8 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QMessageBox>
-#include <QDesktopServices>
 #include <QUrl>
+#include <QFileDialog>
 #include "lib/kreenshoteditor/kreenshoteditor.h"
 #include "lib/kreenshoteditor/ui/maineditorwidget.h"
 #include "lib/kreenshoteditor/core/outputfilenamemanager.h"
@@ -286,17 +286,17 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
-    // TODO: exception handling or similar!!!
+    // TODO: exception handling or similar, e. g. if file is not writable!!!
     d->kreenshotEditor->saveToFile();
 }
 
 void MainWindow::fileSaveAs()
 {
-    // TODO: show dialog
-    QString path = "/tmp/aaa.png";
-    d->kreenshotEditor->saveToFile(path);
-    QMessageBox::information(this, "Not impl", "saved to" + path);
-    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    // TODO: file format handling!
+    QString filepath = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
+    if (!filepath.isEmpty()) {
+        d->kreenshotEditor->saveToFile(filepath);
+    }
 }
 
 void MainWindow::helpAbout()

@@ -409,7 +409,10 @@ void MainEditorWidget::saveToFile(QString filepath)
     //qDebug() << image.save(filepath, "png"); // returns false;
     QImageWriter writer(filepath);
     writer.write(image);
-    qDebug() << writer.error() << writer.errorString();
+    qDebug() << "error code: " << writer.error();
+    if (writer.error() != 0) {
+        qDebug() << "error: " << writer.errorString();
+    }
 }
 
 }
