@@ -23,6 +23,7 @@
 #include <memory>
 #include "../kreenshoteditor.h"
 #include "../core/item.h"
+#include "../core/errorstatus.h"
 
 using namespace kreen::core;
 
@@ -45,7 +46,10 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
-    void saveToFile(QString filepath);
+    /**
+     * returns error message or empty if succeeded
+     */
+    ErrorStatus saveToFile(QString filepath);
 
 Q_SIGNALS:
     void toolChosen(QString toolId);

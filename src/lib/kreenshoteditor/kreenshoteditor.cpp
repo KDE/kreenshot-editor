@@ -138,7 +138,7 @@ ItemsManagerPtr KreenshotEditor::itemsManager()
     return d->itemsManager;
 }
 
-void KreenshotEditor::saveToFile(QString filepath)
+ErrorStatus KreenshotEditor::saveToFile(QString filepath)
 {
     QString targetFilepath;
     if (filepath.isEmpty()) {
@@ -147,13 +147,15 @@ void KreenshotEditor::saveToFile(QString filepath)
 
     qDebug() << targetFilepath;
 
-    d->mainEditorWidget->saveToFile(targetFilepath);
+    auto errorStatus = d->mainEditorWidget->saveToFile(targetFilepath);
 
     // TODO: tell the document that it's filepath has changed!!!
 
     d->afterSaveAction(targetFilepath);
 
     emit outputFileStatusChanged();
+
+    return errorStatus;
 }
 
 OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()

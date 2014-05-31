@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <memory>
+#include "core/errorstatus.h"
 
 class QWidget;
 class QImage;
@@ -78,7 +79,7 @@ public:
     /**
      * If filepath is not set then the settings from outputFilenameManager are used
      */
-    void saveToFile(QString filepath = QString());
+    ErrorStatus saveToFile(QString filepath = QString());
 
     /**
      * singleton

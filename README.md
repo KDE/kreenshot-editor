@@ -35,6 +35,9 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - // TODO: tell the document that it's filepath has changed!!!
+    1. rename ItemsManager to Document
+    2. move baseImage from kreenshoteditor to Document
+    3. add filepath to Document
 - // TODO: file format handling!
 - // TODO: exception handling or similar!!!
 - NEXT: 1. genincludes --> cmake   2. adapt include paths

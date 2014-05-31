@@ -396,7 +396,7 @@ void MainEditorWidget::handleNewItem(ItemPtr item)
     }
 }
 
-void MainEditorWidget::saveToFile(QString filepath)
+ErrorStatus MainEditorWidget::saveToFile(QString filepath)
 {
     qDebug() << filepath;
     qDebug() << QImageReader::supportedImageFormats();
@@ -412,7 +412,14 @@ void MainEditorWidget::saveToFile(QString filepath)
     qDebug() << "error code: " << writer.error();
     if (writer.error() != 0) {
         qDebug() << "error: " << writer.errorString();
+        // throw std::runtime_error(
+        return tr("Error saving image ('%1'): '%2' (code %3)")
+            .arg(filepath)
+            .arg(writer.errorString())
+            .arg(writer.error());
     }
+
+    return ErrorStatus(); // TODO: if we forget that the compiler does not warn but we get garbage out
 }
 
 }

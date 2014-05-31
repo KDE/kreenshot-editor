@@ -287,7 +287,11 @@ void MainWindow::fileOpen()
 void MainWindow::fileSave()
 {
     // TODO: exception handling or similar, e. g. if file is not writable!!!
-    d->kreenshotEditor->saveToFile();
+    ErrorStatus errorStatus = d->kreenshotEditor->saveToFile();
+
+    if (!errorStatus.isEmpty()) {
+        QMessageBox::warning(this, tr("Error saving image"), errorStatus);
+    }
 }
 
 void MainWindow::fileSaveAs()
@@ -295,7 +299,11 @@ void MainWindow::fileSaveAs()
     // TODO: file format handling!
     QString filepath = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
     if (!filepath.isEmpty()) {
-        d->kreenshotEditor->saveToFile(filepath);
+        ErrorStatus errorStatus = d->kreenshotEditor->saveToFile(filepath);
+
+        if (!errorStatus.isEmpty()) {
+            QMessageBox::warning(this, tr("Error saving image"), errorStatus);
+        }
     }
 }
 
