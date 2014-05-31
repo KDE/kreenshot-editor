@@ -28,7 +28,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include "ui/maineditorwidget.h"
-#include "core/itemsmanager.h"
+#include "core/document.h"
 #include "core/outputfilenamemanager.h"
 #include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"

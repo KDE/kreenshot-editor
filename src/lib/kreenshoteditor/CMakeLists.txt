@@ -14,8 +14,8 @@ include_directories(
 )
 
 set(kreenshoteditor_SOURCES
+    core/document.cpp
     core/item.cpp
-    core/itemsmanager.cpp
     core/outputfilenamemanager.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp

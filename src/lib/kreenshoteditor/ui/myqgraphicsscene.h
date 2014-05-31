@@ -27,7 +27,7 @@
 #include "../kreenshoteditor.h"
 #include "kreengraphicsitems.h"
 #include "toolmanager.h"
-#include "../core/itemsmanager.h"
+#include "../core/document.h"
 
 namespace kreen {
 namespace ui {
