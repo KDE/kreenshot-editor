@@ -151,9 +151,11 @@ ErrorStatus KreenshotEditor::saveToFile(QString filepath)
 
     // TODO: tell the document that it's filepath has changed!!!
 
-    d->afterSaveAction(targetFilepath);
-
     emit outputFileStatusChanged();
+
+    if (errorStatus.isEmpty()) {
+        d->afterSaveAction(targetFilepath);
+    }
 
     return errorStatus;
 }

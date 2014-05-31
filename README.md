@@ -38,6 +38,7 @@ TODO
     1. rename ItemsManager to Document
     2. move baseImage from kreenshoteditor to Document
     3. add filepath to Document
+    4. make "save as" work correctly
 - // TODO: file format handling!
 - // TODO: exception handling or similar!!!
 - NEXT: 1. genincludes --> cmake   2. adapt include paths

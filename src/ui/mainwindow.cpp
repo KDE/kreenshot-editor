@@ -173,6 +173,13 @@ public:
         return toolId;
     }
 
+    void handleSaveImageError(QMainWindow* parent, ErrorStatus errorStatus)
+    {
+        if (!errorStatus.isEmpty()) {
+            QMessageBox::warning(parent, parent->tr("Error saving image"), errorStatus);
+        }
+    }
+
 public:
     kreen::KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
@@ -286,12 +293,8 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
-    // TODO: exception handling or similar, e. g. if file is not writable!!!
     ErrorStatus errorStatus = d->kreenshotEditor->saveToFile();
-
-    if (!errorStatus.isEmpty()) {
-        QMessageBox::warning(this, tr("Error saving image"), errorStatus);
-    }
+    d->handleSaveImageError(this, errorStatus);
 }
 
 void MainWindow::fileSaveAs()
@@ -300,10 +303,7 @@ void MainWindow::fileSaveAs()
     QString filepath = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
     if (!filepath.isEmpty()) {
         ErrorStatus errorStatus = d->kreenshotEditor->saveToFile(filepath);
-
-        if (!errorStatus.isEmpty()) {
-            QMessageBox::warning(this, tr("Error saving image"), errorStatus);
-        }
+        d->handleSaveImageError(this, errorStatus);
     }
 }
 
