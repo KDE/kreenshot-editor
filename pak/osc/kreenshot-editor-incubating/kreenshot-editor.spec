@@ -18,6 +18,7 @@
 Name:           kreenshot-editor-incubating
 Summary:        Screenshot image editor
 Version:        0.001
+Release:        0
 License:        LGPL-2.0+
 Group:          Productivity/Graphics
 Url:            http://quickgit.kde.org/?p=scratch%2Fgregormi%2Fkreenshot-editor.git
