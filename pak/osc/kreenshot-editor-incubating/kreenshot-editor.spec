@@ -30,6 +30,7 @@ BuildRoot:      build
 BuildRequires:  unzip
 BuildRequires:  gcc-c++ >= 4.8
 BuildRequires:  cmake >= 2.8.11
+BuildRequires:  libqt5-qtbase-devel >= 5.2
 #BuildRequires:  boost-devel >= 1.53
 #BuildRequires:  wxWidgets-2_9-devel
 #BuildRequires:  wxWidgets-devel
