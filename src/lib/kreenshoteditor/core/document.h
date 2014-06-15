@@ -20,12 +20,18 @@
 #define CORE_DOCUMENT_H
 
 #include "item.h"
+#include <kreen/util/pimplutil.h>
 
 #include <vector>
 #include <memory>
 
 namespace kreen {
 namespace core {
+
+KREEN_PIMPL_FORWARD_DECL(Document)
+
+class Document;
+typedef std::shared_ptr<Document> DocumentPtr;
 
 /**
  * The "document"
@@ -35,8 +41,28 @@ namespace core {
 class Document
 {
 public:
+    /**
+     * TODO
+     */
+    static DocumentPtr create();
+
+public:
     Document();
+
     virtual ~Document();
+
+    /**
+     * see QUndoStack
+     *
+     * Can be used in the Undo/redo scenarios to
+     * determine if the stored document (DocumentFile) has to be saved.
+     */
+    bool isClean();
+
+    /**
+     * see QUndoStack
+     */
+    void setClean();
 
     void addItem(ItemPtr item);
 
@@ -47,9 +73,9 @@ public:
 private:
     std::vector<ItemPtr> _items;
 
+private:
+    DocumentImplPtr d;
 };
-
-typedef std::shared_ptr<Document> DocumentPtr;
 
 }
 }

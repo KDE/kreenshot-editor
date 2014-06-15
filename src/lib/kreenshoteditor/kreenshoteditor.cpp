@@ -40,7 +40,7 @@ class KreenshotEditorImpl
 public:
     KreenshotEditorImpl()
     {
-        itemsManager = std::make_shared<Document>();
+        itemsManager = Document::create();
         outputFilenameManager = std::make_shared<OutputFilenameManager>();
         settingsManager = SettingsManager::instance();
     }

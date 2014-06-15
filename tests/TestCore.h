@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QString>
 #include <QTest>
+#include "lib/kreenshoteditor/core/document.h"
+#include "lib/kreenshoteditor/core/documentfile.h"
 #include "lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 using namespace kreen::core;
@@ -36,6 +38,16 @@ public slots:
 //     void cleanupTestCase();
 
 private slots:
+    void DocumentFile_1()
+    {
+        auto doc = Document::create();
+        QString filename = "./testdata/testcore/docfile1.png";
+        DocumentFile docFile(doc, filename);
+        QCOMPARE(docFile.document(), doc);
+        QCOMPARE(docFile.filename(), filename);
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated);
+    }
+
     void OutputFilenameManager_resultingFilepath_description()
     {
         OutputFilenameManager mgr;

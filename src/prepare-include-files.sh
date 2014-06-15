@@ -15,7 +15,9 @@ HEADER_SRC_ARR[1]=lib/kreenshoteditor/core
 HEADER_TRT_ARR[1]=kreen/core
 HEADER_SRC_ARR[2]=lib/kreenshoteditor/ui
 HEADER_TRT_ARR[2]=kreen/ui
-for i in 0 1 2 ; do
+HEADER_SRC_ARR[3]=lib/kreenshoteditor/util
+HEADER_TRT_ARR[3]=kreen/util
+for i in 0 1 2 3 ; do
     HEADER_SRC=${HEADER_SRC_ARR[$i]}
     HEADER_TRT=${HEADER_TRT_ARR[$i]}
     echo "[prepare-include-files.sh] HEADER_SRC=$HEADER_SRC"

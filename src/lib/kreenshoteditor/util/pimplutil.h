@@ -16,18 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CORE_ERRORSTATUS_H
-#define CORE_ERRORSTATUS_H
-
-#include <QString>
-
-namespace kreen {
-namespace core {
+#ifndef UTIL_PIMPLUTIL_H
+#define UTIL_PIMPLUTIL_H
 
 // "class" (TODO: need that to be found by prepare-include-files.sh / replace later with some export statement)
-typedef QString ErrorStatus;
 
-}
-}
+/**
+ * Needs #include <memory>
+ * Actions to be done:
+ * - Use OrigClassName##ImplPtr to define a private d pointer in the h file
+ * - Define a class OrigClassName##Impl in the cpp file
+ */
+#define KREEN_PIMPL_FORWARD_DECL(OrigClassName) \
+class OrigClassName##Impl; \
+typedef std::shared_ptr<OrigClassName##Impl> OrigClassName##ImplPtr;
 
-#endif // CORE_ERRORSTATUS_H
+/**
+ * call this as first line in the ctor
+ */
+#define KREEN_PIMPL_INIT(OrigClassName) d = std::make_shared<OrigClassName##Impl>();
+
+
+#endif // UTIL_PIMPLUTIL_H
+
+// kate: indent-mode cstyle; replace-tabs on;

@@ -21,9 +21,20 @@
 namespace kreen {
 namespace core {
 
+class DocumentImpl
+{
+public:
+    int transientContentId = 0;
+};
+
+DocumentPtr Document::create()
+{
+    return std::make_shared<Document>();
+}
+
 Document::Document()
 {
-
+    KREEN_PIMPL_INIT(Document)
 }
 
 Document::~Document()
@@ -31,8 +42,26 @@ Document::~Document()
 
 }
 
+bool Document::isClean()
+{
+    // TMP, TODO: use QUndoStack
+    return d->transientContentId == 0;
+}
+
+void Document::setClean()
+{
+    // TMP, TODO: use QUndoStack
+    d->transientContentId = 0;
+}
+
+// int Document::contentHashTransient()
+// {
+//     return d->transientContentId;
+// }
+
 void Document::addItem(ItemPtr item)
 {
+    d->transientContentId++;
     _items.push_back(item);
 }
 
