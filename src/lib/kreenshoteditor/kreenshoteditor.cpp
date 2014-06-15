@@ -40,7 +40,7 @@ class KreenshotEditorImpl
 public:
     KreenshotEditorImpl()
     {
-        itemsManager = std::make_shared<ItemsManager>();
+        itemsManager = std::make_shared<Document>();
         outputFilenameManager = std::make_shared<OutputFilenameManager>();
         settingsManager = SettingsManager::instance();
     }
@@ -75,7 +75,7 @@ public:
 
 public:
     QImage baseImage;
-    ItemsManagerPtr itemsManager;
+    DocumentPtr itemsManager;
     OutputFilenameManagerPtr outputFilenameManager;
     SettingsManagerPtr settingsManager;
 
@@ -133,7 +133,7 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
-ItemsManagerPtr KreenshotEditor::itemsManager()
+DocumentPtr KreenshotEditor::itemsManager()
 {
     return d->itemsManager;
 }

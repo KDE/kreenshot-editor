@@ -32,8 +32,8 @@ class KreenshotEditorImpl;
 typedef std::shared_ptr<KreenshotEditorImpl> KreenshotEditorImplPtr;
 
 namespace core {
-class ItemsManager;
-typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
+class Document;
+typedef std::shared_ptr<Document> DocumentPtr;
 
 class OutputFilenameManager;
 typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
@@ -91,7 +91,7 @@ public:
     /**
      * Access to used edited items
      */
-    ItemsManagerPtr itemsManager();
+    DocumentPtr itemsManager();
 
     /**
      * Use for initCaptureTime() and setDescription(...)

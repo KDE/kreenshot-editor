@@ -35,6 +35,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - // TODO: tell the document that it's filepath has changed!!!
+    0. everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
     1. rename ItemsManager to Document
     2. move baseImage from kreenshoteditor to Document
     3. add filepath to Document
@@ -62,6 +63,7 @@ TODO
 
 LATER
 -----
+- pak: run unit tests after build
 - prepare-include-files.sh: only find classes with the KREEN_*(?)EXPORT macro
     - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 - OpenSuseBuild service

@@ -21,22 +21,22 @@
 namespace kreen {
 namespace core {
 
-ItemsManager::ItemsManager()
+Document::Document()
 {
 
 }
 
-ItemsManager::~ItemsManager()
+Document::~Document()
 {
 
 }
 
-void ItemsManager::addItem(ItemPtr item)
+void Document::addItem(ItemPtr item)
 {
     _items.push_back(item);
 }
 
-void ItemsManager::addDemoItems()
+void Document::addDemoItems()
 {
     //TODO
 
@@ -101,7 +101,7 @@ void ItemsManager::addDemoItems()
     }
 }
 
-const std::vector<ItemPtr>& ItemsManager::items()
+const std::vector<ItemPtr>& Document::items()
 {
     return _items;
 }

@@ -32,11 +32,11 @@ namespace core {
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
  * Manages Z-Order.
  */
-class ItemsManager
+class Document
 {
 public:
-    ItemsManager();
-    virtual ~ItemsManager();
+    Document();
+    virtual ~Document();
 
     void addItem(ItemPtr item);
 
@@ -49,7 +49,7 @@ private:
 
 };
 
-typedef std::shared_ptr<ItemsManager> ItemsManagerPtr;
+typedef std::shared_ptr<Document> DocumentPtr;
 
 }
 }
