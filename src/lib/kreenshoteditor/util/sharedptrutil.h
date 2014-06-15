@@ -16,31 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UTIL_PIMPLUTIL_H
-#define UTIL_PIMPLUTIL_H
-
-#include "sharedptrutil.h"
+#ifndef UTIL_SHAREDPTRUTIL_H
+#define UTIL_SHAREDPTRUTIL_H
 
 // "class" (TODO: need that to be found by prepare-include-files.sh / replace later with some export statement)
 
 /**
- * Utility to faciliate the usage of the Pimpl idiom
- * 
- * Needs #include <memory>
- * Actions to be done:
- * - Use OrigClassName##ImplPtr to define a private d pointer in the h file
- * - Define a class OrigClassName##Impl in the cpp file
+ * NOTE that this might be wrapped with in a correct namespace declaration
  */
-#define KREEN_PIMPL_FORWARD_DECL(OrigClassName) \
-class OrigClassName##Impl; \
-typedef std::shared_ptr<OrigClassName##Impl> OrigClassName##ImplPtr;
-
-/**
- * call this as first line in the ctor
- */
-#define KREEN_PIMPL_INIT(OrigClassName) d = std::make_shared<OrigClassName##Impl>();
+#define KREEN_SHAREDPTR_FORWARD_DECL(OrigClassName) \
+class OrigClassName;\
+typedef std::shared_ptr<OrigClassName> OrigClassName##Ptr;
 
 
-#endif // UTIL_PIMPLUTIL_H
+#endif // UTIL_SHAREDPTRUTIL_H
 
 // kate: indent-mode cstyle; replace-tabs on;

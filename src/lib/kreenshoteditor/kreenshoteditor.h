@@ -19,6 +19,7 @@
 #ifndef KREENSHOTEDITOR_H
 #define KREENSHOTEDITOR_H
 
+#include <kreen/util/pimplutil.h>
 #include <QObject>
 #include <memory>
 #include <kreen/core/errorstatus.h>
@@ -28,15 +29,11 @@ class QImage;
 
 namespace kreen {
 
-class KreenshotEditorImpl;
-typedef std::shared_ptr<KreenshotEditorImpl> KreenshotEditorImplPtr;
+KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
-class Document;
-typedef std::shared_ptr<Document> DocumentPtr;
-
-class OutputFilenameManager;
-typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
+KREEN_SHAREDPTR_FORWARD_DECL(Document)
+KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameManager)
 }
 
 using namespace core;

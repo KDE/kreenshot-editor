@@ -19,8 +19,8 @@
 #ifndef CORE_DOCUMENT_H
 #define CORE_DOCUMENT_H
 
-#include "item.h"
 #include <kreen/util/pimplutil.h>
+#include "item.h"
 
 #include <vector>
 #include <memory>

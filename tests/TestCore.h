@@ -38,7 +38,7 @@ public slots:
 //     void cleanupTestCase();
 
 private slots:
-    void DocumentFile_1()
+    void DocumentFile_init_modifydoc_save_modifydoc_save()
     {
         auto doc = Document::create();
         QString filename = "./testdata/testcore/docfile1.png";
@@ -46,6 +46,18 @@ private slots:
         QCOMPARE(docFile.document(), doc);
         QCOMPARE(docFile.filename(), filename);
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated);
+
+        doc->addItem(Item::create("line"));
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated); // no change because file is not saved
+
+        docFile.save();
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+
+        doc->addItem(Item::create("rect"));
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Modified);
+
+        docFile.save();
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
     }
 
     void OutputFilenameManager_resultingFilepath_description()

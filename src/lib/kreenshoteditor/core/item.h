@@ -88,7 +88,8 @@ public:
 
 public:
     /**
-     * creates a new Item with default values for all properties available for this item
+     * Creates a new Item with default values for all properties available for this item.
+     * See ctor for available typeIds.
      */
     static std::shared_ptr<Item> create(QString typeId);
 
