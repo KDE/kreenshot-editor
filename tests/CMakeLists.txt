@@ -9,8 +9,9 @@ find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets Test)
 
 # set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
+message("[INFO] tests")
 include_directories(
-  # ${CMAKE_SOURCE_DIR}/src/include # TODO
+  ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 

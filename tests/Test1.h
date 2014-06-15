@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDateTime>
-#include "../src/lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 using namespace kreen::core;
 

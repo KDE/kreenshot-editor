@@ -23,7 +23,7 @@
 #include <QDebug>
 #include <QString>
 #include <QTest>
-#include "../src/lib/kreenshoteditor/core/settingsmanager.h"
+#include "lib/kreenshoteditor/core/settingsmanager.h"
 
 using namespace kreen::core;
 
