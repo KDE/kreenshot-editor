@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "document.h"
+#include <QImage>
 
 namespace kreen {
 namespace core {
@@ -24,12 +25,15 @@ namespace core {
 class DocumentImpl
 {
 public:
+    QImage baseImage;
     int transientContentId = 0;
 };
 
-DocumentPtr Document::create()
+DocumentPtr Document::create(QImage baseImage)
 {
-    return std::make_shared<Document>();
+    auto doc = std::make_shared<Document>();
+    doc->setBaseImage(baseImage);
+    return doc;
 }
 
 Document::Document()
@@ -40,6 +44,16 @@ Document::Document()
 Document::~Document()
 {
 
+}
+
+QImage Document::baseImage()
+{
+    return d->baseImage;
+}
+
+void Document::setBaseImage(QImage image)
+{
+    d->baseImage = image;
 }
 
 bool Document::isClean()

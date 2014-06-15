@@ -30,8 +30,7 @@ namespace core {
 
 KREEN_PIMPL_FORWARD_DECL(Document)
 
-class Document;
-typedef std::shared_ptr<Document> DocumentPtr;
+KREEN_SHAREDPTR_FORWARD_DECL(Document)
 
 /**
  * The "document"
@@ -44,7 +43,7 @@ public:
     /**
      * TODO
      */
-    static DocumentPtr create();
+    static DocumentPtr create(QImage baseImage);
 
 public:
     Document();
@@ -63,6 +62,14 @@ public:
      * see QUndoStack
      */
     void setClean();
+
+    /**
+     * Returns the base image (without any items).
+     * TODO: currently after a crop operation the cropped image will be returned. Is this ok? Yes, remove this comment after refac
+     */
+    QImage baseImage();
+
+    void setBaseImage(QImage image);
 
     void addItem(ItemPtr item);
 

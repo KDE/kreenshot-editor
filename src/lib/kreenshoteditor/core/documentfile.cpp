@@ -66,12 +66,12 @@ DocumentFile::FileStatus DocumentFile::fileStatus()
     }
 }
 
-void DocumentFile::save()
+ErrorStatus DocumentFile::save()
 {
 
 }
 
-void DocumentFile::saveAs(QString filename)
+ErrorStatus DocumentFile::saveAs(QString filename)
 {
 
 }

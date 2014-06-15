@@ -29,6 +29,7 @@
 #include <QApplication>
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
+#include "core/documentfile.h"
 #include "core/outputfilenamemanager.h"
 #include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"
@@ -40,7 +41,8 @@ class KreenshotEditorImpl
 public:
     KreenshotEditorImpl()
     {
-        itemsManager = Document::create();
+        // auto doc = Document::create(); // TODO: ok?
+        // documentFile = std::make_shared<DocumentFile>(doc, "TODO?"); // TODO
         outputFilenameManager = std::make_shared<OutputFilenameManager>();
         settingsManager = SettingsManager::instance();
     }
@@ -74,8 +76,7 @@ public:
     }
 
 public:
-    QImage baseImage;
-    DocumentPtr itemsManager;
+    DocumentFilePtr documentFile;
     OutputFilenameManagerPtr outputFilenameManager;
     SettingsManagerPtr settingsManager;
 
@@ -84,7 +85,7 @@ public:
 
 KreenshotEditor::KreenshotEditor()
 {
-    d = std::make_shared<KreenshotEditorImpl>();
+    KREEN_PIMPL_INIT(KreenshotEditor);
 
     d->settingsManager->load();
 }
@@ -96,19 +97,21 @@ KreenshotEditor::~KreenshotEditor()
 
 void KreenshotEditor::setBaseImageData(QImage image)
 {
-    d->baseImage = image;
+    auto doc = Document::create(image);
+    d->documentFile = std::make_shared<DocumentFile>(doc, "");
     d->settingsToOutputFilenameManager();
 }
 
 void KreenshotEditor::setBaseImageFromFile(QString filename)
 {
-    d->baseImage = QImage(filename);
+    auto doc = Document::create(QImage(filename));
+    d->documentFile = std::make_shared<DocumentFile>(doc, "");
     d->outputFilenameManager->setFilepathPattern(filename);
 }
 
-QImage KreenshotEditor::baseImage()
+DocumentFilePtr KreenshotEditor::documentFile()
 {
-    return d->baseImage;
+    return d->documentFile;
 }
 
 MainEditorWidget* KreenshotEditor::mainEditorWidget()
@@ -133,32 +136,28 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
-DocumentPtr KreenshotEditor::itemsManager()
-{
-    return d->itemsManager;
-}
-
-ErrorStatus KreenshotEditor::saveToFile(QString filename)
-{
-    QString targetFilepath;
-    if (filename.isEmpty()) {
-        targetFilepath = outputFilenameManager()->resultingFilepath();
-    }
-
-    qDebug() << targetFilepath;
-
-    auto errorStatus = d->mainEditorWidget->saveToFile(targetFilepath);
-
-    // TODO: tell the document that it's filepath has changed!!!
-
-    emit outputFileStatusChanged();
-
-    if (errorStatus.isEmpty()) {
-        d->afterSaveAction(targetFilepath);
-    }
-
-    return errorStatus;
-}
+//                     TODO: move elsewhere!!!
+// ErrorStatus KreenshotEditor::saveToFile(QString filename)
+// {
+//     QString targetFilepath;
+//     if (filename.isEmpty()) {
+//         targetFilepath = outputFilenameManager()->resultingFilepath();
+//     }
+//
+//     qDebug() << targetFilepath;
+//
+//     auto errorStatus = d->mainEditorWidget->saveToFile(targetFilepath);
+//
+//     // TODO: tell the document that it's filepath has changed!!!
+//
+//     emit outputFileStatusChanged();
+//
+//     if (errorStatus.isEmpty()) {
+//         d->afterSaveAction(targetFilepath);
+//     }
+//
+//     return errorStatus;
+// }
 
 OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
 {

@@ -18,6 +18,7 @@
  */
 #include "maineditorwidget.h"
 #include "core/document.h"
+#include "core/documentfile.h"
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsItem>
@@ -73,7 +74,7 @@ public:
 public:
     // todo: optimize this method?
     QRect getBaseRect() {
-        QImage baseImage = kreenshotEditor->baseImage();
+        QImage baseImage = kreenshotEditor->documentFile()->document()->baseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
@@ -222,7 +223,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     layout->setMargin(0);
 
     //d->createDemoScene();
-    d->kreenshotEditor->itemsManager()->addDemoItems();
+    d->kreenshotEditor->documentFile()->document()->addDemoItems();
     initScene();
 
     // makes sure that every time the mouse is released the whole scene is update from model
@@ -266,11 +267,11 @@ void MainEditorWidget::createSceneFromModel()
     d->scene->clear();
 
     QPixmap pixmap;
-    pixmap.convertFromImage(d->kreenshotEditor->baseImage());
+    pixmap.convertFromImage(d->kreenshotEditor->documentFile()->document()->baseImage());
     auto baseImageItem = new QGraphicsPixmapItem(pixmap);
     d->scene->addItem(baseImageItem);
 
-    foreach (ItemPtr item, d->kreenshotEditor->itemsManager()->items()) {
+    foreach (ItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
         auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, d->scene.get());
         d->scene->addItem(kgrItem);
@@ -388,7 +389,7 @@ void MainEditorWidget::handleNewItem(ItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
-        d->kreenshotEditor->itemsManager()->addItem(item);
+        d->kreenshotEditor->documentFile()->document()->addItem(item);
         createSceneFromModel();
     }
     else {
@@ -401,7 +402,7 @@ ErrorStatus MainEditorWidget::saveToFile(QString filepath)
     qDebug() << filepath;
     qDebug() << QImageReader::supportedImageFormats();
     qDebug() << "MainEditorWidget::saveToFile(QString filepath): " << filepath;
-    QImage image = d->kreenshotEditor->baseImage().copy();
+    QImage image = d->kreenshotEditor->documentFile()->document()->baseImage().copy();
     //qDebug() << image.isNull();
     QPainter painterImage(&image);
     painterImage.setRenderHint(QPainter::Antialiasing);

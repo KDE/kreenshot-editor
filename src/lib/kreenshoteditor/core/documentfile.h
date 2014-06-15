@@ -21,7 +21,7 @@
 
 #include <kreen/util/pimplutil.h>
 #include "document.h"
-
+#include <kreen/core/errorstatus.h>
 #include <memory>
 #include <QString>
 
@@ -67,12 +67,12 @@ public:
     /**
      * save file to filename()
      */
-    void save();
+    ErrorStatus save();
 
     /**
      * save file to filename (filename() then will return the new filename)
      */
-    void saveAs(QString filename);
+    ErrorStatus saveAs(QString filename);
 
 private:
 

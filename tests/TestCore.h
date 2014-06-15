@@ -40,7 +40,7 @@ public slots:
 private slots:
     void DocumentFile_init_modifydoc_save_modifydoc_save()
     {
-        auto doc = Document::create();
+        auto doc = Document::create(QImage());
         QString filename = "./testdata/testcore/docfile1.png";
         DocumentFile docFile(doc, filename);
         QCOMPARE(docFile.document(), doc);

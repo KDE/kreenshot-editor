@@ -32,7 +32,7 @@ namespace kreen {
 KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
-KREEN_SHAREDPTR_FORWARD_DECL(Document)
+KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
 KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameManager)
 }
 
@@ -68,15 +68,22 @@ public:
     void setBaseImageFromFile(QString filename);
 
     /**
-     * Returns the base image (without any items).
-     * TODO: currently after a crop operation the cropped image will be returned. Is this ok?
+     * Access to used edited items
      */
-    QImage baseImage();
+    ////                 DocumentPtr itemsManager();             TODO
+
+    DocumentFilePtr documentFile();
+
+    /**
+     * Use for initCaptureTime() and setDescription(...)
+     */
+    OutputFilenameManagerPtr outputFilenameManager();
+
 
     /**
      * If filename (path to file) is not set then the settings from outputFilenameManager are used
      */
-    ErrorStatus saveToFile(QString filename = QString());
+    ////                    ErrorStatus saveToFile(QString filename = QString());   TODO
 
     /**
      * singleton
@@ -84,16 +91,6 @@ public:
      * TODO: does shared_ptr makes sense here?
      */
     MainEditorWidget* mainEditorWidget();
-
-    /**
-     * Access to used edited items
-     */
-    DocumentPtr itemsManager();
-
-    /**
-     * Use for initCaptureTime() and setDescription(...)
-     */
-    OutputFilenameManagerPtr outputFilenameManager();
 
     /**
      * returns true if the file is not saved yet (not stored on disk yet)

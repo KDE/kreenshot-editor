@@ -26,6 +26,7 @@
 #include <kreen/kreenshoteditor.h>
 #include <kreen/ui/maineditorwidget.h>
 #include <kreen/core/outputfilenamemanager.h>
+#include <kreen/core/documentfile.h>
 
 class MainWindowImpl
 {
@@ -293,16 +294,16 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
-    ErrorStatus errorStatus = d->kreenshotEditor->saveToFile();
+    ErrorStatus errorStatus = d->kreenshotEditor->documentFile()->save();
     d->handleSaveImageError(this, errorStatus);
 }
 
 void MainWindow::fileSaveAs()
 {
     // TODO: file format handling!
-    QString filepath = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
-    if (!filepath.isEmpty()) {
-        ErrorStatus errorStatus = d->kreenshotEditor->saveToFile(filepath);
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
+    if (!filename.isEmpty()) {
+        ErrorStatus errorStatus = d->kreenshotEditor->documentFile()->saveAs(filename);
         d->handleSaveImageError(this, errorStatus);
     }
 }
