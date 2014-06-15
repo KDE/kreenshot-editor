@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "Test1.h"
-#include <QtTest/QTest>
+#include "TestCore.h"
+#include <QTest>
 
-QTEST_MAIN(Test1)
+QTEST_MAIN(TestCore)
 
 // kate: indent-width 4; replace-tabs on;

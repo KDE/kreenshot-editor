@@ -30,6 +30,15 @@ public:
     QString user;
     QString hostname;
     QString filenamePattern;
+
+public:
+    QString sanitizeDescription(QString description)
+    {
+        QString result = description;
+        result.replace("/", "_");
+        result.replace("\\", "_");
+        return result;
+    }
 };
 
 OutputFilenameManager::OutputFilenameManager()
@@ -72,8 +81,8 @@ QString OutputFilenameManager::resultingFilepath(QString pattern)
     QString description = d->description;
     result.replace("${hostname}", d->hostname);
     result.replace("${user}", d->user);
-    result.replace("${description}", description);
-    result.replace("${description_}", description.replace(" ", "_"));
+    result.replace("${description}", d->sanitizeDescription(description));
+    result.replace("${description_}", d->sanitizeDescription(description.replace(" ", "_")));
     result.replace("${YYYY}", d->captureTime.toString("yyyy"));
     result.replace("${MM}", d->captureTime.toString("MM"));
     result.replace("${DD}", d->captureTime.toString("dd"));

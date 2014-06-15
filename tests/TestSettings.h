@@ -36,7 +36,7 @@ public slots:
 //     void cleanupTestCase();
 
 private slots:
-    void testReset()
+    void Reset()
     {
         auto settings = SettingsManager::instance("unittest");
         settings->reset();
@@ -49,7 +49,7 @@ private slots:
         settings->save();
     }
 
-    void testSaveLoad()
+    void SaveLoad()
     {
         {
             auto settings = SettingsManager::instance("unittest");

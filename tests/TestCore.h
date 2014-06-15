@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef TEST_1_H
-#define TEST_1_H
+#ifndef TEST_CORE_H
+#define TEST_CORE_H
 
 #include <QObject>
 #include <QDebug>
-#include <QDateTime>
+#include <QString>
+#include <QTest>
 #include "lib/kreenshoteditor/core/outputfilenamemanager.h"
 
 using namespace kreen::core;
 
-class Test1 : public QObject
+class TestCore : public QObject
 {
     Q_OBJECT
 
@@ -35,30 +36,29 @@ public slots:
 //     void cleanupTestCase();
 
 private slots:
-    void DateTime()
+    void OutputFilenameManager_resultingFilepath_description()
     {
-        QDateTime local(QDateTime::currentDateTime());
-        qDebug() << local.toString();
-        qDebug() << local.toString("yyyy-MM-dd_HH-mm-ss");
+        OutputFilenameManager mgr;
+        mgr.setDescription("Hallo Test");
+        QCOMPARE(mgr.resultingFilepath("aaa${description}.png"), QString("aaaHallo Test.png"));
+        QCOMPARE(mgr.resultingFilepath("aaa${description_}.png"), QString("aaaHallo_Test.png"));
+
+        mgr.setDescription("a/b\\c d");
+        QCOMPARE(mgr.resultingFilepath("${description}"), QString("a_b_c d"));
     }
 
-    void FormatString()
-    {
-        QString a = "/home/user/screenshots/";
-//         qDebug() << local.toString();
-//         qDebug() << local.toString("yyyy-MM-dd_HH-mm-ss");
-    }
-
-    void OutputFilenameManager_1()
+    void OutputFilenameManager_resultingFilepath_manual()
     {
         OutputFilenameManager mgr;
         mgr.initCaptureTime();
         mgr.setDescription("Hallo Test");
+        qDebug() << "[CHECK VISUALLY]:";
         qDebug() << mgr.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
         qDebug() << mgr.resultingFilepath("${description}, ${hostname}, ${user}");
+
     }
 };
 
-#endif // TEST_1_H
+#endif // TEST_CORE_H
 
-// kate: indent-width 4; replace-tabs on;
+// kate: indent-mode cstyle; replace-tabs on;

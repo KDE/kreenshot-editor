@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- / in description should be replaced by _
 - // TODO: tell the document that it's filepath has changed!!!
     1. rename ItemsManager to Document
     2. move baseImage from kreenshoteditor to Document
