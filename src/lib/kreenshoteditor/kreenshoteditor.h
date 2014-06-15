@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <memory>
-#include "core/errorstatus.h"
+#include <kreen/core/errorstatus.h>
 
 class QWidget;
 class QImage;

@@ -21,9 +21,8 @@
 
 #include <QWidget>
 #include <memory>
-#include "../kreenshoteditor.h"
-#include "../core/item.h"
-#include "../core/errorstatus.h"
+#include <kreen/kreenshoteditor.h>
+#include <kreen/core/item.h>
 
 using namespace kreen::core;
 

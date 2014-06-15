@@ -24,10 +24,11 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <memory>
-#include "../kreenshoteditor.h"
+#include <kreen/kreenshoteditor.h>
+#include <kreen/core/document.h>
 #include "kreengraphicsitems.h"
 #include "toolmanager.h"
-#include "../core/document.h"
+
 
 namespace kreen {
 namespace ui {

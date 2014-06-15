@@ -23,9 +23,9 @@
 #include <QMessageBox>
 #include <QUrl>
 #include <QFileDialog>
-#include "lib/kreenshoteditor/kreenshoteditor.h"
-#include "lib/kreenshoteditor/ui/maineditorwidget.h"
-#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include <kreen/kreenshoteditor.h>
+#include <kreen/ui/maineditorwidget.h>
+#include <kreen/core/outputfilenamemanager.h>
 
 class MainWindowImpl
 {

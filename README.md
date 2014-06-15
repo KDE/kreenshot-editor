@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- NEXT: 1. genincludes --> cmake   2. adapt include paths
 - / in description should be replaced by _
 - // TODO: tell the document that it's filepath has changed!!!
     1. rename ItemsManager to Document
@@ -64,6 +63,8 @@ TODO
 
 LATER
 -----
+- prepare-include-files.sh: only find classes with the KREEN_*(?)EXPORT macro
+    - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 - OpenSuseBuild service
 - Ctrl+Shift+C: copy image to clipboard
 - // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method

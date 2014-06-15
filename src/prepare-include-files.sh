@@ -7,20 +7,33 @@ echo "[prepare-include-files.sh] INC_TARGET_DIR=$1"
 
 # for each given dir (separated by space)
 # find header files and copy them to target dir
-for d in lib/kreenshoteditor/core lib/kreenshoteditor/ui ; do
-    echo "[prepare-include-files.sh] d=$d"
-    TO=$INC_TARGET_DIR/kreen/`basename $d`
+HEADER_SRC_ARR=()
+HEADER_TRT_ARR=()
+HEADER_SRC_ARR[0]=lib/kreenshoteditor/kreenshoteditor.h
+HEADER_TRT_ARR[0]=kreen
+HEADER_SRC_ARR[1]=lib/kreenshoteditor/core
+HEADER_TRT_ARR[1]=kreen/core
+HEADER_SRC_ARR[2]=lib/kreenshoteditor/ui
+HEADER_TRT_ARR[2]=kreen/ui
+for i in 0 1 2 ; do
+    HEADER_SRC=${HEADER_SRC_ARR[$i]}
+    HEADER_TRT=${HEADER_TRT_ARR[$i]}
+    echo "[prepare-include-files.sh] HEADER_SRC=$HEADER_SRC"
+    echo "[prepare-include-files.sh] HEADER_TRT=$HEADER_TRT"
+    TO=$INC_TARGET_DIR/$HEADER_TRT
     echo "[prepare-include-files.sh] TO=$TO"
     mkdir -p $TO
 
-    # causes rebuilds
-    # echo "[prepare-include-files.sh] clean it"
-    # rm --verbose $TO/*
-    # echo "[prepare-include-files.sh] fill it"
+    # causes rebuilds (but not with ln)
+    # TODO: move outside to clean everything at once recursively?
+    echo "[prepare-include-files.sh] clean"
+    rm --verbose $TO/*
 
-    FILES=$(grep -R -l --include=*.h class $d) # TODO: replace class with KREEN_EXPORT
-    for i in $FILES ; do
-        FROM=`pwd`/$i
+    echo "[prepare-include-files.sh] fill (flatten subdirs)" # TODO: is flatten that what we want???
+    FILES=$(grep -R -l --include=*.h class $HEADER_SRC) # TODO: replace search keyword "class" with KREEN_EXPORT
+    for f in $FILES ; do
+        # we need absolute path for ln
+        FROM=`pwd`/$f
         echo "[prepare-include-files.sh] $FROM --> TO"
         # cp --update "$FROM" "$TO" # cp: dANGER to edit a non-tracked file when navigating via IDE
         # so we use ln:

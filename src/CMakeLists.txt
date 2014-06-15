@@ -15,6 +15,7 @@ message("[INFO] src/include_directories")
 include_directories(
     .
     ui
+    
     # see prepare-include-files.sh;
     # Reason: instead of #include "../core/item.h"
     #         we would like to write #include "kreen/core/item.h"

@@ -21,8 +21,8 @@
 #include <QCommandLineOption>
 #include <QDebug>
 #include "ui/mainwindow.h"
-#include "lib/kreenshoteditor/kreenshoteditor.h"
-#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include <kreen/kreenshoteditor.h>
+#include <kreen/core/outputfilenamemanager.h>
 
 #include <iostream>
 #include <stdexcept>

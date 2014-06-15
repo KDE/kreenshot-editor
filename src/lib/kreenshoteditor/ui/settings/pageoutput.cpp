@@ -20,7 +20,7 @@
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
-#include "kreen/core/outputfilenamemanager.h"
+#include <kreen/core/outputfilenamemanager.h>
 
 namespace kreen {
 namespace ui {
