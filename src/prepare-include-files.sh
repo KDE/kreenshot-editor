@@ -20,24 +20,24 @@ for i in 0 1 2 ; do
     HEADER_TRT=${HEADER_TRT_ARR[$i]}
     echo "[prepare-include-files.sh] HEADER_SRC=$HEADER_SRC"
     echo "[prepare-include-files.sh] HEADER_TRT=$HEADER_TRT"
-    TO=$INC_TARGET_DIR/$HEADER_TRT
-    echo "[prepare-include-files.sh] TO=$TO"
-    mkdir -p $TO
+    TARGET_DIR=$INC_TARGET_DIR/$HEADER_TRT
+    echo "[prepare-include-files.sh] TARGET_DIR=$TARGET_DIR"
+    mkdir -p $TARGET_DIR
 
     # causes rebuilds (but not with ln)
     # TODO: move outside to clean everything at once recursively?
     echo "[prepare-include-files.sh] clean"
-    rm --verbose $TO/*
+    rm --verbose $TARGET_DIR/*
 
     echo "[prepare-include-files.sh] fill (flatten subdirs)" # TODO: is flatten that what we want???
     FILES=$(grep -R -l --include=*.h class $HEADER_SRC) # TODO: replace search keyword "class" with KREEN_EXPORT
     for f in $FILES ; do
         # we need absolute path for ln
         FROM=`pwd`/$f
-        echo "[prepare-include-files.sh] $FROM --> TO"
+        echo "[prepare-include-files.sh] create symlink to $FROM"
         # cp --update "$FROM" "$TO" # cp: dANGER to edit a non-tracked file when navigating via IDE
         # so we use ln:
-        ln -s --force "$FROM" "$TO"
+        ln -s --force "$FROM" "$TARGET_DIR"
     done
 done
 
