@@ -65,7 +65,7 @@ public:
     /**
      * Loads the image data from the given path and set output filepath to path.
      */
-    void setBaseImagePath(QString path);
+    void setBaseImageFromFile(QString filename);
 
     /**
      * Returns the base image (without any items).
@@ -74,9 +74,9 @@ public:
     QImage baseImage();
 
     /**
-     * If filepath is not set then the settings from outputFilenameManager are used
+     * If filename (path to file) is not set then the settings from outputFilenameManager are used
      */
-    ErrorStatus saveToFile(QString filepath = QString());
+    ErrorStatus saveToFile(QString filename = QString());
 
     /**
      * singleton

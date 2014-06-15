@@ -100,10 +100,10 @@ void KreenshotEditor::setBaseImageData(QImage image)
     d->settingsToOutputFilenameManager();
 }
 
-void KreenshotEditor::setBaseImagePath(QString path)
+void KreenshotEditor::setBaseImageFromFile(QString filename)
 {
-    d->baseImage = QImage(path);
-    d->outputFilenameManager->setFilepathPattern(path);
+    d->baseImage = QImage(filename);
+    d->outputFilenameManager->setFilepathPattern(filename);
 }
 
 QImage KreenshotEditor::baseImage()
@@ -138,10 +138,10 @@ DocumentPtr KreenshotEditor::itemsManager()
     return d->itemsManager;
 }
 
-ErrorStatus KreenshotEditor::saveToFile(QString filepath)
+ErrorStatus KreenshotEditor::saveToFile(QString filename)
 {
     QString targetFilepath;
-    if (filepath.isEmpty()) {
+    if (filename.isEmpty()) {
         targetFilepath = outputFilenameManager()->resultingFilepath();
     }
 

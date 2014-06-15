@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         kreenshotEditor->setBaseImageData(QImage(arguments.baseImagePath));
     }
     else {
-        kreenshotEditor->setBaseImagePath(arguments.baseImagePath);
+        kreenshotEditor->setBaseImageFromFile(arguments.baseImagePath);
     }
     kreenshotEditor->outputFilenameManager()->initCaptureTime();
     kreenshotEditor->outputFilenameManager()->setDescription(arguments.description);
