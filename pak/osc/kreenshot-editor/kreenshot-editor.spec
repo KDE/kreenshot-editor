@@ -15,13 +15,13 @@
 # This Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
 # in order to a properly filled download page
-Name:           kreenshot-editor-incubating
+Name:           kreenshot-editor
 Summary:        Screenshot image editor
 Version:        0.001
 Release:        0
 License:        LGPL-2.0+
 Group:          Productivity/Graphics
-Url:            http://quickgit.kde.org/?p=scratch%2Fgregormi%2Fkreenshot-editor.git
+Url:            http://kreenshot.wordpress.com
 Source0:        kreenshot-editor-6af544a.tar.gz
 #Source1:        ChangeLog
 #Patch0:         0001-progress_indicator.cpp-fix-by-using-wxString-ctor.patch
