@@ -1,4 +1,5 @@
 project(kreenshoteditor)
+message("[INFO] lib/kreenshoteditor/start")
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -7,6 +8,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 # find Qt5 modules
+
 find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets Network)
 
 include_directories(
@@ -35,9 +37,9 @@ set(kreenshoteditor_FORMS
     ui/settings/preferencesdialog.ui
     ui/settings/pageoutput.ui
     )
-message(kreenshoteditor_FORMS=${kreenshoteditor_FORMS})
+message("[DEBUG] kreenshoteditor_FORMS=${kreenshoteditor_FORMS}")
 qt5_wrap_ui(kreenshoteditor_FORMS_HEADERS ${kreenshoteditor_FORMS})
-message(kreenshoteditor_FORMS_HEADERS=${kreenshoteditor_FORMS_HEADERS})
+message("[DEBUG] kreenshoteditor_FORMS_HEADERS=${kreenshoteditor_FORMS_HEADERS}")
 
 add_library(kreenshoteditor SHARED
     ${kreenshoteditor_SOURCES}
@@ -49,5 +51,7 @@ target_link_libraries(kreenshoteditor
      Qt5::Widgets
      Qt5::Network
 )
+
+message("[INFO] lib/kreenshoteditor/end")
 
 # kate: indent-width 4; replace-tabs on;

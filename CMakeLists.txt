@@ -4,6 +4,8 @@
 #
 cmake_minimum_required(VERSION 2.8.11)
 
+message("[INFO] root/start")
+
 project(kreenshot-editor)
 
 set(CMAKE_MODULE_PATH
@@ -13,7 +15,11 @@ set(CMAKE_MODULE_PATH
 
 add_definitions("-std=c++11")
 
+message("[INFO] root/add_subdirectory(src)")
 add_subdirectory(src)
 
 enable_testing()
+message("[INFO] root/add_subdirectory(tests)")
 add_subdirectory(tests)
+
+message("[INFO] root/end")

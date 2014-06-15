@@ -34,6 +34,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- NEXT: 1. genincludes --> cmake   2. adapt include paths
 - / in description should be replaced by _
 - // TODO: tell the document that it's filepath has changed!!!
     1. rename ItemsManager to Document
@@ -42,7 +43,6 @@ TODO
     4. make "save as" work correctly
 - // TODO: file format handling!
 - // TODO: exception handling or similar!!!
-- NEXT: 1. genincludes --> cmake   2. adapt include paths
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
 - fix cursor when cancelling crop tool
 - save image to file: do not save selection indication rect
