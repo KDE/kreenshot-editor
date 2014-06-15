@@ -31,7 +31,7 @@
 #include <QHBoxLayout>
 #include <cmath>
 #include <algorithm>
-#include "../core/item.h"
+#include "kreen/core/item.h"
 
 using namespace kreen::core;
 

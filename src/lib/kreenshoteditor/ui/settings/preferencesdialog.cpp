@@ -19,7 +19,7 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 #include "pageoutput.h"
-#include "../../core/settingsmanager.h"
+#include "kreen/core/settingsmanager.h"
 
 namespace kreen {
 namespace ui {

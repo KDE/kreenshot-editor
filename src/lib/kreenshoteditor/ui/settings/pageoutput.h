@@ -21,7 +21,7 @@
 
 #include <QWidget>
 #include <memory>
-#include "../../core/settingsgroupoutput.h"
+#include "kreen/core/settingsgroupoutput.h"
 
 namespace kreen {
 namespace ui {

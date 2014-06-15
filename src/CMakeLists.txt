@@ -47,10 +47,21 @@ target_link_libraries(kreenshot-editor
 message("[INFO] src/add_subdirectory(lib/kreenshoteditor)")
 add_subdirectory(lib/kreenshoteditor)
 
-# http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
-message("[INFO] src/execute_process: prepare-include-files.sh")
-execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/prepare-include-files.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-# execute_process(COMMAND echo "Hallo")
+##### start: header file handling #####
+
+    # http://stackoverflow.com/questions/15972898/cmake-how-to-run-a-add-custom-command-before-everything-else
+    message("[INFO] src/add_custom_target: prepare-include-files")
+    add_custom_target(prepare-include-files
+        # COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/mk_config_h.py ${CMAKE_CURRENT_BINARY_DIR}/config.h
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/prepare-include-files.sh generated-include WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+
+        # when outside add_custom_target use execute_process but this is only run when cmake is configuring:
+        # http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
+        # execute_process(COMMAND echo "Hallo")
+    )
+    add_dependencies(kreenshot-editor prepare-include-files)
+
+##### end: header file handling #####
 
 message("[INFO] src/end")
 
