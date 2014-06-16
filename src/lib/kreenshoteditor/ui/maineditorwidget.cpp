@@ -33,10 +33,10 @@
 #include <QImageReader>
 #include <QImageWriter>
 #include <memory>
-#include "kreengraphicsitems.h"
-#include "myqgraphicsscene.h"
+#include <kreen/core/kreengraphicsitems.h>
+#include <kreen/core/myqgraphicsscene.h>
+#include <kreen/core/toolmanager.h>
 #include "myqgraphicsview.h"
-#include "toolmanager.h"
 
 namespace kreen {
 namespace ui {
@@ -52,8 +52,6 @@ class MainEditorWidgetImpl
 public:
     KreenshotEditorPtr kreenshotEditor;
     MyQGraphicsViewPtr graphicsView;
-    MyQGraphicsScenePtr scene;
-    ToolManagerPtr toolManager;
 
     /**
      * not nullptr if there is an image operation item (like crop) waiting for the user
@@ -63,8 +61,6 @@ public:
 public:
     MainEditorWidgetImpl()
     {
-        toolManager = std::make_shared<ToolManager>();
-        scene = std::make_shared<MyQGraphicsScene>(toolManager);
         imageOperationItem = nullptr;
     }
 
@@ -78,6 +74,16 @@ public:
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
+    }
+
+    MyQGraphicsScenePtr scene()
+    {
+        return kreenshotEditor->documentFile()->document()->graphicsScene();
+    }
+
+    ToolManagerPtr toolManager()
+    {
+        return kreenshotEditor->documentFile()->document()->toolManager();
     }
 
     // todo: remove later
@@ -138,7 +144,7 @@ public:
             //qDebug() << "muh";
             auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
-                grItemBase->setMovable(toolManager->chosenTool() == ToolEnum::Select);
+                grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
             }
         }
     }
@@ -151,7 +157,7 @@ public:
     void createDemoScene()
     {
         QRect rect = getBaseRect();
-        scene->setSceneRect(rect);
+        scene()->setSceneRect(rect);
 
         {
             auto dropShadow = new QGraphicsDropShadowEffect();
@@ -163,7 +169,7 @@ public:
             rectItem->setRect(120, 100, 150, 100);
             rectItem->setGraphicsEffect(dropShadow);
             rectItem->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-            scene->addItem(rectItem);
+            scene()->addItem(rectItem);
         }
 
         {
@@ -171,10 +177,10 @@ public:
             rect2Item->setRect(10, 5, 30, 40);
             //rect2Item->setGraphicsEffect(dropShadow);
             //rect2Item->setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-            scene->addItem(rect2Item);
+            scene()->addItem(rect2Item);
         }
 
-        scene->addText("Hello, world!");
+        scene()->addText("Hello, world!");
 
         {
             auto dropShadow = new QGraphicsDropShadowEffect();
@@ -185,13 +191,13 @@ public:
             auto textItem = new QGraphicsTextItem("With drop shadow");
             textItem->setPos(30, 60);
             textItem->setGraphicsEffect(dropShadow);
-            scene->addItem(textItem);
+            scene()->addItem(textItem);
         }
 
         {
             auto textItem = new QGraphicsTextItem("TODO: With white glow background");
             textItem->setPos(30, 80);
-            scene->addItem(textItem);
+            scene()->addItem(textItem);
         }
     }
 };
@@ -228,9 +234,9 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
-    connect(d->scene.get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
+    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
 
-    connect(d->scene.get(), SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
+    connect(d->scene().get(), SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -240,7 +246,7 @@ MainEditorWidget::~MainEditorWidget()
 
 void MainEditorWidget::initScene() {
     QRect rect = d->getBaseRect();
-    d->scene->setSceneRect(rect);
+    d->scene()->setSceneRect(rect);
 
     d->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
@@ -248,7 +254,7 @@ void MainEditorWidget::initScene() {
     d->graphicsView->setBackgroundBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern)); // todo: make nicer
 
     d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
-    d->graphicsView->setScene(d->scene.get());
+    d->graphicsView->setScene(d->scene().get());
     d->graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
 
     // scroll to 0,0 / does all not work:
@@ -260,21 +266,21 @@ void MainEditorWidget::initScene() {
 }
 
 /**
-    * recreate the scene to reflect the current kreenshotEditor->itemsManager
-    */
+ * recreate the scene to reflect the current kreenshotEditor->documentFile()->document()
+ */
 void MainEditorWidget::createSceneFromModel()
 {
-    d->scene->clear();
+    d->scene()->clear();
 
     QPixmap pixmap;
     pixmap.convertFromImage(d->kreenshotEditor->documentFile()->document()->baseImage());
     auto baseImageItem = new QGraphicsPixmapItem(pixmap);
-    d->scene->addItem(baseImageItem);
+    d->scene()->addItem(baseImageItem);
 
     foreach (ItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
-        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, d->scene.get());
-        d->scene->addItem(kgrItem);
+        auto kgrItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
+        d->scene()->addItem(kgrItem);
     }
 
     d->updateItemsGeometryFromModel();
@@ -284,10 +290,10 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
-    d->toolManager->setImageOperationActive(item != nullptr);
+    d->toolManager()->setImageOperationActive(item != nullptr);
 
     if (d->imageOperationItem != nullptr) {
-        d->scene->removeItem(d->imageOperationItem);
+        d->scene()->removeItem(d->imageOperationItem);
         d->imageOperationItem = nullptr;
     }
 
@@ -297,8 +303,8 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 //             //dimRect->setBrush();
 //             scene.addItem(dimRect);
 
-        auto kgrItem = d->toolManager->createGraphicsItemFromKreenItem(item, d->scene.get());
-        d->scene->addItem(kgrItem);
+        auto kgrItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
+        d->scene()->addItem(kgrItem);
         d->imageOperationItem = kgrItem;
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
         grItemBase->setIsCreating(false);
@@ -355,7 +361,7 @@ void MainEditorWidget::requestTool(QString toolId)
         QMessageBox::information(this, "Not impl", message);
     }
 
-    d->toolManager->setChosenTool(toolEnum, this);
+    d->toolManager()->setChosenTool(toolEnum, this);
     d->updateItemsBehaviourFromChosenTool();
 
     // remove current image operation if another tool is selected
@@ -395,32 +401,6 @@ void MainEditorWidget::handleNewItem(ItemPtr item)
     else {
         updateSceneWithImageOperationItem(item);
     }
-}
-
-ErrorStatus MainEditorWidget::saveToFile(QString filepath)
-{
-    qDebug() << filepath;
-    qDebug() << QImageReader::supportedImageFormats();
-    qDebug() << "MainEditorWidget::saveToFile(QString filepath): " << filepath;
-    QImage image = d->kreenshotEditor->documentFile()->document()->baseImage().copy();
-    //qDebug() << image.isNull();
-    QPainter painterImage(&image);
-    painterImage.setRenderHint(QPainter::Antialiasing);
-    d->scene->render(&painterImage);
-    //qDebug() << image.save(filepath, "png"); // returns false;
-    QImageWriter writer(filepath);
-    writer.write(image);
-    qDebug() << "error code: " << writer.error();
-    if (writer.error() != 0) {
-        qDebug() << "error: " << writer.errorString();
-        // throw std::runtime_error(
-        return tr("Error saving image ('%1'): '%2' (code %3)")
-            .arg(filepath)
-            .arg(writer.errorString())
-            .arg(writer.error());
-    }
-
-    return ErrorStatus(); // TODO: if we forget that the compiler does not warn but we get garbage out
 }
 
 }

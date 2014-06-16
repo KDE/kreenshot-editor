@@ -68,22 +68,14 @@ public:
     void setBaseImageFromFile(QString filename);
 
     /**
-     * Access to used edited items
+     * active document which might have a file on disk or not yet
      */
-    ////                 DocumentPtr itemsManager();             TODO
-
     DocumentFilePtr documentFile();
 
     /**
      * Use for initCaptureTime() and setDescription(...)
      */
     OutputFilenameManagerPtr outputFilenameManager();
-
-
-    /**
-     * If filename (path to file) is not set then the settings from outputFilenameManager are used
-     */
-    ////                    ErrorStatus saveToFile(QString filename = QString());   TODO
 
     /**
      * singleton

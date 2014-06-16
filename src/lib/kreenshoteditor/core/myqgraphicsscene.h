@@ -26,12 +26,12 @@
 #include <memory>
 #include <kreen/kreenshoteditor.h>
 #include <kreen/core/document.h>
+#include <kreen/core/toolmanager.h>
 #include "kreengraphicsitems.h"
-#include "toolmanager.h"
 
 
 namespace kreen {
-namespace ui {
+namespace core {
 
 /**
  * TODO: move all logic from MyQGraphicsView to here to potentially solve the wrong-drawing-when-scrolling-bug

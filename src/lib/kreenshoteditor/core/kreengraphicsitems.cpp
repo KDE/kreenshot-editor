@@ -19,7 +19,7 @@
 #include "kreengraphicsitems.h"
 
 namespace kreen {
-namespace ui {
+namespace core {
 
 }
 }

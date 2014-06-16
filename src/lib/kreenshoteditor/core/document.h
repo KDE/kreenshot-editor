@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <memory>
+#include <QImage>
 
 namespace kreen {
 namespace core {
@@ -31,6 +32,8 @@ namespace core {
 KREEN_PIMPL_FORWARD_DECL(Document)
 
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
+KREEN_SHAREDPTR_FORWARD_DECL(MyQGraphicsScene)
+KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 
 /**
  * The "document"
@@ -76,6 +79,21 @@ public:
     void addDemoItems();
 
     const std::vector<ItemPtr>& items();
+
+    /**
+     * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
+     */
+    MyQGraphicsScenePtr graphicsScene();
+
+    /**
+     * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
+     */
+    ToolManagerPtr toolManager();
+
+    /**
+     * renders the document to a QImage
+     */
+    QImage renderToImage();
 
 private:
     std::vector<ItemPtr> _items;

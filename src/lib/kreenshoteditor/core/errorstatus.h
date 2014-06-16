@@ -25,6 +25,10 @@ namespace kreen {
 namespace core {
 
 // "class" (TODO: need that to be found by prepare-include-files.sh / replace later with some export statement)
+
+/**
+ * Empty string means success, everything else: cause of the error
+ */
 typedef QString ErrorStatus;
 
 }

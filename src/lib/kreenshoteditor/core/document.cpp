@@ -18,6 +18,8 @@
  */
 #include "document.h"
 #include <QImage>
+#include <QPainter>
+#include "myqgraphicsscene.h"
 
 namespace kreen {
 namespace core {
@@ -25,12 +27,24 @@ namespace core {
 class DocumentImpl
 {
 public:
+    DocumentImpl()
+    {
+        toolManager = std::make_shared<ToolManager>();
+        scene = std::make_shared<MyQGraphicsScene>(toolManager);
+    }
+
+public:
     QImage baseImage;
+
+    MyQGraphicsScenePtr scene;
+    ToolManagerPtr toolManager;
+
     int transientContentId = 0;
 };
 
 DocumentPtr Document::create(QImage baseImage)
 {
+    Q_ASSERT_X(!baseImage.isNull(), "create", "image must not be empty");
     auto doc = std::make_shared<Document>();
     doc->setBaseImage(baseImage);
     return doc;
@@ -147,6 +161,26 @@ void Document::addDemoItems()
 const std::vector<ItemPtr>& Document::items()
 {
     return _items;
+}
+
+MyQGraphicsScenePtr Document::graphicsScene()
+{
+    return d->scene;
+}
+
+ToolManagerPtr Document::toolManager()
+{
+    return d->toolManager;
+}
+
+QImage Document::renderToImage()
+{
+    QImage image = baseImage().copy();
+    Q_ASSERT_X(!image.isNull(), "renderToImage", "image must not be empty otherwise creation of the painter will fail");
+    QPainter painterImage(&image);
+    painterImage.setRenderHint(QPainter::Antialiasing);
+    d->scene->render(&painterImage);
+    return image;
 }
 
 }

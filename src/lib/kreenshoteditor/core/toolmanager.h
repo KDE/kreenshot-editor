@@ -20,9 +20,10 @@
 #define UI_TOOLMANAGER_H
 
 #include <memory>
+#include "kreengraphicsitems.h"
 
 namespace kreen {
-namespace ui {
+namespace core {
 
 enum ToolEnum
 {

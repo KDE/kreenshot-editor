@@ -36,7 +36,7 @@
 using namespace kreen::core;
 
 namespace kreen {
-namespace ui {
+namespace core {
 
 /**
  * multiselection will break the logic

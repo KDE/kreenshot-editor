@@ -45,11 +45,6 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
-    /**
-     * returns error message or empty if succeeded
-     */
-    ErrorStatus saveToFile(QString filepath);
-
 Q_SIGNALS:
     void toolChosen(QString toolId);
 

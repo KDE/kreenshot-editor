@@ -10,6 +10,10 @@ find_package(Qt5 "5.2.0" NO_MODULE REQUIRED Core Widgets Test)
 # set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 message("[INFO] tests")
+message("[INFO] CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
+message("[INFO] CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}")
+message("[INFO] CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}")
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/src/generated-include
@@ -34,12 +38,9 @@ add_executable(TestCore ${TestCoreSrc})
 target_link_libraries(TestCore Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME TestCore COMMAND TestCore)
 
-
-# # Test: MetaPos
-# set(TestMetaPosSrc TestMetaPos.cpp)
-# add_executable(TestMetaPos ${TestMetaPosSrc})
-# target_link_libraries(TestMetaPos Qt5::Core Qt5::Test qtikzcore)
-# add_test(NAME TestMetaPos COMMAND TestMetaPos)
-
+# http://stackoverflow.com/questions/13429656/cmake-how-to-copy-contents-of-a-directory-into-build-directory-after-make
+# TODO: cleanup dir before copying stuff
+add_custom_command(TARGET TestCore PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/testdata $<TARGET_FILE_DIR:TestCore>/testdata)
 
 # kate: indent-width 4; replace-tabs on;

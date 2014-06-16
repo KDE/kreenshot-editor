@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QString>
 #include <QTest>
+#include <QFileInfo>
 #include "lib/kreenshoteditor/core/document.h"
 #include "lib/kreenshoteditor/core/documentfile.h"
 #include "lib/kreenshoteditor/core/outputfilenamemanager.h"
@@ -40,8 +41,11 @@ public slots:
 private slots:
     void DocumentFile_init_modifydoc_save_modifydoc_save()
     {
-        auto doc = Document::create(QImage());
-        QString filename = "./testdata/testcore/docfile1.png";
+        QFileInfo file("./testdata/image1.png");
+        qDebug() << file.absoluteFilePath(); // this will be relative build/tests
+
+        auto doc = Document::create(QImage("./testdata/image1.png"));
+        QString filename = "./testdata/docfile1.png";
         DocumentFile docFile(doc, filename);
         QCOMPARE(docFile.document(), doc);
         QCOMPARE(docFile.filename(), filename);
@@ -50,7 +54,7 @@ private slots:
         doc->addItem(Item::create("line"));
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated); // no change because file is not saved
 
-        docFile.save();
+        QCOMPARE(docFile.save(), QString());
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
 
         doc->addItem(Item::create("rect"));
@@ -58,6 +62,11 @@ private slots:
 
         docFile.save();
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+    }
+
+    void DocumentFile_save_create_intermediate_directories()
+    {
+        qDebug() << "TODO: write test case to show that intermediate dirs are created by save()";
     }
 
     void OutputFilenameManager_resultingFilepath_description()

@@ -105,7 +105,7 @@ void KreenshotEditor::setBaseImageData(QImage image)
 void KreenshotEditor::setBaseImageFromFile(QString filename)
 {
     auto doc = Document::create(QImage(filename));
-    d->documentFile = std::make_shared<DocumentFile>(doc, "");
+    d->documentFile = std::make_shared<DocumentFile>(doc, filename);
     d->outputFilenameManager->setFilepathPattern(filename);
 }
 
@@ -135,29 +135,6 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
 
     return d->mainEditorWidget;
 }
-
-//                     TODO: move elsewhere!!!
-// ErrorStatus KreenshotEditor::saveToFile(QString filename)
-// {
-//     QString targetFilepath;
-//     if (filename.isEmpty()) {
-//         targetFilepath = outputFilenameManager()->resultingFilepath();
-//     }
-//
-//     qDebug() << targetFilepath;
-//
-//     auto errorStatus = d->mainEditorWidget->saveToFile(targetFilepath);
-//
-//     // TODO: tell the document that it's filepath has changed!!!
-//
-//     emit outputFileStatusChanged();
-//
-//     if (errorStatus.isEmpty()) {
-//         d->afterSaveAction(targetFilepath);
-//     }
-//
-//     return errorStatus;
-// }
 
 OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
 {
