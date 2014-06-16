@@ -30,6 +30,8 @@ namespace core {
 
 KREEN_PIMPL_FORWARD_DECL(DocumentFile)
 
+KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
+
 /**
  * Connects a Document instance with a file on disk
  */
@@ -83,8 +85,6 @@ private:
 private:
     DocumentFileImplPtr d;
 };
-
-typedef std::shared_ptr<DocumentFile> DocumentFilePtr;
 
 }
 }

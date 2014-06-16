@@ -19,6 +19,7 @@
 #ifndef CORE_ITEM_H
 #define CORE_ITEM_H
 
+#include <kreen/util/pimplutil.h>
 #include <QString>
 #include <QRect>
 #include <QLine>
@@ -28,17 +29,11 @@
 namespace kreen {
 namespace core {
 
-class ItemProperty;
-typedef std::shared_ptr<ItemProperty> ItemPropertyPtr;
-
-class LineColorProperty;
-typedef std::shared_ptr<LineColorProperty> LineColorPropertyPtr;
-
-class LineStyleProperty;
-typedef std::shared_ptr<LineStyleProperty> LineStylePropertyPtr;
-
-class DropShadowProperty;
-typedef std::shared_ptr<DropShadowProperty> DropShadowPropertyPtr;
+KREEN_SHAREDPTR_FORWARD_DECL(Item)
+KREEN_SHAREDPTR_FORWARD_DECL(ItemProperty)
+KREEN_SHAREDPTR_FORWARD_DECL(LineColorProperty)
+KREEN_SHAREDPTR_FORWARD_DECL(LineStyleProperty)
+KREEN_SHAREDPTR_FORWARD_DECL(DropShadowProperty)
 
 class RectStyleProperty;
 class FillProperty;
@@ -127,8 +122,6 @@ public:
 public:
     QString text;
 };
-
-typedef std::shared_ptr<Item> ItemPtr;
 
 class ItemProperty
 {

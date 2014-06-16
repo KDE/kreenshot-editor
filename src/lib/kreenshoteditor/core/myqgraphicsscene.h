@@ -29,9 +29,11 @@
 #include <kreen/core/toolmanager.h>
 #include "kreengraphicsitems.h"
 
-
 namespace kreen {
 namespace core {
+
+
+KREEN_SHAREDPTR_FORWARD_DECL(MyQGraphicsScene)
 
 /**
  * TODO: move all logic from MyQGraphicsView to here to potentially solve the wrong-drawing-when-scrolling-bug
@@ -145,8 +147,6 @@ private:
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
 };
-
-typedef std::shared_ptr<MyQGraphicsScene> MyQGraphicsScenePtr;
 
 }
 }
