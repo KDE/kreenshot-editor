@@ -19,13 +19,14 @@ set(kreenshoteditor_SOURCES
     core/document.cpp
     core/documentfile.cpp
     core/item.cpp
+    core/kreengraphicsitems.cpp
+    core/myqgraphicsscene.cpp
     core/outputfilenamemanager.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
 
-    ui/kreengraphicsitems.cpp
+
     ui/maineditorwidget.cpp
-    ui/myqgraphicsscene.cpp
     ui/myqgraphicsview.cpp
 
     ui/settings/pageoutput.cpp

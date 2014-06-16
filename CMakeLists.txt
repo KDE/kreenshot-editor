@@ -14,6 +14,8 @@ set(CMAKE_MODULE_PATH
 )
 
 add_definitions("-std=c++11")
+# see http://stackoverflow.com/questions/3486987/error-on-missing-return-statement
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror=return-type -fdiagnostics-show-option")
 
 message("[INFO] root/add_subdirectory(src)")
 add_subdirectory(src)

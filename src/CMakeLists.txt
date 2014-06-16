@@ -31,6 +31,11 @@ set(kreenshoteditorapp_FORMS ui/mainwindow.ui)
 qt5_wrap_ui(kreenshoteditorapp_FORMS_HEADERS ${kreenshoteditorapp_FORMS})
 
 add_definitions("-std=c++11")
+# see http://stackoverflow.com/questions/3486987/error-on-missing-return-statement
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror=return-type -fdiagnostics-show-option")
+
+# see http://www.cmake.org/pipermail/cmake/2011-May/044451.html
+# set(CMAKE_VERBOSE_MAKEFILE true) # does not work in kdevelop
 
 message("[INFO] src/add_executable")
 add_executable(kreenshot-editor

@@ -92,8 +92,7 @@ QUESTIONS
 - how to install the lib and the app?
     - how to put the include files for dev in the right place?
 - where to store data files like default background image?
-- nullable QPoint for function parameter?
-- is QImage reference counted?
+- nullable QPoint for function parameter? --> just use a shared_ptr???
 - statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
 
 Related tools
