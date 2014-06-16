@@ -34,7 +34,8 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- use #pragma once !!!
+- use KREEN forward decls
+- use #pragma once? (non-standard)
 - // TODO: tell the document that it's filepath has changed!!!
     0. everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
     1. rename ItemsManager to Document

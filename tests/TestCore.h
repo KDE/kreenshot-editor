@@ -34,6 +34,9 @@ class TestCore : public QObject
 {
     Q_OBJECT
 
+private:
+    QString inputImage1Filename = "./testdata/image1.png";
+
 public slots:
 //     void initTestCase();
 //     void cleanupTestCase();
@@ -41,11 +44,11 @@ public slots:
 private slots:
     void DocumentFile_init_modifydoc_save_modifydoc_save()
     {
-        QFileInfo file("./testdata/image1.png");
+        QFileInfo file(inputImage1Filename);
         qDebug() << file.absoluteFilePath(); // this will be relative build/tests
 
-        auto doc = Document::create(QImage("./testdata/image1.png"));
-        QString filename = "./testdata/docfile1.png";
+        auto doc = Document::create(QImage(inputImage1Filename));
+        QString filename = "./testdata/output_docfile1.png";
         DocumentFile docFile(doc, filename);
         QCOMPARE(docFile.document(), doc);
         QCOMPARE(docFile.filename(), filename);
@@ -62,6 +65,17 @@ private slots:
 
         docFile.save();
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+    }
+
+    void DocumentFile_init_modifydoc_saveas()
+    {
+        auto doc = Document::create(QImage(inputImage1Filename));
+        DocumentFile docFile(doc, inputImage1Filename);
+
+        QString filename = "./testdata/output_docfile2.png";
+        QCOMPARE(docFile.saveAs(filename), QString());
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+        QCOMPARE(docFile.filename(), filename);
     }
 
     void DocumentFile_save_create_intermediate_directories()

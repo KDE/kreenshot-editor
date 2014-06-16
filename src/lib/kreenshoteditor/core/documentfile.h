@@ -66,11 +66,14 @@ public:
 
     /**
      * save file to filename()
+     * sets Document clean if saving succeeds
      */
     ErrorStatus save();
 
     /**
-     * save file to filename (filename() then will return the new filename)
+     * save file to filename
+     * sets Document clean if saving succeeds
+     * filename() then will return the new filename, if saving succeeds
      */
     ErrorStatus saveAs(QString filename);
 

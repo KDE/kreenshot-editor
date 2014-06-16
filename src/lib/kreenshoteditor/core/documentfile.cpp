@@ -124,8 +124,16 @@ ErrorStatus DocumentFile::save()
 
 ErrorStatus DocumentFile::saveAs(QString filename)
 {
-    // TODO
-    return ErrorStatus();
+    auto errorStatus = d->saveToFile(filename);
+    if (errorStatus.isEmpty()) {
+        d->filename = filename;
+        d->fileStatus = FileStatus_Saved;
+        d->doc->setClean();
+    }
+    else {
+        qDebug() << errorStatus;
+    }
+    return errorStatus;
 }
 
 }
