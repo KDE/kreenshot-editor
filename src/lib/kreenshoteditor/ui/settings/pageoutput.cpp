@@ -20,7 +20,7 @@
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
-#include <kreen/core/outputfilenamemanager.h>
+#include <kreen/core/outputfilenamegenerator.h>
 
 namespace kreen {
 namespace ui {
@@ -97,11 +97,11 @@ void PageOutput::chooseDefaultOutputDirectory()
 
 void PageOutput::updateFilenamePreview()
 {
-    OutputFilenameManager outputFilenameManager;
-    outputFilenameManager.initCaptureTime();
-    outputFilenameManager.setDescription("Window 1");
-    outputFilenameManager.setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
-    d->ui.labelPreview->setText(outputFilenameManager.resultingFilepath());
+    OutputFilenameGenerator outputFilenameGenerator;
+    outputFilenameGenerator.initCaptureTime();
+    outputFilenameGenerator.setDescription("Window 1");
+    outputFilenameGenerator.setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
+    d->ui.labelPreview->setText(outputFilenameGenerator.resultingFilepath());
 }
 
 }

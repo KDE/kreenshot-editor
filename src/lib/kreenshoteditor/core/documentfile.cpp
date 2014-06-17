@@ -119,6 +119,8 @@ ErrorStatus DocumentFile::save()
     else {
         qDebug() << errorStatus;
     }
+
+    emit fileStatusChanged();
     return errorStatus;
 }
 
@@ -133,6 +135,8 @@ ErrorStatus DocumentFile::saveAs(QString filename)
     else {
         qDebug() << errorStatus;
     }
+
+    emit fileStatusChanged();
     return errorStatus;
 }
 

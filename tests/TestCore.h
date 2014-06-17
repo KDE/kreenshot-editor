@@ -26,7 +26,7 @@
 #include <QFileInfo>
 #include "lib/kreenshoteditor/core/document.h"
 #include "lib/kreenshoteditor/core/documentfile.h"
-#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include "lib/kreenshoteditor/core/outputfilenamegenerator.h"
 
 using namespace kreen::core;
 
@@ -85,23 +85,23 @@ private slots:
 
     void OutputFilenameManager_resultingFilepath_description()
     {
-        OutputFilenameManager mgr;
-        mgr.setDescription("Hallo Test");
-        QCOMPARE(mgr.resultingFilepath("aaa${description}.png"), QString("aaaHallo Test.png"));
-        QCOMPARE(mgr.resultingFilepath("aaa${description_}.png"), QString("aaaHallo_Test.png"));
+        OutputFilenameGenerator gen;
+        gen.setDescription("Hallo Test");
+        QCOMPARE(gen.resultingFilepath("aaa${description}.png"), QString("aaaHallo Test.png"));
+        QCOMPARE(gen.resultingFilepath("aaa${description_}.png"), QString("aaaHallo_Test.png"));
 
-        mgr.setDescription("a/b\\c d");
-        QCOMPARE(mgr.resultingFilepath("${description}"), QString("a_b_c d"));
+        gen.setDescription("a/b\\c d");
+        QCOMPARE(gen.resultingFilepath("${description}"), QString("a_b_c d"));
     }
 
     void OutputFilenameManager_resultingFilepath_manual()
     {
-        OutputFilenameManager mgr;
-        mgr.initCaptureTime();
-        mgr.setDescription("Hallo Test");
+        OutputFilenameGenerator gen;
+        gen.initCaptureTime();
+        gen.setDescription("Hallo Test");
         qDebug() << "[CHECK VISUALLY]:";
-        qDebug() << mgr.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
-        qDebug() << mgr.resultingFilepath("${description}, ${hostname}, ${user}");
+        qDebug() << gen.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
+        qDebug() << gen.resultingFilepath("${description}, ${hostname}, ${user}");
 
     }
 };

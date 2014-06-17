@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "outputfilenamemanager.h"
+#include "outputfilenamegenerator.h"
 #include <QHostInfo>
 
 namespace kreen {
 namespace core {
 
-class OutputFilenameManagerImpl
+class OutputFilenameGeneratorImpl
 {
 public:
     QDateTime captureTime;
@@ -41,21 +41,21 @@ public:
     }
 };
 
-OutputFilenameManager::OutputFilenameManager()
+OutputFilenameGenerator::OutputFilenameGenerator()
 {
-    d = std::make_shared<OutputFilenameManagerImpl>();
+    d = std::make_shared<OutputFilenameGeneratorImpl>();
 
     d->hostname = QHostInfo().localHostName();
 
     d->user = qgetenv("USER"); // get the user name in Linux
 }
 
-OutputFilenameManager::~OutputFilenameManager()
+OutputFilenameGenerator::~OutputFilenameGenerator()
 {
 
 }
 
-void OutputFilenameManager::initCaptureTime(QDateTime datetime)
+void OutputFilenameGenerator::initCaptureTime(QDateTime datetime)
 {
     if (datetime.isValid()) {
         d->captureTime = datetime;
@@ -65,17 +65,17 @@ void OutputFilenameManager::initCaptureTime(QDateTime datetime)
     }
 }
 
-void OutputFilenameManager::setDescription(QString text)
+void OutputFilenameGenerator::setDescription(QString text)
 {
     d->description = text;
 }
 
-void OutputFilenameManager::setFilepathPattern(QString pattern)
+void OutputFilenameGenerator::setFilepathPattern(QString pattern)
 {
     d->filenamePattern = pattern;
 }
 
-QString OutputFilenameManager::resultingFilepath(QString pattern)
+QString OutputFilenameGenerator::resultingFilepath(QString pattern)
 {
     QString result = pattern.isNull() ? d->filenamePattern : pattern;
     QString description = d->description;

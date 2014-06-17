@@ -25,7 +25,7 @@
 #include <QFileDialog>
 #include <kreen/kreenshoteditor.h>
 #include <kreen/ui/maineditorwidget.h>
-#include <kreen/core/outputfilenamemanager.h>
+#include <kreen/core/outputfilenamegenerator.h>
 #include <kreen/core/documentfile.h>
 
 class MainWindowImpl
@@ -198,8 +198,7 @@ MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
     setupUi();
     setupActions();
 
-
-    connect(d->kreenshotEditor.get(), SIGNAL(outputFileStatusChanged()), this, SLOT(updateOutputFileStatus()));
+    connect(d->kreenshotEditor->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(updateOutputFileStatus()));
     updateOutputFileStatus();
 
     d->kreenshotEditor->mainEditorWidget()->requestTool("select");
@@ -322,7 +321,8 @@ void MainWindow::updateOutputFileStatus()
     else if (d->kreenshotEditor->isFileModified()) {
         fileStatusPrefix = tr("* ");
     }
-    setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->outputFilenameManager()->resultingFilepath()).arg(d->baseWindowTitle));
+
+    setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->documentFile()->filename()).arg(d->baseWindowTitle));
 }
 
 void MainWindow::requestTool()

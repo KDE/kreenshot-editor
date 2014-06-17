@@ -35,8 +35,10 @@ KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
 /**
  * Connects a Document instance with a file on disk
  */
-class DocumentFile
+class DocumentFile : public QObject
 {
+    Q_OBJECT
+
 public:
     enum FileStatus
     {
@@ -79,8 +81,11 @@ public:
      */
     ErrorStatus saveAs(QString filename);
 
-private:
-
+Q_SIGNALS:
+    /**
+     * when status of file has changed (after save() or saveAs() is called, NOT by ctor)
+     */
+    void fileStatusChanged();
 
 private:
     DocumentFileImplPtr d;

@@ -21,10 +21,9 @@ set(kreenshoteditor_SOURCES
     core/item.cpp
     core/kreengraphicsitems.cpp
     core/myqgraphicsscene.cpp
-    core/outputfilenamemanager.cpp
+    core/outputfilenamegenerator.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
-
 
     ui/maineditorwidget.cpp
     ui/myqgraphicsview.cpp

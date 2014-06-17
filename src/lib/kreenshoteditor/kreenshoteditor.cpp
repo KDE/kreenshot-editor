@@ -30,7 +30,7 @@
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
 #include "core/documentfile.h"
-#include "core/outputfilenamemanager.h"
+#include "core/outputfilenamegenerator.h"
 #include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"
 
@@ -41,16 +41,14 @@ class KreenshotEditorImpl
 public:
     KreenshotEditorImpl()
     {
-        // auto doc = Document::create(); // TODO: ok?
-        // documentFile = std::make_shared<DocumentFile>(doc, "TODO?"); // TODO
-        outputFilenameManager = std::make_shared<OutputFilenameManager>();
+        outputFilenameGenerator = std::make_shared<OutputFilenameGenerator>();
         settingsManager = SettingsManager::instance();
     }
 
     void settingsToOutputFilenameManager()
     {
         auto outputSettings = settingsManager->output;
-        outputFilenameManager->setFilepathPattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
+        outputFilenameGenerator->setFilepathPattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
     }
 
     void afterSaveAction(QString filepath)
@@ -77,7 +75,7 @@ public:
 
 public:
     DocumentFilePtr documentFile;
-    OutputFilenameManagerPtr outputFilenameManager;
+    OutputFilenameGeneratorPtr outputFilenameGenerator;
     SettingsManagerPtr settingsManager;
 
     MainEditorWidget* mainEditorWidget = nullptr;
@@ -97,16 +95,18 @@ KreenshotEditor::~KreenshotEditor()
 
 void KreenshotEditor::setBaseImageData(QImage image)
 {
-    auto doc = Document::create(image);
-    d->documentFile = std::make_shared<DocumentFile>(doc, "");
     d->settingsToOutputFilenameManager();
+
+    auto doc = Document::create(image);
+    d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilepath());
 }
 
 void KreenshotEditor::setBaseImageFromFile(QString filename)
 {
+    d->outputFilenameGenerator->setFilepathPattern(filename);
+
     auto doc = Document::create(QImage(filename));
     d->documentFile = std::make_shared<DocumentFile>(doc, filename);
-    d->outputFilenameManager->setFilepathPattern(filename);
 }
 
 DocumentFilePtr KreenshotEditor::documentFile()
@@ -136,14 +136,14 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
-OutputFilenameManagerPtr KreenshotEditor::outputFilenameManager()
+OutputFilenameGeneratorPtr KreenshotEditor::outputFilenameManager()
 {
-    return d->outputFilenameManager;
+    return d->outputFilenameGenerator;
 }
 
 bool KreenshotEditor::isFileNew()
 {
-    QString filepath = d->outputFilenameManager->resultingFilepath();
+    QString filepath = d->outputFilenameGenerator->resultingFilepath();
     qDebug() << filepath;
     return !QFile::exists(filepath);
 }
@@ -155,13 +155,12 @@ bool KreenshotEditor::isFileModified()
 
 void KreenshotEditor::showPreferencesDialog()
 {
-    ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameManager);
+    ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameGenerator);
     if (prefsDialog.exec() == QDialog::Accepted) {
         // only if file is still new (= not stored yet to disk) apply the new file path settings
         if (isFileNew()) {
             qDebug() << "settingsToOutputFilenameManager";
             d->settingsToOutputFilenameManager();
-            emit outputFileStatusChanged();
         }
     }
 }

@@ -29,18 +29,18 @@ class PreferencesDialogImpl
 {
 public:
     SettingsManagerPtr settingsManager;
-    OutputFilenameManagerPtr outputFilenameManager;
+    OutputFilenameGeneratorPtr outputFilenameGenerator;
     Ui::dialogSettings ui;
     PageOutput* pageOutput;
 
 private:
 };
 
-PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameManagerPtr outputFilenameManager)
+PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameGeneratorPtr outputFilenameGenerator)
 {
     d = std::make_shared<PreferencesDialogImpl>();
     d->settingsManager = settingsManager;
-    d->outputFilenameManager = outputFilenameManager;
+    d->outputFilenameGenerator = outputFilenameGenerator;
 
     setupUi();
     pushSettingsToUi();

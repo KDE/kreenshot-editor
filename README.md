@@ -34,14 +34,15 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- use KREEN forward decls
-- use #pragma once? (non-standard)
+- make save with correct path work
 - // TODO: tell the document that it's filepath has changed!!!
     0. everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
     1. rename ItemsManager to Document
     2. move baseImage from kreenshoteditor to Document
     3. add filepath to Document
     4. make "save as" work correctly
+- use KREEN forward decls etc.
+- use #pragma once? (non-standard) / replace it as soon as someone sees a problem
 - // TODO: file format handling!
 - // TODO: exception handling or similar!!!
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
@@ -54,6 +55,7 @@ TODO
 - key movement of items
 
 - crop etc. tool
+    - should set new baseImage and move item coordinates to adapt
 - rename Item to KreenItem
 - add context menu to select tools
 - add handles for rect resizing and line repositioning (as extra class)

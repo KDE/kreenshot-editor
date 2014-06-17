@@ -33,7 +33,7 @@ KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
-KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameManager)
+KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
 }
 
 using namespace core;
@@ -75,7 +75,7 @@ public:
     /**
      * Use for initCaptureTime() and setDescription(...)
      */
-    OutputFilenameManagerPtr outputFilenameManager();
+    OutputFilenameGeneratorPtr outputFilenameManager();
 
     /**
      * singleton
@@ -102,10 +102,7 @@ public:
     void showPreferencesDialog();
 
 Q_SIGNALS:
-    /**
-     * todo: fire when appropriate
-     */
-    void outputFileStatusChanged();
+    //// void outputFileStatusChanged();
 
 private:
     KreenshotEditorImplPtr d;

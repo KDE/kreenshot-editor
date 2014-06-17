@@ -19,6 +19,7 @@
 #ifndef CORE_OUTPUTFILENAMEMANAGER_H
 #define CORE_OUTPUTFILENAMEMANAGER_H
 
+#include <kreen/util/pimplutil.h>
 #include <memory>
 #include <QString>
 #include <QDateTime>
@@ -26,11 +27,8 @@
 namespace kreen {
 namespace core {
 
-class OutputFilenameManager;
-typedef std::shared_ptr<OutputFilenameManager> OutputFilenameManagerPtr;
-
-class OutputFilenameManagerImpl;
-typedef std::shared_ptr<OutputFilenameManagerImpl> OutputFilenameManagerImplPtr;
+KREEN_PIMPL_FORWARD_DECL(OutputFilenameGenerator)
+KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
 
 /**
  * Filename pattern similar to greenshot (see greenshot Preferences --> Output)
@@ -50,15 +48,15 @@ typedef std::shared_ptr<OutputFilenameManagerImpl> OutputFilenameManagerImplPtr;
  *
  * The pattern can be used in the complete path to the output file not only in the filename itself.
  */
-class OutputFilenameManager
+class OutputFilenameGenerator
 {
 public:
     /**
      * sets ${user}, ${hostname}
      */
-    OutputFilenameManager();
+    OutputFilenameGenerator();
 
-    virtual ~OutputFilenameManager();
+    virtual ~OutputFilenameGenerator();
 
     /**
      * sets ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}
@@ -85,7 +83,7 @@ public:
 public:
 
 private:
-    OutputFilenameManagerImplPtr d;
+    OutputFilenameGeneratorImplPtr d;
 };
 
 }

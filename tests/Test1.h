@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDateTime>
-#include "lib/kreenshoteditor/core/outputfilenamemanager.h"
+#include "lib/kreenshoteditor/core/outputfilenamegenerator.h"
 
 using namespace kreen::core;
 
@@ -49,13 +49,13 @@ private slots:
 //         qDebug() << local.toString("yyyy-MM-dd_HH-mm-ss");
     }
 
-    void OutputFilenameManager_1()
+    void OutputFilenameGenerator_1()
     {
-        OutputFilenameManager mgr;
-        mgr.initCaptureTime();
-        mgr.setDescription("Hallo Test");
-        qDebug() << mgr.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
-        qDebug() << mgr.resultingFilepath("${description}, ${hostname}, ${user}");
+        OutputFilenameGenerator gen;
+        gen.initCaptureTime();
+        gen.setDescription("Hallo Test");
+        qDebug() << gen.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
+        qDebug() << gen.resultingFilepath("${description}, ${hostname}, ${user}");
     }
 };
 

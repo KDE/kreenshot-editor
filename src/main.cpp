@@ -22,7 +22,7 @@
 #include <QDebug>
 #include "ui/mainwindow.h"
 #include <kreen/kreenshoteditor.h>
-#include <kreen/core/outputfilenamemanager.h>
+#include <kreen/core/outputfilenamegenerator.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -47,15 +47,17 @@ int main(int argc, char *argv[])
     auto arguments = parseArgumentsOrExit(app);
 
     auto kreenshotEditor = std::make_shared<kreen::KreenshotEditor>();
+
+    kreenshotEditor->outputFilenameManager()->initCaptureTime();
+    kreenshotEditor->outputFilenameManager()->setDescription(arguments.description);
+    // TODO later: set pattern from command line (--output-file-pattern)
+
     if (arguments.isTreatFileAsNew) {
         kreenshotEditor->setBaseImageData(QImage(arguments.baseImagePath));
     }
     else {
         kreenshotEditor->setBaseImageFromFile(arguments.baseImagePath);
     }
-    kreenshotEditor->outputFilenameManager()->initCaptureTime();
-    kreenshotEditor->outputFilenameManager()->setDescription(arguments.description);
-    // TODO later: set pattern from command line (--output-file-pattern)
 
     MainWindow mainWindow(kreenshotEditor);
     //mainWindow.resize(640, 480);
