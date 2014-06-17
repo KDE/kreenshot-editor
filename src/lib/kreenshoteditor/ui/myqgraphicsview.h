@@ -19,12 +19,15 @@
 #ifndef UI_MYQGRAPHICSVIEW_H
 #define UI_MYQGRAPHICSVIEW_H
 
+#include <kreen/util/sharedptrutil.h>
 #include <QWidget>
 #include <QGraphicsView>
 #include <memory>
 
 namespace kreen {
 namespace ui {
+
+KREEN_SHAREDPTR_FORWARD_DECL(MyQGraphicsView)
 
 class MyQGraphicsView : public QGraphicsView
 {
@@ -45,8 +48,6 @@ protected:
 
 private:
 };
-
-typedef std::shared_ptr<MyQGraphicsView> MyQGraphicsViewPtr;
 
 }
 }

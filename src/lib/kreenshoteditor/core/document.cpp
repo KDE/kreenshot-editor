@@ -141,7 +141,7 @@ void Document::addDemoItems()
         auto item = Item::create("text");
         item->setRect(QRect(10, 120, 200, 40));
         item->text = TextProperty::create();
-        item->text->text = "Hello From ItemsManager";
+        item->text->text = "Hello from the document";
         _items.push_back(item);
     }
 

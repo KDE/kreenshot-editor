@@ -19,6 +19,7 @@
 #ifndef CORE_SETTINGSMANAGER_H
 #define CORE_SETTINGSMANAGER_H
 
+#include <kreen/util/pimplutil.h>
 #include <vector>
 #include <memory>
 #include <QString>
@@ -27,8 +28,7 @@
 namespace kreen {
 namespace core {
 
-class SettingsManager;
-typedef std::shared_ptr<SettingsManager> SettingsManagerPtr;
+KREEN_SHAREDPTR_FORWARD_DECL(SettingsManager)
 
 /**
  */

@@ -30,6 +30,7 @@ class QImage;
 namespace kreen {
 
 KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
+KREEN_SHAREDPTR_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
@@ -107,8 +108,6 @@ Q_SIGNALS:
 private:
     KreenshotEditorImplPtr d;
 };
-
-typedef std::shared_ptr<KreenshotEditor> KreenshotEditorPtr;
 
 }
 

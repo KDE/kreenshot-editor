@@ -19,6 +19,7 @@
 #ifndef UI_MAIN_EDITOR_WIDGET_H
 #define UI_MAIN_EDITOR_WIDGET_H
 
+#include <kreen/util/pimplutil.h>
 #include <QWidget>
 #include <memory>
 #include <kreen/kreenshoteditor.h>
@@ -34,8 +35,7 @@ namespace ui {
 
 class MyQGraphicsView;
 
-class MainEditorWidgetImpl;
-typedef std::shared_ptr<MainEditorWidgetImpl> MainEditorWidgetImplPtr;
+KREEN_PIMPL_FORWARD_DECL(MainEditorWidget)
 
 class MainEditorWidget : public QWidget
 {

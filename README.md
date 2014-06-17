@@ -35,9 +35,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - when document is modified, it file status should become "modified"
-- rename ItemsManager to Document
-- use KREEN forward decls etc.
-- use #pragma once? (non-standard) / replace it as soon as someone sees a problem
 - // TODO: file format handling!
             see qDebug() << QImageReader::supportedImageFormats();
 - // TODO: exception handling or similar!!!
@@ -87,6 +84,7 @@ LATER
 - Create Actions in lib (instead of UI file) and use in GUI (überlegen: nice ui file vs. good coding)
 - "Open last file storage location" or "Open storage location"
 - use m4 to generate settings class
+- use #pragma once? (non-standard) / replace it as soon as someone sees a problem
 
 QUESTIONS
 ---------
