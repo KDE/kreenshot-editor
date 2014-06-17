@@ -70,12 +70,12 @@ void OutputFilenameGenerator::setDescription(QString text)
     d->description = text;
 }
 
-void OutputFilenameGenerator::setFilepathPattern(QString pattern)
+void OutputFilenameGenerator::setFilenamePattern(QString pattern)
 {
     d->filenamePattern = pattern;
 }
 
-QString OutputFilenameGenerator::resultingFilepath(QString pattern)
+QString OutputFilenameGenerator::resultingFilename(QString pattern)
 {
     QString result = pattern.isNull() ? d->filenamePattern : pattern;
     QString description = d->description;

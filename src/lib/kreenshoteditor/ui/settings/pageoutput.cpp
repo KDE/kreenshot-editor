@@ -100,8 +100,8 @@ void PageOutput::updateFilenamePreview()
     OutputFilenameGenerator outputFilenameGenerator;
     outputFilenameGenerator.initCaptureTime();
     outputFilenameGenerator.setDescription("Window 1");
-    outputFilenameGenerator.setFilepathPattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
-    d->ui.labelPreview->setText(outputFilenameGenerator.resultingFilepath());
+    outputFilenameGenerator.setFilenamePattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
+    d->ui.labelPreview->setText(outputFilenameGenerator.resultingFilename());
 }
 
 }

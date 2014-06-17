@@ -97,11 +97,11 @@ private slots:
     {
         OutputFilenameGenerator gen;
         gen.setDescription("Hallo Test");
-        QCOMPARE(gen.resultingFilepath("aaa${description}.png"), QString("aaaHallo Test.png"));
-        QCOMPARE(gen.resultingFilepath("aaa${description_}.png"), QString("aaaHallo_Test.png"));
+        QCOMPARE(gen.resultingFilename("aaa${description}.png"), QString("aaaHallo Test.png"));
+        QCOMPARE(gen.resultingFilename("aaa${description_}.png"), QString("aaaHallo_Test.png"));
 
         gen.setDescription("a/b\\c d");
-        QCOMPARE(gen.resultingFilepath("${description}"), QString("a_b_c d"));
+        QCOMPARE(gen.resultingFilename("${description}"), QString("a_b_c d"));
     }
 
     void OutputFilenameManager_resultingFilepath_manual()
@@ -110,8 +110,8 @@ private slots:
         gen.initCaptureTime();
         gen.setDescription("Hallo Test");
         qDebug() << "[CHECK VISUALLY]:";
-        qDebug() << gen.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
-        qDebug() << gen.resultingFilepath("${description}, ${hostname}, ${user}");
+        qDebug() << gen.resultingFilename("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
+        qDebug() << gen.resultingFilename("${description}, ${hostname}, ${user}");
 
     }
 };

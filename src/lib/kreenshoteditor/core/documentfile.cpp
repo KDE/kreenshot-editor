@@ -74,7 +74,10 @@ public:
         return ErrorStatus();
     }
 
-    void afterSaveAction(QString filepath)
+    /**
+     * filename can be with out without path
+     */
+    void afterSaveAction(QString filename)
     {
         if (!settingsManager) {
             qDebug() << "[INFO] DocumentFile.afterSaveAction will not work because settingsManager is nullptr";
@@ -82,20 +85,20 @@ public:
         }
 
         if (settingsManager->output.afterSaveOpenDefaultViewer) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(filepath));
+            QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
         }
 
         if (settingsManager->output.afterSaveOpenFileBrowser) {
-            QDesktopServices::openUrl(QFileInfo(filepath).dir().absolutePath());
+            QDesktopServices::openUrl(QFileInfo(filename).dir().absolutePath());
 
             // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
         }
 
         if (settingsManager->output.afterSaveClipboardFilepath) {
             QClipboard *clipboard = QApplication::clipboard();
-            clipboard->setText(filepath);
+            clipboard->setText(filename);
         } else if (settingsManager->output.afterSaveClipboardImageData) {
-            QImage image(filepath);
+            QImage image(filename);
             QClipboard *clipboard = QApplication::clipboard();
             clipboard->setImage(image);
         }

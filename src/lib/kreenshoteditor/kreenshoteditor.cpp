@@ -44,7 +44,8 @@ public:
     void settingsToOutputFilenameManager()
     {
         auto outputSettings = settingsManager->output;
-        outputFilenameGenerator->setFilepathPattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
+        //                                                                                     == PathCombine
+        outputFilenameGenerator->setFilenamePattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
     }
 
 public:
@@ -72,12 +73,12 @@ void KreenshotEditor::setBaseImageData(QImage image)
     d->settingsToOutputFilenameManager();
 
     auto doc = Document::create(image);
-    d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilepath(), d->settingsManager);
+    d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
 }
 
 void KreenshotEditor::setBaseImageFromFile(QString filename)
 {
-    d->outputFilenameGenerator->setFilepathPattern(filename);
+    d->outputFilenameGenerator->setFilenamePattern(filename);
 
     auto doc = Document::create(QImage(filename));
     d->documentFile = std::make_shared<DocumentFile>(doc, filename, d->settingsManager);

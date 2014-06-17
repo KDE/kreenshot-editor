@@ -47,6 +47,8 @@ KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
  * NOT SUPPORTED: ${title} Window title
  *
  * The pattern can be used in the complete path to the output file not only in the filename itself.
+ *
+ * NOTE: Filename can be with out without path
  */
 class OutputFilenameGenerator
 {
@@ -71,14 +73,15 @@ public:
 
     /**
      * set pattern or fixed path (directory AND filename)
+     * filename can be with out without path
      */
-    void setFilepathPattern(QString pattern);
+    void setFilenamePattern(QString pattern);
 
     /**
      * location + filename as defined by setFilepathPattern()
      * The pattern argument overrides the setting by setFilepathPattern()
      */
-    QString resultingFilepath(QString pattern = QString());
+    QString resultingFilename(QString pattern = QString());
 
 public:
 
