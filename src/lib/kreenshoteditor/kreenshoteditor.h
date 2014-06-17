@@ -63,7 +63,7 @@ public:
     void setBaseImageData(QImage image);
 
     /**
-     * Loads the image data from the given path and set output filepath to path.
+     * Loads the image data from the given path and set output filename to given filename (with or without path).
      */
     void setBaseImageFromFile(QString filename);
 

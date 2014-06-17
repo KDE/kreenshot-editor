@@ -35,7 +35,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - when document is modified, it file status should become "modified"
-- everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
 - rename ItemsManager to Document
 - use KREEN forward decls etc.
 - use #pragma once? (non-standard) / replace it as soon as someone sees a problem

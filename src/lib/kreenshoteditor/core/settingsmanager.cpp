@@ -54,7 +54,7 @@ void SettingsManager::load()
     output.filenamePattern = settings.value("output/filename-pattern", "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png").toString();
     output.afterSaveOpenDefaultViewer = settings.value("output/after-save/open-default-viewer", false).toBool();
     output.afterSaveOpenFileBrowser = settings.value("output/after-save/open-filebrowser", false).toBool();
-    output.afterSaveClipboardFilepath = settings.value("output/after-save/clipboard-filepath", false).toBool();
+    output.afterSaveClipboardFilename = settings.value("output/after-save/clipboard-filename", false).toBool();
     output.afterSaveClipboardImageData = settings.value("output/after-save/clipboard-imagedata", false).toBool();
 }
 
@@ -65,7 +65,7 @@ void SettingsManager::save()
     settings.setValue("output/filename-pattern", output.filenamePattern);
     settings.setValue("output/after-save/open-default-viewer", output.afterSaveOpenDefaultViewer);
     settings.setValue("output/after-save/open-filebrowser", output.afterSaveOpenFileBrowser);
-    settings.setValue("output/after-save/clipboard-filepath", output.afterSaveClipboardFilepath);
+    settings.setValue("output/after-save/clipboard-filename", output.afterSaveClipboardFilename);
     settings.setValue("output/after-save/clipboard-imagedata", output.afterSaveClipboardImageData);
 }
 

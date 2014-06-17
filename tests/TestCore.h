@@ -45,7 +45,7 @@ public slots:
          // do not do any interactive things when saving the document
          settingsManager->output.afterSaveOpenDefaultViewer = false;
          settingsManager->output.afterSaveOpenFileBrowser = false;
-         settingsManager->output.afterSaveClipboardFilepath = false;
+         settingsManager->output.afterSaveClipboardFilename = false;
          settingsManager->output.afterSaveClipboardImageData = false;
      }
 
@@ -93,7 +93,7 @@ private slots:
         qDebug() << "TODO: write test case to show that intermediate dirs are created by save()";
     }
 
-    void OutputFilenameManager_resultingFilepath_description()
+    void OutputFilenameManager_resultingFilename_description()
     {
         OutputFilenameGenerator gen;
         gen.setDescription("Hallo Test");
@@ -104,7 +104,7 @@ private slots:
         QCOMPARE(gen.resultingFilename("${description}"), QString("a_b_c d"));
     }
 
-    void OutputFilenameManager_resultingFilepath_manual()
+    void OutputFilenameManager_resultingFilename_manual()
     {
         OutputFilenameGenerator gen;
         gen.initCaptureTime();

@@ -94,7 +94,7 @@ public:
             // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
         }
 
-        if (settingsManager->output.afterSaveClipboardFilepath) {
+        if (settingsManager->output.afterSaveClipboardFilename) {
             QClipboard *clipboard = QApplication::clipboard();
             clipboard->setText(filename);
         } else if (settingsManager->output.afterSaveClipboardImageData) {

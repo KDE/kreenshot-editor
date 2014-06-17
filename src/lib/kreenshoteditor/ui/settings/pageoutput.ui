@@ -178,7 +178,7 @@ ${hostname}    machine/PC name</string>
        </spacer>
       </item>
       <item row="1" column="3">
-       <widget class="QRadioButton" name="radioButtonAfterSaveClipboardFilePath">
+       <widget class="QRadioButton" name="radioButtonAfterSaveClipboardFilename">
         <property name="text">
          <string>File path</string>
         </property>
@@ -208,7 +208,7 @@ ${hostname}    machine/PC name</string>
      <zorder>radioButtonAfterSaveClipboardImage</zorder>
      <zorder>horizontalSpacer</zorder>
      <zorder>horizontalSpacer_2</zorder>
-     <zorder>radioButtonAfterSaveClipboardFilePath</zorder>
+     <zorder>radioButtonAfterSaveClipboardFilename</zorder>
      <zorder>radioButtonAfterSaveClipboardNothing</zorder>
     </widget>
    </item>

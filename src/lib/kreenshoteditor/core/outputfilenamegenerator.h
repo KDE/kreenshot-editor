@@ -78,8 +78,8 @@ public:
     void setFilenamePattern(QString pattern);
 
     /**
-     * location + filename as defined by setFilepathPattern()
-     * The pattern argument overrides the setting by setFilepathPattern()
+     * location + filename as defined by setFilenamePattern()
+     * The pattern argument overrides the setting by setFilenamePattern()
      */
     QString resultingFilename(QString pattern = QString());
 

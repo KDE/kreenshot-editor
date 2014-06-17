@@ -42,7 +42,7 @@ public:
     bool afterSaveOpenFileBrowser;
 
     // either or
-    bool afterSaveClipboardFilepath;
+    bool afterSaveClipboardFilename;
     bool afterSaveClipboardImageData;
 
 private:

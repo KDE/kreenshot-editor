@@ -106,7 +106,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
         }
 
         arguments.baseImagePath = args[0];
-        qDebug() << "  imageFilepath:" << arguments.baseImagePath;
+        qDebug() << "  baseImagePath:" << arguments.baseImagePath;
 
         QString image2Filepath = parser.value(image2Option);
         qDebug() << "  image2Filepath:" << image2Filepath;
