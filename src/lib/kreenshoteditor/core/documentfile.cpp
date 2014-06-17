@@ -23,6 +23,11 @@
 #include <QImageWriter>
 #include <QFileInfo>
 #include <QDir>
+#include <QUrl>
+#include <QDesktopServices>
+#include <QClipboard>
+#include <QApplication>
+#include "core/settingsmanager.h"
 
 #define tr(arg) QObject::tr(arg)
 
@@ -33,6 +38,7 @@ class DocumentFileImpl
 {
 public:
     DocumentPtr doc;
+    SettingsManagerPtr settingsManager;
     QString filename;
     /**
      * WARN: the corresponding getter method also used the document's status to calc the returned value!
@@ -46,11 +52,8 @@ public:
     ErrorStatus saveToFile(QString filename)
     {
         qDebug() << "DocumentFileImpl.saveToFile: " << filename;
-        qDebug() << QImageReader::supportedImageFormats();
 
         QImage image = doc->renderToImage();
-
-        //qDebug() << image.save(filepath, "png"); // returns false;
 
         // create intermediate directories
         QFileInfo fileInfo(filename);
@@ -63,22 +66,50 @@ public:
             qDebug() << "error: " << writer.errorString();
             // throw std::runtime_error(
             return tr("Error saving image ('%1'): '%2' (code %3)")
-                .arg(filename)
-                .arg(writer.errorString())
-                .arg(writer.error());
+                   .arg(filename)
+                   .arg(writer.errorString())
+                   .arg(writer.error());
         }
 
         return ErrorStatus();
     }
+
+    void afterSaveAction(QString filepath)
+    {
+        if (!settingsManager) {
+            qDebug() << "[INFO] DocumentFile.afterSaveAction will not work because settingsManager is nullptr";
+            return;
+        }
+
+        if (settingsManager->output.afterSaveOpenDefaultViewer) {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(filepath));
+        }
+
+        if (settingsManager->output.afterSaveOpenFileBrowser) {
+            QDesktopServices::openUrl(QFileInfo(filepath).dir().absolutePath());
+
+            // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
+        }
+
+        if (settingsManager->output.afterSaveClipboardFilepath) {
+            QClipboard *clipboard = QApplication::clipboard();
+            clipboard->setText(filepath);
+        } else if (settingsManager->output.afterSaveClipboardImageData) {
+            QImage image(filepath);
+            QClipboard *clipboard = QApplication::clipboard();
+            clipboard->setImage(image);
+        }
+    }
 };
 
-DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename)
+DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager)
 {
     KREEN_PIMPL_INIT(DocumentFile)
 
     d->doc = doc;
     d->filename = filename;
     d->fileStatus = FileStatus_NotCreated;
+    d->settingsManager = settingsManager;
 }
 
 DocumentFile::~DocumentFile()
@@ -120,7 +151,7 @@ ErrorStatus DocumentFile::save()
         qDebug() << errorStatus;
     }
 
-    emit fileStatusChanged();
+    afterSaveToFile(errorStatus);
     return errorStatus;
 }
 
@@ -136,9 +167,17 @@ ErrorStatus DocumentFile::saveAs(QString filename)
         qDebug() << errorStatus;
     }
 
-    emit fileStatusChanged();
+    afterSaveToFile(errorStatus);
     return errorStatus;
 }
 
+    void DocumentFile::afterSaveToFile(ErrorStatus errorStatus)
+    {
+        if (errorStatus.isEmpty()) {
+            d->afterSaveAction(filename());
+        }
+
+        emit fileStatusChanged();
+    }
 }
 }

@@ -75,7 +75,7 @@ public:
     /**
      * Use for initCaptureTime() and setDescription(...)
      */
-    OutputFilenameGeneratorPtr outputFilenameManager();
+    OutputFilenameGeneratorPtr outputFilenameGenerator();
 
     /**
      * singleton

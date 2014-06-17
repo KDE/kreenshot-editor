@@ -31,6 +31,7 @@ namespace core {
 KREEN_PIMPL_FORWARD_DECL(DocumentFile)
 
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
+KREEN_SHAREDPTR_FORWARD_DECL(SettingsManager)
 
 /**
  * Connects a Document instance with a file on disk
@@ -51,8 +52,9 @@ public:
     /**
      * Inits the DocumentFile with a Document and a filename (i. e. path to file).
      * The initial FileStatus will be NotCreated (i. e. nothing gets loaded or stored to disk yet)
+     * settingsManager is optional: a warning will be printed to console and afterSaveAction won't work
      */
-    DocumentFile(DocumentPtr doc, QString filename);
+    DocumentFile(DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager = nullptr);
 
     virtual ~DocumentFile();
 
@@ -86,6 +88,9 @@ Q_SIGNALS:
      * when status of file has changed (after save() or saveAs() is called, NOT by ctor)
      */
     void fileStatusChanged();
+
+private:
+    void afterSaveToFile(ErrorStatus errorStatus);
 
 private:
     DocumentFileImplPtr d;

@@ -27,6 +27,7 @@
 #include "lib/kreenshoteditor/core/document.h"
 #include "lib/kreenshoteditor/core/documentfile.h"
 #include "lib/kreenshoteditor/core/outputfilenamegenerator.h"
+#include "lib/kreenshoteditor/core/settingsmanager.h"
 
 using namespace kreen::core;
 
@@ -36,9 +37,18 @@ class TestCore : public QObject
 
 private:
     QString inputImage1Filename = "./testdata/image1.png";
+    SettingsManagerPtr settingsManager = SettingsManager::instance("unittest");
 
 public slots:
-//     void initTestCase();
+     void initTestCase()
+     {
+         // do not do any interactive things when saving the document
+         settingsManager->output.afterSaveOpenDefaultViewer = false;
+         settingsManager->output.afterSaveOpenFileBrowser = false;
+         settingsManager->output.afterSaveClipboardFilepath = false;
+         settingsManager->output.afterSaveClipboardImageData = false;
+     }
+
 //     void cleanupTestCase();
 
 private slots:
@@ -49,7 +59,7 @@ private slots:
 
         auto doc = Document::create(QImage(inputImage1Filename));
         QString filename = "./testdata/output_docfile1.png";
-        DocumentFile docFile(doc, filename);
+        DocumentFile docFile(doc, filename, settingsManager); // settingsManager not need cause it is optional
         QCOMPARE(docFile.document(), doc);
         QCOMPARE(docFile.filename(), filename);
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated);
@@ -70,7 +80,7 @@ private slots:
     void DocumentFile_init_modifydoc_saveas()
     {
         auto doc = Document::create(QImage(inputImage1Filename));
-        DocumentFile docFile(doc, inputImage1Filename);
+        DocumentFile docFile(doc, inputImage1Filename, nullptr);
 
         QString filename = "./testdata/output_docfile2.png";
         QCOMPARE(docFile.saveAs(filename), QString());

@@ -34,16 +34,13 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- make save with correct path work
-- // TODO: tell the document that it's filepath has changed!!!
-    0. everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
-    1. rename ItemsManager to Document
-    2. move baseImage from kreenshoteditor to Document
-    3. add filepath to Document
-    4. make "save as" work correctly
+- when document is modified, it file status should become "modified"
+- everywhere where filepath is used, use filename (and filename becomes filenameNoPath)
+- rename ItemsManager to Document
 - use KREEN forward decls etc.
 - use #pragma once? (non-standard) / replace it as soon as someone sees a problem
 - // TODO: file format handling!
+            see qDebug() << QImageReader::supportedImageFormats();
 - // TODO: exception handling or similar!!!
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
 - fix cursor when cancelling crop tool
@@ -67,6 +64,7 @@ TODO
 
 LATER
 -----
+- cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
 - pak: run unit tests after build
 - prepare-include-files.sh: only find classes with the KREEN_*(?)EXPORT macro
     - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???

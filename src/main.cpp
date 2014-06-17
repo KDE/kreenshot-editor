@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
 
     auto kreenshotEditor = std::make_shared<kreen::KreenshotEditor>();
 
-    kreenshotEditor->outputFilenameManager()->initCaptureTime();
-    kreenshotEditor->outputFilenameManager()->setDescription(arguments.description);
+    kreenshotEditor->outputFilenameGenerator()->initCaptureTime();
+    kreenshotEditor->outputFilenameGenerator()->setDescription(arguments.description);
     // TODO later: set pattern from command line (--output-file-pattern)
 
     if (arguments.isTreatFileAsNew) {

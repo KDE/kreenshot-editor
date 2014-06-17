@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDateTime>
+#include <QImageReader>
 #include "lib/kreenshoteditor/core/outputfilenamegenerator.h"
 
 using namespace kreen::core;
@@ -56,6 +57,11 @@ private slots:
         gen.setDescription("Hallo Test");
         qDebug() << gen.resultingFilepath("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
         qDebug() << gen.resultingFilepath("${description}, ${hostname}, ${user}");
+    }
+
+    void QImageReader_1()
+    {
+        qDebug() << "QImageReader::supportedImageFormats()" << QImageReader::supportedImageFormats();
     }
 };
 
