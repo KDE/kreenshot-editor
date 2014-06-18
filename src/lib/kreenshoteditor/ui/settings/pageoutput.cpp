@@ -17,10 +17,12 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "pageoutput.h"
+#include "pageoutputimpl.h"
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
 #include <kreen/core/outputfilenamegenerator.h>
+#include <core/documentfile.h>
 
 namespace kreen {
 namespace ui {
@@ -31,11 +33,10 @@ class PageOutputImpl
 public:
     Ui::pageOutput ui;
 
+public:
+
+
 private:
-    void exp()
-    {
-        //ui.radioButtonAfterSaveClipboardImage
-    }
 };
 
 PageOutput::PageOutput(QWidget* parent)
@@ -55,12 +56,19 @@ void PageOutput::setupUi()
     connect(d->ui.toolButtonChooseDirectory, SIGNAL(clicked()), this, SLOT(chooseDefaultOutputDirectory()));
     connect(d->ui.lineEditOutputDirectory, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
     connect(d->ui.lineEditFilenamePattern, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
+
+    d->ui.comboBoxImageFileExt->addItems(QStringList(DocumentFile::supportedImageFormats()));
 }
 
 void PageOutput::setValues(SettingsGroupOutput values)
 {
     d->ui.lineEditOutputDirectory->setText(values.defaultOutputDirectory);
-    d->ui.lineEditFilenamePattern->setText(values.filenamePattern);
+
+    QString filename, ext;
+    PageOutputImplHeader::filenameToFilenamePlusExt(values.filenamePattern, &filename, &ext);
+    d->ui.lineEditFilenamePattern->setText(filename);
+    d->ui.comboBoxImageFileExt->setCurrentText(ext);
+
     d->ui.checkBoxAfterSaveOpenDefaultViewer->setChecked(values.afterSaveOpenDefaultViewer);
     d->ui.checkBoxAfterSaveShowFileBrowser->setChecked(values.afterSaveOpenFileBrowser);
     d->ui.radioButtonAfterSaveClipboardFilename->setChecked(values.afterSaveClipboardFilename);
@@ -71,7 +79,10 @@ SettingsGroupOutput PageOutput::values()
 {
     SettingsGroupOutput values;
     values.defaultOutputDirectory = d->ui.lineEditOutputDirectory->text();
-    values.filenamePattern = d->ui.lineEditFilenamePattern->text();
+
+    values.filenamePattern = PageOutputImplHeader::filenamePlusExtToFilename(
+        d->ui.lineEditFilenamePattern->text(), d->ui.comboBoxImageFileExt->currentText());
+
     values.afterSaveOpenDefaultViewer = d->ui.checkBoxAfterSaveOpenDefaultViewer->isChecked();
     values.afterSaveOpenFileBrowser = d->ui.checkBoxAfterSaveShowFileBrowser->isChecked();
     values.afterSaveClipboardFilename = d->ui.radioButtonAfterSaveClipboardFilename->isChecked();

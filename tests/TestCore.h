@@ -93,6 +93,11 @@ private slots:
         qDebug() << "TODO: write test case to show that intermediate dirs are created by save()";
     }
 
+    void DocumentFile_supportedImageFormats()
+    {
+        QCOMPARE(DocumentFile::supportedImageFormats().first(), QString("bmp"));
+    }
+
     void OutputFilenameManager_resultingFilename_description()
     {
         OutputFilenameGenerator gen;

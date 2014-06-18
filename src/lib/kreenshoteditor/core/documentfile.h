@@ -48,6 +48,11 @@ public:
         FileStatus_Modified
     };
 
+    /**
+     * returns the supported images format file extensions that can be used for the filename
+     */
+    static QList<QString> supportedImageFormats();
+
 public:
     /**
      * Inits the DocumentFile with a Document and a filename (i. e. path to file).

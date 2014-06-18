@@ -35,6 +35,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - when document is modified, it file status should become "modified"
+    - do this by cleanly use commands (qundostack)
 - // TODO: file format handling!
             see qDebug() << QImageReader::supportedImageFormats();
 - // TODO: exception handling or similar!!!
@@ -61,6 +62,8 @@ TODO
 LATER
 -----
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
+- PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
+    be an own widget and show also description
 - pak: run unit tests after build
 - prepare-include-files.sh: only find classes with the KREEN_*(?)EXPORT macro
     - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???

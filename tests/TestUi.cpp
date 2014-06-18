@@ -16,52 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_SETTINGS_PAGEOUTPUT_H
-#define UI_SETTINGS_PAGEOUTPUT_H
+#include "TestUi.h"
+#include <QTest>
 
-#include <kreen/util/pimplutil.h>
-#include <QWidget>
-#include <memory>
-#include <kreen/core/settingsgroupoutput.h>
+QTEST_MAIN(TestUi)
 
-namespace kreen {
-namespace ui {
-namespace settings {
-
-using namespace kreen::core;
-
-KREEN_PIMPL_FORWARD_DECL(PageOutput)
-
-class PageOutput : public QWidget
-{
-    Q_OBJECT
-
-public:
-    PageOutput(QWidget* parent);
-    virtual ~PageOutput();
-
-    void setValues(SettingsGroupOutput values);
-
-    SettingsGroupOutput values();
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-    void chooseDefaultOutputDirectory();
-    void updateFilenamePreview();
-
-private:
-    void setupUi();
-
-private:
-    PageOutputImplPtr d;
-
-};
-
-}
-}
-}
-
-#endif // UI_SETTINGS_PAGEOUTPUT_H
-
-// kate: indent-mode cstyle; replace-tabs on;
+// kate: indent-width 4; replace-tabs on;

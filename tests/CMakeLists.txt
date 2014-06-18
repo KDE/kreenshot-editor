@@ -26,17 +26,23 @@ add_executable(Test1 ${Test1Src})
 target_link_libraries(Test1 Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME Test1 COMMAND Test1)
 
+# Test: TestCore
+set(TestCoreSrc TestCore.cpp)
+add_executable(TestCore ${TestCoreSrc})
+target_link_libraries(TestCore Qt5::Core Qt5::Test kreenshoteditor)
+add_test(NAME TestCore COMMAND TestCore)
+
 # Test: TestSettings
 set(TestSettingsSrc TestSettings.cpp)
 add_executable(TestSettings ${TestSettingsSrc})
 target_link_libraries(TestSettings Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME TestSettings COMMAND TestSettings)
 
-# Test: TestCore
-set(TestCoreSrc TestCore.cpp)
-add_executable(TestCore ${TestCoreSrc})
-target_link_libraries(TestCore Qt5::Core Qt5::Test kreenshoteditor)
-add_test(NAME TestCore COMMAND TestCore)
+# Test: TestUi
+set(TestUiSrc TestUi.cpp)
+add_executable(TestUi ${TestUiSrc})
+target_link_libraries(TestUi Qt5::Core Qt5::Test kreenshoteditor)
+add_test(NAME TestUi COMMAND TestUi)
 
 # http://stackoverflow.com/questions/13429656/cmake-how-to-copy-contents-of-a-directory-into-build-directory-after-make
 # TODO: cleanup dir before copying stuff

@@ -16,53 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_SETTINGS_PREFERENCES_H
-#define UI_SETTINGS_PREFERENCES_H
+#ifndef UI_SETTINGS_PAGEOUTPUTIMPL_H
+#define UI_SETTINGS_PAGEOUTPUTIMPL_H
 
-#include <QDialog>
-#include <memory>
-#include <kreen/core/settingsmanager.h>
-#include <kreen/core/outputfilenamegenerator.h>
+#include <QString>
+#include <QStringRef>
 
 namespace kreen {
 namespace ui {
 namespace settings {
 
-using namespace kreen::core;
-
-KREEN_PIMPL_FORWARD_DECL(PreferencesDialog)
-
-/**
- * The accepted signal is handled internally and then the settings are stored
- */
-class PreferencesDialog : public QDialog
-{
-    Q_OBJECT
-
+class PageOutputImplHeader {
 public:
-    /**
-     * settingsManager: read and store the settings
-     * outputFilenameManager: for preview
-     */
-    PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameGeneratorPtr outputFilenameManager);
-    virtual ~PreferencesDialog();
+    static void filenameToFilenamePlusExt(const QString filename_in, QString* filename_out, QString* ext_out)
+    {
+        int i = filename_in.lastIndexOf(".");
+        if (i == -1) {
+            *filename_out = filename_in;
+            *ext_out = "";
+        }
+        else {
+            QStringRef ref(&filename_in);
+            *filename_out = ref.left(i).toString();
+            *ext_out = ref.right(i + 1).toString();
+        }
+    }
 
-private Q_SLOTS:
-    void pullSettingsFromUiAndSave();
-
-private:
-    void setupUi();
-
-    void pushSettingsToUi();
-
-private:
-    PreferencesDialogImplPtr d;
+    static QString filenamePlusExtToFilename(QString filename_noext, QString ext)
+    {
+        return filename_noext + "." + ext;
+    }
 };
 
 }
 }
 }
 
-#endif // UI_SETTINGS_PREFERENCES_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

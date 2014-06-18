@@ -105,6 +105,17 @@ public:
     }
 };
 
+QList<QString> DocumentFile::supportedImageFormats()
+{
+    auto origList = QImageReader::supportedImageFormats();
+    QList<QString> list;
+    foreach (auto item, origList) {
+        list << QString(item);
+    }
+    return list;
+}
+
+
 DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager)
 {
     KREEN_PIMPL_INIT(DocumentFile)
