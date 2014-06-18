@@ -500,11 +500,13 @@ public:
                 auto widgetProxy = new QGraphicsProxyWidget(this);
                 widgetProxy->setWidget(frame);
                 _interactionWidget = widgetProxy;
-                // _interactionWidget->setPos(10, 10); // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
+
+                // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
+                // TODO: 2014-06-18: seems not to be an issue anymore...
+                //_interactionWidget->setPos(-_interactionWidget->widget()->width(), -_interactionWidget->widget()->height());
+                _interactionWidget->setPos(rect.width(), rect.height());
             }
         }
-
-        //_interactionWidget->setPos(10, 10); // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
     }
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
