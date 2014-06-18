@@ -36,8 +36,6 @@ TODO
 ----
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
-- // TODO: file format handling!
-            see qDebug() << QImageReader::supportedImageFormats();
 - // TODO: exception handling or similar!!!
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
 - fix cursor when cancelling crop tool
@@ -69,6 +67,9 @@ LATER
     - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 - OpenSuseBuild service
 - Ctrl+Shift+C: copy image to clipboard
+    - show message flash, when done (or KMessageBox, "show never again")
+    - plus: provide drag source for DND
+- Open last save location
 - // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
     - dolphin --select
 - Settings: After saving: copy image path to clipboard

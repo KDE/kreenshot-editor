@@ -181,6 +181,16 @@ public:
         }
     }
 
+    QString imageFileExtensionsToGetSaveFileNameFilterString(QStringList fileextlist)
+    {
+        QString result;
+        foreach (QString str, fileextlist)
+        {
+            result += "*." + str + " ";
+        }
+        return result;
+    }
+
 public:
     kreen::KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
@@ -299,8 +309,11 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
-    // TODO: file format handling!
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save file as"), "", tr("Images (*.png)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save file as"),
+                                                    d->kreenshotEditor->documentFile()->filename(),
+                                                    tr("Images") + " ("
+                                                   + d->imageFileExtensionsToGetSaveFileNameFilterString(DocumentFile::supportedImageFormats())
+                                                   + ")");
     if (!filename.isEmpty()) {
         ErrorStatus errorStatus = d->kreenshotEditor->documentFile()->saveAs(filename);
         d->handleSaveImageError(this, errorStatus);

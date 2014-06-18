@@ -57,7 +57,7 @@ void PageOutput::setupUi()
     connect(d->ui.lineEditOutputDirectory, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
     connect(d->ui.lineEditFilenamePattern, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
 
-    d->ui.comboBoxImageFileExt->addItems(QStringList(DocumentFile::supportedImageFormats()));
+    d->ui.comboBoxImageFileExt->addItems(DocumentFile::supportedImageFormats());
 }
 
 void PageOutput::setValues(SettingsGroupOutput values)
