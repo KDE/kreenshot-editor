@@ -40,7 +40,6 @@ TODO
     - do this by cleanly use commands (qundostack)
 - // TODO: exception handling or similar!!!
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
-- fix cursor when cancelling crop tool
 - save image to file: do not save selection indication rect
 - enable more item properties (see item.h/cpp)
 - enable hover visual

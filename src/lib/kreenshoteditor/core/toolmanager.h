@@ -19,6 +19,7 @@
 #ifndef UI_TOOLMANAGER_H
 #define UI_TOOLMANAGER_H
 
+#include <util/sharedptrutil.h>
 #include <memory>
 #include "kreengraphicsitems.h"
 
@@ -35,6 +36,8 @@ enum ToolEnum
     // ...
     OperationCrop
 };
+
+KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 
 class ToolManager
 {
@@ -78,7 +81,6 @@ public:
     void setChosenTool(ToolEnum tool, QWidget* parent)
     {
         _chosenTool = tool;
-        setCursor(parent);
     }
 
     bool isImageOperationActive()
@@ -92,39 +94,10 @@ public:
     }
 
 private:
-    void setCursor(QWidget* w)
-    {
-        if (_chosenTool == Select) {
-            w->setCursor(Qt::ArrowCursor);
-        }
-        else if (_chosenTool == DrawRect) {
-            w->setCursor(Qt::CrossCursor);
-        }
-        else if (_chosenTool == DrawLine) {
-            w->setCursor(Qt::CrossCursor);
-        }
-        else if (_chosenTool == DrawEllipse) {
-            w->setCursor(Qt::CrossCursor);
-        }
-        else if (_chosenTool == DrawText) {
-            w->setCursor(Qt::CrossCursor);
-        }
-        else if (_chosenTool == OperationCrop) {
-            w->setCursor(Qt::CrossCursor);
-        }
-        else {
-            qDebug() << "_chosenTool" << _chosenTool;
-            Q_ASSERT(false);
-        }
-    }
-
-private:
     ToolEnum _chosenTool;
 
     bool _isImageOperationActive = false;
 };
-
-typedef std::shared_ptr<ToolManager> ToolManagerPtr;
 
 }
 }

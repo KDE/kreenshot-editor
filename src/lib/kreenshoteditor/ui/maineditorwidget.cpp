@@ -231,7 +231,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    d->graphicsView = std::make_shared<MyQGraphicsView>();
+    d->graphicsView = std::make_shared<MyQGraphicsView>(d->toolManager());
     layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
 
@@ -378,6 +378,7 @@ void MainEditorWidget::requestTool(QString toolId)
         updateSceneWithImageOperationItem(nullptr);
     }
 
+    d->graphicsView->setCursorFromChosenTool();
     emit toolChosen(toolId);
 }
 
@@ -400,6 +401,7 @@ void MainEditorWidget::imageOperationAcceptedDecoupled()
 
     updateSceneWithImageOperationItem(nullptr); // remove image operation item
     initScene(); // would causes crash in mouse event if not called in the decoupled method
+    requestTool("select"); // go to Select after an image operation
 }
 
 

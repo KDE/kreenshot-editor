@@ -49,6 +49,11 @@ Q_SIGNALS:
     void toolChosen(QString toolId);
 
 public Q_SLOTS:
+    /**
+     * possible toolIds:
+     * select, rect, ellipse, line, ...
+     * op-crop, ...
+     */
     void requestTool(QString toolId);
 
 protected Q_SLOTS:
