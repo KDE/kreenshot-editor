@@ -72,11 +72,22 @@ public:
      */
     QImage baseImage();
 
+    /**
+     * TODO: put to undostack
+     */
     void setBaseImage(QImage image);
 
+    /**
+     * TODO: put to undostack
+     */
     void addItem(ItemPtr item);
 
+    /**
+     * todo: remove later
+     */
     void addDemoItems();
+
+    void operationCrop(QRect rect);
 
     const std::vector<ItemPtr>& items();
 

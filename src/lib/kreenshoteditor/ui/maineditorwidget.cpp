@@ -32,6 +32,7 @@
 #include <QMargins>
 #include <QImageReader>
 #include <QImageWriter>
+#include <QTimer>
 #include <memory>
 #include <kreen/core/kreengraphicsitems.h>
 #include <kreen/core/myqgraphicsscene.h>
@@ -47,21 +48,32 @@ namespace ui {
 // bool mouseOver; // TODO later
 //};
 
+class ImageOperationHandling
+{
+public:
+    /**
+     * not nullptr if there is an image operation item (like crop) waiting for the user
+     */
+    QGraphicsItem* imageOperationGraphicsItem; // TODO: rename to imgOpGraphicsItem
+    ItemPtr imageOperationItem; // imgOpItem
+
+    bool imageOperationItemActive()
+    {
+        return imageOperationGraphicsItem != nullptr;
+    }
+};
+
 class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
     MyQGraphicsViewPtr graphicsView;
-
-    /**
-     * not nullptr if there is an image operation item (like crop) waiting for the user
-     */
-    QGraphicsItem* imageOperationItem;
+    ImageOperationHandling imgOpHandling;
 
 public:
     MainEditorWidgetImpl()
     {
-        imageOperationItem = nullptr;
+        imgOpHandling.imageOperationGraphicsItem = nullptr;
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -147,11 +159,6 @@ public:
                 grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
             }
         }
-    }
-
-    bool imageOperationItemActive()
-    {
-        return imageOperationItem != nullptr;
     }
 
     void createDemoScene()
@@ -290,11 +297,13 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
+    d->imgOpHandling.imageOperationItem = item;
     d->toolManager()->setImageOperationActive(item != nullptr);
 
-    if (d->imageOperationItem != nullptr) {
-        d->scene()->removeItem(d->imageOperationItem);
-        d->imageOperationItem = nullptr;
+    if (d->imgOpHandling.imageOperationGraphicsItem != nullptr) {
+        d->scene()->removeItem(d->imgOpHandling.imageOperationGraphicsItem);
+        d->imgOpHandling.imageOperationGraphicsItem = nullptr;
+        d->imgOpHandling.imageOperationItem = nullptr;
     }
 
     if (item != nullptr) {
@@ -305,7 +314,7 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 
         auto kgrItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         d->scene()->addItem(kgrItem);
-        d->imageOperationItem = kgrItem;
+        d->imgOpHandling.imageOperationGraphicsItem = kgrItem;
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
         grItemBase->setIsCreating(false);
         grItemBase->updateVisualGeometryFromModel();
@@ -380,11 +389,19 @@ void MainEditorWidget::updateItemsGeometryFromModel()
 
 void MainEditorWidget::imageOperationAccepted()
 {
-    qDebug() << "............TODO: MainEditorWidget::imageOperationAccepted()";
-//     auto baseImage = d->kreenshotEditor->baseImage();
-//     d->kreenshotEditor->setBaseImage(baseImage.copy(QRect(10, 10, 100, 100)));
-//     initScene(d->graphicsView); // causes crash
+    qDebug() << "MainEditorWidget::imageOperationAccepted(). Forward to imageOperationAcceptedDecoupled() because otherwise some mouse release event will crash because image operation object will be remove";
+    QTimer::singleShot(0, this, SLOT(imageOperationAcceptedDecoupled()));
 }
+
+void MainEditorWidget::imageOperationAcceptedDecoupled()
+{
+    qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
+    d->kreenshotEditor->documentFile()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
+
+    updateSceneWithImageOperationItem(nullptr); // remove image operation item
+    initScene(); // would causes crash in mouse event if not called in the decoupled method
+}
+
 
 void MainEditorWidget::imageOperationCanceled()
 {

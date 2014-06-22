@@ -158,6 +158,15 @@ void Document::addDemoItems()
     }
 }
 
+void Document::operationCrop(QRect rect)
+{
+    setBaseImage(baseImage().copy(rect));
+
+    foreach (auto item, items()) {
+        item->setRect(item->rect().translated(-rect.x(), -rect.y())); // TODO: this should also work for lines => add a "translate" method
+    }
+}
+
 const std::vector<ItemPtr>& Document::items()
 {
     return _items;

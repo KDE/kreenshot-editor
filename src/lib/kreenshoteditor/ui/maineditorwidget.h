@@ -55,6 +55,7 @@ protected Q_SLOTS:
     void updateItemsGeometryFromModel();
     void updateSceneWithImageOperationItem(ItemPtr item);
     void imageOperationAccepted();
+    void imageOperationAcceptedDecoupled();
     void imageOperationCanceled();
 
     /**
