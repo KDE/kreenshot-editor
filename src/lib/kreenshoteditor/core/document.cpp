@@ -188,7 +188,9 @@ QImage Document::renderToImage()
     Q_ASSERT_X(!image.isNull(), "renderToImage", "image must not be empty otherwise creation of the painter will fail");
     QPainter painterImage(&image);
     painterImage.setRenderHint(QPainter::Antialiasing);
+    d->scene->renderFinalImageOnly(true);
     d->scene->render(&painterImage);
+    d->scene->renderFinalImageOnly(false);
     return image;
 }
 

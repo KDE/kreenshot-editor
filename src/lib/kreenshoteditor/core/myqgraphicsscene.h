@@ -49,6 +49,23 @@ public:
         _creatingItem = nullptr;
     }
 
+    /**
+     * When image is saved to file things like crop operation tool or selection rects
+     * should not be drawn. This is done by hiding all other elements
+     */
+    void renderFinalImageOnly(bool finalOnly)
+    {
+        foreach (QGraphicsItem* grItem, items()) {
+
+            auto kreenGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            if (kreenGrItem && kreenGrItem->item()->typeId.startsWith("op-")) { // hide image operations like crop or rip out
+                grItem->setVisible(!finalOnly);
+            }
+
+            // TODO: also hide the selection rect
+        }
+    }
+
 Q_SIGNALS:
     void mouseReleased();
 
@@ -178,7 +195,6 @@ protected:
 
 private:
     ToolManagerPtr _toolManager;
-
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
 };
