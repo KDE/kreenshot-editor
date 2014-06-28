@@ -63,17 +63,35 @@ public:
     }
 };
 
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+class SelectionHandles
+{
+public:
+    SelectionHandles(MainEditorWidgetImpl* d_) {
+        d = d_;
+    }
+
+private:
+    MainEditorWidgetImpl* d;
+    std::map<QGraphicsItem*, std::vector<QGraphicsRectItem*>> currentHandles;
+
+public:
+void redrawSelectionHandles(bool createNewHandles);
+};
+
 class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
     MyQGraphicsViewPtr graphicsView;
     ImageOperationHandling imgOpHandling;
+    SelectionHandlesPtr selectionHandles;
 
 public:
     MainEditorWidgetImpl()
     {
         imgOpHandling.imageOperationGraphicsItem = nullptr;
+        selectionHandles = std::make_shared<SelectionHandles>(this);
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -161,6 +179,17 @@ public:
         }
     }
 
+    void updateDragModeFromChosenTool()
+    {
+        if (toolManager()->chosenTool() == ToolEnum::Select) {
+            graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
+            //graphicsView->setDragMode(QGraphicsView::ScrollHandDrag); // todo later: use this when press control?
+        }
+        else {
+            graphicsView->setDragMode(QGraphicsView::NoDrag);
+        }
+    }
+
     void createDemoScene()
     {
         QRect rect = getBaseRect();
@@ -209,6 +238,98 @@ public:
     }
 };
 
+void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
+{
+    if (createNewHandles) {
+        foreach (auto grItemPair, currentHandles) {
+            foreach (auto grItem, grItemPair.second) {
+                d->scene()->removeItem(grItem);
+            }
+        }
+
+        currentHandles.clear();
+    }
+
+    const int hw = 10; // handle width
+
+    foreach (auto graphicsItem, d->scene()->selectedItems()) {
+
+
+        // TODO ................. DO THIS AS SOON A HANDLE IS CLICKED
+        //graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+        // ......... and undo it after a handle operation is complete
+        
+
+        auto baseRect = graphicsItem->sceneBoundingRect();
+        int x = baseRect.x();
+        int y = baseRect.y();
+        int w = baseRect.width();
+        int h = baseRect.height();
+        int w2 = w / 2;
+        int h2 = h / 2;
+        int hw2 = hw / 2;
+        auto rect = QRect(0, 0, hw, hw);
+
+        //
+        // 1   2   3
+        // 4   5   6
+        // 7   8   9
+        //
+        auto r1 = rect.translated(x - hw2, y - hw2); // 1
+        auto r2 = rect.translated(x + w2 - hw2, y - hw2); // 2
+        auto r3 = rect.translated(x + w - hw2, y - hw2); // 3
+
+        auto r4 = rect.translated(x - hw2, y + h2 - hw2); // 4
+        auto r6 = rect.translated(x + w - hw2, y + h2 - hw2); // 6
+
+        auto r7 = rect.translated(x - hw2, y + h - hw2); // 7
+        auto r8 = rect.translated(x + w2 - hw2, y + h - hw2); // 8
+        auto r9 = rect.translated(x + w - hw2, y + h - hw2); // 9
+
+
+        if (createNewHandles) {
+            std::vector<QGraphicsRectItem*> handles;
+            handles.push_back(new QGraphicsRectItem(r1));
+            handles.push_back(new QGraphicsRectItem(r2));
+            handles.push_back(new QGraphicsRectItem(r3));
+
+            handles.push_back(new QGraphicsRectItem(r4));
+            handles.push_back(new QGraphicsRectItem(r6));
+
+            handles.push_back(new QGraphicsRectItem(r7));
+            handles.push_back(new QGraphicsRectItem(r8));
+            handles.push_back(new QGraphicsRectItem(r9));
+
+            currentHandles.insert(std::make_pair(graphicsItem, handles));
+        }
+        else {
+            std::vector<QGraphicsRectItem*> handles = currentHandles[graphicsItem];
+
+            int i = 0;
+            handles[i++]->setRect(r1);
+            handles[i++]->setRect(r2);
+            handles[i++]->setRect(r3);
+            handles[i++]->setRect(r4);
+            handles[i++]->setRect(r6);
+            handles[i++]->setRect(r7);
+            handles[i++]->setRect(r8);
+            handles[i++]->setRect(r9);
+        }
+    }
+
+    if (createNewHandles) {
+        foreach (auto grItemPair, currentHandles) {
+            foreach (auto grItem, grItemPair.second) {
+                grItem->setBrush(QBrush(Qt::black));
+                grItem->setPen(Qt::NoPen);
+                //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
+                grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+                d->scene()->addItem(grItem);
+            }
+        }
+    }
+}
+
 MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 {
     d = std::make_shared<MainEditorWidgetImpl>();
@@ -232,6 +353,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     auto layout = new QGridLayout();
     this->setLayout(layout);
     d->graphicsView = std::make_shared<MyQGraphicsView>(d->toolManager());
+    //d->graphicsView->setRubberBandSelectionMode(Qt::IntersectsItemShape); // default
     layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
 
@@ -244,6 +366,8 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
 
     connect(d->scene().get(), SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
+
+    connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(sceneSelectionChanged()));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -275,7 +399,7 @@ void MainEditorWidget::initScene() {
 /**
  * recreate the scene to reflect the current kreenshotEditor->documentFile()->document()
  */
-void MainEditorWidget::createSceneFromModel()
+void MainEditorWidget::createSceneFromModel(ItemPtr selectNewItem /*= nullptr*/)
 {
     d->scene()->clear();
 
@@ -286,8 +410,17 @@ void MainEditorWidget::createSceneFromModel()
 
     foreach (ItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
-        auto kgrItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
-        d->scene()->addItem(kgrItem);
+        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
+        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+
+        connect(grItemBase, SIGNAL(itemMoveSignal()), this, SLOT(redrawSelectionHandles()));
+
+        d->scene()->addItem(grItem);
+
+        if (selectNewItem == item) {
+            grItem->setSelected(true);
+            qDebug() << "isSelected: " << grItem->isSelected();
+        }
     }
 
     d->updateItemsGeometryFromModel();
@@ -312,10 +445,10 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
 //             //dimRect->setBrush();
 //             scene.addItem(dimRect);
 
-        auto kgrItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
-        d->scene()->addItem(kgrItem);
-        d->imgOpHandling.imageOperationGraphicsItem = kgrItem;
-        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(kgrItem);
+        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
+        d->scene()->addItem(grItem);
+        d->imgOpHandling.imageOperationGraphicsItem = grItem;
+        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
         grItemBase->setIsCreating(false);
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(imageOperationAccepted()));
@@ -379,6 +512,7 @@ void MainEditorWidget::requestTool(QString toolId)
     }
 
     d->graphicsView->setCursorFromChosenTool();
+    d->updateDragModeFromChosenTool();
     emit toolChosen(toolId);
 }
 
@@ -386,6 +520,7 @@ void MainEditorWidget::updateItemsGeometryFromModel()
 {
     qDebug() << "updateItemsGeometryFromModel";
     d->updateItemsGeometryFromModel();
+    d->selectionHandles->redrawSelectionHandles(true);
 }
 
 void MainEditorWidget::imageOperationAccepted()
@@ -415,11 +550,23 @@ void MainEditorWidget::handleNewItem(ItemPtr item)
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
         d->kreenshotEditor->documentFile()->document()->addItem(item);
-        createSceneFromModel();
+        createSceneFromModel(item);
     }
     else {
         updateSceneWithImageOperationItem(item);
     }
+}
+
+void MainEditorWidget::sceneSelectionChanged()
+{
+    qDebug() << "sceneSelectionChanged() " << d->scene()->selectedItems();
+    d->selectionHandles->redrawSelectionHandles(true);
+}
+
+void MainEditorWidget::redrawSelectionHandles()
+{
+    qDebug() << "SLOT redrawSelectionHandles";
+    d->selectionHandles->redrawSelectionHandles(false);
 }
 
 }

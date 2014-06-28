@@ -28,6 +28,7 @@
 #include <QDebug> // move to cpp file
 #include <QLineEdit>
 #include <QPushButton>
+#include <QPainter>
 #include <QHBoxLayout>
 #include <cmath>
 #include <algorithm>
@@ -51,6 +52,8 @@ Q_SIGNALS:
     void operationAccepted();
     void operationCanceled();
 
+    void itemMoveSignal();
+
 public:
     /**
      * scene: to get:
@@ -64,6 +67,7 @@ public:
         _scene = scene;
 
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
+        _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, true); // selectable by default
     }
 
     ItemPtr item()
@@ -187,12 +191,15 @@ protected:
     // TMP
     void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
     {
-        //qDebug() << "itemChangeImpl: " << change;
+        // qDebug() << "itemChangeImpl: " << change;
         if (change == QGraphicsItem::ItemPositionChange) {
-            //qDebug() << "itemChangeImpl: " << change;
+            // qDebug() << "itemChangeImpl: " << change;
             //QPoint origPos = _graphicsItem->pos().toPoint();
             //QPoint newPos = value.toPoint();
             //updateVisualGeometryFromModel();
+
+            qDebug() << "emit itemMoveSignal();";
+            emit itemMoveSignal();
         }
     }
 
@@ -272,6 +279,19 @@ public:
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0)
+    {
+        // QGraphicsRectItem::paint(painter, option, widget);
+        // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
+
+        Q_UNUSED(widget);
+        painter->setPen(pen());
+        painter->setBrush(brush());
+        painter->drawRect(rect());
+
+        // omit the selected rect because we draw it ourselves
+    }
 };
 
 class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemBase
@@ -330,6 +350,12 @@ public:
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
+    }
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0)
+    {
+        // TODO see Rect: reimpl this method to suppress selection marquee
+        QGraphicsEllipseItem::paint(painter, option, widget);
     }
 };
 
@@ -471,9 +497,9 @@ public:
 
         if (_interactionWidget == nullptr) { // TODO: rename this variable
             std::vector<QGraphicsRectItem*> dimRects;
-            // 1  2   4
-            // 1      4
-            // 1  3   4
+            // 1  2  4
+            // 1     4
+            // 1  3  4
             dimRects.push_back(new QGraphicsRectItem(-rect.x(), -rect.y(), rect.x(), sceneRect().height(), this)); // 1
             dimRects.push_back(new QGraphicsRectItem(0, -rect.y(), rect.width(), rect.y(), this)); // 2
             dimRects.push_back(new QGraphicsRectItem(0, rect.height(), rect.width(), sceneRect().height() - rect.height() - rect.y(), this)); // 3

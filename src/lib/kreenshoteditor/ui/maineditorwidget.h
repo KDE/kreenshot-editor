@@ -69,9 +69,16 @@ protected Q_SLOTS:
      */
     void handleNewItem(ItemPtr item);
 
+    void sceneSelectionChanged();
+    void redrawSelectionHandles();
+
 protected:
     void initScene();
-    void createSceneFromModel();
+
+    /**
+     * if selectNewItem is not nullptr, then it will be selected
+     */
+    void createSceneFromModel(ItemPtr selectNewItem = nullptr);
 
     void paintEvent(QPaintEvent*);
 
