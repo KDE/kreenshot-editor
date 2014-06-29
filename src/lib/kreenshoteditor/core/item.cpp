@@ -78,7 +78,7 @@ ItemPtr Item::create(QString typeId)
         item->_properties.push_back(std::make_shared<DropShadowProperty>());
         // TODO: fillColor, text
 
-        item->lineColor()->color = Qt::magenta; // TODO: or transparent for "no border rect"
+        item->lineColor()->color = Qt::black; // TODO: or transparent for "no border rect"
         item->lineStyle()->width = 2;
         item->lineStyle()->penStyle = Qt::SolidLine;
         // TODO: fillcolor solid

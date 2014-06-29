@@ -106,7 +106,7 @@ void Document::addDemoItems()
         auto item = Item::create("rect");
         item->setRect(QRect(30, 30, 40, 30));
         item->lineColor()->color = Qt::darkGreen;
-        item->lineStyle()->width = 3;
+        item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
         item->lineStyle()->penStyle = Qt::DotLine;
         _items.push_back(item);
     }
@@ -139,8 +139,18 @@ void Document::addDemoItems()
     {
         auto item = Item::create("text");
         item->setRect(QRect(10, 120, 200, 40));
+        item->lineColor()->color = Qt::gray;
         item->text = TextProperty::create();
         item->text->text = "Hello from the document";
+        _items.push_back(item);
+    }
+
+    {
+        auto item = Item::create("text");
+        item->setRect(QRect(10, 420, 150, 40));
+        item->lineColor()->color = Qt::magenta;
+        item->text = TextProperty::create();
+        item->text->text = "TODO: apply attributes; fill shape; multiline; edit text";
         _items.push_back(item);
     }
 

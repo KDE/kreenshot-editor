@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- black selection rects are blurred on some items, why?
 - op crop
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"
@@ -61,6 +60,7 @@ TODO
 
 LATER
 -----
+- item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
 - PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
     be an own widget and show also description

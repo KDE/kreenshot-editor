@@ -428,9 +428,10 @@ public:
         setFlag(QGraphicsItem::ItemClipsChildrenToShape); // do not draw text larger than the rect
 
         configureDropShadow(QPoint(2, 2), 5); // ok?
-        // configurePen(this); // TODO: configure font etc
+        configurePen(this);
+        // TODO: configure font etc
 
-        auto textGrItem = new QGraphicsTextItem("With drop shadow TODO: apply attributes; multiline; edit; don't display if outside rect", this);
+        auto textGrItem = new QGraphicsTextItem(_item->text->text, this); // create to parent
         textGrItem->setPos(5, 5);
 
         // later

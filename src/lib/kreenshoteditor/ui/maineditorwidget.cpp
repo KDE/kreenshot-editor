@@ -262,7 +262,7 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
         currentHandles.clear();
     }
 
-    const qreal hw = 10; // handle width
+    const qreal hw = 10.0; // handle width, TODO: even or uneven numbers: these or those items will have blurred rects
     qreal hw2 = hw / 2.0;
 
     //

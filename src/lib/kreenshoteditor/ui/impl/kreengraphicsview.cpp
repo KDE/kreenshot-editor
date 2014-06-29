@@ -25,7 +25,7 @@ namespace ui {
 KreenGraphicsView::KreenGraphicsView(kreen::core::ToolManagerPtr toolmanager)
 {
     _toolManager = toolmanager;
-    setRenderHint(QPainter::Antialiasing);
+    setRenderHints(QPainter::Antialiasing/* | QPainter::SmoothPixmapTransform*/);
 }
 
 void KreenGraphicsView::setCursorFromChosenTool()
