@@ -262,8 +262,7 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
         currentHandles.clear();
     }
 
-    const qreal hw = 10.0; // handle width, TODO: even or uneven numbers: these or those items will have blurred rects
-    qreal hw2 = hw / 2.0;
+    const qreal handleWidth = 10.0;
 
     //
     // 1   2   3
@@ -282,13 +281,27 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
     cursors.push_back(Qt::SizeVerCursor); // 8
     cursors.push_back(Qt::SizeFDiagCursor); // 9
 
-    foreach (auto graphicsItem, d->scene()->selectedItems()) {
+    foreach (auto grItem, d->scene()->selectedItems()) {
 
         // TODO ................. DO THIS AS SOON A HANDLE IS CLICKED
         //graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, false);
         // ......... and undo it after a handle operation is complete
 
-        auto baseRect = graphicsItem->sceneBoundingRect();
+        qreal hw = handleWidth;
+
+        // WORKAROUND:
+        // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
+        //                     the underlying item is also blurred
+        //                     WTF-->the black selection rects get also blurred
+        auto kGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        if (kGrItem->workaroundIsBlurredOnUnevenHandleWidth()) {
+            qDebug() << "INFO: workaround used";
+            hw--;
+        }
+
+        qreal hw2 = hw / 2.0;
+
+        auto baseRect = grItem->sceneBoundingRect();
         qreal x = baseRect.x();
         qreal y = baseRect.y();
         qreal w = baseRect.width();
@@ -327,10 +340,10 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
             handles.push_back(newRectItemWithCursor(r8, cursors[8]));
             handles.push_back(newRectItemWithCursor(r9, cursors[9]));
 
-            currentHandles.insert(std::make_pair(graphicsItem, handles));
+            currentHandles.insert(std::make_pair(grItem, handles));
         }
         else {
-            std::vector<QGraphicsRectItem*> handles = currentHandles[graphicsItem];
+            std::vector<QGraphicsRectItem*> handles = currentHandles[grItem];
 
             int i = 0;
             handles[i++]->setRect(r1);

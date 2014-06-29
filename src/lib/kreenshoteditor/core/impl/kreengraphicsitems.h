@@ -81,6 +81,18 @@ public:
         _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
     }
 
+    /**
+     * WORKAROUND:
+     */
+    bool workaroundIsBlurredOnUnevenHandleWidth()
+    {
+        if (_item->lineStyle()->width % 2 == 1) { // uneven
+            return true; // special handling for uneven line widths needed
+            // there are probably more cases
+        }
+        return false;
+    }
+
     virtual void updateModelFromVisualGeometry() = 0;
 
     virtual void updateVisualGeometryFromModel() = 0;

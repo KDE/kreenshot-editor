@@ -81,7 +81,6 @@ public:
      */
     QLine line();
 
-
 public:
     /**
      * Creates a new Item with default values for all properties available for this item.
