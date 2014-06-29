@@ -403,7 +403,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     // to check if everything is ok (e. g. with multiselection moves)
     connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
 
-    connect(d->scene().get(), SIGNAL(itemCreated(ItemPtr)), this, SLOT(handleNewItem(ItemPtr)));
+    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(handleNewItem(KreenItemPtr)));
 
     connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(sceneSelectionChanged()));
 }
