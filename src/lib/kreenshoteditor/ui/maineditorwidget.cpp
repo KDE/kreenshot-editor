@@ -85,6 +85,7 @@ public:
     KreenshotEditorPtr kreenshotEditor;
     ToolManagerPtr toolManager_;
     KreenGraphicsViewPtr graphicsView;
+    QGraphicsPixmapItem* baseImageSceneItem;
     ImageOperationHandling imgOpHandling;
     SelectionHandlesPtr selectionHandles;
 
@@ -246,6 +247,7 @@ QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
     grItem->setPen(Qt::NoPen);
     //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
     grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+    qDebug() << "newRectItemWithCursor, setCursor";
     grItem->setCursor(cursor);
     return grItem;
 }
@@ -443,8 +445,9 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
 
     QPixmap pixmap;
     pixmap.convertFromImage(d->kreenshotEditor->documentFile()->document()->baseImage());
-    auto baseImageItem = new QGraphicsPixmapItem(pixmap);
-    d->scene()->addItem(baseImageItem);
+    d->baseImageSceneItem = new QGraphicsPixmapItem(pixmap);
+    d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
+    d->scene()->addItem(d->baseImageSceneItem);
 
     foreach (KreenItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
@@ -498,6 +501,44 @@ void MainEditorWidget::paintEvent(QPaintEvent*)
 {
     // QPainter painter(this);
 }
+
+// void setCursorFromChosenTool(ToolManagerPtr toolManager, QGraphicsItem* imageItem)
+// {
+//     // workaround (not really) for https://bugreports.qt-project.org/browse/QTBUG-4190
+//     //QWidget* w = imageItem;
+//     QCursor curCursor = imageItem->cursor();
+//     Qt::CursorShape newCursorShape;
+//     auto tool = toolManager->chosenTool();
+//
+//     if (tool == Select) {
+//         newCursorShape = Qt::ArrowCursor;
+//     }
+//     else if (tool == DrawRect) {
+//         newCursorShape = Qt::CrossCursor;
+//     }
+//     else if (tool == DrawLine) {
+//         newCursorShape = Qt::CrossCursor;
+//     }
+//     else if (tool == DrawEllipse) {
+//         newCursorShape = Qt::CrossCursor;
+//     }
+//     else if (tool == DrawText) {
+//         newCursorShape = Qt::CrossCursor;
+//     }
+//     else if (tool == OperationCrop) {
+//         newCursorShape = Qt::CrossCursor;
+//     }
+//     else {
+//         qDebug() << "_chosenTool" << tool;
+//         Q_ASSERT(false);
+//     }
+//
+//     if (curCursor.shape() != newCursorShape) {
+//         auto tool = toolManager->chosenTool();
+//         qDebug() << QTime::currentTime() << " baseImage setCursor for " << tool << "cursor=" << newCursorShape;
+//         imageItem->setCursor(newCursorShape);
+//     }
+// }
 
 void MainEditorWidget::requestTool(QString toolId)
 {

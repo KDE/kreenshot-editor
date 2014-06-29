@@ -22,14 +22,29 @@
 namespace kreen {
 namespace ui {
 
-KreenGraphicsView::KreenGraphicsView(kreen::core::ToolManagerPtr toolmanager)
+KreenGraphicsView::KreenGraphicsView(ToolManagerPtr toolmanager)
 {
     _toolManager = toolmanager;
+
     setRenderHints(QPainter::Antialiasing/* | QPainter::SmoothPixmapTransform*/);
 }
 
-void KreenGraphicsView::setCursorFromChosenTool()
+void KreenGraphicsView::setHelperBaseImageItem(QGraphicsItem* helperBaseImageItem)
 {
+    _helperBaseImageItem = helperBaseImageItem;
+}
+
+
+void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos)
+{
+    Q_ASSERT(_helperBaseImageItem != nullptr); // TODO: also verify if _helperBaseImageItem exists in scene
+
+    if (pos != nullptr) { // if pos is given
+        auto item = itemAt(*pos);
+        if (item != _helperBaseImageItem) // if mouse over any item or no item except the background...
+            return; // ... do not try to set the cursor
+    }
+
     // workaround (not really) for https://bugreports.qt-project.org/browse/QTBUG-4190
     QWidget* w = viewport();
     QCursor curCursor = w->cursor();
@@ -83,7 +98,8 @@ void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)
     //  here to have it reset to Arrow after Crop is finished and Select is
     //  chosen again.
     // So probably cause for illbehaved cursor is the QGraphicsProxyWidget.
-    setCursorFromChosenTool();
+    QPoint pos = event->pos();
+    setCursorFromChosenTool(&pos);
 
     QGraphicsView::mouseMoveEvent(event);
 }

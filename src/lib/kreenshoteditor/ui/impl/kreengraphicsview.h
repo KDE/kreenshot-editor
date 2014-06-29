@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QTime>
 #include <QGraphicsView>
+#include <QPoint>
 #include <memory>
 
 namespace kreen {
@@ -41,7 +42,12 @@ class KreenGraphicsView : public QGraphicsView
 public:
     KreenGraphicsView(kreen::core::ToolManagerPtr toolmanager);
 
-    void setCursorFromChosenTool();
+    /**
+     * impl detail for cursor handling
+     */
+    void setHelperBaseImageItem(QGraphicsItem* helperBaseImageItem);
+
+    void setCursorFromChosenTool(QPoint* pos = nullptr);
 
 protected:
     virtual void enterEvent(QEvent* event);
@@ -50,6 +56,7 @@ protected:
 
 private:
     kreen::core::ToolManagerPtr _toolManager;
+    QGraphicsItem* _helperBaseImageItem;
 };
 
 }
