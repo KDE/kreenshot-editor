@@ -286,11 +286,17 @@ public:
         // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
 
         Q_UNUSED(widget);
+        //painter->save();
         painter->setPen(pen());
         painter->setBrush(brush());
         painter->drawRect(rect());
+        //painter->restore();
 
         // omit the selected rect because we draw it ourselves
+
+        // TODO: idea: round rect
+        //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+        //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
     }
 };
 

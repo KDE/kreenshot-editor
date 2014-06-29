@@ -239,6 +239,17 @@ public:
     }
 };
 
+QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
+{
+    auto grItem = new QGraphicsRectItem(rect);
+    grItem->setBrush(QBrush(Qt::black));
+    grItem->setPen(Qt::NoPen);
+    //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
+    grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+    grItem->setCursor(cursor);
+    return grItem;
+}
+
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {
     if (createNewHandles) {
@@ -253,6 +264,23 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 
     const qreal hw = 10; // handle width
     qreal hw2 = hw / 2.0;
+
+    //
+    // 1   2   3
+    // 4   5   6
+    // 7   8   9
+    //
+    std::vector<QCursor> cursors;
+    cursors.push_back(Qt::ArrowCursor); // not used
+    cursors.push_back(Qt::SizeFDiagCursor); // 1
+    cursors.push_back(Qt::SizeVerCursor); // 2
+    cursors.push_back(Qt::SizeBDiagCursor); // 3
+    cursors.push_back(Qt::SizeHorCursor); // 4
+    cursors.push_back(Qt::OpenHandCursor); // 5
+    cursors.push_back(Qt::SizeHorCursor); // 6
+    cursors.push_back(Qt::SizeBDiagCursor); // 7
+    cursors.push_back(Qt::SizeVerCursor); // 8
+    cursors.push_back(Qt::SizeFDiagCursor); // 9
 
     foreach (auto graphicsItem, d->scene()->selectedItems()) {
 
@@ -288,16 +316,16 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 
         if (createNewHandles) {
             std::vector<QGraphicsRectItem*> handles;
-            handles.push_back(new QGraphicsRectItem(r1));
-            handles.push_back(new QGraphicsRectItem(r2));
-            handles.push_back(new QGraphicsRectItem(r3));
+            handles.push_back(newRectItemWithCursor(r1, cursors[1]));
+            handles.push_back(newRectItemWithCursor(r2, cursors[2]));
+            handles.push_back(newRectItemWithCursor(r3, cursors[3]));
 
-            handles.push_back(new QGraphicsRectItem(r4));
-            handles.push_back(new QGraphicsRectItem(r6));
+            handles.push_back(newRectItemWithCursor(r4, cursors[4]));
+            handles.push_back(newRectItemWithCursor(r6, cursors[6]));
 
-            handles.push_back(new QGraphicsRectItem(r7));
-            handles.push_back(new QGraphicsRectItem(r8));
-            handles.push_back(new QGraphicsRectItem(r9));
+            handles.push_back(newRectItemWithCursor(r7, cursors[7]));
+            handles.push_back(newRectItemWithCursor(r8, cursors[8]));
+            handles.push_back(newRectItemWithCursor(r9, cursors[9]));
 
             currentHandles.insert(std::make_pair(graphicsItem, handles));
         }
@@ -319,10 +347,6 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
     if (createNewHandles) {
         foreach (auto grItemPair, currentHandles) {
             foreach (auto grItem, grItemPair.second) {
-                grItem->setBrush(QBrush(Qt::black));
-                grItem->setPen(Qt::NoPen);
-                //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
-                grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
                 d->scene()->addItem(grItem);
             }
         }
@@ -457,23 +481,9 @@ void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
     }
 }
 
-// todo: remove
 void MainEditorWidget::paintEvent(QPaintEvent*)
 {
-    QPainter painter(this);
-
-    // QPainter painterImage(QImage); // TODO: use this to render to image and then to save to file
-
-//     auto baseImage = d->kreenshotEditor->baseImage();
-//     painter.drawImage(QPoint(0, 0), baseImage);
-
-    //painter.drawRect(205, 205, 30, 30);
-
-    //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin)); // TODO: set antialias
-    //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
-
-    //d->scene.render(&painter);
-    //d->graphicsView.render(&painter); // does not work like this
+    // QPainter painter(this);
 }
 
 void MainEditorWidget::requestTool(QString toolId)

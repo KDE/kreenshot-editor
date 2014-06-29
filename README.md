@@ -34,6 +34,7 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- black selection rects are blurred on some items, why?
 - op crop
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"
