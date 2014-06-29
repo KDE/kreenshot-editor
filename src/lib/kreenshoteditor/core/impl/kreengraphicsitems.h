@@ -67,7 +67,7 @@ public:
         _scene = scene;
 
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
-        _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, true); // selectable by default
+        setMovable(true); // selectable and moveable by default
     }
 
     KreenItemPtr item()
@@ -75,9 +75,16 @@ public:
         return _item;
     }
 
+    /**
+     * selectable and moveable
+     */
     void setMovable(bool isMovable)
     {
+        qDebug() << "KreenQGraphicsItemBase::setMovable: " << isMovable;
+        //bool isSelectable = _graphicsItem->flags() | QGraphicsItem::ItemIsSelectable;
+        //if (isSelectable != isMovable) {
         _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
+        //}
         _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
     }
 

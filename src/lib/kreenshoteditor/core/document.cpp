@@ -92,6 +92,14 @@ void Document::addItem(KreenItemPtr item)
     _items.push_back(item);
 }
 
+void Document::removeItems(const QList<KreenItemPtr> items)
+{
+    foreach (auto item, items) {
+        d->transientContentId++;
+        _items.removeAll(item);
+    }
+}
+
 void Document::addDemoItems()
 {
     //TODO
@@ -176,7 +184,7 @@ void Document::operationCrop(QRect rect)
     }
 }
 
-const std::vector<KreenItemPtr>& Document::items()
+const QList<KreenItemPtr> Document::items()
 {
     return _items;
 }

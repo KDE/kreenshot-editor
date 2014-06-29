@@ -46,6 +46,12 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
+    /**
+     * TODO: move the action creation for Delete etc. to KreenshotEditor
+     * TODO: add signal or something to enable or disable the deleted action if no items are selected
+     */
+    void deleteSelectedItems();
+
 Q_SIGNALS:
     void toolChosen(QString toolId);
 

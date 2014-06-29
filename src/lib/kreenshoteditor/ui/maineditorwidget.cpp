@@ -450,6 +450,8 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
     d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
     d->scene()->addItem(d->baseImageSceneItem);
 
+    QGraphicsItem* selectNewItemGrItem = nullptr;
+
     foreach (KreenItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
@@ -460,12 +462,19 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
         d->scene()->addItem(grItem);
 
         if (selectNewItem == item) {
-            grItem->setSelected(true);
-            qDebug() << "isSelected: " << grItem->isSelected();
+            selectNewItemGrItem = grItem;
         }
     }
 
     d->updateItemsGeometryFromModel();
+    d->updateItemsBehaviourFromChosenTool();
+
+    // make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override
+    if (selectNewItemGrItem != nullptr) {
+        selectNewItemGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        selectNewItemGrItem->setSelected(true);
+        qDebug() << "isSelected: " << selectNewItemGrItem->isSelected();
+    }
 }
 
 void MainEditorWidget::updateSceneWithImageOperationItem(KreenItemPtr item)
@@ -638,6 +647,20 @@ void MainEditorWidget::redrawSelectionHandles()
 {
     //qDebug() << "SLOT redrawSelectionHandles";
     d->selectionHandles->redrawSelectionHandles(false);
+}
+
+void MainEditorWidget::deleteSelectedItems()
+{
+    QList<KreenItemPtr> toBeErased;
+    foreach (auto grItem, d->scene()->selectedItems()) {
+
+        auto kGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        toBeErased.append(kGrItem->item());
+    }
+
+    d->kreenshotEditor->documentFile()->document()->removeItems(toBeErased);
+
+    createSceneFromModel();
 }
 
 }

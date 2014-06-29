@@ -83,13 +83,18 @@ public:
     void addItem(KreenItemPtr item);
 
     /**
+     * TODO: put to undostack
+     */
+    void removeItems(const QList<KreenItemPtr> items);
+
+    /**
      * todo: remove later
      */
     void addDemoItems();
 
     void operationCrop(QRect rect);
 
-    const std::vector<KreenItemPtr>& items();
+    const QList<KreenItemPtr> items();
 
     /**
      * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
@@ -102,7 +107,7 @@ public:
     QImage renderToImage();
 
 private:
-    std::vector<KreenItemPtr> _items;
+    QList<KreenItemPtr> _items;
 
 private:
     DocumentImplPtr d;

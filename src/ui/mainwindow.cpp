@@ -283,7 +283,7 @@ void MainWindow::editRedo()
 
 void MainWindow::selectedItemsDelete()
 {
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
+    d->kreenshotEditor->mainEditorWidget()->deleteSelectedItems();
 }
 
 void MainWindow::editUndo()
