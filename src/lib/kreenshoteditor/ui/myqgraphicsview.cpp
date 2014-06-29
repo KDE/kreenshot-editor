@@ -17,3 +17,77 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "myqgraphicsview.h"
+#include "../core/toolmanager.h"
+
+namespace kreen {
+namespace ui {
+
+MyQGraphicsView::MyQGraphicsView(kreen::core::ToolManagerPtr toolmanager)
+{
+    _toolManager = toolmanager;
+    setRenderHint(QPainter::Antialiasing);
+}
+
+void MyQGraphicsView::setCursorFromChosenTool()
+{
+    // workaround (not really) for https://bugreports.qt-project.org/browse/QTBUG-4190
+    QWidget* w = viewport();
+    QCursor curCursor = w->cursor();
+    Qt::CursorShape newCursorShape;
+    auto tool = _toolManager->chosenTool();
+
+    if (tool == Select) {
+        newCursorShape = Qt::ArrowCursor;
+    }
+    else if (tool == DrawRect) {
+        newCursorShape = Qt::CrossCursor;
+    }
+    else if (tool == DrawLine) {
+        newCursorShape = Qt::CrossCursor;
+    }
+    else if (tool == DrawEllipse) {
+        newCursorShape = Qt::CrossCursor;
+    }
+    else if (tool == DrawText) {
+        newCursorShape = Qt::CrossCursor;
+    }
+    else if (tool == OperationCrop) {
+        newCursorShape = Qt::CrossCursor;
+    }
+    else {
+        qDebug() << "_chosenTool" << tool;
+        Q_ASSERT(false);
+    }
+
+    if (curCursor.shape() != newCursorShape) {
+        auto tool = _toolManager->chosenTool();
+        qDebug() << QTime::currentTime() << " setCursor for " << tool;
+        w->setCursor(newCursorShape);
+    }
+}
+
+void MyQGraphicsView::enterEvent(QEvent* event)
+{
+    // for not to have to click once before one can start moving items
+    this->setFocus();
+}
+
+void MyQGraphicsView::mouseMoveEvent(QMouseEvent* event)
+{
+    // makes sure that the cursor is always right
+    // NOTE: when an image operation (like crop) is active and
+    //  there is a WidgetProxy active the mouse movement on the proxy widget
+    //  is caught and the cursor is tried to be change, it does NOT change
+    //  which is ok (but there is massive console output from the qDebug()).
+    //  But it might be the cause why we need to set the cursor
+    //  here to have it reset to Arrow after Crop is finished and Select is
+    //  chosen again.
+    // So probably cause for illbehaved cursor is the QGraphicsProxyWidget.
+    setCursorFromChosenTool();
+
+    QGraphicsView::mouseMoveEvent(event);
+}
+
+}
+}
+

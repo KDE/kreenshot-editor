@@ -19,6 +19,7 @@
 #ifndef UI_TOOLMANAGER_H
 #define UI_TOOLMANAGER_H
 
+#include <kreen/util/exportutil.h>
 #include <util/sharedptrutil.h>
 #include <memory>
 #include "kreengraphicsitems.h"

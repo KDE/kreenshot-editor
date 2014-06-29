@@ -24,7 +24,7 @@
 namespace kreen {
 namespace core {
 
-// "class" (TODO: need that to be found by prepare-include-files.sh / replace later with some export statement)
+// KREEN_DECL_EXPORT, needed by prepare-include-files.sh
 
 /**
  * Empty string means success, everything else: cause of the error

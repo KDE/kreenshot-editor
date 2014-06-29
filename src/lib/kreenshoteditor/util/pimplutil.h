@@ -21,13 +21,12 @@
 
 #include "sharedptrutil.h"
 
-// "class" (TODO: need that to be found by prepare-include-files.sh / replace later with some export statement)
+// KREEN_DECL_EXPORT, needed by prepare-include-files.sh
 
 /**
  * Utility to faciliate the usage of the Pimpl idiom
  * 
- * Needs #include <memory>
- * Actions to be done:
+ * Usage after using the forward decl:
  * - Use OrigClassName##ImplPtr to define a private d pointer in the h file
  * - Define a class OrigClassName##Impl in the cpp file
  */

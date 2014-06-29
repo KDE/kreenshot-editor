@@ -20,6 +20,7 @@
 #include <QImage>
 #include <QPainter>
 #include "myqgraphicsscene.h"
+#include "toolmanager.h"
 
 namespace kreen {
 namespace core {
@@ -29,15 +30,13 @@ class DocumentImpl
 public:
     DocumentImpl()
     {
-        toolManager = std::make_shared<ToolManager>();
-        scene = std::make_shared<MyQGraphicsScene>(toolManager);
+        scene = std::make_shared<MyQGraphicsScene>();
     }
 
 public:
     QImage baseImage;
 
     MyQGraphicsScenePtr scene;
-    ToolManagerPtr toolManager;
 
     int transientContentId = 0;
 };
@@ -175,11 +174,6 @@ const std::vector<ItemPtr>& Document::items()
 MyQGraphicsScenePtr Document::graphicsScene()
 {
     return d->scene;
-}
-
-ToolManagerPtr Document::toolManager()
-{
-    return d->toolManager;
 }
 
 QImage Document::renderToImage()

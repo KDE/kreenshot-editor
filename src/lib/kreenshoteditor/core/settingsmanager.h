@@ -19,6 +19,7 @@
 #ifndef CORE_SETTINGSMANAGER_H
 #define CORE_SETTINGSMANAGER_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <vector>
 #include <memory>
@@ -32,7 +33,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(SettingsManager)
 
 /**
  */
-class SettingsManager
+class KREEN_DECL_EXPORT SettingsManager
 {
 public:
     /**

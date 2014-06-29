@@ -19,8 +19,9 @@
 #ifndef CORE_DOCUMENT_H
 #define CORE_DOCUMENT_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
-#include "item.h"
+#include <kreen/core/item.h>
 
 #include <vector>
 #include <memory>
@@ -33,14 +34,13 @@ KREEN_PIMPL_FORWARD_DECL(Document)
 
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(MyQGraphicsScene)
-KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 
 /**
  * The "document"
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
  * Manages Z-Order.
  */
-class Document
+class KREEN_DECL_EXPORT Document
 {
 public:
     /**
@@ -95,11 +95,6 @@ public:
      * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
      */
     MyQGraphicsScenePtr graphicsScene();
-
-    /**
-     * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
-     */
-    ToolManagerPtr toolManager();
 
     /**
      * renders the document to a QImage

@@ -198,7 +198,7 @@ protected:
             //QPoint newPos = value.toPoint();
             //updateVisualGeometryFromModel();
 
-            qDebug() << "emit itemPositionHasChangedSignal();";
+            //qDebug() << "emit itemPositionHasChangedSignal();";
             emit itemPositionHasChangedSignal();
         }
     }

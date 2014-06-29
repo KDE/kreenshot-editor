@@ -19,6 +19,7 @@
 #ifndef CORE_OUTPUTFILENAMEMANAGER_H
 #define CORE_OUTPUTFILENAMEMANAGER_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <memory>
 #include <QString>
@@ -50,7 +51,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
  *
  * NOTE: Filename can be with out without path
  */
-class OutputFilenameGenerator
+class KREEN_DECL_EXPORT OutputFilenameGenerator
 {
 public:
     /**

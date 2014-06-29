@@ -32,7 +32,7 @@ for i in 0 1 2 3 ; do
     rm --verbose $TARGET_DIR/*
 
     echo "[prepare-include-files.sh] fill (flatten subdirs)" # TODO: is flatten that what we want???
-    FILES=$(grep -R -l --include=*.h class $HEADER_SRC) # TODO: replace search keyword "class" with KREEN_EXPORT
+    FILES=$(grep -R -l --include=*.h KREEN_DECL_EXPORT $HEADER_SRC) # find files that contain KREEN_DECL_EXPORT
     for f in $FILES ; do
         # we need absolute path for ln
         FROM=`pwd`/$f

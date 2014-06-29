@@ -34,9 +34,9 @@
 #include <QImageWriter>
 #include <QTimer>
 #include <memory>
-#include <kreen/core/kreengraphicsitems.h>
+#include "../core/kreengraphicsitems.h"
 #include <kreen/core/myqgraphicsscene.h>
-#include <kreen/core/toolmanager.h>
+#include "../core/toolmanager.h"
 #include "myqgraphicsview.h"
 
 namespace kreen {
@@ -83,6 +83,7 @@ class MainEditorWidgetImpl
 {
 public:
     KreenshotEditorPtr kreenshotEditor;
+    ToolManagerPtr toolManager_;
     MyQGraphicsViewPtr graphicsView;
     ImageOperationHandling imgOpHandling;
     SelectionHandlesPtr selectionHandles;
@@ -113,7 +114,7 @@ public:
 
     ToolManagerPtr toolManager()
     {
-        return kreenshotEditor->documentFile()->document()->toolManager();
+        return toolManager_;
     }
 
     // todo: remove later
@@ -332,6 +333,8 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 {
     d = std::make_shared<MainEditorWidgetImpl>();
     d->kreenshotEditor = kreenshotEditor;
+    d->toolManager_ = std::make_shared<ToolManager>();
+    d->kreenshotEditor->documentFile()->document()->graphicsScene()->setToolManager(d->toolManager());
 
     bool oldScrollAreaCode = false;
 
@@ -563,7 +566,7 @@ void MainEditorWidget::sceneSelectionChanged()
 
 void MainEditorWidget::redrawSelectionHandles()
 {
-    qDebug() << "SLOT redrawSelectionHandles";
+    //qDebug() << "SLOT redrawSelectionHandles";
     d->selectionHandles->redrawSelectionHandles(false);
 }
 

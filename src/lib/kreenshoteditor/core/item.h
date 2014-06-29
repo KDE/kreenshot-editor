@@ -19,6 +19,7 @@
 #ifndef CORE_ITEM_H
 #define CORE_ITEM_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <QString>
 #include <QRect>
@@ -45,7 +46,7 @@ class ImageProperty;
 /**
  * One item with it's type, position, size etc.
  */
-class Item
+class KREEN_DECL_EXPORT Item
 {
 public:
     Item();

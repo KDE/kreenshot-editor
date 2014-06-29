@@ -19,6 +19,7 @@
 #ifndef KREENSHOTEDITOR_H
 #define KREENSHOTEDITOR_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <QObject>
 #include <memory>
@@ -48,7 +49,7 @@ using namespace ui;
 /**
  *
  */
-class KreenshotEditor : public QObject, public std::enable_shared_from_this<KreenshotEditor>
+class KREEN_DECL_EXPORT KreenshotEditor : public QObject, public std::enable_shared_from_this<KreenshotEditor>
 // http://stackoverflow.com/questions/11711034/stdshared-ptr-of-this
 {
     Q_OBJECT

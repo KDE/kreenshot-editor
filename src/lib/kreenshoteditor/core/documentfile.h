@@ -19,6 +19,7 @@
 #ifndef CORE_DOCUMENTFILE_H
 #define CORE_DOCUMENTFILE_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include "document.h"
 #include <kreen/core/errorstatus.h>
@@ -36,7 +37,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(SettingsManager)
 /**
  * Connects a Document instance with a file on disk
  */
-class DocumentFile : public QObject
+class KREEN_DECL_EXPORT DocumentFile : public QObject
 {
     Q_OBJECT
 

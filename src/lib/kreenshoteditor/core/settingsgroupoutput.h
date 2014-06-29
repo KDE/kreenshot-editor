@@ -19,6 +19,7 @@
 #ifndef CORE_SETTINGSGROUPOUTPUT_H
 #define CORE_SETTINGSGROUPOUTPUT_H
 
+#include <kreen/util/exportutil.h>
 #include <vector>
 #include <memory>
 #include <QString>
@@ -28,7 +29,7 @@ namespace core {
 
 /**
  */
-class SettingsGroupOutput
+class KREEN_DECL_EXPORT SettingsGroupOutput
 {
 public:
     SettingsGroupOutput() { }

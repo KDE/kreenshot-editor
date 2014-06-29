@@ -19,6 +19,7 @@
 #ifndef UI_MAIN_EDITOR_WIDGET_H
 #define UI_MAIN_EDITOR_WIDGET_H
 
+#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <QWidget>
 #include <memory>
@@ -37,7 +38,7 @@ class MyQGraphicsView;
 
 KREEN_PIMPL_FORWARD_DECL(MainEditorWidget)
 
-class MainEditorWidget : public QWidget
+class KREEN_DECL_EXPORT MainEditorWidget : public QWidget
 {
     Q_OBJECT
 
