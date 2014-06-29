@@ -52,7 +52,7 @@ Q_SIGNALS:
     void operationAccepted();
     void operationCanceled();
 
-    void itemMoveSignal();
+    void itemPositionHasChangedSignal();
 
 public:
     /**
@@ -192,14 +192,14 @@ protected:
     void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
     {
         // qDebug() << "itemChangeImpl: " << change;
-        if (change == QGraphicsItem::ItemPositionChange) {
+        if (change == QGraphicsItem::ItemPositionHasChanged) {
             // qDebug() << "itemChangeImpl: " << change;
             //QPoint origPos = _graphicsItem->pos().toPoint();
             //QPoint newPos = value.toPoint();
             //updateVisualGeometryFromModel();
 
-            qDebug() << "emit itemMoveSignal();";
-            emit itemMoveSignal();
+            qDebug() << "emit itemPositionHasChangedSignal();";
+            emit itemPositionHasChangedSignal();
         }
     }
 

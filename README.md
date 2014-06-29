@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- move an item with selection handles => "pixel hopping". Reason maybe because the model is based on whole pixels insted of fractions
 - op crop
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"

@@ -250,25 +250,23 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
         currentHandles.clear();
     }
 
-    const int hw = 10; // handle width
+    const qreal hw = 10; // handle width
+    qreal hw2 = hw / 2.0;
 
     foreach (auto graphicsItem, d->scene()->selectedItems()) {
-
 
         // TODO ................. DO THIS AS SOON A HANDLE IS CLICKED
         //graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, false);
         // ......... and undo it after a handle operation is complete
-        
 
         auto baseRect = graphicsItem->sceneBoundingRect();
-        int x = baseRect.x();
-        int y = baseRect.y();
-        int w = baseRect.width();
-        int h = baseRect.height();
-        int w2 = w / 2;
-        int h2 = h / 2;
-        int hw2 = hw / 2;
-        auto rect = QRect(0, 0, hw, hw);
+        qreal x = baseRect.x();
+        qreal y = baseRect.y();
+        qreal w = baseRect.width();
+        qreal h = baseRect.height();
+        qreal w2 = floor(w / 2.0);
+        qreal h2 = floor(h / 2.0);
+        auto rect = QRectF(0, 0, hw, hw);
 
         //
         // 1   2   3
@@ -413,7 +411,7 @@ void MainEditorWidget::createSceneFromModel(ItemPtr selectNewItem /*= nullptr*/)
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
 
-        connect(grItemBase, SIGNAL(itemMoveSignal()), this, SLOT(redrawSelectionHandles()));
+        connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), this, SLOT(redrawSelectionHandles()));
 
         d->scene()->addItem(grItem);
 
