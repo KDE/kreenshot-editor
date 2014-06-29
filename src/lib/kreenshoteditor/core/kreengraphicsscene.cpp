@@ -16,24 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "myqgraphicsscene.h"
+#include "kreengraphicsscene.h"
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 
 namespace kreen {
 namespace core {
 
-MyQGraphicsScene::MyQGraphicsScene()
+KreenGraphicsScene::KreenGraphicsScene()
 {
     _creatingItem = nullptr;
 }
 
-void MyQGraphicsScene::setToolManager(ToolManagerPtr toolManager)
+void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
 {
     _toolManager = toolManager;
 }
 
-void MyQGraphicsScene::renderFinalImageOnly(bool finalOnly)
+void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
 {
     foreach (QGraphicsItem* grItem, items()) {
 
@@ -46,7 +46,7 @@ void MyQGraphicsScene::renderFinalImageOnly(bool finalOnly)
     }
 }
 
-void MyQGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     qDebug() << "MyQGraphicsScene::mousePressEvent";
     Q_ASSERT(_toolManager != nullptr);
@@ -94,7 +94,7 @@ void MyQGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mousePressEvent(event);
 }
 
-void MyQGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (_creatingItem != nullptr) {
 
@@ -114,12 +114,12 @@ void MyQGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mouseMoveEvent(event);
 }
 
-bool MyQGraphicsScene::isItemForPointToSceneRestriction(ItemPtr item)
+bool KreenGraphicsScene::isItemForPointToSceneRestriction(ItemPtr item)
 {
     return item->typeId == "op-crop"; // TODO: op-ripout
 }
 
-void MyQGraphicsScene::restrictPointToScene(QPoint* pt)
+void KreenGraphicsScene::restrictPointToScene(QPoint* pt)
 {
     if (pt->x() < 0) {
         pt->setX(0);
@@ -138,7 +138,7 @@ void MyQGraphicsScene::restrictPointToScene(QPoint* pt)
     }
 }
 
-void MyQGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     qDebug() << "MyQGraphicsScene::mouseReleaseEvent";
 

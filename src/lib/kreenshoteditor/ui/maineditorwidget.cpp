@@ -35,7 +35,7 @@
 #include <QTimer>
 #include <memory>
 #include "../core/kreengraphicsitems.h"
-#include <kreen/core/myqgraphicsscene.h>
+#include "../core/kreengraphicsscene.h"
 #include "../core/toolmanager.h"
 #include "impl/kreengraphicsview.h"
 
@@ -107,7 +107,7 @@ public:
         return rect;
     }
 
-    MyQGraphicsScenePtr scene()
+    KreenGraphicsScenePtr scene()
     {
         return kreenshotEditor->documentFile()->document()->graphicsScene();
     }

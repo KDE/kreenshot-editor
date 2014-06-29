@@ -33,7 +33,7 @@ namespace core {
 KREEN_PIMPL_FORWARD_DECL(Document)
 
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
-KREEN_SHAREDPTR_FORWARD_DECL(MyQGraphicsScene)
+KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 
 /**
  * The "document"
@@ -94,7 +94,7 @@ public:
     /**
      * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
      */
-    MyQGraphicsScenePtr graphicsScene();
+    KreenGraphicsScenePtr graphicsScene();
 
     /**
      * renders the document to a QImage

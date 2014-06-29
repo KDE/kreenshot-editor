@@ -20,7 +20,7 @@ set(kreenshoteditor_SOURCES
     core/documentfile.cpp
     core/item.cpp
     core/kreengraphicsitems.cpp
-    core/myqgraphicsscene.cpp
+    core/kreengraphicsscene.cpp
     core/outputfilenamegenerator.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
