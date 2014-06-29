@@ -32,7 +32,7 @@
 #include <QHBoxLayout>
 #include <cmath>
 #include <algorithm>
-#include <kreen/core/item.h>
+#include <kreen/core/kreenitem.h>
 
 using namespace kreen::core;
 
@@ -60,7 +60,7 @@ public:
      *  - scene rect
      *  - all selected items
      */
-    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, ItemPtr item, QGraphicsScene* scene)
+    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene)
     {
         _item = item;
         _graphicsItem = graphicsItem;
@@ -70,7 +70,7 @@ public:
         _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, true); // selectable by default
     }
 
-    ItemPtr item()
+    KreenItemPtr item()
     {
         return _item;
     }
@@ -217,7 +217,7 @@ protected Q_SLOTS:
     }
 
 protected:
-    ItemPtr _item;
+    KreenItemPtr _item;
 
     /**
      * user is still moving the mouse with pressed button
@@ -232,7 +232,7 @@ private:
 class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenQGraphicsRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -303,7 +303,7 @@ public:
 class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsEllipseItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenQGraphicsEllipseItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -368,7 +368,7 @@ public:
 class KreenQGraphicsLineItem : public QGraphicsLineItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenQGraphicsLineItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenQGraphicsLineItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -418,7 +418,7 @@ public:
 class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenGraphicsTextRectItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsTextRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -483,7 +483,7 @@ public:
 class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
 {
 public:
-    KreenGraphicsOperationCropItem(ItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsOperationCropItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }

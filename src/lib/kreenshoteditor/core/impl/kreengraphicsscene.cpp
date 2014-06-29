@@ -56,28 +56,28 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     if (!_toolManager->isImageOperationActive()) {
         ToolEnum tool = _toolManager->chosenTool();
 
-        ItemPtr item;
+        KreenItemPtr item;
 
         if (tool == Select) {
             // do nothing
         }
         else if (tool == DrawRect) {
-            item = Item::create("rect");
+            item = KreenItem::create("rect");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
             this->addItem(_creatingItem);
         }
         else if (tool == DrawEllipse) {
-            item = Item::create("ellipse");
+            item = KreenItem::create("ellipse");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
             this->addItem(_creatingItem);
         }
         else if (tool == DrawLine) {
-            item = Item::create("line");
+            item = KreenItem::create("line");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
             this->addItem(_creatingItem);
         }
         else if (tool == OperationCrop) {
-            item = Item::create("op-crop");
+            item = KreenItem::create("op-crop");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item, this);
             this->addItem(_creatingItem);
         }
@@ -114,7 +114,7 @@ void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mouseMoveEvent(event);
 }
 
-bool KreenGraphicsScene::isItemForPointToSceneRestriction(ItemPtr item)
+bool KreenGraphicsScene::isItemForPointToSceneRestriction(KreenItemPtr item)
 {
     return item->typeId == "op-crop"; // TODO: op-ripout
 }

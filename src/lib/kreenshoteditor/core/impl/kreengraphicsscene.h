@@ -62,14 +62,14 @@ Q_SIGNALS:
     /**
      * this can be drawn item like rect or an operation op-crop
      */
-    void itemCreated(ItemPtr item);
+    void itemCreated(KreenItemPtr item);
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
 
-    bool isItemForPointToSceneRestriction(ItemPtr item);
+    bool isItemForPointToSceneRestriction(KreenItemPtr item);
 
     void restrictPointToScene(QPoint* pt);
 

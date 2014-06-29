@@ -86,7 +86,7 @@ void Document::setClean()
 //     return d->transientContentId;
 // }
 
-void Document::addItem(ItemPtr item)
+void Document::addItem(KreenItemPtr item)
 {
     d->transientContentId++;
     _items.push_back(item);
@@ -97,13 +97,13 @@ void Document::addDemoItems()
     //TODO
 
     {
-        auto item = Item::create("line");
+        auto item = KreenItem::create("line");
         item->setLine(QLine(QPoint(10, 20), QPoint(30, 40)));
         _items.push_back(item);
     }
 
     {
-        auto item = Item::create("rect");
+        auto item = KreenItem::create("rect");
         item->setRect(QRect(30, 30, 40, 30));
         item->lineColor()->color = Qt::darkGreen;
         item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
@@ -112,13 +112,13 @@ void Document::addDemoItems()
     }
 
     {
-        auto item = Item::create("ellipse");
+        auto item = KreenItem::create("ellipse");
         item->setRect(QRect(10, 40, 40, 40));
         _items.push_back(item);
     }
 
     {
-        auto item = Item::create("ellipse");
+        auto item = KreenItem::create("ellipse");
         item->setRect(QRect(10, 80, 70, 40));
         item->lineColor()->color = Qt::blue;
         item->lineStyle()->width = 2;
@@ -127,7 +127,7 @@ void Document::addDemoItems()
     }
 
     {
-        auto item = Item::create("rect");
+        auto item = KreenItem::create("rect");
         item->setRect(QRect(0, 0, 10, 10));
         item->lineStyle()->width = 1;
         item->lineStyle()->penStyle = Qt::SolidLine;
@@ -137,7 +137,7 @@ void Document::addDemoItems()
 
 
     {
-        auto item = Item::create("text");
+        auto item = KreenItem::create("text");
         item->setRect(QRect(10, 120, 200, 40));
         item->lineColor()->color = Qt::gray;
         item->text = TextProperty::create();
@@ -146,7 +146,7 @@ void Document::addDemoItems()
     }
 
     {
-        auto item = Item::create("text");
+        auto item = KreenItem::create("text");
         item->setRect(QRect(10, 420, 150, 40));
         item->lineColor()->color = Qt::magenta;
         item->text = TextProperty::create();
@@ -155,13 +155,13 @@ void Document::addDemoItems()
     }
 
     {
-        auto item = Item::create("rect");
+        auto item = KreenItem::create("rect");
         item->setRect(QRect(200, 200, 50, 50));
         _items.push_back(item);
     }
 
     {
-        auto item = Item::create("rect");
+        auto item = KreenItem::create("rect");
         item->setRect(QRect(962-10, 556-10, 10, 10));
         _items.push_back(item);
     }
@@ -176,7 +176,7 @@ void Document::operationCrop(QRect rect)
     }
 }
 
-const std::vector<ItemPtr>& Document::items()
+const std::vector<KreenItemPtr>& Document::items()
 {
     return _items;
 }

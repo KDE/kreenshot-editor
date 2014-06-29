@@ -30,7 +30,7 @@
 namespace kreen {
 namespace core {
 
-KREEN_SHAREDPTR_FORWARD_DECL(Item)
+KREEN_SHAREDPTR_FORWARD_DECL(KreenItem)
 KREEN_SHAREDPTR_FORWARD_DECL(ItemProperty)
 KREEN_SHAREDPTR_FORWARD_DECL(LineColorProperty)
 KREEN_SHAREDPTR_FORWARD_DECL(LineStyleProperty)
@@ -46,10 +46,10 @@ class ImageProperty;
 /**
  * One item with it's type, position, size etc.
  */
-class KREEN_DECL_EXPORT Item
+class KREEN_DECL_EXPORT KreenItem
 {
 public:
-    Item();
+    KreenItem();
     /**
      * line (= arrow)
      * rect
@@ -61,8 +61,8 @@ public:
      * op-crop
      * op-ripout
      */
-    Item(QString typeId);
-    virtual ~Item();
+    KreenItem(QString typeId);
+    virtual ~KreenItem();
 
     void setRect(QRect rect);
 
@@ -87,7 +87,7 @@ public:
      * Creates a new Item with default values for all properties available for this item.
      * See ctor for available typeIds.
      */
-    static std::shared_ptr<Item> create(QString typeId);
+    static std::shared_ptr<KreenItem> create(QString typeId);
 
 public:
     QString typeId;

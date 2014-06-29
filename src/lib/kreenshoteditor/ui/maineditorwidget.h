@@ -24,7 +24,7 @@
 #include <QWidget>
 #include <memory>
 #include <kreen/kreenshoteditor.h>
-#include <kreen/core/item.h>
+#include <kreen/core/kreenitem.h>
 
 using namespace kreen::core;
 
@@ -59,7 +59,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void updateItemsGeometryFromModel();
-    void updateSceneWithImageOperationItem(ItemPtr item);
+    void updateSceneWithImageOperationItem(KreenItemPtr item);
     void imageOperationAccepted();
     void imageOperationAcceptedDecoupled();
     void imageOperationCanceled();
@@ -68,7 +68,7 @@ protected Q_SLOTS:
      * a draw item like rect is added to model
      * an operation item like op-crop is handled otherwise
      */
-    void handleNewItem(ItemPtr item);
+    void handleNewItem(KreenItemPtr item);
 
     void sceneSelectionChanged();
     void redrawSelectionHandles();
@@ -79,7 +79,7 @@ protected:
     /**
      * if selectNewItem is not nullptr, then it will be selected
      */
-    void createSceneFromModel(ItemPtr selectNewItem = nullptr);
+    void createSceneFromModel(KreenItemPtr selectNewItem = nullptr);
 
     void paintEvent(QPaintEvent*);
 

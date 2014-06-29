@@ -43,7 +43,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 class ToolManager
 {
 public:
-    static QGraphicsItem* createGraphicsItemFromKreenItem(ItemPtr item, QGraphicsScene* scene)
+    static QGraphicsItem* createGraphicsItemFromKreenItem(KreenItemPtr item, QGraphicsScene* scene)
     {
         // create items
         //

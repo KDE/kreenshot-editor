@@ -64,13 +64,13 @@ private slots:
         QCOMPARE(docFile.filename(), filename);
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated);
 
-        doc->addItem(Item::create("line"));
+        doc->addItem(KreenItem::create("line"));
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated); // no change because file is not saved
 
         QCOMPARE(docFile.save(), QString());
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
 
-        doc->addItem(Item::create("rect"));
+        doc->addItem(KreenItem::create("rect"));
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Modified);
 
         docFile.save();

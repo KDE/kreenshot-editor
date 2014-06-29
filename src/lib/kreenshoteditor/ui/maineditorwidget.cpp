@@ -55,7 +55,7 @@ public:
      * not nullptr if there is an image operation item (like crop) waiting for the user
      */
     QGraphicsItem* imageOperationGraphicsItem; // TODO: rename to imgOpGraphicsItem
-    ItemPtr imageOperationItem; // imgOpItem
+    KreenItemPtr imageOperationItem; // imgOpItem
 
     bool imageOperationItemActive()
     {
@@ -424,7 +424,7 @@ void MainEditorWidget::initScene() {
 /**
  * recreate the scene to reflect the current kreenshotEditor->documentFile()->document()
  */
-void MainEditorWidget::createSceneFromModel(ItemPtr selectNewItem /*= nullptr*/)
+void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullptr*/)
 {
     d->scene()->clear();
 
@@ -433,7 +433,7 @@ void MainEditorWidget::createSceneFromModel(ItemPtr selectNewItem /*= nullptr*/)
     auto baseImageItem = new QGraphicsPixmapItem(pixmap);
     d->scene()->addItem(baseImageItem);
 
-    foreach (ItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
+    foreach (KreenItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
 
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
@@ -451,7 +451,7 @@ void MainEditorWidget::createSceneFromModel(ItemPtr selectNewItem /*= nullptr*/)
     d->updateItemsGeometryFromModel();
 }
 
-void MainEditorWidget::updateSceneWithImageOperationItem(ItemPtr item)
+void MainEditorWidget::updateSceneWithImageOperationItem(KreenItemPtr item)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
@@ -556,7 +556,7 @@ void MainEditorWidget::imageOperationCanceled()
     updateSceneWithImageOperationItem(nullptr);
 }
 
-void MainEditorWidget::handleNewItem(ItemPtr item)
+void MainEditorWidget::handleNewItem(KreenItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {

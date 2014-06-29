@@ -21,7 +21,7 @@
 
 #include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
-#include <kreen/core/item.h>
+#include <kreen/core/kreenitem.h>
 
 #include <vector>
 #include <memory>
@@ -80,7 +80,7 @@ public:
     /**
      * TODO: put to undostack
      */
-    void addItem(ItemPtr item);
+    void addItem(KreenItemPtr item);
 
     /**
      * todo: remove later
@@ -89,7 +89,7 @@ public:
 
     void operationCrop(QRect rect);
 
-    const std::vector<ItemPtr>& items();
+    const std::vector<KreenItemPtr>& items();
 
     /**
      * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
@@ -102,7 +102,7 @@ public:
     QImage renderToImage();
 
 private:
-    std::vector<ItemPtr> _items;
+    std::vector<KreenItemPtr> _items;
 
 private:
     DocumentImplPtr d;

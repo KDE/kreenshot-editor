@@ -16,31 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "item.h"
+#include "kreenitem.h"
 #include <QDebug>
 #include <algorithm>
 
 namespace kreen {
 namespace core {
 
-Item::Item()
+KreenItem::KreenItem()
 {
 
 }
 
-Item::Item(QString typeId)
+KreenItem::KreenItem(QString typeId)
 {
     this->typeId = typeId;
 }
 
-Item::~Item()
+KreenItem::~KreenItem()
 {
 
 }
 
-ItemPtr Item::create(QString typeId)
+KreenItemPtr KreenItem::create(QString typeId)
 {
-    auto item = std::make_shared<Item>(typeId);
+    auto item = std::make_shared<KreenItem>(typeId);
 
     if (typeId == "rect") {
         item->_properties.push_back(std::make_shared<LineColorProperty>());
@@ -95,12 +95,12 @@ ItemPtr Item::create(QString typeId)
     return item;
 }
 
-void Item::setRect(QRect rect)
+void KreenItem::setRect(QRect rect)
 {
     _rect = rect;
 }
 
-QRect Item::rect()
+QRect KreenItem::rect()
 {
     if (_line.isNull())
         return _rect;
@@ -108,12 +108,12 @@ QRect Item::rect()
         return QRect(_line.p1(), _line.p2());
 }
 
-void Item::setLine(QLine line)
+void KreenItem::setLine(QLine line)
 {
     _line = line;
 }
 
-QLine Item::line()
+QLine KreenItem::line()
 {
     return _line;
 }
@@ -127,17 +127,17 @@ ItemPropertyPtr propFromVectorOrNull(QString propName, std::vector<ItemPropertyP
     return result != _properties.end() ? *result : nullptr;
 }
 
-LineColorPropertyPtr Item::lineColor()
+LineColorPropertyPtr KreenItem::lineColor()
 {
     return std::static_pointer_cast<LineColorProperty>(propFromVectorOrNull("lineColor", _properties));
 }
 
-LineStylePropertyPtr Item::lineStyle()
+LineStylePropertyPtr KreenItem::lineStyle()
 {
     return std::static_pointer_cast<LineStyleProperty>(propFromVectorOrNull("lineStyle", _properties));
 }
 
-DropShadowPropertyPtr Item::dropShadow()
+DropShadowPropertyPtr KreenItem::dropShadow()
 {
     return std::static_pointer_cast<DropShadowProperty>(propFromVectorOrNull("dropShadow", _properties));
 }
