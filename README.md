@@ -38,6 +38,7 @@ TODO
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
+- mouse over: draw a light version of the selection rects
 - // TODO: exception handling or similar!!!
     http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
 - save image to file: do not save selection indication rect
