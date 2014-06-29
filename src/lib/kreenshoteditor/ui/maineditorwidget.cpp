@@ -35,7 +35,7 @@
 #include <QTimer>
 #include <memory>
 #include "../core/impl/kreengraphicsitems.h"
-#include "../core/kreengraphicsscene.h"
+#include "../core/impl/kreengraphicsscene.h"
 #include "../core/impl/toolmanager.h"
 #include "impl/kreengraphicsview.h"
 

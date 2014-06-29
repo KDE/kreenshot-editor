@@ -17,8 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsscene.h"
-#include "impl/toolmanager.h"
-#include "impl/kreengraphicsitems.h"
+#include "toolmanager.h"
+#include "kreengraphicsitems.h"
 
 namespace kreen {
 namespace core {
