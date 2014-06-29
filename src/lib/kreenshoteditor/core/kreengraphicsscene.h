@@ -19,7 +19,6 @@
 #ifndef UI_MYQGRAPHICSSCENE_H
 #define UI_MYQGRAPHICSSCENE_H
 
-#include <kreen/util/exportutil.h>
 #include <kreen/util/sharedptrutil.h>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -39,7 +38,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
  * TODO: move all logic from MyQGraphicsView to here to potentially solve the wrong-drawing-when-scrolling-bug
  * and make other things easier
  */
-class KREEN_DECL_EXPORT KreenGraphicsScene : public QGraphicsScene
+class KreenGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 

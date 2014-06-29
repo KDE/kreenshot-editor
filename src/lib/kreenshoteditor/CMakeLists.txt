@@ -16,20 +16,21 @@ include_directories(
 )
 
 set(kreenshoteditor_SOURCES
+    core/impl/kreengraphicsitems.cpp
+
     core/document.cpp
     core/documentfile.cpp
     core/item.cpp
-    core/kreengraphicsitems.cpp
     core/kreengraphicsscene.cpp
     core/outputfilenamegenerator.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
 
-    ui/maineditorwidget.cpp
     ui/impl/kreengraphicsview.cpp
-
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp
+
+    ui/maineditorwidget.cpp
 
     kreenshoteditor.cpp
 )

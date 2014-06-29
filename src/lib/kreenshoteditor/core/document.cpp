@@ -20,7 +20,7 @@
 #include <QImage>
 #include <QPainter>
 #include "kreengraphicsscene.h"
-#include "toolmanager.h"
+#include "impl/toolmanager.h"
 
 namespace kreen {
 namespace core {

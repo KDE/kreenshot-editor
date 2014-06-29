@@ -34,9 +34,9 @@
 #include <QImageWriter>
 #include <QTimer>
 #include <memory>
-#include "../core/kreengraphicsitems.h"
+#include "../core/impl/kreengraphicsitems.h"
 #include "../core/kreengraphicsscene.h"
-#include "../core/toolmanager.h"
+#include "../core/impl/toolmanager.h"
 #include "impl/kreengraphicsview.h"
 
 namespace kreen {
