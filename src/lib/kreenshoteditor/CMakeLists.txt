@@ -26,7 +26,7 @@ set(kreenshoteditor_SOURCES
     core/settingsmanager.cpp
 
     ui/maineditorwidget.cpp
-    ui/myqgraphicsview.cpp
+    ui/impl/kreengraphicsview.cpp
 
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp

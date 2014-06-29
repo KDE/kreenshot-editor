@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "myqgraphicsview.h"
-#include "../core/toolmanager.h"
+#include "kreengraphicsview.h"
+#include "../../core/toolmanager.h"
 
 namespace kreen {
 namespace ui {
 
-MyQGraphicsView::MyQGraphicsView(kreen::core::ToolManagerPtr toolmanager)
+KreenGraphicsView::KreenGraphicsView(kreen::core::ToolManagerPtr toolmanager)
 {
     _toolManager = toolmanager;
     setRenderHint(QPainter::Antialiasing);
 }
 
-void MyQGraphicsView::setCursorFromChosenTool()
+void KreenGraphicsView::setCursorFromChosenTool()
 {
     // workaround (not really) for https://bugreports.qt-project.org/browse/QTBUG-4190
     QWidget* w = viewport();
@@ -66,13 +66,13 @@ void MyQGraphicsView::setCursorFromChosenTool()
     }
 }
 
-void MyQGraphicsView::enterEvent(QEvent* event)
+void KreenGraphicsView::enterEvent(QEvent* event)
 {
     // for not to have to click once before one can start moving items
     this->setFocus();
 }
 
-void MyQGraphicsView::mouseMoveEvent(QMouseEvent* event)
+void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
     // makes sure that the cursor is always right
     // NOTE: when an image operation (like crop) is active and

@@ -34,7 +34,7 @@ class QGraphicsView;
 namespace kreen {
 namespace ui {
 
-class MyQGraphicsView;
+class KreenGraphicsView;
 
 KREEN_PIMPL_FORWARD_DECL(MainEditorWidget)
 

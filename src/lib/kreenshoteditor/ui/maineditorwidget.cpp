@@ -37,7 +37,7 @@
 #include "../core/kreengraphicsitems.h"
 #include <kreen/core/myqgraphicsscene.h>
 #include "../core/toolmanager.h"
-#include "myqgraphicsview.h"
+#include "impl/kreengraphicsview.h"
 
 namespace kreen {
 namespace ui {
@@ -84,7 +84,7 @@ class MainEditorWidgetImpl
 public:
     KreenshotEditorPtr kreenshotEditor;
     ToolManagerPtr toolManager_;
-    MyQGraphicsViewPtr graphicsView;
+    KreenGraphicsViewPtr graphicsView;
     ImageOperationHandling imgOpHandling;
     SelectionHandlesPtr selectionHandles;
 
@@ -353,7 +353,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     auto layout = new QGridLayout();
     this->setLayout(layout);
-    d->graphicsView = std::make_shared<MyQGraphicsView>(d->toolManager());
+    d->graphicsView = std::make_shared<KreenGraphicsView>(d->toolManager());
     //d->graphicsView->setRubberBandSelectionMode(Qt::IntersectsItemShape); // default
     layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
