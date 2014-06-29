@@ -83,8 +83,10 @@ void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos)
 
 void KreenGraphicsView::enterEvent(QEvent* event)
 {
+    qDebug() << "KreenGraphicsView::enterEvent";
     // for not to have to click once before one can start moving items
     this->setFocus();
+    QGraphicsView::enterEvent(event);
 }
 
 void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)

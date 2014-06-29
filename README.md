@@ -89,6 +89,8 @@ LATER
         [NEW] ...
         *  ... (see mainwindow.cpp)
 - Create Actions in lib (instead of UI file) and use in GUI (überlegen: nice ui file vs. good coding)
+- BUG: resize the main window requires the user to click the editor widget to restore the cursor to normal
+    nothing goes until it was clicked
 - "Open last file storage location" or "Open storage location"
 - use m4 to generate settings class
 - use #pragma once? (non-standard) / replace it as soon as someone sees a problem

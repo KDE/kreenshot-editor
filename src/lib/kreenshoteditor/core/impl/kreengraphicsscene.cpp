@@ -152,6 +152,8 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         if (!grItemBase->item()->rect().isNull()) {
             qDebug() << "emit itemCreated";
             emit itemCreated(grItemBase->item());
+            qDebug() << "QGraphicsScene::mouseReleaseEvent(event)";
+            QGraphicsScene::mouseReleaseEvent(event);
             return;
         }
         else {

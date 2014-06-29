@@ -246,6 +246,7 @@ QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
     grItem->setBrush(QBrush(Qt::black));
     grItem->setPen(Qt::NoPen);
     //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
+    grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
     grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
     qDebug() << "newRectItemWithCursor, setCursor";
     grItem->setCursor(cursor);
@@ -497,9 +498,10 @@ void MainEditorWidget::updateSceneWithImageOperationItem(KreenItemPtr item)
     }
 }
 
-void MainEditorWidget::paintEvent(QPaintEvent*)
+void MainEditorWidget::paintEvent(QPaintEvent* event)
 {
     // QPainter painter(this);
+    QWidget::paintEvent(event);
 }
 
 // void setCursorFromChosenTool(ToolManagerPtr toolManager, QGraphicsItem* imageItem)
@@ -625,6 +627,10 @@ void MainEditorWidget::handleNewItem(KreenItemPtr item)
 void MainEditorWidget::sceneSelectionChanged()
 {
     qDebug() << "sceneSelectionChanged() " << d->scene()->selectedItems();
+
+    qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
+    d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
+
     d->selectionHandles->redrawSelectionHandles(true);
 }
 

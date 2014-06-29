@@ -81,7 +81,7 @@ protected:
      */
     void createSceneFromModel(KreenItemPtr selectNewItem = nullptr);
 
-    void paintEvent(QPaintEvent*);
+    void paintEvent(QPaintEvent* event);
 
 private:
     MainEditorWidgetImplPtr d;
