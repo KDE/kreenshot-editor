@@ -137,6 +137,10 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void requestToolBySenderAction();
 
+    void editUndo();
+    void editRedo();
+    void selectedItemsDelete();
+
 private:
     KreenshotEditorImplPtr d;
 };

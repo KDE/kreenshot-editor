@@ -48,9 +48,6 @@ public Q_SLOTS:
     void fileOpen();
     void fileSave();
     void fileSaveAs();
-    void editUndo();
-    void editRedo();
-    void selectedItemsDelete();
     void editPreferences();
     void helpAbout();
 

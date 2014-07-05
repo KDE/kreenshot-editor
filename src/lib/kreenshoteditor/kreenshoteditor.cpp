@@ -204,7 +204,9 @@ QList<QAction*> KreenshotEditor::editActions()
 {
     if (d->editActionsList.empty())
     {
-        d->editActionsList.append(d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del"))));
+        auto deleteAction = d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del")));
+        connect(deleteAction, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
+        d->editActionsList.append(deleteAction);
     }
 
     return d->editActionsList;
@@ -214,8 +216,13 @@ QList<QAction*> KreenshotEditor::undoActions()
 {
     if (d->undoActionsList.empty())
     {
-        d->undoActionsList.append(d->newAction(QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z"))));
-        d->undoActionsList.append(d->newAction(QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y"))));
+        auto action = d->newAction(QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z")));
+        connect(action, SIGNAL(triggered()), this, SLOT(editUndo()));
+        d->undoActionsList.append(action);
+
+        action = d->newAction(QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y")));
+        connect(action, SIGNAL(triggered()), this, SLOT(editRedo()));
+        d->undoActionsList.append(action);
     }
     return d->undoActionsList;
 }
@@ -250,6 +257,21 @@ void KreenshotEditor::showPreferencesDialog()
             d->settingsToOutputFilenameManager();
         }
     }
+}
+
+void KreenshotEditor::editUndo()
+{
+    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+}
+
+void KreenshotEditor::editRedo()
+{
+    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+}
+
+void KreenshotEditor::selectedItemsDelete()
+{
+    mainEditorWidget()->deleteSelectedItems();
 }
 
 }

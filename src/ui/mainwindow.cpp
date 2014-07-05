@@ -30,30 +30,46 @@
 class MainWindowImpl
 {
 public:
-    void addSeparator(QWidget* w)
+    void insertSeparator(QAction* before, QWidget* w)
     {
         auto sep = new QAction(w);
         sep->setSeparator(true);
-        w->addAction(sep);
+        w->insertAction(before, sep);
     }
 
     void insertToolsActionsForPlaceholder(QWidget* parent, QAction* placeholder)
     {
-        parent->addAction(toolIdToActionMap.value("select"));
+        parent->insertAction(placeholder, toolIdToActionMap.value("select"));
 
-        addSeparator(parent);
+        insertSeparator(placeholder, parent);
         foreach (auto action, allToolActions()) {
             if (!actionToToolId(action).startsWith("op-") && !(actionToToolId(action) == "select")) {
-                parent->addAction(action);
+                parent->insertAction(placeholder, action);
             }
         }
-        addSeparator(parent);
+        insertSeparator(placeholder, parent);
         foreach (auto action, allToolActions()) {
             if (actionToToolId(action).startsWith("op-")) {
-                parent->addAction(action);
+                parent->insertAction(placeholder, action);
             }
         }
 
+        parent->removeAction(placeholder);
+    }
+
+    void insertUndoActionsForPlaceholder(QWidget* parent, QAction* placeholder)
+    {
+        foreach (auto action, kreenshotEditor->undoActions()) {
+            parent->insertAction(placeholder, action);
+        }
+        parent->removeAction(placeholder);
+    }
+
+    void insertEditActionsForPlaceholder(QWidget* parent, QAction* placeholder)
+    {
+        foreach (auto action, kreenshotEditor->editActions()) {
+            parent->insertAction(placeholder, action);
+        }
         parent->removeAction(placeholder);
     }
 
@@ -67,6 +83,12 @@ public:
         //
         insertToolsActionsForPlaceholder(ui->menuTool, ui->actionToolsActionsPlaceholder);
         insertToolsActionsForPlaceholder(ui->toolBar_Tools, ui->actionToolsActionsPlaceholder);
+
+        insertUndoActionsForPlaceholder(ui->menuEdit, ui->actionUndoActionsPlaceholder);
+        insertUndoActionsForPlaceholder(ui->toolBar_Main, ui->actionUndoActionsPlaceholder);
+
+        insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder);
+        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder);
     }
 
     /**
@@ -220,12 +242,9 @@ void MainWindow::setupActions()
 
     connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
-    // actionQuit via Action Editor
+    // actionQuit: via Action Editor in designer
     connect(d->ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     connect(d->ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-    connect(d->ui->actionUndo, SIGNAL(triggered()), this, SLOT(editUndo()));
-    connect(d->ui->actionRedo, SIGNAL(triggered()), this, SLOT(editRedo()));
-    connect(d->ui->actionItemDelete, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
@@ -235,21 +254,6 @@ void MainWindow::setupActions()
 void MainWindow::editPreferences()
 {
     d->kreenshotEditor->showPreferencesDialog();
-}
-
-void MainWindow::editRedo()
-{
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
-}
-
-void MainWindow::selectedItemsDelete()
-{
-    d->kreenshotEditor->mainEditorWidget()->deleteSelectedItems();
-}
-
-void MainWindow::editUndo()
-{
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
 }
 
 void MainWindow::fileNew()
