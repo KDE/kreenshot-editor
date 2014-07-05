@@ -30,7 +30,7 @@
 class MainWindowImpl
 {
 public:
-    void setupActionIds() // todo: rename to actionmap
+    void setupActionsMenuAndToolbar()
     {
         foreach(auto action, allToolActions()) {
             toolIdToActionMap.insert(actionToToolId(action), action);
@@ -191,7 +191,7 @@ void MainWindow::setupUi()
 
     d->ui->containerEditor->addWidget(d->kreenshotEditor->mainEditorWidget());
 
-    d->setupActionIds();
+    d->setupActionsMenuAndToolbar();
 
     d->setupToolActionRelatedWidgetProperties();
 }

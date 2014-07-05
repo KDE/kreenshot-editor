@@ -141,7 +141,6 @@ void KreenshotEditor::requestToolBySenderAction()
     mainEditorWidget()->requestTool(toolId);
 }
 
-
 void KreenshotEditor::setBaseImageData(QImage image)
 {
     d->settingsToOutputFilenameManager();
