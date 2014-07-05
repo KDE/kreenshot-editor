@@ -40,7 +40,7 @@ namespace kreen {
 namespace core {
 
 /**
- * multiselection will break the logic
+ * Visual representation of a KreenItem
  */
 class KreenQGraphicsItemBase : public QObject
 {
@@ -75,6 +75,11 @@ public:
     KreenItemPtr item()
     {
         return _item;
+    }
+
+    QGraphicsItem* graphicsItem()
+    {
+        return _graphicsItem;
     }
 
     /**

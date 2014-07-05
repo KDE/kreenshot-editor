@@ -148,6 +148,25 @@ public:
 //                 scene.addItem(rectItem);
 //             }
 
+
+    /**
+     * all corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
+     */
+    QList<KreenQGraphicsItemBase*> kreenGraphicsItems()
+    {
+        QList<KreenQGraphicsItemBase*> list;
+
+        foreach(auto grItem, graphicsView->items()) {
+
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            if (grItemBase != nullptr) { // there might also be other items
+                list << grItemBase;
+            }
+        }
+
+        return list;
+    }
+
     /**
      * update positions and sizes from model
      */
@@ -240,6 +259,7 @@ public:
     }
 };
 
+// TMP
 QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
 {
     auto grItem = new QGraphicsRectItem(rect);
@@ -253,6 +273,7 @@ QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
     return grItem;
 }
 
+// TMP
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {
     if (createNewHandles) {
@@ -551,6 +572,7 @@ void MainEditorWidget::paintEvent(QPaintEvent* event)
 //     }
 // }
 
+
 void MainEditorWidget::requestTool(QString toolId)
 {
     ToolEnum toolEnum;
@@ -663,6 +685,14 @@ void MainEditorWidget::deleteSelectedItems()
     d->kreenshotEditor->documentFile()->document()->removeItems(toBeErased);
 
     createSceneFromModel();
+}
+
+void MainEditorWidget::selectAllItems()
+{
+    // todo: potential optimization: disable events before the loop and enable afterwards
+    foreach(auto kreenGraphicsItemBase, d->kreenGraphicsItems()) {
+        kreenGraphicsItemBase->graphicsItem()->setSelected(true);
+    }
 }
 
 int MainEditorWidget::selectedItemsCount()

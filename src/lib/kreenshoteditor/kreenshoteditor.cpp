@@ -111,6 +111,7 @@ public:
     QList<QAction*> undoActionsList;
 
     QList<QAction*> editActionsList;
+    QAction* actionSelectAll;
     QAction* actionItemDelete;
 };
 
@@ -126,7 +127,7 @@ KreenshotEditor::KreenshotEditor()
     foreach (auto action, d->toolActions()->actions()) {
 
         // select action to tool request
-        connect(action, SIGNAL(triggered()), this, SLOT(requestToolBySenderAction()));
+        connect(action, SIGNAL(triggered()), this, SLOT(slotRequestToolBySenderAction()));
     }
 }
 
@@ -142,7 +143,7 @@ QString KreenshotEditor::actionToToolId(QAction* action)
     return toolId;
 }
 
-void KreenshotEditor::requestToolBySenderAction()
+void KreenshotEditor::slotRequestToolBySenderAction()
 {
     QString className = QObject::sender()->metaObject()->className();
     qDebug() << className;
@@ -209,9 +210,13 @@ QList<QAction*> KreenshotEditor::editActions()
 {
     if (d->editActionsList.empty())
     {
-        d->actionItemDelete = d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del")));
+        d->actionSelectAll = d->newAction(QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
+        connect(d->actionSelectAll, SIGNAL(triggered()), this, SLOT(slotEditSelectAll()));
+        d->editActionsList.append(d->actionSelectAll);
+
+        d->actionItemDelete = d->newAction(QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
         d->actionItemDelete->setEnabled(false);
-        connect(d->actionItemDelete, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
+        connect(d->actionItemDelete, SIGNAL(triggered()), this, SLOT(slotEditDeleteSelectedItems()));
         d->editActionsList.append(d->actionItemDelete);
     }
 
@@ -223,11 +228,11 @@ QList<QAction*> KreenshotEditor::undoActions()
     if (d->undoActionsList.empty())
     {
         auto action = d->newAction(QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z")));
-        connect(action, SIGNAL(triggered()), this, SLOT(editUndo()));
+        connect(action, SIGNAL(triggered()), this, SLOT(slotEditUndo()));
         d->undoActionsList.append(action);
 
         action = d->newAction(QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y")));
-        connect(action, SIGNAL(triggered()), this, SLOT(editRedo()));
+        connect(action, SIGNAL(triggered()), this, SLOT(slotEditRedo()));
         d->undoActionsList.append(action);
     }
     return d->undoActionsList;
@@ -265,17 +270,17 @@ void KreenshotEditor::showPreferencesDialog()
     }
 }
 
-void KreenshotEditor::editUndo()
+void KreenshotEditor::slotEditUndo()
 {
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
 }
 
-void KreenshotEditor::editRedo()
+void KreenshotEditor::slotEditRedo()
 {
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
 }
 
-void KreenshotEditor::selectedItemsDelete()
+void KreenshotEditor::slotEditDeleteSelectedItems()
 {
     mainEditorWidget()->deleteSelectedItems();
 }
@@ -284,6 +289,11 @@ void KreenshotEditor::slotActionItemDeleteUpdateEnabledState()
 {
     qDebug() << "slotActionItemDeleteUpdateEnabledState";
     d->actionItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
+}
+
+void KreenshotEditor::slotEditSelectAll()
+{
+    mainEditorWidget()->selectAllItems();
 }
 
 }

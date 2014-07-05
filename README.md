@@ -34,7 +34,10 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- SelectAll: do not show in main toolbar
+- SelectAll: when clicked the Select tool should be selected first
 - draw item => do not show move item cursor
+- use more KreenQGraphicsItemBase::graphicsItem()
 - op crop
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"
