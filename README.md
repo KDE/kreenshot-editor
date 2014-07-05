@@ -75,6 +75,9 @@ LATER
 - Open last save location
 - // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
     - dolphin --select
+- lib: provide different kinds of mainwidget
+   - with or without toolbar
+   - with some predefined stuff etc.
 - Settings: After saving: copy image path to clipboard
 - Select a Item
   - Handles for resizing appear
@@ -109,3 +112,8 @@ These Linux tools have similar image editor capabilities:
 - greenshot (.NET) - the inspirational source for kreenshot-editor
 - shutter (Perl)
 - hotshots (QT)
+
+Thanks to contributors
+----------------------
+- Code from Tikzkit (https://projects.kde.org/projects/playground/graphics/tikzkit)
+
