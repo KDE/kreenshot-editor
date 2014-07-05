@@ -35,7 +35,7 @@ void KreenGraphicsView::setHelperBaseImageItem(QGraphicsItem* helperBaseImageIte
 }
 
 
-void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos)
+void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos, bool leftButtonDown)
 {
     Q_ASSERT(_helperBaseImageItem != nullptr); // TODO: also verify if _helperBaseImageItem exists in scene
 
@@ -43,6 +43,10 @@ void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos)
         auto item = itemAt(*pos);
         if (item != _helperBaseImageItem) // if mouse over any item or no item except the background...
             return; // ... do not try to set the cursor
+    }
+
+    if (leftButtonDown) { // if left button is down then an item is probably moved and we do not want to change the cursor
+        return;
     }
 
     // workaround (not really) for https://bugreports.qt-project.org/browse/QTBUG-4190
@@ -101,7 +105,7 @@ void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)
     //  chosen again.
     // So probably cause for illbehaved cursor is the QGraphicsProxyWidget.
     QPoint pos = event->pos();
-    setCursorFromChosenTool(&pos);
+    setCursorFromChosenTool(&pos, event->button() | Qt::LeftButton);
 
     QGraphicsView::mouseMoveEvent(event);
 }

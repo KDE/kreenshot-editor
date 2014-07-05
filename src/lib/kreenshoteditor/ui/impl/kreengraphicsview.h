@@ -47,7 +47,10 @@ public:
      */
     void setHelperBaseImageItem(QGraphicsItem* helperBaseImageItem);
 
-    void setCursorFromChosenTool(QPoint* pos = nullptr);
+    /**
+     * WORKAROUND method to correctly set mouse cursor
+     */
+    void setCursorFromChosenTool(QPoint* pos = nullptr, bool leftButtonDown = false);
 
 protected:
     virtual void enterEvent(QEvent* event);
