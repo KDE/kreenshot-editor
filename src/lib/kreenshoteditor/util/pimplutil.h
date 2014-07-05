@@ -36,8 +36,15 @@ typedef std::shared_ptr<OrigClassName##Impl> OrigClassName##ImplPtr;
 
 /**
  * call this as first line in the ctor
+ * example: KREEN_PIMPL_INIT(Document)
  */
 #define KREEN_PIMPL_INIT(OrigClassName) d = std::make_shared<OrigClassName##Impl>();
+
+/**
+ * call this as first line in the ctor and give this as first parameter
+ * example: KREEN_PIMPL_INIT(Document)
+ */
+#define KREEN_PIMPL_INIT_THIS(OrigClassName) d = std::make_shared<OrigClassName##Impl>(this);
 
 
 #endif // UTIL_PIMPLUTIL_H

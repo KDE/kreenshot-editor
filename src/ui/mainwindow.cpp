@@ -30,17 +30,33 @@
 class MainWindowImpl
 {
 public:
-    void setupActionIds()
+    void setupActionIds() // todo: rename to actionmap
     {
-        ui->actionToolSelect->setData("select");
-        ui->actionToolRect->setData("rect");
-        ui->actionToolEllipse->setData("ellipse");
-        ui->actionToolLine->setData("line");
-        ui->actionToolText->setData("text");
-        ui->actionToolHighlight->setData("highlight");
-        ui->actionToolObfuscate->setData("obfuscate");
-        ui->actionToolCrop->setData("op-crop");
-        ui->actionToolRipOut->setData("op-ripout");
+        foreach(auto action, allToolActions()) {
+            toolIdToActionMap.insert(actionToToolId(action), action);
+        }
+
+        // fill menuTool and toolBar_Tools
+        //
+        ui->menuTool->addAction(toolIdToActionMap.value("select"));
+        ui->toolBar_Tools->addAction(toolIdToActionMap.value("select"));
+
+        ui->menuTool->addSeparator();
+        ui->toolBar_Tools->addSeparator();
+        foreach (auto action, allToolActions()) {
+            if (!actionToToolId(action).startsWith("op-") && !(actionToToolId(action) == "select")) {
+                ui->menuTool->addAction(action);
+                ui->toolBar_Tools->addAction(action);
+            }
+        }
+        ui->menuTool->addSeparator();
+        ui->toolBar_Tools->addSeparator();
+        foreach (auto action, allToolActions()) {
+            if (actionToToolId(action).startsWith("op-")) {
+                ui->menuTool->addAction(action);
+                ui->toolBar_Tools->addAction(action);
+            }
+        }
     }
 
     /**
@@ -51,48 +67,19 @@ public:
     {
         foreach (auto action, allToolActions()) {
 
-            action->setCheckable(true);
-
             QString toolId = actionToToolId(action);
             toolboxButtonFromId(toolId)->setIcon(action->icon());
             if (!toolboxButtonFromId(toolId)->isCheckable()) {
-                qDebug() << "forgot to set checkable true... let me do it for you";
+                qDebug() << "toolbutton: set isCheckable to true (because it was not set in designer)";
                 toolboxButtonFromId(toolId)->setCheckable(true); // to avoid that the button "flips back"
             }
         }
-//         ui->pushButtonToolSelect->setIcon(ui->actionToolSelect->icon());
-//         ui->pushButtonToolRect->setIcon(ui->actionToolRect->icon());
-//         ...
     }
 
     QAction* toolActionFromId(QString toolId)
     {
-        if (toolId == "select") {
-            return ui->actionToolSelect;
-        }
-        else if (toolId == "rect") {
-            return ui->actionToolRect;
-        }
-        else if (toolId == "ellipse") {
-            return ui->actionToolEllipse;
-        }
-        else if (toolId == "line") {
-            return ui->actionToolLine;
-        }
-        else if (toolId == "text") {
-            return ui->actionToolText;
-        }
-        else if (toolId == "highlight") {
-            return ui->actionToolHighlight;
-        }
-        else if (toolId == "obfuscate") {
-            return ui->actionToolObfuscate;
-        }
-        else if (toolId == "op-crop") {
-            return ui->actionToolCrop;
-        }
-        else if (toolId == "op-ripout") {
-            return ui->actionToolRipOut;
+        if (toolIdToActionMap.contains(toolId)) {
+            return toolIdToActionMap.value(toolId);
         }
         else {
             qDebug() << "toolActionFromId: TODO  ..." << toolId;
@@ -137,34 +124,13 @@ public:
         }
     }
 
-    std::vector<QAction*> allToolActions()
+    QList<QAction*> allToolActions()
     {
-        std::vector<QAction*> list;
-
-        list.push_back(ui->actionToolSelect);
-        list.push_back(ui->actionToolRect);
-        list.push_back(ui->actionToolEllipse);
-        list.push_back(ui->actionToolLine);
-        list.push_back(ui->actionToolText);
-        list.push_back(ui->actionToolHighlight);
-        list.push_back(ui->actionToolObfuscate);
-        list.push_back(ui->actionToolCrop);
-        list.push_back(ui->actionToolRipOut);
-        return list;
+        return kreenshotEditor->toolActions()->actions();
     }
 
     /**
-     * by action object name
-     */
-//     QString actionToTool(QObject* action)
-//     {
-//         QString senderName = action->objectName();
-//         QString toolId = senderName.replace("actionTool", "").toLower();
-//         return toolId;
-//     }
-
-    /**
-     * by action data
+     * from action data
      */
     QString actionToToolId(QAction* action)
     {
@@ -194,6 +160,7 @@ public:
     kreen::KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
     QString baseWindowTitle;
+    QMap<QString, QAction*> toolIdToActionMap;
 };
 
 MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
@@ -237,24 +204,14 @@ void MainWindow::setupActions()
         QString toolId = d->actionToToolId(action);
 
         // button click to action
-        connect(d->toolboxButtonFromId(toolId), SIGNAL(clicked()), d->toolActionFromId(toolId), SLOT(trigger()));
+        connect(d->toolboxButtonFromId(toolId), SIGNAL(clicked()), action, SLOT(trigger()));
 
         // action toogled to button
-        connect(d->toolActionFromId(toolId), SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
+        connect(action, SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
 
         // select action to request
-        connect(d->toolActionFromId(toolId), SIGNAL(triggered()), this, SLOT(requestTool()));
+        connect(action, SIGNAL(triggered()), this, SLOT(requestTool()));
     }
-
-    //connect(d->ui->pushButtonToolSelect, SIGNAL(clicked()), d->ui->actionToolSelect, SLOT(trigger()));
-    //connect(d->ui->pushButtonToolRect, SIGNAL(clicked()), d->ui->actionToolRect, SLOT(trigger()));
-    // ...
-    //connect(d->ui->actionToolSelect, SIGNAL(toggled(bool)), d->ui->pushButtonToolSelect, SLOT(setChecked(bool)));
-    //connect(d->ui->actionToolRect, SIGNAL(toggled(bool)), d->ui->pushButtonToolRect, SLOT(setChecked(bool)));
-    // ..
-    //connect(d->ui->actionToolSelect, SIGNAL(triggered()), this, SLOT(requestTool()));
-    //connect(d->ui->actionToolRect, SIGNAL(triggered()), this, SLOT(requestTool()));
-    // ...
 
     connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
@@ -353,11 +310,7 @@ void MainWindow::requestTool()
 void MainWindow::toolChosen(QString toolId)
 {
     qDebug() << "MainWindow::toolChosen: " << toolId;
-    foreach (auto toolAction, d->allToolActions()) {
-        //qDebug() << "uncheck";
-        toolAction->setChecked(false);
-    }
 
     auto toolAction = d->toolActionFromId(toolId);
-    toolAction->setChecked(true);
+    toolAction->setChecked(true); // the other items will be unchecked because of QActionGroup
 }

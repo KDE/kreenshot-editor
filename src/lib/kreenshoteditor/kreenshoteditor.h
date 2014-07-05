@@ -22,8 +22,9 @@
 #include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <QObject>
-#include <memory>
+#include <QList>
 #include <QDateTime>
+#include <QAction>
 #include <kreen/core/errorstatus.h>
 
 class QWidget;
@@ -91,6 +92,17 @@ public:
      * TODO: does shared_ptr makes sense here?
      */
     MainEditorWidget* mainEditorWidget();
+
+    /**
+     * get all actions for choosing "Select", "Rect", "Ellipse" etc. in a group
+     * because only one of them is active at a time
+     */
+    QActionGroup* toolActions();
+
+    /**
+     * get actions like "Delete", "Copy", "Paste", "Select All" etc.
+     */
+    QList<QAction*> editActions();
 
     /**
      * returns true if the file is not saved yet (not stored on disk yet)

@@ -32,11 +32,14 @@
 
 namespace kreen {
 
+#define tr(arg) QObject::tr(arg)
+
 class KreenshotEditorImpl
 {
 public:
-    KreenshotEditorImpl()
+    KreenshotEditorImpl(KreenshotEditor* owner_)
     {
+        owner = owner_;
         outputFilenameGenerator = std::make_shared<OutputFilenameGenerator>();
         settingsManager = SettingsManager::instance();
     }
@@ -48,17 +51,59 @@ public:
         outputFilenameGenerator->setFilenamePattern(QDir(outputSettings.defaultOutputDirectory).filePath(outputSettings.filenamePattern));
     }
 
+    QAction* newToolAction(QString toolId, QIcon icon, QString text, QObject* parent, QKeySequence key)
+    {
+        auto action = new QAction(icon, text, parent);
+        action->setCheckable(true);
+        action->setShortcut(key);
+        action->setData(toolId);
+        action->setToolTip(text); // todo: more
+        return action;
+    }
+
+    /**
+     * singleton
+     */
+    QActionGroup* toolActions()
+    {
+        if (actionGroup != nullptr) {
+            return actionGroup;
+        }
+
+        actionGroup = new QActionGroup(owner);
+        newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), actionGroup, QKeySequence(tr("Esc")));
+        newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), actionGroup, QKeySequence(tr("R")));
+        newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), actionGroup, QKeySequence(tr("E")));
+        newToolAction("line", QIcon::fromTheme("draw-arrow-forward"), tr("Line or arrow"), actionGroup, QKeySequence(tr("L")));
+        newToolAction("text", QIcon::fromTheme("draw-text"), tr("Text"), actionGroup, QKeySequence(tr("T")));
+        newToolAction("highlight", QIcon::fromTheme("im-status-message-edit"), tr("Highlight"), actionGroup, QKeySequence(tr("H")));
+        newToolAction("obfuscate", QIcon::fromTheme("edit-delete-shred"), tr("Obfuscate"), actionGroup, QKeySequence(tr("O")));
+        newToolAction("op-crop", QIcon::fromTheme("transform-crop"), tr("Crop"), actionGroup, QKeySequence(tr("Ctrl+Shift+X")));
+        newToolAction("op-ripout", QIcon::fromTheme("distribute-vertical-equal"), tr("Rip out"), actionGroup, QKeySequence(tr("Ctrl+Shift+R")));
+
+        return actionGroup;
+    }
+
+    QList<QAction*> editActions()
+    {
+        return QList<QAction*>(); // TODO
+    }
+
 public:
+    KreenshotEditor* owner;
     DocumentFilePtr documentFile;
     OutputFilenameGeneratorPtr outputFilenameGenerator;
     SettingsManagerPtr settingsManager;
 
     MainEditorWidget* mainEditorWidget = nullptr;
+    QActionGroup* actionGroup = nullptr;
 };
+
+#undef tr
 
 KreenshotEditor::KreenshotEditor()
 {
-    KREEN_PIMPL_INIT(KreenshotEditor);
+    KREEN_PIMPL_INIT_THIS(KreenshotEditor);
 
     d->settingsManager->load();
 }
@@ -111,7 +156,16 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
+QActionGroup* KreenshotEditor::toolActions()
 {
+    return d->toolActions();
+}
+
+QList<QAction*> KreenshotEditor::editActions()
+{
+    return QList<QAction*>(); // TODO
+}
+
 void KreenshotEditor::setCaptureTime(QDateTime datetime)
 {
     d->outputFilenameGenerator->initCaptureTime(datetime);
