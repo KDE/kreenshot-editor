@@ -68,6 +68,8 @@ public:
 
         _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
         setMovable(true); // selectable and moveable by default
+
+        _graphicsItem->setCursor(Qt::SizeAllCursor);
     }
 
     KreenItemPtr item()
