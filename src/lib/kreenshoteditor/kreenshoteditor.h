@@ -105,6 +105,11 @@ public:
     QList<QAction*> editActions();
 
     /**
+     * undo / redo
+     */
+    QList<QAction*> undoActions();
+
+    /**
      * returns true if the file is not saved yet (not stored on disk yet)
      */
     bool isFileNew();

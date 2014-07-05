@@ -62,8 +62,7 @@
     <property name="title">
      <string>Tool</string>
     </property>
-    <addaction name="separator"/>
-    <addaction name="separator"/>
+    <addaction name="actionToolsActionsPlaceholder"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menu_File"/>
@@ -92,11 +91,13 @@
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
    <addaction name="separator"/>
+   <addaction name="actionUndoActionsPlaceholder"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="separator"/>
+   <addaction name="actionEditActionsPlaceholder"/>
    <addaction name="actionItemDelete"/>
   </widget>
   <widget class="QDockWidget" name="containerToolbox">
@@ -448,7 +449,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
+   <addaction name="actionToolsActionsPlaceholder"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
@@ -581,6 +582,21 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="actionUndoActionsPlaceholder">
+   <property name="text">
+    <string>UndoActions</string>
+   </property>
+  </action>
+  <action name="actionEditActionsPlaceholder">
+   <property name="text">
+    <string>EditActions</string>
+   </property>
+  </action>
+  <action name="actionToolsActionsPlaceholder">
+   <property name="text">
+    <string>ToolsActions</string>
    </property>
   </action>
  </widget>

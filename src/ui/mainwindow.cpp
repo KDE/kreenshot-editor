@@ -30,6 +30,33 @@
 class MainWindowImpl
 {
 public:
+    void addSeparator(QWidget* w)
+    {
+        auto sep = new QAction(w);
+        sep->setSeparator(true);
+        w->addAction(sep);
+    }
+
+    void insertToolsActionsForPlaceholder(QWidget* parent, QAction* placeholder)
+    {
+        parent->addAction(toolIdToActionMap.value("select"));
+
+        addSeparator(parent);
+        foreach (auto action, allToolActions()) {
+            if (!actionToToolId(action).startsWith("op-") && !(actionToToolId(action) == "select")) {
+                parent->addAction(action);
+            }
+        }
+        addSeparator(parent);
+        foreach (auto action, allToolActions()) {
+            if (actionToToolId(action).startsWith("op-")) {
+                parent->addAction(action);
+            }
+        }
+
+        parent->removeAction(placeholder);
+    }
+
     void setupActionsMenuAndToolbar()
     {
         foreach(auto action, allToolActions()) {
@@ -38,25 +65,8 @@ public:
 
         // fill menuTool and toolBar_Tools
         //
-        ui->menuTool->addAction(toolIdToActionMap.value("select"));
-        ui->toolBar_Tools->addAction(toolIdToActionMap.value("select"));
-
-        ui->menuTool->addSeparator();
-        ui->toolBar_Tools->addSeparator();
-        foreach (auto action, allToolActions()) {
-            if (!actionToToolId(action).startsWith("op-") && !(actionToToolId(action) == "select")) {
-                ui->menuTool->addAction(action);
-                ui->toolBar_Tools->addAction(action);
-            }
-        }
-        ui->menuTool->addSeparator();
-        ui->toolBar_Tools->addSeparator();
-        foreach (auto action, allToolActions()) {
-            if (actionToToolId(action).startsWith("op-")) {
-                ui->menuTool->addAction(action);
-                ui->toolBar_Tools->addAction(action);
-            }
-        }
+        insertToolsActionsForPlaceholder(ui->menuTool, ui->actionToolsActionsPlaceholder);
+        insertToolsActionsForPlaceholder(ui->toolBar_Tools, ui->actionToolsActionsPlaceholder);
     }
 
     /**

@@ -61,27 +61,35 @@ public:
         return action;
     }
 
+    QAction* newAction(QIcon icon, QString text, QObject* parent, QKeySequence key)
+    {
+        auto action = new QAction(icon, text, parent);
+        action->setShortcut(key);
+        action->setToolTip(text); // todo: more
+        return action;
+    }
+
     /**
      * singleton
      */
     QActionGroup* toolActions()
     {
-        if (actionGroup != nullptr) {
-            return actionGroup;
+        if (toolActionGroup != nullptr) {
+            return toolActionGroup;
         }
 
-        actionGroup = new QActionGroup(owner);
-        newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), actionGroup, QKeySequence(tr("Esc")));
-        newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), actionGroup, QKeySequence(tr("R")));
-        newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), actionGroup, QKeySequence(tr("E")));
-        newToolAction("line", QIcon::fromTheme("draw-arrow-forward"), tr("Line or arrow"), actionGroup, QKeySequence(tr("L")));
-        newToolAction("text", QIcon::fromTheme("draw-text"), tr("Text"), actionGroup, QKeySequence(tr("T")));
-        newToolAction("highlight", QIcon::fromTheme("im-status-message-edit"), tr("Highlight"), actionGroup, QKeySequence(tr("H")));
-        newToolAction("obfuscate", QIcon::fromTheme("edit-delete-shred"), tr("Obfuscate"), actionGroup, QKeySequence(tr("O")));
-        newToolAction("op-crop", QIcon::fromTheme("transform-crop"), tr("Crop"), actionGroup, QKeySequence(tr("Ctrl+Shift+X")));
-        newToolAction("op-ripout", QIcon::fromTheme("distribute-vertical-equal"), tr("Rip out"), actionGroup, QKeySequence(tr("Ctrl+Shift+R")));
+        toolActionGroup = new QActionGroup(owner);
+        newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), toolActionGroup, QKeySequence(tr("Esc")));
+        newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), toolActionGroup, QKeySequence(tr("R")));
+        newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), toolActionGroup, QKeySequence(tr("E")));
+        newToolAction("line", QIcon::fromTheme("draw-arrow-forward"), tr("Line or arrow"), toolActionGroup, QKeySequence(tr("L")));
+        newToolAction("text", QIcon::fromTheme("draw-text"), tr("Text"), toolActionGroup, QKeySequence(tr("T")));
+        newToolAction("highlight", QIcon::fromTheme("im-status-message-edit"), tr("Highlight"), toolActionGroup, QKeySequence(tr("H")));
+        newToolAction("obfuscate", QIcon::fromTheme("edit-delete-shred"), tr("Obfuscate"), toolActionGroup, QKeySequence(tr("O")));
+        newToolAction("op-crop", QIcon::fromTheme("transform-crop"), tr("Crop"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+X")));
+        newToolAction("op-ripout", QIcon::fromTheme("distribute-vertical-equal"), tr("Rip out"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+R")));
 
-        return actionGroup;
+        return toolActionGroup;
     }
 
     QList<QAction*> editActions()
@@ -97,7 +105,10 @@ public:
     SettingsManagerPtr settingsManager;
 
     MainEditorWidget* mainEditorWidget = nullptr;
-    QActionGroup* actionGroup = nullptr;
+
+    QActionGroup* toolActionGroup = nullptr;
+    QList<QAction*> undoActionsList;
+    QList<QAction*> editActionsList;
 };
 
 #undef tr
@@ -191,7 +202,22 @@ QActionGroup* KreenshotEditor::toolActions()
 
 QList<QAction*> KreenshotEditor::editActions()
 {
-    return QList<QAction*>(); // TODO
+    if (d->editActionsList.empty())
+    {
+        d->editActionsList.append(d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del"))));
+    }
+
+    return d->editActionsList;
+}
+
+QList<QAction*> KreenshotEditor::undoActions()
+{
+    if (d->undoActionsList.empty())
+    {
+        d->undoActionsList.append(d->newAction(QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z"))));
+        d->undoActionsList.append(d->newAction(QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y"))));
+    }
+    return d->undoActionsList;
 }
 
 void KreenshotEditor::setCaptureTime(QDateTime datetime)

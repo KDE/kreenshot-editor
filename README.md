@@ -34,6 +34,8 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- delete should be disabled if no item selected
+- draw item => do not show move item cursor
 - op crop
     // TODO: this should also work for lines => add a "translate" method
 - when document is modified, it file status should become "modified"
@@ -45,16 +47,12 @@ TODO
 - enable more item properties (see item.h/cpp)
 - enable hover visual
 - makes sure line has a bigger catch area when trying to move
-- ToolManager: Draw item tool: text, highlight, obfuscate
 - key movement of items
-
 - crop etc. tool
     - should set new baseImage and move item coordinates to adapt
-- rename Item to KreenItem
 - add context menu to select tools
 - add handles for rect resizing and line repositioning (as extra class)
     - Ctrl for propertional
-- Draw rect tool
 - draw arrow
 - click on empty space chooses Select tool
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
@@ -100,6 +98,7 @@ LATER
 
 QUESTIONS
 ---------
+- how to provide own icons?
 - how to install the lib and the app?
     - how to put the include files for dev in the right place?
 - where to store data files like default background image?
