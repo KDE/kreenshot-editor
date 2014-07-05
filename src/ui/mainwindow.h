@@ -54,10 +54,6 @@ public Q_SLOTS:
     void editPreferences();
     void helpAbout();
 
-    /**
-     * Works with convention based action names
-     */
-    void requestTool();
     void toolChosen(QString toolId);
 
     void updateOutputFileStatus();

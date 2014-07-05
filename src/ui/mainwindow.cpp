@@ -134,9 +134,7 @@ public:
      */
     QString actionToToolId(QAction* action)
     {
-        QString toolId = action->data().toString();
-        Q_ASSERT_X(!toolId.isEmpty(), "actionToToolId", "Hint: setupActions must be called once before using this method");
-        return toolId;
+        return kreenshotEditor->actionToToolId(action);
     }
 
     void handleSaveImageError(QMainWindow* parent, ErrorStatus errorStatus)
@@ -208,9 +206,6 @@ void MainWindow::setupActions()
 
         // action toogled to button
         connect(action, SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
-
-        // select action to request
-        connect(action, SIGNAL(triggered()), this, SLOT(requestTool()));
     }
 
     connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
@@ -292,19 +287,6 @@ void MainWindow::updateOutputFileStatus()
     }
 
     setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->documentFile()->filename()).arg(d->baseWindowTitle));
-}
-
-void MainWindow::requestTool()
-{
-    QString className = QObject::sender()->metaObject()->className();
-    qDebug() << className;
-    Q_ASSERT(className == "QAction");
-
-    QString toolId = d->actionToToolId((QAction*)QObject::sender());
-    QString message = QString("MainWindow::requestTool: tool id '%1'").arg(toolId);
-    qDebug() << message;
-
-    d->kreenshotEditor->mainEditorWidget()->requestTool(toolId);
 }
 
 void MainWindow::toolChosen(QString toolId)

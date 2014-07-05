@@ -121,8 +121,16 @@ public:
      */
     void showPreferencesDialog();
 
+    /**
+     * util method
+     */
+    QString actionToToolId(QAction* action);
+
 Q_SIGNALS:
     //// void outputFileStatusChanged();
+
+protected Q_SLOTS:
+    void requestToolBySenderAction();
 
 private:
     KreenshotEditorImplPtr d;

@@ -90,7 +90,8 @@ public:
     }
 
 public:
-    KreenshotEditor* owner;
+    KreenshotEditor* owner = nullptr;
+
     DocumentFilePtr documentFile;
     OutputFilenameGeneratorPtr outputFilenameGenerator;
     SettingsManagerPtr settingsManager;
@@ -106,12 +107,40 @@ KreenshotEditor::KreenshotEditor()
     KREEN_PIMPL_INIT_THIS(KreenshotEditor);
 
     d->settingsManager->load();
+
+    // connect tool actions
+    foreach (auto action, d->toolActions()->actions()) {
+
+        // select action to tool request
+        connect(action, SIGNAL(triggered()), this, SLOT(requestToolBySenderAction()));
+    }
 }
 
 KreenshotEditor::~KreenshotEditor()
 {
 
 }
+
+QString KreenshotEditor::actionToToolId(QAction* action)
+{
+    QString toolId = action->data().toString();
+    Q_ASSERT_X(!toolId.isEmpty(), "actionToToolId", "Hint: setupActions must be called once before using this method");
+    return toolId;
+}
+
+void KreenshotEditor::requestToolBySenderAction()
+{
+    QString className = QObject::sender()->metaObject()->className();
+    qDebug() << className;
+    Q_ASSERT(className == "QAction");
+
+    QString toolId = actionToToolId((QAction*)QObject::sender());
+    QString message = QString("MainWindow::requestTool: tool id '%1'").arg(toolId);
+    qDebug() << message;
+
+    mainEditorWidget()->requestTool(toolId);
+}
+
 
 void KreenshotEditor::setBaseImageData(QImage image)
 {
