@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- delete should be disabled if no item selected
 - draw item => do not show move item cursor
 - op crop
     // TODO: this should also work for lines => add a "translate" method

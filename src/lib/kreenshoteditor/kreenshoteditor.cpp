@@ -107,8 +107,11 @@ public:
     MainEditorWidget* mainEditorWidget = nullptr;
 
     QActionGroup* toolActionGroup = nullptr;
+
     QList<QAction*> undoActionsList;
+
     QList<QAction*> editActionsList;
+    QAction* actionItemDelete;
 };
 
 #undef tr
@@ -190,6 +193,8 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
 //         else {
         d->mainEditorWidget = mainEditorWidget;
 //         }
+
+        connect(d->mainEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(slotActionItemDeleteUpdateEnabledState()));
     }
 
     return d->mainEditorWidget;
@@ -204,9 +209,10 @@ QList<QAction*> KreenshotEditor::editActions()
 {
     if (d->editActionsList.empty())
     {
-        auto deleteAction = d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del")));
-        connect(deleteAction, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
-        d->editActionsList.append(deleteAction);
+        d->actionItemDelete = d->newAction(QIcon::fromTheme("edit-delete"), "Delete", this, QKeySequence(tr("Del")));
+        d->actionItemDelete->setEnabled(false);
+        connect(d->actionItemDelete, SIGNAL(triggered()), this, SLOT(selectedItemsDelete()));
+        d->editActionsList.append(d->actionItemDelete);
     }
 
     return d->editActionsList;
@@ -272,6 +278,12 @@ void KreenshotEditor::editRedo()
 void KreenshotEditor::selectedItemsDelete()
 {
     mainEditorWidget()->deleteSelectedItems();
+}
+
+void KreenshotEditor::slotActionItemDeleteUpdateEnabledState()
+{
+    qDebug() << "slotActionItemDeleteUpdateEnabledState";
+    d->actionItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
 }
 
 }

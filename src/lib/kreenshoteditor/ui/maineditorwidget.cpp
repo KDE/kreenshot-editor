@@ -641,6 +641,8 @@ void MainEditorWidget::sceneSelectionChanged()
     d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
 
     d->selectionHandles->redrawSelectionHandles(true);
+
+    emit itemSelectionChanged();
 }
 
 void MainEditorWidget::redrawSelectionHandles()
@@ -661,6 +663,11 @@ void MainEditorWidget::deleteSelectedItems()
     d->kreenshotEditor->documentFile()->document()->removeItems(toBeErased);
 
     createSceneFromModel();
+}
+
+int MainEditorWidget::selectedItemsCount()
+{
+    return d->scene()->selectedItems().size();
 }
 
 }

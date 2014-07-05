@@ -52,8 +52,14 @@ public:
      */
     void deleteSelectedItems();
 
+    /**
+     * tmp
+     */
+    int selectedItemsCount();
+
 Q_SIGNALS:
     void toolChosen(QString toolId);
+    void itemSelectionChanged();
 
 public Q_SLOTS:
     /**

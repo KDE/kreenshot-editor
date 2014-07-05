@@ -140,6 +140,7 @@ protected Q_SLOTS:
     void editUndo();
     void editRedo();
     void selectedItemsDelete();
+    void slotActionItemDeleteUpdateEnabledState();
 
 private:
     KreenshotEditorImplPtr d;
