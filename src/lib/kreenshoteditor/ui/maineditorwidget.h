@@ -58,7 +58,7 @@ public:
     int selectedItemsCount();
 
 Q_SIGNALS:
-    void toolChosen(QString toolId);
+    void toolChosenSignal(QString toolId);
     void itemSelectionChanged();
 
 public Q_SLOTS:

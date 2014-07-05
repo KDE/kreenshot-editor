@@ -248,7 +248,7 @@ void MainWindow::setupActions()
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
-    connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosen(QString)), this, SLOT(toolChosen(QString)));
+    connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
 }
 
 void MainWindow::editPreferences()
@@ -303,9 +303,9 @@ void MainWindow::updateOutputFileStatus()
     setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->documentFile()->filename()).arg(d->baseWindowTitle));
 }
 
-void MainWindow::toolChosen(QString toolId)
+void MainWindow::slotToolChosen(QString toolId)
 {
-    qDebug() << "MainWindow::toolChosen: " << toolId;
+    qDebug() << "MainWindow::slotToolChosen: " << toolId;
 
     auto toolAction = d->toolActionFromId(toolId);
     toolAction->setChecked(true); // the other items will be unchecked because of QActionGroup

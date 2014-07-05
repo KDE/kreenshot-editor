@@ -589,7 +589,7 @@ void MainEditorWidget::requestTool(QString toolId)
 
     d->graphicsView->setCursorFromChosenTool();
     d->updateDragModeFromChosenTool();
-    emit toolChosen(toolId);
+    emit toolChosenSignal(toolId);
 }
 
 void MainEditorWidget::updateItemsGeometryFromModel()

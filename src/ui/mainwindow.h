@@ -51,7 +51,7 @@ public Q_SLOTS:
     void editPreferences();
     void helpAbout();
 
-    void toolChosen(QString toolId);
+    void slotToolChosen(QString toolId);
 
     void updateOutputFileStatus();
 
