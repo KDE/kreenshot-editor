@@ -22,7 +22,6 @@
 #include <QDebug>
 #include "ui/mainwindow.h"
 #include <kreen/kreenshoteditor.h>
-#include <kreen/core/outputfilenamegenerator.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -48,8 +47,8 @@ int main(int argc, char *argv[])
 
     auto kreenshotEditor = std::make_shared<kreen::KreenshotEditor>();
 
-    kreenshotEditor->outputFilenameGenerator()->initCaptureTime();
-    kreenshotEditor->outputFilenameGenerator()->setDescription(arguments.description);
+    kreenshotEditor->setCaptureTime();
+    kreenshotEditor->setDescription(arguments.description);
     // TODO later: set pattern from command line (--output-file-pattern)
 
     if (arguments.isTreatFileAsNew) {

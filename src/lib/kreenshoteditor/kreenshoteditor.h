@@ -23,6 +23,7 @@
 #include <kreen/util/pimplutil.h>
 #include <QObject>
 #include <memory>
+#include <QDateTime>
 #include <kreen/core/errorstatus.h>
 
 class QWidget;
@@ -35,7 +36,6 @@ KREEN_SHAREDPTR_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
-KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
 }
 
 using namespace core;
@@ -75,9 +75,15 @@ public:
     DocumentFilePtr documentFile();
 
     /**
-     * Use for initCaptureTime() and setDescription(...)
+     * sets ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}
+     * if datetime is not set the current time is used
      */
-    OutputFilenameGeneratorPtr outputFilenameGenerator();
+    void setCaptureTime(QDateTime datetime = QDateTime());
+
+    /**
+     * sets ${description}
+     */
+    void setDescription(QString text);
 
     /**
      * singleton

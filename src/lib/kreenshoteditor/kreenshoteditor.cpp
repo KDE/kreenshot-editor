@@ -111,9 +111,15 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
-OutputFilenameGeneratorPtr KreenshotEditor::outputFilenameGenerator()
 {
-    return d->outputFilenameGenerator;
+void KreenshotEditor::setCaptureTime(QDateTime datetime)
+{
+    d->outputFilenameGenerator->initCaptureTime(datetime);
+}
+
+void KreenshotEditor::setDescription(QString text)
+{
+    d->outputFilenameGenerator->setDescription(text);
 }
 
 bool KreenshotEditor::isFileNew()

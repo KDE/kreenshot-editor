@@ -21,7 +21,7 @@
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
-#include <kreen/core/outputfilenamegenerator.h>
+#include "../../core/outputfilenamegenerator.h"
 #include <core/documentfile.h>
 
 namespace kreen {

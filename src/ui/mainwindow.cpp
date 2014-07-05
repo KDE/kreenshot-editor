@@ -25,7 +25,6 @@
 #include <QFileDialog>
 #include <kreen/kreenshoteditor.h>
 #include <kreen/ui/maineditorwidget.h>
-#include <kreen/core/outputfilenamegenerator.h>
 #include <kreen/core/documentfile.h>
 
 class MainWindowImpl

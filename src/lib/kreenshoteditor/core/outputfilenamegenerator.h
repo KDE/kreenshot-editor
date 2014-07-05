@@ -51,7 +51,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
  *
  * NOTE: Filename can be with out without path
  */
-class KREEN_DECL_EXPORT OutputFilenameGenerator
+class OutputFilenameGenerator
 {
 public:
     /**
