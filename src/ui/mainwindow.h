@@ -63,6 +63,6 @@ private:
     MainWindowImplPtr d;
 };
 
-#endif // UI_MAIN_WINDOW_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

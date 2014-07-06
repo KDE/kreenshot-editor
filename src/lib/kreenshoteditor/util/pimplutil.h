@@ -47,6 +47,6 @@ typedef std::shared_ptr<OrigClassName##Impl> OrigClassName##ImplPtr;
 #define KREEN_PIMPL_INIT_THIS(OrigClassName) d = std::make_shared<OrigClassName##Impl>(this);
 
 
-#endif // UTIL_PIMPLUTIL_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

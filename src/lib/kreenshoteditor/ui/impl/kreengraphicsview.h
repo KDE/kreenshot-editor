@@ -65,6 +65,6 @@ private:
 }
 }
 
-#endif // MYQGRAPHICSVIEW
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

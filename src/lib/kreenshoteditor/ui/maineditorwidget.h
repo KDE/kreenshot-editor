@@ -102,6 +102,6 @@ private:
 }
 }
 
-#endif // UI_MAIN_EDITOR_WIDGET_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

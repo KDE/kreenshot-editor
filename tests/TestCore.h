@@ -121,6 +121,6 @@ private slots:
     }
 };
 
-#endif // TEST_CORE_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

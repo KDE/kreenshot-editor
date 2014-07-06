@@ -374,6 +374,6 @@ private:
 }
 }
 
-#endif // UI_KREENQGRAPHICSITEMS_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

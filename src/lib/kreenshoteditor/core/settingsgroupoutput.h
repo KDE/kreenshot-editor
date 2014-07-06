@@ -55,4 +55,4 @@ private:
 }
 }
 
-#endif // CORE_SETTINGSGROUPOUTPUT_H
+#endif

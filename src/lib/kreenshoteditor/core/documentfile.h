@@ -105,4 +105,4 @@ private:
 }
 }
 
-#endif // CORE_DOCUMENTFILE_H
+#endif

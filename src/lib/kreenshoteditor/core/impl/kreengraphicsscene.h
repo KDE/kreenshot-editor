@@ -84,6 +84,6 @@ private:
 }
 }
 
-#endif // UI_MYQGRAPHICSSCENE_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

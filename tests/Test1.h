@@ -65,6 +65,6 @@ private slots:
     }
 };
 
-#endif // TEST_1_H
+#endif
 
 // kate: indent-width 4; replace-tabs on;

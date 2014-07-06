@@ -93,4 +93,4 @@ private:
 }
 }
 
-#endif // CORE_OUTPUTFILENAMEMANAGER
+#endif

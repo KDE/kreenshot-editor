@@ -80,4 +80,4 @@ private:
 }
 }
 
-#endif // CORE_SETTINGSMANAGER_H
+#endif

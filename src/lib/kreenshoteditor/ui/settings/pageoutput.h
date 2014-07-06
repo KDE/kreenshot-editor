@@ -63,6 +63,6 @@ private:
 }
 }
 
-#endif // UI_SETTINGS_PAGEOUTPUT_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

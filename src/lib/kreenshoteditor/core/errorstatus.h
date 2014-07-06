@@ -34,4 +34,4 @@ typedef QString ErrorStatus;
 }
 }
 
-#endif // CORE_ERRORSTATUS_H
+#endif

@@ -30,6 +30,6 @@
 class OrigClassName;\
 typedef std::shared_ptr<OrigClassName> OrigClassName##Ptr;
 
-#endif // UTIL_SHAREDPTRUTIL_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;

@@ -166,4 +166,4 @@ public:
 }
 }
 
-#endif // CORE_ITEM_H
+#endif

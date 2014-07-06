@@ -153,4 +153,4 @@ private:
 
 }
 
-#endif // KREENSHOTEDITOR_H
+#endif
