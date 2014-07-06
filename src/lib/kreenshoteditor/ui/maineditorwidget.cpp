@@ -689,6 +689,8 @@ void MainEditorWidget::deleteSelectedItems()
 
 void MainEditorWidget::selectAllItems()
 {
+    requestTool("select");
+    
     // todo: potential optimization: disable events before the loop and enable afterwards
     foreach(auto kreenGraphicsItemBase, d->kreenGraphicsItems()) {
         kreenGraphicsItemBase->graphicsItem()->setSelected(true);

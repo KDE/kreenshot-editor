@@ -34,7 +34,6 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- SelectAll: when clicked the Select tool should be selected first
 - draw item => do not show move item cursor
 - use more KreenQGraphicsItemBase::graphicsItem()
 - op crop
