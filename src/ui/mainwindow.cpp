@@ -42,13 +42,13 @@ public:
         parent->insertAction(placeholder, toolIdToActionMap.value("select"));
 
         insertSeparator(placeholder, parent);
-        foreach (auto action, allToolActions()) {
+        foreach (auto action, kreenshotEditor->toolActions()) {
             if (!actionToToolId(action).startsWith("op-") && !(actionToToolId(action) == "select")) {
                 parent->insertAction(placeholder, action);
             }
         }
         insertSeparator(placeholder, parent);
-        foreach (auto action, allToolActions()) {
+        foreach (auto action, kreenshotEditor->toolActions()) {
             if (actionToToolId(action).startsWith("op-")) {
                 parent->insertAction(placeholder, action);
             }
@@ -59,23 +59,22 @@ public:
 
     void insertUndoActionsForPlaceholder(QWidget* parent, QAction* placeholder)
     {
-        foreach (auto action, kreenshotEditor->undoActions()) {
-            parent->insertAction(placeholder, action);
-        }
+        parent->insertAction(placeholder, kreenshotEditor->actionFromId("edit-undo"));
+        parent->insertAction(placeholder, kreenshotEditor->actionFromId("edit-redo"));
         parent->removeAction(placeholder);
     }
 
-    void insertEditActionsForPlaceholder(QWidget* parent, QAction* placeholder)
+    void insertEditActionsForPlaceholder(QWidget* parent, QAction* placeholder, QStringList actionIds)
     {
-        foreach (auto action, kreenshotEditor->editActions()) {
-            parent->insertAction(placeholder, action);
+        foreach (auto actionId, actionIds) {
+            parent->insertAction(placeholder, kreenshotEditor->actionFromId(actionId));
         }
         parent->removeAction(placeholder);
     }
 
     void setupActionsMenuAndToolbar()
     {
-        foreach(auto action, allToolActions()) {
+        foreach(auto action, kreenshotEditor->toolActions()) {
             toolIdToActionMap.insert(actionToToolId(action), action);
         }
 
@@ -87,8 +86,11 @@ public:
         insertUndoActionsForPlaceholder(ui->menuEdit, ui->actionUndoActionsPlaceholder);
         insertUndoActionsForPlaceholder(ui->toolBar_Main, ui->actionUndoActionsPlaceholder);
 
-        insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder);
-        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder);
+        QStringList editActions;
+        editActions << "edit-objects-select-all" << "edit-objects-delete";
+        insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder, editActions);
+        editActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items
+        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder, editActions);
     }
 
     /**
@@ -97,7 +99,7 @@ public:
      */
     void setupToolActionRelatedWidgetProperties()
     {
-        foreach (auto action, allToolActions()) {
+        foreach (auto action, kreenshotEditor->toolActions()) {
 
             QString toolId = actionToToolId(action);
             toolboxButtonFromId(toolId)->setIcon(action->icon());
@@ -154,11 +156,6 @@ public:
             Q_ASSERT(false);
             return nullptr;
         }
-    }
-
-    QList<QAction*> allToolActions()
-    {
-        return kreenshotEditor->toolActions()->actions();
     }
 
     /**
@@ -230,7 +227,7 @@ void MainWindow::setupUi()
 
 void MainWindow::setupActions()
 {
-    foreach (auto action, d->allToolActions()) {
+    foreach (auto action, d->kreenshotEditor->toolActions()) {
         QString toolId = d->actionToToolId(action);
 
         // button click to action

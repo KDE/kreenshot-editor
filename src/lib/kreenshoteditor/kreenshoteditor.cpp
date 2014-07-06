@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QStringList>
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
 #include "core/documentfile.h"
@@ -61,40 +62,40 @@ public:
         return action;
     }
 
-    QAction* newAction(QIcon icon, QString text, QObject* parent, QKeySequence key)
+    /**
+     * creates an action and adds it to the actionIdToActionMap
+     */
+    QAction* newAction(QString actionId, QIcon icon, QString text, QObject* parent, QKeySequence key)
     {
         auto action = new QAction(icon, text, parent);
         action->setShortcut(key);
         action->setToolTip(text); // todo: more
+        action->setData(actionId);
+
+        actionIdToActionMap.insert(actionId, action);
+
         return action;
     }
 
     /**
      * singleton
      */
-    QActionGroup* toolActions()
+    QList<QAction*> toolActions()
     {
-        if (toolActionGroup != nullptr) {
-            return toolActionGroup;
+        if (toolActionGroup == nullptr) {
+            toolActionGroup = new QActionGroup(owner);
+            newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), toolActionGroup, QKeySequence(tr("Esc")));
+            newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), toolActionGroup, QKeySequence(tr("R")));
+            newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), toolActionGroup, QKeySequence(tr("E")));
+            newToolAction("line", QIcon::fromTheme("draw-arrow-forward"), tr("Line or arrow"), toolActionGroup, QKeySequence(tr("L")));
+            newToolAction("text", QIcon::fromTheme("draw-text"), tr("Text"), toolActionGroup, QKeySequence(tr("T")));
+            newToolAction("highlight", QIcon::fromTheme("im-status-message-edit"), tr("Highlight"), toolActionGroup, QKeySequence(tr("H")));
+            newToolAction("obfuscate", QIcon::fromTheme("edit-delete-shred"), tr("Obfuscate"), toolActionGroup, QKeySequence(tr("O")));
+            newToolAction("op-crop", QIcon::fromTheme("transform-crop"), tr("Crop"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+X")));
+            newToolAction("op-ripout", QIcon::fromTheme("distribute-vertical-equal"), tr("Rip out"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+R")));
         }
 
-        toolActionGroup = new QActionGroup(owner);
-        newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), toolActionGroup, QKeySequence(tr("Esc")));
-        newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), toolActionGroup, QKeySequence(tr("R")));
-        newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), toolActionGroup, QKeySequence(tr("E")));
-        newToolAction("line", QIcon::fromTheme("draw-arrow-forward"), tr("Line or arrow"), toolActionGroup, QKeySequence(tr("L")));
-        newToolAction("text", QIcon::fromTheme("draw-text"), tr("Text"), toolActionGroup, QKeySequence(tr("T")));
-        newToolAction("highlight", QIcon::fromTheme("im-status-message-edit"), tr("Highlight"), toolActionGroup, QKeySequence(tr("H")));
-        newToolAction("obfuscate", QIcon::fromTheme("edit-delete-shred"), tr("Obfuscate"), toolActionGroup, QKeySequence(tr("O")));
-        newToolAction("op-crop", QIcon::fromTheme("transform-crop"), tr("Crop"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+X")));
-        newToolAction("op-ripout", QIcon::fromTheme("distribute-vertical-equal"), tr("Rip out"), toolActionGroup, QKeySequence(tr("Ctrl+Shift+R")));
-
-        return toolActionGroup;
-    }
-
-    QList<QAction*> editActions()
-    {
-        return QList<QAction*>(); // TODO
+        return toolActionGroup->actions();
     }
 
 public:
@@ -106,11 +107,8 @@ public:
 
     MainEditorWidget* mainEditorWidget = nullptr;
 
+    QMap<QString, QAction*> actionIdToActionMap;
     QActionGroup* toolActionGroup = nullptr;
-
-    QList<QAction*> undoActionsList;
-
-    QList<QAction*> editActionsList;
     QAction* actionSelectAll;
     QAction* actionItemDelete;
 };
@@ -123,8 +121,10 @@ KreenshotEditor::KreenshotEditor()
 
     d->settingsManager->load();
 
+    allActionIds(); // init the action map
+
     // connect tool actions
-    foreach (auto action, d->toolActions()->actions()) {
+    foreach (auto action, d->toolActions()) {
 
         // select action to tool request
         connect(action, SIGNAL(triggered()), this, SLOT(slotRequestToolBySenderAction()));
@@ -141,6 +141,13 @@ QString KreenshotEditor::actionToToolId(QAction* action)
     QString toolId = action->data().toString();
     Q_ASSERT_X(!toolId.isEmpty(), "actionToToolId", "Hint: setupActions must be called once before using this method");
     return toolId;
+}
+
+QString KreenshotEditor::actionToActionId(QAction* action)
+{
+    QString actionId = action->data().toString();
+    Q_ASSERT_X(!actionId.isEmpty(), "actionToActionId", "Hint: setupActions must be called once before using this method");
+    return actionId;
 }
 
 void KreenshotEditor::slotRequestToolBySenderAction()
@@ -201,41 +208,45 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
     return d->mainEditorWidget;
 }
 
-QActionGroup* KreenshotEditor::toolActions()
+QStringList KreenshotEditor::allActionIds()
 {
-    return d->toolActions();
-}
-
-QList<QAction*> KreenshotEditor::editActions()
-{
-    if (d->editActionsList.empty())
-    {
-        d->actionSelectAll = d->newAction(QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
+    if (d->actionIdToActionMap.empty()) { // singleton
+        //
+        // edit actions
+        //
+        d->actionSelectAll = d->newAction("edit-objects-select-all", QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
         connect(d->actionSelectAll, SIGNAL(triggered()), this, SLOT(slotEditSelectAll()));
-        d->editActionsList.append(d->actionSelectAll);
 
-        d->actionItemDelete = d->newAction(QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
+        d->actionItemDelete = d->newAction("edit-objects-delete", QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
         d->actionItemDelete->setEnabled(false);
         connect(d->actionItemDelete, SIGNAL(triggered()), this, SLOT(slotEditDeleteSelectedItems()));
-        d->editActionsList.append(d->actionItemDelete);
+
+        //
+        // undo actions
+        //
+        auto action = d->newAction("edit-undo", QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z")));
+        connect(action, SIGNAL(triggered()), this, SLOT(slotEditUndo()));
+
+        action = d->newAction("edit-redo", QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y")));
+        connect(action, SIGNAL(triggered()), this, SLOT(slotEditRedo()));
     }
 
-    return d->editActionsList;
+    return d->actionIdToActionMap.keys();
 }
 
-QList<QAction*> KreenshotEditor::undoActions()
+QAction* KreenshotEditor::actionFromId(QString actionId)
 {
-    if (d->undoActionsList.empty())
-    {
-        auto action = d->newAction(QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z")));
-        connect(action, SIGNAL(triggered()), this, SLOT(slotEditUndo()));
-        d->undoActionsList.append(action);
-
-        action = d->newAction(QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y")));
-        connect(action, SIGNAL(triggered()), this, SLOT(slotEditRedo()));
-        d->undoActionsList.append(action);
+    if (!d->actionIdToActionMap.contains(actionId)) {
+        qDebug() << "actionId '" << actionId << "' must be one of allActionIds";
+        return nullptr;
     }
-    return d->undoActionsList;
+
+    return d->actionIdToActionMap.value(actionId);
+}
+
+QList<QAction*> KreenshotEditor::toolActions()
+{
+    return d->toolActions();
 }
 
 void KreenshotEditor::setCaptureTime(QDateTime datetime)

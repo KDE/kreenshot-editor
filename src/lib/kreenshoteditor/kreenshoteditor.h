@@ -97,17 +97,17 @@ public:
      * get all actions for choosing "Select", "Rect", "Ellipse" etc. in a group
      * because only one of them is active at a time
      */
-    QActionGroup* toolActions();
+    QList<QAction*> toolActions();
 
     /**
-     * get actions like "Delete", "Copy", "Paste", "Select All" etc.
+     * all Action except for the toolActions (todo: merge this later)
      */
-    QList<QAction*> editActions();
+    QStringList allActionIds();
 
     /**
-     * undo / redo
+     * Returns action from one of the allActionIds() actions. Returns null if not found.
      */
-    QList<QAction*> undoActions();
+    QAction* actionFromId(QString actionId);
 
     /**
      * returns true if the file is not saved yet (not stored on disk yet)
@@ -130,6 +130,8 @@ public:
      * util method
      */
     QString actionToToolId(QAction* action);
+
+    QString actionToActionId(QAction* action);
 
 Q_SIGNALS:
     //// void outputFileStatusChanged();
