@@ -47,11 +47,11 @@ public:
 
     void instrumentResetFilenamepatternButton()
     {
-        MenuButtonUtil util(ui.toolButtonRestoreDefaultPlaceholder);
-        ui.toolButtonRestoreDefaultPlaceholder->setIcon(QIcon::fromTheme("code-variable"));
+        MenuButtonUtil util(ui.toolButtonRestoreDefaultFilenamePattern);
+        ui.toolButtonRestoreDefaultFilenamePattern->setIcon(QIcon::fromTheme("code-variable"));
         auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", owner);
         owner->connect(action, SIGNAL(triggered()), owner, SLOT(slotResetFilenamePattern()));
-        ui.toolButtonRestoreDefaultPlaceholder->addAction(action);
+        ui.toolButtonRestoreDefaultFilenamePattern->addAction(action);
     }
 
 private:
