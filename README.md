@@ -54,19 +54,15 @@ TODO
 - add handles for rect resizing and line repositioning (as extra class)
     - Ctrl for propertional
 - draw arrow
-- click on empty space chooses Select tool
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 
 LATER
 -----
-- item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
 - PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
     be an own widget and show also description
-- pak: run unit tests after build
-- prepare-include-files.sh: only find classes with the KREEN_*(?)EXPORT macro
-    - does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 - OpenSuseBuild service
+    - pak: run unit tests after build
 - Ctrl+Shift+C: copy image to clipboard
     - show message flash, when done (or KMessageBox, "show never again")
     - plus: provide drag source for DND
@@ -76,9 +72,7 @@ LATER
 - lib: provide different kinds of mainwidget
    - with or without toolbar
    - with some predefined stuff etc.
-- Settings: After saving: copy image path to clipboard
 - Select a Item
-  - Handles for resizing appear
   - Controls for common properties appear
      - most recently used or pinned colors
      - slider for line width
@@ -89,12 +83,16 @@ LATER
         let appear in windows title and in filename --> statusbar / ...edit pattern...
         [NEW] ...
         *  ... (see mainwindow.cpp)
-- Create Actions in lib (instead of UI file) and use in GUI (überlegen: nice ui file vs. good coding)
+- "Open last file storage location" or "Open storage location"
+- ? click on empty space should choose Select tool
+- ? use m4 to generate settings class
+- ? use #pragma once? (non-standard) / replace it as soon as someone sees a problem
+
+BUGS
+----
 - BUG: resize the main window requires the user to click the editor widget to restore the cursor to normal
     nothing goes until it was clicked
-- "Open last file storage location" or "Open storage location"
-- use m4 to generate settings class
-- use #pragma once? (non-standard) / replace it as soon as someone sees a problem
+- item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
 
 QUESTIONS
 ---------
@@ -104,6 +102,7 @@ QUESTIONS
 - where to store data files like default background image?
 - nullable QPoint for function parameter? --> just use a shared_ptr???
 - statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
+- prepare-include-files.sh: does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 
 Related tools
 -------------
