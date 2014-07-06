@@ -16,43 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CORE_SETTINGSGROUPOUTPUT_H
-#define CORE_SETTINGSGROUPOUTPUT_H
+#include "menubuttonutil.h"
 
-#include <kreen/util/exportutil.h>
-#include <vector>
-#include <memory>
-#include <QString>
-
-namespace kreen {
-namespace core {
-
-/**
- */
-class KREEN_DECL_EXPORT SettingsGroupOutput
+MenuButtonUtil::MenuButtonUtil(QToolButton* toolButton)
 {
-public:
-    SettingsGroupOutput() { }
-    virtual ~SettingsGroupOutput() { }
-
-public:
-    QString defaultOutputDirectory;
-
-    QString filenamePattern;
-    QString filenamePattern_DefaultValue() { return "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png"; }
-
-    bool afterSaveOpenDefaultViewer;
-    bool afterSaveOpenFileBrowser;
-
-    // either or
-    bool afterSaveClipboardFilename;
-    bool afterSaveClipboardImageData;
-
-private:
-
-};
-
-}
+    connect(toolButton, SIGNAL(clicked()), toolButton, SLOT(showMenu()));
 }
 
-#endif // CORE_SETTINGSGROUPOUTPUT_H
+MenuButtonUtil::~MenuButtonUtil()
+{
+
+}

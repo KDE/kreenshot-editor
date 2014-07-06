@@ -21,28 +21,39 @@
 #include "ui_pageoutput.h"
 #include <QFileDialog>
 #include <QDebug>
+#include <QMenu>
+#include <QToolBar>
 #include "../../core/impl/outputfilenamegenerator.h"
+#include "../../ui/widgets/menubuttonutil.h"
 #include <core/documentfile.h>
 
 namespace kreen {
 namespace ui {
 namespace settings {
 
+#define tr(arg) QObject::tr(arg)
+
 class PageOutputImpl
 {
 public:
     Ui::pageOutput ui;
+    PageOutput* owner;
 
 public:
-
+    PageOutputImpl(PageOutput* owner_)
+    {
+        owner = owner_;
+    }
 
 private:
 };
 
+#undef tr
+
 PageOutput::PageOutput(QWidget* parent)
  : QWidget(parent)
 {
-    d = std::make_shared<PageOutputImpl>();
+    KREEN_PIMPL_INIT_THIS(PageOutput);
     setupUi();
 }
 
@@ -53,11 +64,19 @@ PageOutput::~PageOutput()
 void PageOutput::setupUi()
 {
     d->ui.setupUi(this);
-    connect(d->ui.toolButtonChooseDirectory, SIGNAL(clicked()), this, SLOT(chooseDefaultOutputDirectory()));
-    connect(d->ui.lineEditOutputDirectory, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
-    connect(d->ui.lineEditFilenamePattern, SIGNAL(textChanged(QString)), this, SLOT(updateFilenamePreview()));
+    connect(d->ui.toolButtonChooseDirectory, SIGNAL(clicked()), this, SLOT(slotChooseDefaultOutputDirectory()));
+    connect(d->ui.lineEditOutputDirectory, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateFilenamePreview()));
+    connect(d->ui.lineEditFilenamePattern, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateFilenamePreview()));
+    connect(d->ui.comboBoxImageFileExt, SIGNAL(currentIndexChanged(int)), this, SLOT(slotUpdateFilenamePreview()));
 
     d->ui.comboBoxImageFileExt->addItems(DocumentFile::supportedImageFormats());
+
+    // instrument reset filenamepattern button
+    MenuButtonUtil util(d->ui.toolButtonRestoreDefaultPlaceholder);
+    d->ui.toolButtonRestoreDefaultPlaceholder->setIcon(QIcon::fromTheme("code-variable"));
+    auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", this);
+    connect(action, SIGNAL(triggered()), this, SLOT(slotResetFilenamePattern()));
+    d->ui.toolButtonRestoreDefaultPlaceholder->addAction(action);
 }
 
 void PageOutput::setValues(SettingsGroupOutput values)
@@ -90,7 +109,7 @@ SettingsGroupOutput PageOutput::values()
     return values;
 }
 
-void PageOutput::chooseDefaultOutputDirectory()
+void PageOutput::slotChooseDefaultOutputDirectory()
 {
     QDir currentDir(d->ui.lineEditOutputDirectory->text());
     if (!currentDir.exists())
@@ -106,13 +125,24 @@ void PageOutput::chooseDefaultOutputDirectory()
     }
 }
 
-void PageOutput::updateFilenamePreview()
+void PageOutput::slotUpdateFilenamePreview()
 {
     OutputFilenameGenerator outputFilenameGenerator;
     outputFilenameGenerator.initCaptureTime();
     outputFilenameGenerator.setDescription("Window 1");
-    outputFilenameGenerator.setFilenamePattern(QDir(d->ui.lineEditOutputDirectory->text()).filePath(d->ui.lineEditFilenamePattern->text()));
+    outputFilenameGenerator.setFilenamePattern(
+        QDir(d->ui.lineEditOutputDirectory->text()).filePath(
+            PageOutputImplHeader::filenamePlusExtToFilename(d->ui.lineEditFilenamePattern->text(), d->ui.comboBoxImageFileExt->currentText()))
+                            );
     d->ui.labelPreview->setText(outputFilenameGenerator.resultingFilename());
+}
+
+void PageOutput::slotResetFilenamePattern()
+{
+    SettingsGroupOutput values;
+    QString filename, ext;
+    PageOutputImplHeader::filenameToFilenamePlusExt(values.filenamePattern_DefaultValue(), &filename, &ext);
+    d->ui.lineEditFilenamePattern->setText(filename);
 }
 
 }

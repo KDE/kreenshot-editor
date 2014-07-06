@@ -51,7 +51,7 @@ void SettingsManager::load()
 {
     QSettings settings;
     output.defaultOutputDirectory = settings.value("output/default-output-directory", "~/Pictures/screenshots").toString();
-    output.filenamePattern = settings.value("output/filename-pattern", "${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png").toString();
+    output.filenamePattern = settings.value("output/filename-pattern", output.filenamePattern_DefaultValue()).toString();
     output.afterSaveOpenDefaultViewer = settings.value("output/after-save/open-default-viewer", false).toBool();
     output.afterSaveOpenFileBrowser = settings.value("output/after-save/open-filebrowser", false).toBool();
     output.afterSaveClipboardFilename = settings.value("output/after-save/clipboard-filename", false).toBool();
@@ -74,6 +74,7 @@ void SettingsManager::reset()
     QSettings settings;
     settings.clear();
 }
+
 
 }
 }

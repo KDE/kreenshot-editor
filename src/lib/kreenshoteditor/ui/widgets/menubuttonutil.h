@@ -16,53 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_SETTINGS_PAGEOUTPUT_H
-#define UI_SETTINGS_PAGEOUTPUT_H
+#ifndef UUID_26b34cda_d030_4356_a926_534f71be9e3f
+#define UUID_26b34cda_d030_4356_a926_534f71be9e3f
 
-#include <kreen/util/pimplutil.h>
 #include <QWidget>
-#include <memory>
-#include "../../core/settingsgroupoutput.h"
+#include <QToolButton>
 
-namespace kreen {
-namespace ui {
-namespace settings {
-
-using namespace kreen::core;
-
-KREEN_PIMPL_FORWARD_DECL(PageOutput)
-
-class PageOutput : public QWidget
+class MenuButtonUtil : public QObject
 {
     Q_OBJECT
 
 public:
-    PageOutput(QWidget* parent);
-    virtual ~PageOutput();
+    /**
+     * connects click event
+     */
+    MenuButtonUtil(QToolButton* toolButton);
 
-    void setValues(SettingsGroupOutput values);
-
-    SettingsGroupOutput values();
+    virtual ~MenuButtonUtil();
 
 public Q_SLOTS:
 
-private Q_SLOTS:
-    void slotChooseDefaultOutputDirectory();
-    void slotUpdateFilenamePreview();
-    void slotResetFilenamePattern();
-
 private:
-    void setupUi();
-
-private:
-    PageOutputImplPtr d;
 
 };
 
-}
-}
-}
-
-#endif // UI_SETTINGS_PAGEOUTPUT_H
+#endif
 
 // kate: indent-mode cstyle; replace-tabs on;
