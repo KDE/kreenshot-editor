@@ -16,6 +16,7 @@ include_directories(
 )
 
 set(kreenshoteditor_SOURCES
+    core/impl/kreengraphicsitembase.cpp
     core/impl/kreengraphicsitems.cpp
     core/impl/kreengraphicsscene.cpp
     core/impl/outputfilenamegenerator.cpp
