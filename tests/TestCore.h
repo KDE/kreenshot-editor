@@ -26,7 +26,7 @@
 #include <QFileInfo>
 #include "lib/kreenshoteditor/core/document.h"
 #include "lib/kreenshoteditor/core/documentfile.h"
-#include "lib/kreenshoteditor/core/outputfilenamegenerator.h"
+#include "lib/kreenshoteditor/core/impl/outputfilenamegenerator.h"
 #include "lib/kreenshoteditor/core/settingsmanager.h"
 
 using namespace kreen::core;

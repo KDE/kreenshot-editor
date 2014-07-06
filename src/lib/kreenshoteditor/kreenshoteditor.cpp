@@ -27,7 +27,7 @@
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
 #include "core/documentfile.h"
-#include "core/outputfilenamegenerator.h"
+#include "core/impl/outputfilenamegenerator.h"
 #include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"
 

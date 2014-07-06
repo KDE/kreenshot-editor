@@ -18,11 +18,11 @@ include_directories(
 set(kreenshoteditor_SOURCES
     core/impl/kreengraphicsitems.cpp
     core/impl/kreengraphicsscene.cpp
+    core/impl/outputfilenamegenerator.cpp
 
     core/document.cpp
     core/documentfile.cpp
     core/kreenitem.cpp
-    core/outputfilenamegenerator.cpp
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
 

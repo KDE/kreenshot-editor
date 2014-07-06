@@ -22,7 +22,7 @@
 #include <QDialog>
 #include <memory>
 #include <kreen/core/settingsmanager.h>
-#include "../../core/outputfilenamegenerator.h"
+#include "../../core/impl/outputfilenamegenerator.h"
 
 namespace kreen {
 namespace ui {
