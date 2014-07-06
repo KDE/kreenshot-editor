@@ -34,17 +34,11 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- op crop
-    // TODO: this should also work for lines => add a "translate" method   DONE
-    TODO: AFTER having moved line the document is not updated correctly!!!
-
-- use more KreenQGraphicsItemBase::graphicsItem()
+- save image to file: do not save selection indication rect
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
 - mouse over: draw a light version of the selection rects
-- // TODO: exception handling or similar!!!
-    http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
-- save image to file: do not save selection indication rect
+- use more KreenQGraphicsItemBase::graphicsItem()
 - enable more item properties (see item.h/cpp)
 - enable hover visual
 - makes sure line has a bigger catch area when trying to move

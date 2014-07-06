@@ -110,6 +110,7 @@ QRect KreenItem::rect()
 
 void KreenItem::setLine(QLine line)
 {
+    qDebug() << "KreenItem::setLine: " << line;
     _line = line;
 }
 

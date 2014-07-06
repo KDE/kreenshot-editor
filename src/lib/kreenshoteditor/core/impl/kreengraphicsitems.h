@@ -68,7 +68,7 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
-        QPoint scenePos = this->scenePos().toPoint();
+        QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
@@ -139,7 +139,7 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
-        QPoint scenePos = this->scenePos().toPoint();
+        QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
@@ -202,9 +202,10 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
-        //QPoint scenePos = this->scenePos().toPoint();
-        QLine line = this->line().toLine();
+        QPoint scenePos = this->pos().toPoint();
+        QLine line = this->line().toLine().translated(scenePos); // translate our line to scenePos
         _item->setLine(line);
+        this->setPos(0.0, 0.0); // reset QGraphicsItem pos to 0|0 because our model only relies on the line (and not additionally on the pos)
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
@@ -265,7 +266,7 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
-        QPoint scenePos = this->scenePos().toPoint();
+        QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
@@ -361,7 +362,7 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
-        QPoint scenePos = this->scenePos().toPoint();
+        QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
