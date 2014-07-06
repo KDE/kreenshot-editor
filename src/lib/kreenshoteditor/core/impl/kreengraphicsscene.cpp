@@ -164,7 +164,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mouseReleaseEvent(event);
 
     qDebug() << "emit MyQGraphicsScene::mouseReleased";
-    emit mouseReleased(); // used to update from model to have instant visual feedback iif something is wrong with model/view mappine
+    emit mouseReleased(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
 }
 
 }

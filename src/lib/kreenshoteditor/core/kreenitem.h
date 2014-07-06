@@ -81,6 +81,11 @@ public:
      */
     QLine line();
 
+    /**
+     * move the item by the given amount
+     */
+    void translate(int dx, int dy);
+
 public:
     /**
      * Creates a new Item with default values for all properties available for this item.

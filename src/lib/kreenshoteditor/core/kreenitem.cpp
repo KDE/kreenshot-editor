@@ -118,6 +118,16 @@ QLine KreenItem::line()
     return _line;
 }
 
+void KreenItem::translate(int dx, int dy)
+{
+    if (_line.isNull()) {
+        _rect.translate(dx, dy);
+    }
+    else {
+        _line.translate(dx, dy);
+    }
+}
+
 ItemPropertyPtr propFromVectorOrNull(QString propName, std::vector<ItemPropertyPtr> _properties)
 {
     auto result = std::find_if(_properties.begin(), _properties.end(),

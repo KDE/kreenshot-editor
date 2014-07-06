@@ -35,7 +35,9 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - op crop
-    // TODO: this should also work for lines => add a "translate" method
+    // TODO: this should also work for lines => add a "translate" method   DONE
+    TODO: AFTER having moved line the document is not updated correctly!!!
+
 - use more KreenQGraphicsItemBase::graphicsItem()
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
