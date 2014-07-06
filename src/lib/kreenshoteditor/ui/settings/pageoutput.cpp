@@ -45,13 +45,22 @@ public:
         owner = owner_;
     }
 
+    void instrumentResetFilenamepatternButton()
+    {
+        MenuButtonUtil util(ui.toolButtonRestoreDefaultPlaceholder);
+        ui.toolButtonRestoreDefaultPlaceholder->setIcon(QIcon::fromTheme("code-variable"));
+        auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", owner);
+        owner->connect(action, SIGNAL(triggered()), owner, SLOT(slotResetFilenamePattern()));
+        ui.toolButtonRestoreDefaultPlaceholder->addAction(action);
+    }
+
 private:
 };
 
 #undef tr
 
 PageOutput::PageOutput(QWidget* parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     KREEN_PIMPL_INIT_THIS(PageOutput);
     setupUi();
@@ -71,12 +80,7 @@ void PageOutput::setupUi()
 
     d->ui.comboBoxImageFileExt->addItems(DocumentFile::supportedImageFormats());
 
-    // instrument reset filenamepattern button
-    MenuButtonUtil util(d->ui.toolButtonRestoreDefaultPlaceholder);
-    d->ui.toolButtonRestoreDefaultPlaceholder->setIcon(QIcon::fromTheme("code-variable"));
-    auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", this);
-    connect(action, SIGNAL(triggered()), this, SLOT(slotResetFilenamePattern()));
-    d->ui.toolButtonRestoreDefaultPlaceholder->addAction(action);
+    d->instrumentResetFilenamepatternButton();
 }
 
 void PageOutput::setValues(SettingsGroupOutput values)
@@ -100,7 +104,7 @@ SettingsGroupOutput PageOutput::values()
     values.defaultOutputDirectory = d->ui.lineEditOutputDirectory->text();
 
     values.filenamePattern = PageOutputImplHeader::filenamePlusExtToFilename(
-        d->ui.lineEditFilenamePattern->text(), d->ui.comboBoxImageFileExt->currentText());
+                                 d->ui.lineEditFilenamePattern->text(), d->ui.comboBoxImageFileExt->currentText());
 
     values.afterSaveOpenDefaultViewer = d->ui.checkBoxAfterSaveOpenDefaultViewer->isChecked();
     values.afterSaveOpenFileBrowser = d->ui.checkBoxAfterSaveShowFileBrowser->isChecked();
@@ -133,7 +137,7 @@ void PageOutput::slotUpdateFilenamePreview()
     outputFilenameGenerator.setFilenamePattern(
         QDir(d->ui.lineEditOutputDirectory->text()).filePath(
             PageOutputImplHeader::filenamePlusExtToFilename(d->ui.lineEditFilenamePattern->text(), d->ui.comboBoxImageFileExt->currentText()))
-                            );
+    );
     d->ui.labelPreview->setText(outputFilenameGenerator.resultingFilename());
 }
 
