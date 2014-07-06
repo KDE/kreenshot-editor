@@ -34,10 +34,9 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
-- draw item => do not show move item cursor
-- use more KreenQGraphicsItemBase::graphicsItem()
 - op crop
     // TODO: this should also work for lines => add a "translate" method
+- use more KreenQGraphicsItemBase::graphicsItem()
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
 - mouse over: draw a light version of the selection rects

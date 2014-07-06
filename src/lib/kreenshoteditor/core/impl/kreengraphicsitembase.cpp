@@ -29,17 +29,18 @@ KreenQGraphicsItemBase::KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, Kree
 
     _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     setMovable(true); // selectable and moveable by default
-
-    _graphicsItem->setCursor(Qt::SizeAllCursor);
 }
+
 KreenItemPtr KreenQGraphicsItemBase::item()
 {
     return _item;
 }
+
 QGraphicsItem* KreenQGraphicsItemBase::graphicsItem()
 {
     return _graphicsItem;
 }
+
 void KreenQGraphicsItemBase::setMovable(bool isMovable)
 {
     qDebug() << "KreenQGraphicsItemBase::setMovable: " << isMovable;
@@ -48,7 +49,15 @@ void KreenQGraphicsItemBase::setMovable(bool isMovable)
     _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
     //}
     _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
+
+    if (isMovable) {
+        _graphicsItem->setCursor(Qt::SizeAllCursor);
+    }
+    else {
+        _graphicsItem->unsetCursor();
+    }
 }
+
 bool KreenQGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
 {
     if (_item->lineStyle()->width % 2 == 1) { // uneven
@@ -57,10 +66,12 @@ bool KreenQGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
     }
     return false;
 }
+
 void KreenQGraphicsItemBase::setIsCreating(bool creating)
 {
     _isCreating = creating;
 }
+
 void KreenQGraphicsItemBase::configurePen(QAbstractGraphicsShapeItem* grItem)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
@@ -75,6 +86,7 @@ void KreenQGraphicsItemBase::configurePen(QGraphicsLineItem* grItem)
     Q_ASSERT(_item->lineStyle());
     grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
 }
+
 void KreenQGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
@@ -87,26 +99,31 @@ void KreenQGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius
         _graphicsItem->setGraphicsEffect(dropShadow);
     }
 }
+
 QRect KreenQGraphicsItemBase::sceneRect()
 {
     return _scene->sceneRect().toRect();
 }
+
 void KreenQGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
 {
     qDebug() << "connectImageOperationAcceptButton";
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(operationAcceptedSlot()));
 }
+
 void KreenQGraphicsItemBase::connectImageOperationCancelButton(QPushButton* button)
 {
     qDebug() << "connectImageOperationAcceptButton";
     connect(button, SIGNAL(clicked()), this, SLOT(operationCanceledSlot()));
 }
+
 bool KreenQGraphicsItemBase::mousePressEventImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint origPos = event->scenePos().toPoint();
     //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
     return true;
 }
+
 bool KreenQGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint newPos = event->scenePos().toPoint();
@@ -137,6 +154,7 @@ bool KreenQGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* eve
 
     return true;
 }
+
 void KreenQGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     // qDebug() << "itemChangeImpl: " << change;
