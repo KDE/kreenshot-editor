@@ -38,6 +38,7 @@
 #include "../core/impl/kreengraphicsscene.h"
 #include "../core/impl/toolmanager.h"
 #include "impl/kreengraphicsview.h"
+#include "../core/impl/selectionhandles.h" // TODO: move to ui/impl?
 
 namespace kreen {
 namespace ui {
@@ -63,37 +64,31 @@ public:
     }
 };
 
-KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
-class SelectionHandles
-{
-public:
-    SelectionHandles(MainEditorWidgetImpl* d_) {
-        d = d_;
-    }
-
-private:
-    MainEditorWidgetImpl* d;
-    std::map<QGraphicsItem*, std::vector<QGraphicsRectItem*>> currentHandles;
-
-public:
-void redrawSelectionHandles(bool createNewHandles);
-};
-
 class MainEditorWidgetImpl
 {
 public:
-    KreenshotEditorPtr kreenshotEditor;
+    MainEditorWidget* _owner;
+    KreenshotEditorPtr kreenshotEditor() { return _kreenshotEditor; };
     ToolManagerPtr toolManager_;
     KreenGraphicsViewPtr graphicsView;
     QGraphicsPixmapItem* baseImageSceneItem;
     ImageOperationHandling imgOpHandling;
     SelectionHandlesPtr selectionHandles;
 
+private:
+    KreenshotEditorPtr _kreenshotEditor;
+
 public:
-    MainEditorWidgetImpl()
+    MainEditorWidgetImpl(MainEditorWidget* owner)
     {
+        _owner = owner;
         imgOpHandling.imageOperationGraphicsItem = nullptr;
-        selectionHandles = std::make_shared<SelectionHandles>(this);
+    }
+
+    void init(KreenshotEditorPtr kreenshotEditor_)
+    {
+        _kreenshotEditor = kreenshotEditor_;
+        selectionHandles = std::make_shared<SelectionHandles>(scene().get()); // needs kreenshotEditor
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -102,7 +97,7 @@ public:
 public:
     // todo: optimize this method?
     QRect getBaseRect() {
-        QImage baseImage = kreenshotEditor->documentFile()->document()->baseImage();
+        QImage baseImage = _kreenshotEditor->documentFile()->document()->baseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
@@ -110,7 +105,7 @@ public:
 
     KreenGraphicsScenePtr scene()
     {
-        return kreenshotEditor->documentFile()->document()->graphicsScene();
+        return _kreenshotEditor->documentFile()->document()->graphicsScene();
     }
 
     ToolManagerPtr toolManager()
@@ -259,143 +254,12 @@ public:
     }
 };
 
-// TMP
-QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
-{
-    auto grItem = new QGraphicsRectItem(rect);
-    grItem->setBrush(QBrush(Qt::black));
-    grItem->setPen(Qt::NoPen);
-    //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
-    grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-    grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
-    qDebug() << "newRectItemWithCursor, setCursor";
-    grItem->setCursor(cursor);
-    return grItem;
-}
-
-// TMP
-void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
-{
-    if (createNewHandles) {
-        foreach (auto grItemPair, currentHandles) {
-            foreach (auto grItem, grItemPair.second) {
-                d->scene()->removeItem(grItem);
-            }
-        }
-
-        currentHandles.clear();
-    }
-
-    const qreal handleWidth = 10.0;
-
-    //
-    // 1   2   3
-    // 4   5   6
-    // 7   8   9
-    //
-    std::vector<QCursor> cursors;
-    cursors.push_back(Qt::ArrowCursor); // not used
-    cursors.push_back(Qt::SizeFDiagCursor); // 1
-    cursors.push_back(Qt::SizeVerCursor); // 2
-    cursors.push_back(Qt::SizeBDiagCursor); // 3
-    cursors.push_back(Qt::SizeHorCursor); // 4
-    cursors.push_back(Qt::OpenHandCursor); // 5
-    cursors.push_back(Qt::SizeHorCursor); // 6
-    cursors.push_back(Qt::SizeBDiagCursor); // 7
-    cursors.push_back(Qt::SizeVerCursor); // 8
-    cursors.push_back(Qt::SizeFDiagCursor); // 9
-
-    foreach (auto grItem, d->scene()->selectedItems()) {
-
-        // TODO ................. DO THIS AS SOON A HANDLE IS CLICKED
-        //graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, false);
-        // ......... and undo it after a handle operation is complete
-
-        qreal hw = handleWidth;
-
-        // WORKAROUND:
-        // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
-        //                     the underlying item is also blurred
-        //                     WTF-->the black selection rects get also blurred
-        auto kGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
-        if (kGrItem->workaroundIsBlurredOnUnevenHandleWidth()) {
-            qDebug() << "INFO: workaround used";
-            hw--;
-        }
-
-        qreal hw2 = hw / 2.0;
-
-        auto baseRect = grItem->sceneBoundingRect();
-        qreal x = baseRect.x();
-        qreal y = baseRect.y();
-        qreal w = baseRect.width();
-        qreal h = baseRect.height();
-        qreal w2 = floor(w / 2.0);
-        qreal h2 = floor(h / 2.0);
-        auto rect = QRectF(0, 0, hw, hw);
-
-        //
-        // 1   2   3
-        // 4   5   6
-        // 7   8   9
-        //
-        auto r1 = rect.translated(x - hw2, y - hw2); // 1
-        auto r2 = rect.translated(x + w2 - hw2, y - hw2); // 2
-        auto r3 = rect.translated(x + w - hw2, y - hw2); // 3
-
-        auto r4 = rect.translated(x - hw2, y + h2 - hw2); // 4
-        auto r6 = rect.translated(x + w - hw2, y + h2 - hw2); // 6
-
-        auto r7 = rect.translated(x - hw2, y + h - hw2); // 7
-        auto r8 = rect.translated(x + w2 - hw2, y + h - hw2); // 8
-        auto r9 = rect.translated(x + w - hw2, y + h - hw2); // 9
-
-
-        if (createNewHandles) {
-            std::vector<QGraphicsRectItem*> handles;
-            handles.push_back(newRectItemWithCursor(r1, cursors[1]));
-            handles.push_back(newRectItemWithCursor(r2, cursors[2]));
-            handles.push_back(newRectItemWithCursor(r3, cursors[3]));
-
-            handles.push_back(newRectItemWithCursor(r4, cursors[4]));
-            handles.push_back(newRectItemWithCursor(r6, cursors[6]));
-
-            handles.push_back(newRectItemWithCursor(r7, cursors[7]));
-            handles.push_back(newRectItemWithCursor(r8, cursors[8]));
-            handles.push_back(newRectItemWithCursor(r9, cursors[9]));
-
-            currentHandles.insert(std::make_pair(grItem, handles));
-        }
-        else {
-            std::vector<QGraphicsRectItem*> handles = currentHandles[grItem];
-
-            int i = 0;
-            handles[i++]->setRect(r1);
-            handles[i++]->setRect(r2);
-            handles[i++]->setRect(r3);
-            handles[i++]->setRect(r4);
-            handles[i++]->setRect(r6);
-            handles[i++]->setRect(r7);
-            handles[i++]->setRect(r8);
-            handles[i++]->setRect(r9);
-        }
-    }
-
-    if (createNewHandles) {
-        foreach (auto grItemPair, currentHandles) {
-            foreach (auto grItem, grItemPair.second) {
-                d->scene()->addItem(grItem);
-            }
-        }
-    }
-}
-
 MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 {
-    d = std::make_shared<MainEditorWidgetImpl>();
-    d->kreenshotEditor = kreenshotEditor;
+    KREEN_PIMPL_INIT_THIS(MainEditorWidget);
+    d->init(kreenshotEditor);
     d->toolManager_ = std::make_shared<ToolManager>();
-    d->kreenshotEditor->documentFile()->document()->graphicsScene()->setToolManager(d->toolManager());
+    d->kreenshotEditor()->documentFile()->document()->graphicsScene()->setToolManager(d->toolManager());
 
     bool oldScrollAreaCode = false;
 
@@ -420,7 +284,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     layout->setMargin(0);
 
     //d->createDemoScene();
-    d->kreenshotEditor->documentFile()->document()->addDemoItems();
+    d->kreenshotEditor()->documentFile()->document()->addDemoItems();
     initScene();
 
     // makes sure that every time the mouse is released the whole scene is update from model
@@ -466,14 +330,14 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
     d->scene()->clear();
 
     QPixmap pixmap;
-    pixmap.convertFromImage(d->kreenshotEditor->documentFile()->document()->baseImage());
+    pixmap.convertFromImage(d->kreenshotEditor()->documentFile()->document()->baseImage());
     d->baseImageSceneItem = new QGraphicsPixmapItem(pixmap);
     d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
     d->scene()->addItem(d->baseImageSceneItem);
 
     QGraphicsItem* selectNewItemGrItem = nullptr;
 
-    foreach (KreenItemPtr item, d->kreenshotEditor->documentFile()->document()->items()) {
+    foreach (KreenItemPtr item, d->kreenshotEditor()->documentFile()->document()->items()) {
 
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
@@ -630,7 +494,7 @@ void MainEditorWidget::imageOperationAccepted()
 void MainEditorWidget::imageOperationAcceptedDecoupled()
 {
     qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
-    d->kreenshotEditor->documentFile()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
+    d->kreenshotEditor()->documentFile()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
 
     updateSceneWithImageOperationItem(nullptr); // remove image operation item
     initScene(); // would causes crash in mouse event if not called in the decoupled method
@@ -647,7 +511,7 @@ void MainEditorWidget::handleNewItem(KreenItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
-        d->kreenshotEditor->documentFile()->document()->addItem(item);
+        d->kreenshotEditor()->documentFile()->document()->addItem(item);
         createSceneFromModel(item);
     }
     else {
@@ -682,7 +546,7 @@ void MainEditorWidget::deleteSelectedItems()
         toBeErased.append(kGrItem->item());
     }
 
-    d->kreenshotEditor->documentFile()->document()->removeItems(toBeErased);
+    d->kreenshotEditor()->documentFile()->document()->removeItems(toBeErased);
 
     createSceneFromModel();
 }
