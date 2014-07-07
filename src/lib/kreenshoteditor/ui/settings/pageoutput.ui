@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>693</width>
+    <width>699</width>
     <height>460</height>
    </rect>
   </property>
@@ -111,9 +111,6 @@ ${hostname}    machine/PC name</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="3">
-    <widget class="QLineEdit" name="lineEditOutputDirectory"/>
-   </item>
    <item row="10" column="1">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -205,8 +202,12 @@ ${hostname}    machine/PC name</string>
      <zorder>radioButtonAfterSaveClipboardNothing</zorder>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QComboBox" name="comboBoxImageFileExt"/>
+   <item row="2" column="5">
+    <widget class="QToolButton" name="toolButtonRestoreDefaultFilenamePattern">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="2">
     <widget class="QLabel" name="label_7">
@@ -220,14 +221,16 @@ ${hostname}    machine/PC name</string>
      <property name="text">
       <string>...</string>
      </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QToolButton" name="toolButtonRestoreDefaultFilenamePattern">
-     <property name="text">
-      <string>...</string>
+     <property name="icon">
+      <iconset theme="document-open-folder"/>
      </property>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="4">
+    <widget class="QLineEdit" name="lineEditOutputDirectory"/>
+   </item>
+   <item row="2" column="3" colspan="2">
+    <widget class="QComboBox" name="comboBoxImageFileExt"/>
    </item>
   </layout>
  </widget>
