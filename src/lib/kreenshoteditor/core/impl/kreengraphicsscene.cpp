@@ -140,7 +140,7 @@ void KreenGraphicsScene::restrictPointToScene(QPoint* pt)
 
 void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    qDebug() << "MyQGraphicsScene::mouseReleaseEvent";
+    qDebug() << "MyQGraphicsScene::mouseReleaseEvent enter";
 
     if (_creatingItem != nullptr) {
         this->removeItem(_creatingItem);
@@ -152,7 +152,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         if (!grItemBase->item()->rect().isNull()) {
             qDebug() << "emit itemCreated";
             emit itemCreated(grItemBase->item());
-            qDebug() << "QGraphicsScene::mouseReleaseEvent(event)";
+            qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
             return;
         }
