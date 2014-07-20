@@ -23,19 +23,33 @@
 #include <QWidget>
 #include <QToolButton>
 
+class QMenu;
+
+/**
+ * Gives more control over the item height of Actions
+ */
 class KREEN_DECL_EXPORT KreenToolButton : public QToolButton
 {
     Q_OBJECT
 
 public:
-    KreenToolButton(QWidget* parent = 0) : QToolButton(parent) {}
+    KreenToolButton(QWidget* parent = 0);
 
-    virtual ~KreenToolButton() { }
+    virtual ~KreenToolButton();
+
+    void setMaxIconSize(int maxIconSize);
+
+    /**
+     * sets the action to the menu that was autoset via setMenu
+     */
+    void addMenuAction(QAction* action);
+
+    void addAction(QAction* action);
 
 public Q_SLOTS:
 
 private:
-
+    QMenu* _menu;
 };
 
 #endif

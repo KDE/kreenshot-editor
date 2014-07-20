@@ -24,6 +24,7 @@
 #include <QAction>
 #include <QMessageBox>
 #include <QSignalMapper>
+#include <QDebug>
 
 MainWindow1::MainWindow1()
 {
@@ -109,11 +110,34 @@ void MainWindow1::setupUi()
     }
 
     {
-        auto toolButtonTest1 = new KreenToolButton(this);
-        mainLayout->addWidget(toolButtonTest1);
-        toolButtonTest1->setText("...");
-        signalMapper->setMapping(toolButtonTest1, QString("clicked() toolButtonTest1"));
-        connect(toolButtonTest1, SIGNAL(clicked()), signalMapper, SLOT(map()));
+        auto kreenToolButtonTest1 = new KreenToolButton(this);
+        mainLayout->addWidget(kreenToolButtonTest1);
+
+        kreenToolButtonTest1->setText("KreenToolButton - no actions");
+        signalMapper->setMapping(kreenToolButtonTest1, QString("clicked() kreenToolButtonTest1"));
+        connect(kreenToolButtonTest1, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    }
+
+    {
+        auto kreenToolButtonTest2 = new KreenToolButton(this);
+        mainLayout->addWidget(kreenToolButtonTest2);
+
+        kreenToolButtonTest2->setText("KreenToolButton - two actions - InstantPopup");
+        kreenToolButtonTest2->setPopupMode(QToolButton::InstantPopup);
+        signalMapper->setMapping(kreenToolButtonTest2, QString("clicked() kreenToolButtonTest2"));
+        connect(kreenToolButtonTest2, SIGNAL(clicked()), signalMapper, SLOT(map()));
+
+        auto action1 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/64x64/devices/input-gaming.png"), "input-gaming.png 64x64", this);
+        auto action2 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/16x16/devices/media-floppy.png"), "media-floppy.png 16x16", this);
+        auto action3 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/32x32/devices/media-optical-mixed-cd.png"), "media-optical-mixed-cd.png 32x32", this);
+
+        kreenToolButtonTest2->addMenuAction(action1);
+        kreenToolButtonTest2->addMenuAction(action2);
+        kreenToolButtonTest2->addMenuAction(action3);
+
+        kreenToolButtonTest2->setMaxIconSize(48);
+
+        qDebug() << kreenToolButtonTest2->menu();
     }
 }
 

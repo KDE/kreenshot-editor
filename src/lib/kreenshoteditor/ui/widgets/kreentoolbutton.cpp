@@ -17,4 +17,73 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreentoolbutton.h"
+#include <QProxyStyle>
+#include <QMenu>
 
+class MyStyle : public QProxyStyle
+{
+public:
+    MyStyle(int maxIconSize)
+    {
+        _maxIconSize = maxIconSize;
+    }
+
+protected:
+    virtual int pixelMetric(PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0) const
+    {
+        // http://www.qtcentre.org/threads/15742-How-to-change-Icon-size-in-QMenu
+        if (metric == PM_SmallIconSize) {
+            return _maxIconSize;
+        }
+        else
+            return QProxyStyle::pixelMetric(metric, option, widget);
+    }
+
+//     virtual QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const
+//     {
+//         auto s = QProxyStyle::sizeFromContents(type, option, size, widget);
+//         s.setHeight(40);
+//         return s;
+//     }
+
+//     virtual QRect itemPixmapRect(const QRect& r, int flags, const QPixmap& pixmap) const
+//     {
+//         auto rect = QProxyStyle::itemPixmapRect(r, flags, pixmap);
+//         rect.setHeight(40);
+//         return rect;
+//     }
+
+private:
+    int _maxIconSize;
+};
+
+// KreenToolButton::setDefaultActionShowMenu()
+// {
+//     connect(this, SIGNAL(clicked()), this, SLOT(showMenu()));
+// }
+
+KreenToolButton::KreenToolButton(QWidget* parent) : QToolButton(parent)
+{
+    _menu = new QMenu(this);
+    setMenu(_menu);
+}
+
+KreenToolButton::~KreenToolButton()
+{
+
+}
+
+void KreenToolButton::addAction(QAction* action)
+{
+    Q_ASSERT_X(false, "KreenToolButton::addAction", "Do not use. Use addMenuAction instead");
+}
+
+void KreenToolButton::addMenuAction(QAction* action)
+{
+    menu()->addAction(action);
+}
+
+void KreenToolButton::setMaxIconSize(int maxIconSize)
+{
+    _menu->setStyle(new MyStyle(maxIconSize));
+}
