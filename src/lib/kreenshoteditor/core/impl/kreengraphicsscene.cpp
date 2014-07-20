@@ -19,6 +19,7 @@
 #include "kreengraphicsscene.h"
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
+#include "selectionhandlegraphicsitem.h"
 
 namespace kreen {
 namespace core {
@@ -42,7 +43,10 @@ void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
             grItem->setVisible(!finalOnly);
         }
 
-        // TODO: also hide the selection rect
+        auto selectionHandleGrItem = dynamic_cast<SelectionHandleGraphicsItem*>(grItem);
+        if (selectionHandleGrItem) { // hide SelectionHandleGraphicsItem
+            grItem->setVisible(!finalOnly);
+        }
     }
 }
 
