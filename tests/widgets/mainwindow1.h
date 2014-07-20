@@ -32,9 +32,12 @@ public:
 
 public Q_SLOTS:
 
+
 public:
-    void setupActions();
     void setupUi();
+
+protected Q_SLOTS:
+    void slotMessageBox(QString message);
 
 private:
 
