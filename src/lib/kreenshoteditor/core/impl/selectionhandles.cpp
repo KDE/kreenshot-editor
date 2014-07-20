@@ -33,31 +33,43 @@ namespace core {
 class SelectionHandlesImpl
 {
 public:
+    SelectionHandles* owner = nullptr;
     QGraphicsScene* scene;
     std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
 
 public:
-    SelectionHandleGraphicsItem* newSelectionHandleItemWithCursor(QRectF rect, const QCursor& cursor)
+    SelectionHandlesImpl(SelectionHandles* owner_)
     {
-        auto grItem = new SelectionHandleGraphicsItem(rect);
+        owner = owner_;
+    }
+
+    /**
+     * creates a new SelectionHandleGraphicsItem including cursor and move event handling
+     *
+     * TODO: let the SelectionHandleGraphicsItem handle the cursors according to the position
+     */
+    SelectionHandleGraphicsItem* createSelectionHandleItem(QGraphicsItem* instrumentedItem, QRectF rect, const QCursor& cursor)
+    {
+        auto grItem = new SelectionHandleGraphicsItem(instrumentedItem, rect);
         grItem->setBrush(QBrush(Qt::black));
         grItem->setPen(Qt::NoPen);
-        //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
         grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-        grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+        grItem->setFlag(QGraphicsItem::ItemIsMovable, true);
         qDebug() << "newRectItemWithCursor, setCursor";
         grItem->setCursor(cursor);
+
+        // connect(grItem, itemPositionHasChangedSignal, owner, // TODO later or go directly to the instrumentedItem
+
         return grItem;
     }
 };
 
 
 SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
-    KREEN_PIMPL_INIT(SelectionHandles);
+    KREEN_PIMPL_INIT_THIS(SelectionHandles);
     d->scene = scene;
 }
 
-// TMP
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {
     if (createNewHandles) {
@@ -137,16 +149,16 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 
         if (createNewHandles) {
             std::vector<SelectionHandleGraphicsItem*> handles;
-            handles.push_back(d->newSelectionHandleItemWithCursor(r1, cursors[1]));
-            handles.push_back(d->newSelectionHandleItemWithCursor(r2, cursors[2]));
-            handles.push_back(d->newSelectionHandleItemWithCursor(r3, cursors[3]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r1, cursors[1]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r2, cursors[2]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r3, cursors[3]));
 
-            handles.push_back(d->newSelectionHandleItemWithCursor(r4, cursors[4]));
-            handles.push_back(d->newSelectionHandleItemWithCursor(r6, cursors[6]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r4, cursors[4]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r6, cursors[6]));
 
-            handles.push_back(d->newSelectionHandleItemWithCursor(r7, cursors[7]));
-            handles.push_back(d->newSelectionHandleItemWithCursor(r8, cursors[8]));
-            handles.push_back(d->newSelectionHandleItemWithCursor(r9, cursors[9]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r7, cursors[7]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r8, cursors[8]));
+            handles.push_back(d->createSelectionHandleItem(grItem, r9, cursors[9]));
 
             d->currentHandles.insert(std::make_pair(grItem, handles));
         }

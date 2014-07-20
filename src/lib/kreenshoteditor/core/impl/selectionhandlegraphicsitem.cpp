@@ -28,14 +28,15 @@
 namespace kreen {
 namespace core {
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem() : QGraphicsRectItem()
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem)
+ : SelectionHandleGraphicsItem(instrumentedItem, QRectF())
 {
-
 }
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
 {
-
+    _instrumentedItem = instrumentedItem;
+    setAcceptHoverEvents(true);
 }
 
 SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
@@ -43,10 +44,40 @@ SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 
 }
 
+void SelectionHandleGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void SelectionHandleGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    QGraphicsItem::hoverLeaveEvent(event);
+}
+
+void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    // The mouse is over a SelectionHandle and the user
+    // clicks to move the Handle. If we would not disable
+    // Movement of the instrumentedItem then the item would move because it is selected
+    // and all selected items are moved automatically.
+    _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    // see mousePressEvent
+    _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+    QGraphicsItem::mouseReleaseEvent(event);
+}
+
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
 {
     if (change == QGraphicsItem::ItemPositionHasChanged) {
         emit itemPositionHasChangedSignal();
+    }
+    else if (change == QGraphicsItem::ItemPositionChange) {
+        _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, false);
     }
 
     return QGraphicsItem::itemChange(change, value);

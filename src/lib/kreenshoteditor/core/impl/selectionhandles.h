@@ -21,6 +21,7 @@
 
 #include <kreen/util/pimplutil.h>
 #include <QString>
+#include <QObject>
 #include <map>
 
 class QGraphicsItem;
@@ -35,14 +36,19 @@ KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 class MainEditorWidgetImpl;
 class SelectionHandleGraphicsItem;
 
-class SelectionHandles
+class SelectionHandles //: public QObject
 {
+    //Q_OBJECT
+
 public:
     SelectionHandles(QGraphicsScene* scene);
 
     virtual ~SelectionHandles() { }
 
 public:
+    /**
+     * TMP?
+     */
     void redrawSelectionHandles(bool createNewHandles);
 
 private:

@@ -35,9 +35,9 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     Q_OBJECT
 
 public:
-    SelectionHandleGraphicsItem();
+    SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem);
 
-    SelectionHandleGraphicsItem(QRectF rect);
+    SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 
@@ -45,9 +45,15 @@ Q_SIGNALS:
     void itemPositionHasChangedSignal();
 
 protected:
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
 private:
+    QGraphicsItem* _instrumentedItem;
 };
 
 }
