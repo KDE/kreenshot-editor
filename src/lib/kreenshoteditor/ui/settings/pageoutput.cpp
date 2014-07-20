@@ -24,7 +24,6 @@
 #include <QMenu>
 #include <QToolBar>
 #include "../../core/impl/outputfilenamegenerator.h"
-#include "../../ui/widgets/menubuttonutil.h"
 #include <core/documentfile.h>
 
 namespace kreen {
@@ -47,8 +46,11 @@ public:
 
     void instrumentResetFilenamepatternButton()
     {
-        MenuButtonUtil util(ui.toolButtonRestoreDefaultFilenamePattern);
+        // TODO: search or create a small "configure" icon
         ui.toolButtonRestoreDefaultFilenamePattern->setIcon(QIcon::fromTheme("code-variable"));
+
+        // InstantPopup was set by designer
+
         auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", owner);
         owner->connect(action, SIGNAL(triggered()), owner, SLOT(slotResetFilenamePattern()));
         ui.toolButtonRestoreDefaultFilenamePattern->addAction(action);

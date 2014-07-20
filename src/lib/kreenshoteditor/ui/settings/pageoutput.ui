@@ -207,6 +207,9 @@ ${hostname}    machine/PC name</string>
      <property name="text">
       <string>...</string>
      </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
     </widget>
    </item>
    <item row="2" column="2">
@@ -222,7 +225,9 @@ ${hostname}    machine/PC name</string>
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="document-open-folder"/>
+      <iconset theme="document-open-folder">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
