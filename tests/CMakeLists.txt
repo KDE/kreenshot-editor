@@ -44,6 +44,11 @@ add_executable(TestUi ${TestUiSrc})
 target_link_libraries(TestUi Qt5::Core Qt5::Test kreenshoteditor)
 add_test(NAME TestUi COMMAND TestUi)
 
+# Interactive: TestWidgetsInteractive
+set(TestWidgetsInteractiveSrc TestWidgetsInteractive.cpp widgets/mainwindow1.cpp)
+add_executable(TestWidgetsInteractive ${TestWidgetsInteractiveSrc})
+target_link_libraries(TestWidgetsInteractive Qt5::Core kreenshoteditor)
+
 # http://stackoverflow.com/questions/13429656/cmake-how-to-copy-contents-of-a-directory-into-build-directory-after-make
 # TODO: cleanup dir before copying stuff
 add_custom_command(TARGET TestCore PRE_BUILD

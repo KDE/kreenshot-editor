@@ -33,6 +33,7 @@ set(kreenshoteditor_SOURCES
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp
 
+    ui/widgets/kreentoolbutton.cpp
     ui/widgets/menubuttonutil.cpp
 
     ui/maineditorwidget.cpp
