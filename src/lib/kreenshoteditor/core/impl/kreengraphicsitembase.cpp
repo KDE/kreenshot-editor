@@ -60,7 +60,7 @@ void KreenQGraphicsItemBase::setMovable(bool isMovable)
 
 bool KreenQGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
 {
-    if (_item->lineStyle()->width % 2 == 1) { // uneven
+    if (_item->lineStyle() != nullptr && _item->lineStyle()->width % 2 == 1) { // uneven
         return true; // special handling for uneven line widths needed
         // there are probably more cases
     }
