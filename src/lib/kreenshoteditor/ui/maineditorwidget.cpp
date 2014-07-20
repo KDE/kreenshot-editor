@@ -165,7 +165,7 @@ public:
     /**
      * update positions and sizes from model
      */
-    void updateItemsGeometryFromModel()
+    void slotUpdateItemsGeometryFromModel()
     {
         foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
@@ -289,11 +289,11 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
-    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(updateItemsGeometryFromModel()));
+    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(slotUpdateItemsGeometryFromModel()));
 
-    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(handleNewItem(KreenItemPtr)));
+    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
 
-    connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(sceneSelectionChanged()));
+    connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -342,7 +342,7 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
 
-        connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), this, SLOT(redrawSelectionHandles()));
+        connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), this, SLOT(slotRedrawSelectionHandles()));
 
         d->scene()->addItem(grItem);
 
@@ -351,7 +351,7 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
         }
     }
 
-    d->updateItemsGeometryFromModel();
+    d->slotUpdateItemsGeometryFromModel();
     d->updateItemsBehaviourFromChosenTool();
 
     // make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override
@@ -362,7 +362,7 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
     }
 }
 
-void MainEditorWidget::updateSceneWithImageOperationItem(KreenItemPtr item)
+void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
@@ -387,8 +387,8 @@ void MainEditorWidget::updateSceneWithImageOperationItem(KreenItemPtr item)
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
         grItemBase->setIsCreating(false);
         grItemBase->updateVisualGeometryFromModel();
-        connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(imageOperationAccepted()));
-        connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(imageOperationCanceled()));
+        connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(slotImageOperationAccepted()));
+        connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(slotImageOperationCanceled()));
     }
 }
 
@@ -470,7 +470,7 @@ void MainEditorWidget::requestTool(QString toolId)
 
     // remove current image operation if another tool is selected
     if (!toolId.startsWith("op-")) {
-        updateSceneWithImageOperationItem(nullptr);
+        slotUpdateSceneWithImageOperationItem(nullptr);
     }
 
     d->graphicsView->setCursorFromChosenTool();
@@ -478,36 +478,36 @@ void MainEditorWidget::requestTool(QString toolId)
     emit toolChosenSignal(toolId);
 }
 
-void MainEditorWidget::updateItemsGeometryFromModel()
+void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
     qDebug() << "updateItemsGeometryFromModel";
-    d->updateItemsGeometryFromModel();
+    d->slotUpdateItemsGeometryFromModel();
     d->selectionHandles->redrawSelectionHandles(true);
 }
 
-void MainEditorWidget::imageOperationAccepted()
+void MainEditorWidget::slotImageOperationAccepted()
 {
     qDebug() << "MainEditorWidget::imageOperationAccepted(). Forward to imageOperationAcceptedDecoupled() because otherwise some mouse release event will crash because image operation object will be remove";
-    QTimer::singleShot(0, this, SLOT(imageOperationAcceptedDecoupled()));
+    QTimer::singleShot(0, this, SLOT(slotImageOperationAcceptedDecoupled()));
 }
 
-void MainEditorWidget::imageOperationAcceptedDecoupled()
+void MainEditorWidget::slotImageOperationAcceptedDecoupled()
 {
     qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
     d->kreenshotEditor()->documentFile()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
 
-    updateSceneWithImageOperationItem(nullptr); // remove image operation item
+    slotUpdateSceneWithImageOperationItem(nullptr); // remove image operation item
     initScene(); // would causes crash in mouse event if not called in the decoupled method
     requestTool("select"); // go to Select after an image operation
 }
 
 
-void MainEditorWidget::imageOperationCanceled()
+void MainEditorWidget::slotImageOperationCanceled()
 {
-    updateSceneWithImageOperationItem(nullptr);
+    slotUpdateSceneWithImageOperationItem(nullptr);
 }
 
-void MainEditorWidget::handleNewItem(KreenItemPtr item)
+void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
@@ -515,11 +515,11 @@ void MainEditorWidget::handleNewItem(KreenItemPtr item)
         createSceneFromModel(item);
     }
     else {
-        updateSceneWithImageOperationItem(item);
+        slotUpdateSceneWithImageOperationItem(item);
     }
 }
 
-void MainEditorWidget::sceneSelectionChanged()
+void MainEditorWidget::slotSceneSelectionChanged()
 {
     qDebug() << "sceneSelectionChanged() " << d->scene()->selectedItems();
 
@@ -531,7 +531,7 @@ void MainEditorWidget::sceneSelectionChanged()
     emit itemSelectionChanged();
 }
 
-void MainEditorWidget::redrawSelectionHandles()
+void MainEditorWidget::slotRedrawSelectionHandles()
 {
     //qDebug() << "SLOT redrawSelectionHandles";
     d->selectionHandles->redrawSelectionHandles(false);

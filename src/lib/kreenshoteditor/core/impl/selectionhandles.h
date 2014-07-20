@@ -40,12 +40,12 @@ public:
         _scene = scene;
     }
 
+public:
+    void redrawSelectionHandles(bool createNewHandles);
+
 private:
     QGraphicsScene* _scene;
     std::map<QGraphicsItem*, std::vector<QGraphicsRectItem*>> currentHandles;
-
-public:
-    void redrawSelectionHandles(bool createNewHandles);
 };
 
 
