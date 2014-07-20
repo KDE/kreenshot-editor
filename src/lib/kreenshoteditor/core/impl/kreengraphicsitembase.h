@@ -112,8 +112,8 @@ protected:
 
     bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event);
 
-    // TMP
-    void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant & value);
+    // TMP (TODO)
+    void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
 protected Q_SLOTS:
     void operationAcceptedSlot()

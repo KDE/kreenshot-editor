@@ -308,7 +308,7 @@ public:
 
     virtual void updateVisualGeometryFromModel()
     {
-        qDebug() << "crop updateVisualGeometryFromModel";
+        qDebug() << "KreenGraphicsOperationCropItem: updateVisualGeometryFromModel";
 
         QRect rect = _item->rect();
         this->setRect(0, 0, rect.width(), rect.height());
@@ -319,10 +319,16 @@ public:
             // 1  2  4
             // 1     4
             // 1  3  4
-            dimRects.push_back(new QGraphicsRectItem(-rect.x(), -rect.y(), rect.x(), sceneRect().height(), this)); // 1
-            dimRects.push_back(new QGraphicsRectItem(0, -rect.y(), rect.width(), rect.y(), this)); // 2
-            dimRects.push_back(new QGraphicsRectItem(0, rect.height(), rect.width(), sceneRect().height() - rect.height() - rect.y(), this)); // 3
-            dimRects.push_back(new QGraphicsRectItem(rect.width(), -rect.y(), sceneRect().width() - rect.width() - rect.x(), sceneRect().height(), this)); // 4
+            _dimRect1 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect2 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect3 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect4 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            dimRects.push_back(_dimRect1); // 1
+            dimRects.push_back(_dimRect2); // 2
+            dimRects.push_back(_dimRect3); // 3
+            dimRects.push_back(_dimRect4); // 4
+
+            // updateDimRects(_item->rect()); // later
 
             foreach (auto dimRect, dimRects) {
                 dimRect->setBrush(QBrush(QColor(0, 0, 0, 128)));
@@ -352,6 +358,8 @@ public:
                 _interactionWidget->setPos(rect.width(), rect.height());
             }
         }
+
+        updateDimRects(rect);
     }
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
@@ -362,13 +370,59 @@ public:
 
     virtual void updateModelFromVisualGeometry()
     {
+        qDebug() << "KreenGraphicsOperationCropItem: updateModelFromVisualGeometry";
+        _item->setRect(modelRectFromGraphicsItem());
+    }
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value)
+    {
+        if (change == QGraphicsItem::ItemPositionHasChanged) {
+            updateDimRects(modelRectFromGraphicsItem());
+        }
+        return QGraphicsItem::itemChange(change, value);
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
+
+private:
+    QRect modelRectFromGraphicsItem()
+    {
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
-        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
+        return QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height());
+    }
+
+    void updateDimRects(QRect itemRect)
+    {
+        if (_dimRect1 == nullptr) // if the rects are not created yet
+            return;
+
+        QRect rect = itemRect;
+        // 1  2  4
+        // 1     4
+        // 1  3  4
+        _dimRect1->setRect(-rect.x(), -rect.y(), rect.x(), sceneRect().height()); // 1
+        _dimRect2->setRect(0, -rect.y(), rect.width(), rect.y()); // 2
+        _dimRect3->setRect(0, rect.height(), rect.width(), sceneRect().height() - rect.height() - rect.y()); // 3
+        _dimRect4->setRect(rect.width(), -rect.y(), sceneRect().width() - rect.width() - rect.x(), sceneRect().height()); // 4
     }
 
 private:
     QGraphicsProxyWidget* _interactionWidget = nullptr;
+    QGraphicsRectItem* _dimRect1;
+    QGraphicsRectItem* _dimRect2;
+    QGraphicsRectItem* _dimRect3;
+    QGraphicsRectItem* _dimRect4;
 };
 
 }

@@ -128,7 +128,7 @@ bool KreenQGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* eve
 {
     //QPoint newPos = event->scenePos().toPoint();
 
-    qDebug() << "updateModelFromVisualGeometry() for all selected items";
+    qDebug() << "mouseReleaseEventImpl: updateModelFromVisualGeometry() for all selected items";
     foreach (auto gritem, _scene->selectedItems()) {
         auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
         if (gritemBase != nullptr) { // there might also be other items
