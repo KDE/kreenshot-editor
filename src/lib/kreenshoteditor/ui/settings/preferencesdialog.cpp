@@ -38,7 +38,7 @@ private:
 
 PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameGeneratorPtr outputFilenameGenerator)
 {
-    d = std::make_shared<PreferencesDialogImpl>();
+    KREEN_PIMPL_INIT(PreferencesDialog);
     d->settingsManager = settingsManager;
     d->outputFilenameGenerator = outputFilenameGenerator;
 

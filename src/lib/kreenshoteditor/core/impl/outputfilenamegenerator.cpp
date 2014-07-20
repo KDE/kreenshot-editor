@@ -43,7 +43,7 @@ public:
 
 OutputFilenameGenerator::OutputFilenameGenerator()
 {
-    d = std::make_shared<OutputFilenameGeneratorImpl>();
+    KREEN_PIMPL_INIT(OutputFilenameGenerator);
 
     d->hostname = QHostInfo().localHostName();
 

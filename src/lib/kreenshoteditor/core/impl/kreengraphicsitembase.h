@@ -39,12 +39,13 @@ using namespace kreen::core;
 namespace kreen {
 namespace core {
 
-    /**
- * Visual representation of a KreenItem
- */
+/**
+* Visual representation of a KreenItem
+*/
 class KreenQGraphicsItemBase : public QObject
 {
-    Q_OBJECT // to have signal/slots
+    // QObject to have signal/slots
+    Q_OBJECT
 
 public:
 
