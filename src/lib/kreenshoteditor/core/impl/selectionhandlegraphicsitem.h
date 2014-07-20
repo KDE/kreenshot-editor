@@ -29,18 +29,26 @@ namespace core {
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
 class MainEditorWidgetImpl;
 
-class SelectionHandleGraphicsItem : public QGraphicsRectItem
+class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
 {
+    // QObject to have signal/slots
+    Q_OBJECT
+
 public:
+    SelectionHandleGraphicsItem();
+
     SelectionHandleGraphicsItem(QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 
-public:
+Q_SIGNALS:
+    void itemPositionHasChangedSignal();
+
+protected:
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
 
 private:
 };
-
 
 }
 }

@@ -30,6 +30,7 @@ class QGraphicsScene;
 namespace kreen {
 namespace core {
 
+KREEN_PIMPL_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 class MainEditorWidgetImpl;
 class SelectionHandleGraphicsItem;
@@ -37,9 +38,7 @@ class SelectionHandleGraphicsItem;
 class SelectionHandles
 {
 public:
-    SelectionHandles(QGraphicsScene* scene) {
-        _scene = scene;
-    }
+    SelectionHandles(QGraphicsScene* scene);
 
     virtual ~SelectionHandles() { }
 
@@ -47,10 +46,8 @@ public:
     void redrawSelectionHandles(bool createNewHandles);
 
 private:
-    QGraphicsScene* _scene;
-    std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
+    SelectionHandlesImplPtr d;
 };
-
 
 }
 }

@@ -30,31 +30,44 @@
 namespace kreen {
 namespace core {
 
-// TMP
-SelectionHandleGraphicsItem* newSelectionHandleItemWithCursor(QRectF rect, const QCursor& cursor)
+class SelectionHandlesImpl
 {
-    auto grItem = new SelectionHandleGraphicsItem(rect);
-    grItem->setBrush(QBrush(Qt::black));
-    grItem->setPen(Qt::NoPen);
-    //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
-    grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-    grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
-    qDebug() << "newRectItemWithCursor, setCursor";
-    grItem->setCursor(cursor);
-    return grItem;
+public:
+    QGraphicsScene* scene;
+    std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
+
+public:
+    SelectionHandleGraphicsItem* newSelectionHandleItemWithCursor(QRectF rect, const QCursor& cursor)
+    {
+        auto grItem = new SelectionHandleGraphicsItem(rect);
+        grItem->setBrush(QBrush(Qt::black));
+        grItem->setPen(Qt::NoPen);
+        //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
+        grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+        grItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+        qDebug() << "newRectItemWithCursor, setCursor";
+        grItem->setCursor(cursor);
+        return grItem;
+    }
+};
+
+
+SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
+    KREEN_PIMPL_INIT(SelectionHandles);
+    d->scene = scene;
 }
 
 // TMP
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {
     if (createNewHandles) {
-        foreach (auto grItemPair, currentHandles) {
+        foreach (auto grItemPair, d->currentHandles) {
             foreach (auto grItem, grItemPair.second) {
-                _scene->removeItem(grItem);
+                d->scene->removeItem(grItem);
             }
         }
 
-        currentHandles.clear();
+        d->currentHandles.clear();
     }
 
     const qreal handleWidth = 10.0;
@@ -76,7 +89,7 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
     cursors.push_back(Qt::SizeVerCursor); // 8
     cursors.push_back(Qt::SizeFDiagCursor); // 9
 
-    foreach (auto grItem, _scene->selectedItems()) {
+    foreach (auto grItem, d->scene->selectedItems()) {
 
         // TODO ................. DO THIS AS SOON A HANDLE IS CLICKED
         //graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -124,21 +137,21 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 
         if (createNewHandles) {
             std::vector<SelectionHandleGraphicsItem*> handles;
-            handles.push_back(newSelectionHandleItemWithCursor(r1, cursors[1]));
-            handles.push_back(newSelectionHandleItemWithCursor(r2, cursors[2]));
-            handles.push_back(newSelectionHandleItemWithCursor(r3, cursors[3]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r1, cursors[1]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r2, cursors[2]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r3, cursors[3]));
 
-            handles.push_back(newSelectionHandleItemWithCursor(r4, cursors[4]));
-            handles.push_back(newSelectionHandleItemWithCursor(r6, cursors[6]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r4, cursors[4]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r6, cursors[6]));
 
-            handles.push_back(newSelectionHandleItemWithCursor(r7, cursors[7]));
-            handles.push_back(newSelectionHandleItemWithCursor(r8, cursors[8]));
-            handles.push_back(newSelectionHandleItemWithCursor(r9, cursors[9]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r7, cursors[7]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r8, cursors[8]));
+            handles.push_back(d->newSelectionHandleItemWithCursor(r9, cursors[9]));
 
-            currentHandles.insert(std::make_pair(grItem, handles));
+            d->currentHandles.insert(std::make_pair(grItem, handles));
         }
         else {
-            std::vector<SelectionHandleGraphicsItem*> handles = currentHandles[grItem];
+            std::vector<SelectionHandleGraphicsItem*> handles = d->currentHandles[grItem];
 
             int i = 0;
             handles[i++]->setRect(r1);
@@ -153,9 +166,9 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
     }
 
     if (createNewHandles) {
-        foreach (auto grItemPair, currentHandles) {
+        foreach (auto grItemPair, d->currentHandles) {
             foreach (auto grItem, grItemPair.second) {
-                _scene->addItem(grItem);
+                d->scene->addItem(grItem);
             }
         }
     }

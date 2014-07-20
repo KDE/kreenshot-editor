@@ -28,6 +28,11 @@
 namespace kreen {
 namespace core {
 
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem() : QGraphicsRectItem()
+{
+
+}
+
 SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QRectF rect) : QGraphicsRectItem(rect)
 {
 
@@ -36,6 +41,15 @@ SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QRectF rect) : QGraphic
 SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 {
 
+}
+
+QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
+{
+    if (change == QGraphicsItem::ItemPositionHasChanged) {
+        emit itemPositionHasChangedSignal();
+    }
+
+    return QGraphicsItem::itemChange(change, value);
 }
 
 }
