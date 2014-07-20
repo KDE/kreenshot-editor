@@ -35,6 +35,8 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 TODO
 ----
 - save image to file: do not save selection indication rect
+  - // TODO: also hide the selection rect
+  
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
 - mouse over: draw a light version of the selection rects

@@ -20,6 +20,7 @@ set(kreenshoteditor_SOURCES
     core/impl/kreengraphicsitems.cpp
     core/impl/kreengraphicsscene.cpp
     core/impl/outputfilenamegenerator.cpp
+    core/impl/selectionhandlegraphicsitem.cpp
     core/impl/selectionhandles.cpp
 
     core/document.cpp

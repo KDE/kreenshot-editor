@@ -16,39 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_c01b9a44c6643c4eb71e9b4b53b9b71f
-#define UUID_c01b9a44c6643c4eb71e9b4b53b9b71f
+#ifndef UUID_selectionhandlegraphicsitem_h
+#define UUID_selectionhandlegraphicsitem_h
 
 #include <kreen/util/pimplutil.h>
 #include <QString>
-#include <map>
-
-class QGraphicsItem;
-class QGraphicsRectItem;
-class QGraphicsScene;
+#include <QGraphicsRectItem>
 
 namespace kreen {
 namespace core {
 
-KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
 class MainEditorWidgetImpl;
-class SelectionHandleGraphicsItem;
 
-class SelectionHandles
+class SelectionHandleGraphicsItem : public QGraphicsRectItem
 {
 public:
-    SelectionHandles(QGraphicsScene* scene) {
-        _scene = scene;
-    }
+    SelectionHandleGraphicsItem(QRectF rect);
 
-    virtual ~SelectionHandles() { }
+    virtual ~SelectionHandleGraphicsItem();
 
 public:
-    void redrawSelectionHandles(bool createNewHandles);
 
 private:
-    QGraphicsScene* _scene;
-    std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
 };
 
 

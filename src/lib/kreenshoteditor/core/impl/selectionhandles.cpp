@@ -25,14 +25,15 @@
 #include <QPen>
 #include <QDebug>
 #include "kreengraphicsitembase.h" // todo: remove this dependency if possible
+#include "selectionhandlegraphicsitem.h"
 
 namespace kreen {
 namespace core {
 
 // TMP
-QGraphicsRectItem* newRectItemWithCursor(QRectF rect, const QCursor& cursor)
+SelectionHandleGraphicsItem* newSelectionHandleItemWithCursor(QRectF rect, const QCursor& cursor)
 {
-    auto grItem = new QGraphicsRectItem(rect);
+    auto grItem = new SelectionHandleGraphicsItem(rect);
     grItem->setBrush(QBrush(Qt::black));
     grItem->setPen(Qt::NoPen);
     //grItem->setFlag(QGraphicsItem::ItemIsMovable, true); // TODO
@@ -122,22 +123,22 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 
 
         if (createNewHandles) {
-            std::vector<QGraphicsRectItem*> handles;
-            handles.push_back(newRectItemWithCursor(r1, cursors[1]));
-            handles.push_back(newRectItemWithCursor(r2, cursors[2]));
-            handles.push_back(newRectItemWithCursor(r3, cursors[3]));
+            std::vector<SelectionHandleGraphicsItem*> handles;
+            handles.push_back(newSelectionHandleItemWithCursor(r1, cursors[1]));
+            handles.push_back(newSelectionHandleItemWithCursor(r2, cursors[2]));
+            handles.push_back(newSelectionHandleItemWithCursor(r3, cursors[3]));
 
-            handles.push_back(newRectItemWithCursor(r4, cursors[4]));
-            handles.push_back(newRectItemWithCursor(r6, cursors[6]));
+            handles.push_back(newSelectionHandleItemWithCursor(r4, cursors[4]));
+            handles.push_back(newSelectionHandleItemWithCursor(r6, cursors[6]));
 
-            handles.push_back(newRectItemWithCursor(r7, cursors[7]));
-            handles.push_back(newRectItemWithCursor(r8, cursors[8]));
-            handles.push_back(newRectItemWithCursor(r9, cursors[9]));
+            handles.push_back(newSelectionHandleItemWithCursor(r7, cursors[7]));
+            handles.push_back(newSelectionHandleItemWithCursor(r8, cursors[8]));
+            handles.push_back(newSelectionHandleItemWithCursor(r9, cursors[9]));
 
             currentHandles.insert(std::make_pair(grItem, handles));
         }
         else {
-            std::vector<QGraphicsRectItem*> handles = currentHandles[grItem];
+            std::vector<SelectionHandleGraphicsItem*> handles = currentHandles[grItem];
 
             int i = 0;
             handles[i++]->setRect(r1);
