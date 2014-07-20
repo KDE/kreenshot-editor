@@ -34,8 +34,12 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 
 TODO
 ----
+- implement SelectionHandles
+    - best way to make the item resize?
+    - (oder zuerst QUndostack?)
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
+- see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - mouse over: draw a light version of the selection rects
 - use more KreenQGraphicsItemBase::graphicsItem()
 - enable more item properties (see item.h/cpp)

@@ -74,7 +74,7 @@ void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* ev
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
 {
     if (change == QGraphicsItem::ItemPositionHasChanged) {
-        emit itemPositionHasChangedSignal();
+        emit handleItemPositionHasChangedSignal();
     }
     else if (change == QGraphicsItem::ItemPositionChange) {
         _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, false);

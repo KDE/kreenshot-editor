@@ -46,7 +46,8 @@ public:
     /**
      * creates a new SelectionHandleGraphicsItem including cursor and move event handling
      *
-     * TODO: let the SelectionHandleGraphicsItem handle the cursors according to the position
+     * TODO: let the SelectionHandleGraphicsItem handle the cursors
+     *        according to the PositionType (TopLeft, TopBorder, ... see Handle from tikzkit
      */
     SelectionHandleGraphicsItem* createSelectionHandleItem(QGraphicsItem* instrumentedItem, QRectF rect, const QCursor& cursor)
     {
