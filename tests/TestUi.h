@@ -69,6 +69,29 @@ private slots:
     {
         QCOMPARE(PageOutputImplHeader::filenamePlusExtToFilename("abc.def-ghi", "png"), QString("abc.def-ghi.png"));
     }
+
+    void ThemeIcons()
+    {
+        qDebug() << "ThemeIcons()";
+
+        qDebug() << "QIcon::themeName(): " << QIcon::themeName();
+        // not breeze because there are currently no icons (2014-07-25)
+        // The icon theme can be set using the "Icons" KDE Control Module
+        QCOMPARE(QIcon::themeName(), QString("oxygen"));
+
+        foreach (QString path, QIcon::themeSearchPaths()) {
+            qDebug() << "path: " << path;
+        }
+
+        auto icon1 = QIcon::fromTheme("edit-select");
+        QCOMPARE(icon1.isNull(), false);
+
+        auto icon2 = QIcon::fromTheme("system");
+        QCOMPARE(icon2.isNull(), false);
+
+        auto icon3 = QIcon::fromTheme("document-new");
+        QCOMPARE(icon3.isNull(), false);
+    }
 };
 
 #endif
