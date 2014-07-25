@@ -5,7 +5,13 @@ kreenshot-editor is incubating.
 
 Build
 -----
+# EITHER: for development (Debug, local install prefix):
+$ mkdir build; cd build; cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=`pwd`/../usr ..
+
+# OR: default (DCMAKE_INSTALL_PREFIX defaults to /usr/local):
 $ mkdir build; cd build; cmake ..
+
+# THEN:
 $ make
 
 Run
