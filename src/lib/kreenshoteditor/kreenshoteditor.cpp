@@ -131,14 +131,16 @@ public:
     QAction* actionDocumentSave;
     QAction* actionDocumentSaveAs;
     QAction* actionDocumentCopyImageToClipboard;
-    QAction* actionFileCopyFilenameToClipboard;
-    QAction* actionFileOpenWithDefaultImageViewer;
+    QAction* actionDocumentCopyFilenameToClipboard;
+    QAction* actionDocumentSelectInFilemanager;
+    QAction* actionDocumentOpenWithDefaultImageViewer;
     // edit actions:
     QAction* actionEditSelectAll;
     QAction* actionEditItemDelete;
     // tool actions:
-    QMap<QString, QAction*> actionIdToActionMap;
     QActionGroup* toolActionGroup = nullptr;
+    // all actions:
+    QMap<QString, QAction*> actionIdToActionMap;
 };
 
 #undef tr
@@ -243,9 +245,6 @@ QStringList KreenshotEditor::allActionIds()
         //
         // file actions
         //
-//         QAction* actionDocumentCopyImageToClipboard;
-//         QAction* actionFileCopyFilenameToClipboard;
-//         QAction* actionFileOpenWithDefaultImageView
         d->actionDocumentNew = d->newAction("document-new", QIcon::fromTheme("document-new"), tr("&New"), this, QKeySequence(tr("Ctrl+N")));
         connect(d->actionDocumentNew, SIGNAL(triggered()), this, SLOT(slotDocumentNew()));
 
@@ -260,6 +259,15 @@ QStringList KreenshotEditor::allActionIds()
 
         d->actionDocumentCopyImageToClipboard = d->newAction("document-image-to-clipboard", QIcon::fromTheme("todo"), tr("Copy image to clipboard"), this, QKeySequence(tr("Ctrl+Shift+C")));
         connect(d->actionDocumentCopyImageToClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentCopyImageToClipboard()));
+
+        d->actionDocumentCopyFilenameToClipboard = d->newAction("document-filename-to-clipboard", QIcon::fromTheme("todo"), tr("Copy filename to clipboard"), this, QKeySequence(tr("Ctrl+Alt+C")));
+        connect(d->actionDocumentCopyFilenameToClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentCopyFilenameToClipboard()));
+
+        d->actionDocumentSelectInFilemanager = d->newAction("document-file-select-in-filemanager", QIcon::fromTheme("todo"), tr("Select in file manager"), this, QKeySequence(tr("Ctrl+Alt+S")));
+        connect(d->actionDocumentSelectInFilemanager, SIGNAL(triggered()), this, SLOT(slotDocumentSelectInFilemanager()));
+
+        d->actionDocumentOpenWithDefaultImageViewer = d->newAction("document-launch-default-viewer", QIcon::fromTheme("todo"), tr("Launch default image viewer"), this, QKeySequence(tr("Ctrl+Alt+L")));
+        connect(d->actionDocumentOpenWithDefaultImageViewer, SIGNAL(triggered()), this, SLOT(slotDocumentLaunchDefaultViewer()));
 
         //
         // edit actions
@@ -363,6 +371,21 @@ void KreenshotEditor::slotDocumentSaveAs()
 void KreenshotEditor::slotDocumentCopyImageToClipboard()
 {
     d->documentFile->document()->copyImageToClipboard();
+}
+
+void KreenshotEditor::slotDocumentCopyFilenameToClipboard()
+{
+    d->documentFile->copyFilenameToClipboard();
+}
+
+void KreenshotEditor::slotDocumentSelectInFilemanager()
+{
+    d->documentFile->selectInFilemanager();
+}
+
+void KreenshotEditor::slotDocumentLaunchDefaultViewer()
+{
+    d->documentFile->launchDefaultImageViewer();
 }
 
 void KreenshotEditor::slotEditUndo()

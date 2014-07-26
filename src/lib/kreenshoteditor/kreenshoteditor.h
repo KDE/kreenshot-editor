@@ -143,6 +143,9 @@ protected Q_SLOTS:
     void slotDocumentSave();
     void slotDocumentSaveAs();
     void slotDocumentCopyImageToClipboard();
+    void slotDocumentCopyFilenameToClipboard();
+    void slotDocumentSelectInFilemanager();
+    void slotDocumentLaunchDefaultViewer();
 
     // edit actions slots:
     void slotEditUndo();

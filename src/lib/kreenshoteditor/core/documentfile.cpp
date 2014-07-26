@@ -38,6 +38,13 @@ namespace core {
 class DocumentFileImpl
 {
 public:
+    DocumentFileImpl(DocumentFile* owner_)
+    {
+        owner = owner_;
+    }
+
+public:
+    DocumentFile* owner;
     DocumentPtr doc;
     SettingsManagerPtr settingsManager;
     QString filename;
@@ -86,16 +93,15 @@ public:
         }
 
         if (settingsManager->output.afterSaveOpenDefaultViewer) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
+            owner->launchDefaultImageViewer();
         }
 
         if (settingsManager->output.afterSaveOpenFileBrowser) {
-            DesktopServices::selectInFilemanager(filename);
+            owner->selectInFilemanager();
         }
 
         if (settingsManager->output.afterSaveClipboardFilename) {
-            QClipboard *clipboard = QApplication::clipboard();
-            clipboard->setText(filename);
+            owner->copyFilenameToClipboard();
         } else if (settingsManager->output.afterSaveClipboardImageData) {
             doc->copyImageToClipboard();
         }
@@ -115,7 +121,7 @@ QList<QString> DocumentFile::supportedImageFormats()
 
 DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager)
 {
-    KREEN_PIMPL_INIT(DocumentFile)
+    KREEN_PIMPL_INIT_THIS(DocumentFile)
 
     d->doc = doc;
     d->filename = filename;
@@ -182,13 +188,30 @@ ErrorStatus DocumentFile::saveAs(QString filename)
     return errorStatus;
 }
 
-    void DocumentFile::afterSaveToFile(ErrorStatus errorStatus)
-    {
-        if (errorStatus.isEmpty()) {
-            d->afterSaveAction(filename());
-        }
-
-        emit fileStatusChanged();
+void DocumentFile::afterSaveToFile(ErrorStatus errorStatus)
+{
+    if (errorStatus.isEmpty()) {
+        d->afterSaveAction(filename());
     }
+
+    emit fileStatusChanged();
+}
+
+void DocumentFile::copyFilenameToClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(d->filename);
+}
+
+void DocumentFile::selectInFilemanager()
+{
+    kreen::core::DesktopServices::selectInFilemanager(d->filename);
+}
+
+void DocumentFile::launchDefaultImageViewer()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(d->filename));
+}
+
 }
 }

@@ -89,6 +89,12 @@ public:
      */
     ErrorStatus saveAs(QString filename);
 
+    void copyFilenameToClipboard();
+
+    void selectInFilemanager();
+
+    void launchDefaultImageViewer();
+
 Q_SIGNALS:
     /**
      * when status of file has changed (after save() or saveAs() is called, NOT by ctor)

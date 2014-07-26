@@ -43,9 +43,6 @@ $ python -c 'import uuid; print str(uuid.uuid1())'
 
 TODO
 ----
-- QColorSelectorDialog, with transparency???
-- Drag source for image in toolbar
-- add Actions for [ ] select saved image in folder, [ ] copy image path to clipboard
 - implement SelectionHandles
     - best way to make the item resize?
     - (oder zuerst QUndostack?)
@@ -68,6 +65,7 @@ TODO
 
 LATER
 -----
+- new: KreenColorButton with transparency handling etc
 - remove default QGraphicsItem selection marquee
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
 - PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
@@ -93,6 +91,9 @@ LATER
         [NEW] ...
         *  ... (see mainwindow.cpp)
 - "Open last file storage location" or "Open storage location"
+- Drag source for image in toolbar
+    - this can currently been achieved by lauching default viewer (Ctrl+Alt+L) and use drag source from there
+- "Copy filename to clipboard": show notification that something was copied; show warning if file is not saved yet
 - ? click on empty space should choose Select tool
 - ? use m4 to generate settings class
 - ? use #pragma once? (non-standard) / replace it as soon as someone sees a problem

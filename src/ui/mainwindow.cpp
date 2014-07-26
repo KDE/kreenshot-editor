@@ -45,10 +45,17 @@ public:
             << "document-save" << "document-save-as"
             << "---"
             << "document-image-to-clipboard"
+            << "document-filename-to-clipboard"
+            << "document-file-select-in-filemanager"
+            << "document-launch-default-viewer"
             ;
         insertEditActionsForPlaceholder(ui->menuFile, ui->actionFileActionsPlaceholder, fileActions);
         // in the toolbar we don't want to have all items
+        fileActions.removeAll("document-new");
         fileActions.removeAll("document-image-to-clipboard");
+        fileActions.removeAll("document-filename-to-clipboard");
+        fileActions.removeAll("document-file-select-in-filemanager");
+        fileActions.removeAll("document-launch-default-viewer");
         fileActions.removeLast(); // "---"
         insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionFileActionsPlaceholder, fileActions);
 
