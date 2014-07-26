@@ -44,10 +44,6 @@ public:
     virtual ~MainWindow();
 
 public Q_SLOTS:
-    void fileNew();
-    void fileOpen();
-    void fileSave();
-    void fileSaveAs();
     void editPreferences();
     void helpAbout();
 

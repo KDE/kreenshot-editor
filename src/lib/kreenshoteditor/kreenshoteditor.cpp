@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QFile>
+#include <QFileDialog>
 #include <QDir>
 #include <QStringList>
 #include "ui/maineditorwidget.h"
@@ -98,6 +99,23 @@ public:
         return toolActionGroup->actions();
     }
 
+    void handleSaveImageError(QWidget* parent, ErrorStatus errorStatus)
+    {
+        if (!errorStatus.isEmpty()) {
+            QMessageBox::warning(parent, parent->tr("Error saving image"), errorStatus);
+        }
+    }
+
+    QString saveFileNameFilterStringFromImageFileExtensions(QStringList fileextlist)
+    {
+        QString result;
+        foreach (QString str, fileextlist)
+        {
+            result += "*." + str + " ";
+        }
+        return result;
+    }
+
 public:
     KreenshotEditor* owner = nullptr;
 
@@ -107,10 +125,20 @@ public:
 
     MainEditorWidget* mainEditorWidget = nullptr;
 
+    // file actions:
+    QAction* actionFileNew;
+    QAction* actionFileOpen;
+    QAction* actionFileSave;
+    QAction* actionFileSaveAs;
+    QAction* actionFileCopyFilenameToClipboard;
+    QAction* actionFileCopyImageToClipboard;
+    QAction* actionFileOpenWithDefaultImageViewer;
+    // edit actions:
+    QAction* actionEditSelectAll;
+    QAction* actionEditItemDelete;
+    // tool actions:
     QMap<QString, QAction*> actionIdToActionMap;
     QActionGroup* toolActionGroup = nullptr;
-    QAction* actionSelectAll;
-    QAction* actionItemDelete;
 };
 
 #undef tr
@@ -211,15 +239,38 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
 QStringList KreenshotEditor::allActionIds()
 {
     if (d->actionIdToActionMap.empty()) { // singleton
+
+        //
+        // file actions
+        //
+//         QAction* actionFileNew;
+//         QAction* actionFileOpen;
+//         QAction* actionFileSave;
+//         QAction* actionFileSaveAs;
+//         QAction* actionFileCopyFilenameToClipboard;
+//         QAction* actionFileCopyImageToClipboard;
+//         QAction* actionFileOpenWithDefaultImageView
+        d->actionFileNew = d->newAction("document-new", QIcon::fromTheme("document-new"), tr("&New"), this, QKeySequence(tr("Ctrl+N")));
+        connect(d->actionFileNew, SIGNAL(triggered()), this, SLOT(slotFileNew()));
+
+        d->actionFileOpen = d->newAction("document-open", QIcon::fromTheme("document-open"), tr("&Open"), this, QKeySequence(tr("Ctrl+O")));
+        connect(d->actionFileOpen, SIGNAL(triggered()), this, SLOT(slotFileOpen()));
+
+        d->actionFileSave = d->newAction("document-save", QIcon::fromTheme("document-save"), tr("Save"), this, QKeySequence(tr("Ctrl+S")));
+        connect(d->actionFileSave, SIGNAL(triggered()), this, SLOT(slotFileSave()));
+
+        d->actionFileSaveAs = d->newAction("document-save-as", QIcon::fromTheme("document-save-as"), tr("Save as..."), this, QKeySequence(tr("Ctrl+Shift+S")));
+        connect(d->actionFileSaveAs, SIGNAL(triggered()), this, SLOT(slotFileSaveAs()));
+
         //
         // edit actions
         //
-        d->actionSelectAll = d->newAction("edit-objects-select-all", QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
-        connect(d->actionSelectAll, SIGNAL(triggered()), this, SLOT(slotEditSelectAll()));
+        d->actionEditSelectAll = d->newAction("edit-objects-select-all", QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
+        connect(d->actionEditSelectAll, SIGNAL(triggered()), this, SLOT(slotEditSelectAll()));
 
-        d->actionItemDelete = d->newAction("edit-objects-delete", QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
-        d->actionItemDelete->setEnabled(false);
-        connect(d->actionItemDelete, SIGNAL(triggered()), this, SLOT(slotEditDeleteSelectedItems()));
+        d->actionEditItemDelete = d->newAction("edit-objects-delete", QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
+        d->actionEditItemDelete->setEnabled(false);
+        connect(d->actionEditItemDelete, SIGNAL(triggered()), this, SLOT(slotEditDeleteSelectedItems()));
 
         //
         // undo actions
@@ -237,7 +288,7 @@ QStringList KreenshotEditor::allActionIds()
 QAction* KreenshotEditor::actionFromId(QString actionId)
 {
     if (!d->actionIdToActionMap.contains(actionId)) {
-        qDebug() << "actionId '" << actionId << "' must be one of allActionIds";
+        qDebug() << "[WARN] Menu items will be missing: actionId '" << actionId << "' must be present in kreenshoteditor.cpp/actionIdToActionMap. See KreenshotEditor::allActionIds()";
         return nullptr;
     }
 
@@ -281,6 +332,35 @@ void KreenshotEditor::showPreferencesDialog()
     }
 }
 
+void KreenshotEditor::slotFileNew()
+{
+    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+}
+
+void KreenshotEditor::slotFileOpen()
+{
+    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+}
+
+void KreenshotEditor::slotFileSave()
+{
+    ErrorStatus errorStatus = documentFile()->save();
+    d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
+}
+
+void KreenshotEditor::slotFileSaveAs()
+{
+    QString filename = QFileDialog::getSaveFileName(this->mainEditorWidget(), tr("Save file as"),
+                                                    documentFile()->filename(),
+                                                    tr("Images") + " ("
+                                                   + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
+                                                   + ")");
+    if (!filename.isEmpty()) {
+        ErrorStatus errorStatus = documentFile()->saveAs(filename);
+        d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
+    }
+}
+
 void KreenshotEditor::slotEditUndo()
 {
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
@@ -299,7 +379,7 @@ void KreenshotEditor::slotEditDeleteSelectedItems()
 void KreenshotEditor::slotActionItemDeleteUpdateEnabledState()
 {
     qDebug() << "slotActionItemDeleteUpdateEnabledState";
-    d->actionItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
+    d->actionEditItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
 }
 
 void KreenshotEditor::slotEditSelectAll()

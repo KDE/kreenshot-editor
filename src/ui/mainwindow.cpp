@@ -30,6 +30,43 @@
 class MainWindowImpl
 {
 public:
+    void setupActionsMenuAndToolbar()
+    {
+        // NOTE: to get a list of all available actions, see KreenshotEditor::allActionIds()
+        //
+
+        //
+        // file file actions
+        //
+        QStringList fileActions;
+        fileActions << "document-new" << "document-open" << "---" << "document-save" << "document-save-as"; // all file actions
+        insertEditActionsForPlaceholder(ui->menuFile, ui->actionFileActionsPlaceholder, fileActions);
+        // fileActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items
+        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionFileActionsPlaceholder, fileActions);
+
+        //
+        // fill edit actions
+        //
+        QStringList editActions;
+        editActions << "edit-objects-select-all" << "edit-objects-delete"; // all edit actions
+        insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder, editActions);
+        editActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items, so we remove this one
+        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder, editActions);
+
+        //
+        // fill menuTool and toolBar_Tools
+        //
+        foreach(auto action, kreenshotEditor->toolActions()) {
+            toolIdToActionMap.insert(actionToToolId(action), action);
+        }
+
+        insertToolsActionsForPlaceholder(ui->menuTool, ui->actionToolsActionsPlaceholder);
+        insertToolsActionsForPlaceholder(ui->toolBar_Tools, ui->actionToolsActionsPlaceholder);
+
+        insertUndoActionsForPlaceholder(ui->menuEdit, ui->actionUndoActionsPlaceholder);
+        insertUndoActionsForPlaceholder(ui->toolBar_Main, ui->actionUndoActionsPlaceholder);
+    }
+
     void insertSeparator(QAction* before, QWidget* w)
     {
         auto sep = new QAction(w);
@@ -64,33 +101,20 @@ public:
         parent->removeAction(placeholder);
     }
 
+    /**
+     * special case: "---" is to add a separator
+     */
     void insertEditActionsForPlaceholder(QWidget* parent, QAction* placeholder, QStringList actionIds)
     {
         foreach (auto actionId, actionIds) {
-            parent->insertAction(placeholder, kreenshotEditor->actionFromId(actionId));
+            if (actionId == "---") {
+                insertSeparator(placeholder, parent);
+            }
+            else {
+                parent->insertAction(placeholder, kreenshotEditor->actionFromId(actionId));
+            }
         }
         parent->removeAction(placeholder);
-    }
-
-    void setupActionsMenuAndToolbar()
-    {
-        foreach(auto action, kreenshotEditor->toolActions()) {
-            toolIdToActionMap.insert(actionToToolId(action), action);
-        }
-
-        // fill menuTool and toolBar_Tools
-        //
-        insertToolsActionsForPlaceholder(ui->menuTool, ui->actionToolsActionsPlaceholder);
-        insertToolsActionsForPlaceholder(ui->toolBar_Tools, ui->actionToolsActionsPlaceholder);
-
-        insertUndoActionsForPlaceholder(ui->menuEdit, ui->actionUndoActionsPlaceholder);
-        insertUndoActionsForPlaceholder(ui->toolBar_Main, ui->actionUndoActionsPlaceholder);
-
-        QStringList editActions;
-        editActions << "edit-objects-select-all" << "edit-objects-delete";
-        insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder, editActions);
-        editActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items
-        insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder, editActions);
     }
 
     /**
@@ -166,23 +190,6 @@ public:
         return kreenshotEditor->actionToToolId(action);
     }
 
-    void handleSaveImageError(QMainWindow* parent, ErrorStatus errorStatus)
-    {
-        if (!errorStatus.isEmpty()) {
-            QMessageBox::warning(parent, parent->tr("Error saving image"), errorStatus);
-        }
-    }
-
-    QString imageFileExtensionsToGetSaveFileNameFilterString(QStringList fileextlist)
-    {
-        QString result;
-        foreach (QString str, fileextlist)
-        {
-            result += "*." + str + " ";
-        }
-        return result;
-    }
-
 public:
     kreen::KreenshotEditorPtr kreenshotEditor;
     Ui::MainWindow* ui;
@@ -237,13 +244,9 @@ void MainWindow::setupActions()
         connect(action, SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
     }
 
-    connect(d->ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    connect(d->ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
-    // actionQuit: via Action Editor in designer
-    connect(d->ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    connect(d->ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    // actionQuit: connected via Action Editor in designer
 
     connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
 }
@@ -251,35 +254,6 @@ void MainWindow::setupActions()
 void MainWindow::editPreferences()
 {
     d->kreenshotEditor->showPreferencesDialog();
-}
-
-void MainWindow::fileNew()
-{
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
-}
-
-void MainWindow::fileOpen()
-{
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
-}
-
-void MainWindow::fileSave()
-{
-    ErrorStatus errorStatus = d->kreenshotEditor->documentFile()->save();
-    d->handleSaveImageError(this, errorStatus);
-}
-
-void MainWindow::fileSaveAs()
-{
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save file as"),
-                                                    d->kreenshotEditor->documentFile()->filename(),
-                                                    tr("Images") + " ("
-                                                   + d->imageFileExtensionsToGetSaveFileNameFilterString(DocumentFile::supportedImageFormats())
-                                                   + ")");
-    if (!filename.isEmpty()) {
-        ErrorStatus errorStatus = d->kreenshotEditor->documentFile()->saveAs(filename);
-        d->handleSaveImageError(this, errorStatus);
-    }
 }
 
 void MainWindow::helpAbout()

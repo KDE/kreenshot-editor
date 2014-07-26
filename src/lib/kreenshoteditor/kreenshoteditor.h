@@ -137,15 +137,21 @@ Q_SIGNALS:
     //// void outputFileStatusChanged();
 
 protected Q_SLOTS:
-    void slotRequestToolBySenderAction();
+    // file actions slots:
+    void slotFileNew();
+    void slotFileOpen();
+    void slotFileSave();
+    void slotFileSaveAs();
 
+    // edit actions slots:
     void slotEditUndo();
     void slotEditRedo();
-
     void slotEditDeleteSelectedItems();
     void slotActionItemDeleteUpdateEnabledState();
-
     void slotEditSelectAll();
+
+    // tool action slots:
+    void slotRequestToolBySenderAction();
 
 private:
     KreenshotEditorImplPtr d;

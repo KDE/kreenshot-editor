@@ -43,9 +43,10 @@ $ python -c 'import uuid; print str(uuid.uuid1())'
 
 TODO
 ----
+- QColorSelectorDialog, with transparency???
 - // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
     - dolphin --select
-    - add Actions for select saved image in folder
+    - add Actions for select saved image in folder, copy image path to clipboard, copy image to clipboard
 - implement SelectionHandles
     - best way to make the item resize?
     - (oder zuerst QUndostack?)
