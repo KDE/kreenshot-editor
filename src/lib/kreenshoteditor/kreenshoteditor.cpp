@@ -125,13 +125,13 @@ public:
 
     MainEditorWidget* mainEditorWidget = nullptr;
 
-    // file actions:
-    QAction* actionFileNew;
-    QAction* actionFileOpen;
-    QAction* actionFileSave;
-    QAction* actionFileSaveAs;
+    // document and file actions:
+    QAction* actionDocumentNew;
+    QAction* actionDocumentOpen;
+    QAction* actionDocumentSave;
+    QAction* actionDocumentSaveAs;
+    QAction* actionDocumentCopyImageToClipboard;
     QAction* actionFileCopyFilenameToClipboard;
-    QAction* actionFileCopyImageToClipboard;
     QAction* actionFileOpenWithDefaultImageViewer;
     // edit actions:
     QAction* actionEditSelectAll;
@@ -243,24 +243,23 @@ QStringList KreenshotEditor::allActionIds()
         //
         // file actions
         //
-//         QAction* actionFileNew;
-//         QAction* actionFileOpen;
-//         QAction* actionFileSave;
-//         QAction* actionFileSaveAs;
+//         QAction* actionDocumentCopyImageToClipboard;
 //         QAction* actionFileCopyFilenameToClipboard;
-//         QAction* actionFileCopyImageToClipboard;
 //         QAction* actionFileOpenWithDefaultImageView
-        d->actionFileNew = d->newAction("document-new", QIcon::fromTheme("document-new"), tr("&New"), this, QKeySequence(tr("Ctrl+N")));
-        connect(d->actionFileNew, SIGNAL(triggered()), this, SLOT(slotFileNew()));
+        d->actionDocumentNew = d->newAction("document-new", QIcon::fromTheme("document-new"), tr("&New"), this, QKeySequence(tr("Ctrl+N")));
+        connect(d->actionDocumentNew, SIGNAL(triggered()), this, SLOT(slotDocumentNew()));
 
-        d->actionFileOpen = d->newAction("document-open", QIcon::fromTheme("document-open"), tr("&Open"), this, QKeySequence(tr("Ctrl+O")));
-        connect(d->actionFileOpen, SIGNAL(triggered()), this, SLOT(slotFileOpen()));
+        d->actionDocumentOpen = d->newAction("document-open", QIcon::fromTheme("document-open"), tr("&Open"), this, QKeySequence(tr("Ctrl+O")));
+        connect(d->actionDocumentOpen, SIGNAL(triggered()), this, SLOT(slotDocumentOpen()));
 
-        d->actionFileSave = d->newAction("document-save", QIcon::fromTheme("document-save"), tr("Save"), this, QKeySequence(tr("Ctrl+S")));
-        connect(d->actionFileSave, SIGNAL(triggered()), this, SLOT(slotFileSave()));
+        d->actionDocumentSave = d->newAction("document-save", QIcon::fromTheme("document-save"), tr("Save"), this, QKeySequence(tr("Ctrl+S")));
+        connect(d->actionDocumentSave, SIGNAL(triggered()), this, SLOT(slotDocumentSave()));
 
-        d->actionFileSaveAs = d->newAction("document-save-as", QIcon::fromTheme("document-save-as"), tr("Save as..."), this, QKeySequence(tr("Ctrl+Shift+S")));
-        connect(d->actionFileSaveAs, SIGNAL(triggered()), this, SLOT(slotFileSaveAs()));
+        d->actionDocumentSaveAs = d->newAction("document-save-as", QIcon::fromTheme("document-save-as"), tr("Save as..."), this, QKeySequence(tr("Ctrl+Shift+S")));
+        connect(d->actionDocumentSaveAs, SIGNAL(triggered()), this, SLOT(slotDocumentSaveAs()));
+
+        d->actionDocumentCopyImageToClipboard = d->newAction("document-image-to-clipboard", QIcon::fromTheme("todo"), tr("Copy image to clipboard"), this, QKeySequence(tr("Ctrl+Shift+C")));
+        connect(d->actionDocumentCopyImageToClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentCopyImageToClipboard()));
 
         //
         // edit actions
@@ -332,23 +331,23 @@ void KreenshotEditor::showPreferencesDialog()
     }
 }
 
-void KreenshotEditor::slotFileNew()
+void KreenshotEditor::slotDocumentNew()
 {
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
 }
 
-void KreenshotEditor::slotFileOpen()
+void KreenshotEditor::slotDocumentOpen()
 {
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
 }
 
-void KreenshotEditor::slotFileSave()
+void KreenshotEditor::slotDocumentSave()
 {
     ErrorStatus errorStatus = documentFile()->save();
     d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
 }
 
-void KreenshotEditor::slotFileSaveAs()
+void KreenshotEditor::slotDocumentSaveAs()
 {
     QString filename = QFileDialog::getSaveFileName(this->mainEditorWidget(), tr("Save file as"),
                                                     documentFile()->filename(),
@@ -359,6 +358,11 @@ void KreenshotEditor::slotFileSaveAs()
         ErrorStatus errorStatus = documentFile()->saveAs(filename);
         d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
     }
+}
+
+void KreenshotEditor::slotDocumentCopyImageToClipboard()
+{
+    d->documentFile->document()->copyImageToClipboard();
 }
 
 void KreenshotEditor::slotEditUndo()

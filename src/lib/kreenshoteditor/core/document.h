@@ -106,6 +106,8 @@ public:
      */
     QImage renderToImage();
 
+    void copyImageToClipboard();
+
 private:
     QList<KreenItemPtr> _items;
 

@@ -44,6 +44,7 @@ $ python -c 'import uuid; print str(uuid.uuid1())'
 TODO
 ----
 - QColorSelectorDialog, with transparency???
+- Drag source for image in toolbar
 - // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
     - dolphin --select
     - add Actions for select saved image in folder, copy image path to clipboard, copy image to clipboard

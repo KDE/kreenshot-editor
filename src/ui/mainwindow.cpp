@@ -36,12 +36,20 @@ public:
         //
 
         //
-        // file file actions
+        // fill file actions
         //
         QStringList fileActions;
-        fileActions << "document-new" << "document-open" << "---" << "document-save" << "document-save-as"; // all file actions
+        // all document and file actions
+        fileActions << "document-new" << "document-open"
+            << "---"
+            << "document-save" << "document-save-as"
+            << "---"
+            << "document-image-to-clipboard"
+            ;
         insertEditActionsForPlaceholder(ui->menuFile, ui->actionFileActionsPlaceholder, fileActions);
-        // fileActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items
+        // in the toolbar we don't want to have all items
+        fileActions.removeAll("document-image-to-clipboard");
+        fileActions.removeLast(); // "---"
         insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionFileActionsPlaceholder, fileActions);
 
         //

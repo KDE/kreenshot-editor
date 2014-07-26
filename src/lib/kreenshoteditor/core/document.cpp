@@ -19,6 +19,8 @@
 #include "document.h"
 #include <QImage>
 #include <QPainter>
+#include <QApplication>
+#include <QClipboard>
 #include "impl/kreengraphicsscene.h"
 #include "impl/toolmanager.h"
 
@@ -204,6 +206,13 @@ QImage Document::renderToImage()
     d->scene->render(&painterImage);
     d->scene->renderFinalImageOnly(false);
     return image;
+}
+
+void Document::copyImageToClipboard()
+{
+    QImage image = renderToImage();
+    QClipboard* clipboard = QApplication::clipboard();
+    clipboard->setImage(image);
 }
 
 }

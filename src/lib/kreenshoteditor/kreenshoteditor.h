@@ -137,11 +137,12 @@ Q_SIGNALS:
     //// void outputFileStatusChanged();
 
 protected Q_SLOTS:
-    // file actions slots:
-    void slotFileNew();
-    void slotFileOpen();
-    void slotFileSave();
-    void slotFileSaveAs();
+    // document and file actions slots:
+    void slotDocumentNew();
+    void slotDocumentOpen();
+    void slotDocumentSave();
+    void slotDocumentSaveAs();
+    void slotDocumentCopyImageToClipboard();
 
     // edit actions slots:
     void slotEditUndo();

@@ -97,9 +97,7 @@ public:
             QClipboard *clipboard = QApplication::clipboard();
             clipboard->setText(filename);
         } else if (settingsManager->output.afterSaveClipboardImageData) {
-            QImage image(filename);
-            QClipboard *clipboard = QApplication::clipboard();
-            clipboard->setImage(image);
+            doc->copyImageToClipboard();
         }
     }
 };
