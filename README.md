@@ -38,8 +38,14 @@ DEV
 ---
 Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
 
+Create new header guard UUI:
+$ python -c 'import uuid; print str(uuid.uuid1())'
+
 TODO
 ----
+- // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
+    - dolphin --select
+    - add Actions for select saved image in folder
 - implement SelectionHandles
     - best way to make the item resize?
     - (oder zuerst QUndostack?)
@@ -72,8 +78,6 @@ LATER
     - show message flash, when done (or KMessageBox, "show never again")
     - plus: provide drag source for DND
 - Open last save location
-- // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
-    - dolphin --select
 - lib: provide different kinds of mainwidget
    - with or without toolbar
    - with some predefined stuff etc.

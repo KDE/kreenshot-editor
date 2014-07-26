@@ -18,10 +18,12 @@
  */
 #include "mainwindow1.h"
 #include <kreen/ui/kreentoolbutton.h>
+#include <kreen/core/desktopservices.h>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QAction>
+#include <QLabel>
 #include <QMessageBox>
 #include <QSignalMapper>
 #include <QDebug>
@@ -47,6 +49,7 @@ void MainWindow1::setupUi()
     connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(slotMessageBox(QString))) ;
 
     {
+        addDescriptionLabel(mainLayout, "simple QPushButton");
         auto pushButtonTest6 = new QPushButton("QPushButton", this);
         mainLayout->addWidget(pushButtonTest6);
         signalMapper->setMapping(pushButtonTest6, "clicked() pushButtonTest6");
@@ -54,6 +57,7 @@ void MainWindow1::setupUi()
     }
 
     {
+        addDescriptionLabel(mainLayout, "simple QToolButton");
         auto toolButtonTest2 = new QToolButton(this);
         mainLayout->addWidget(toolButtonTest2);
         toolButtonTest2->setText("QToolButton default");
@@ -63,6 +67,7 @@ void MainWindow1::setupUi()
     }
 
     {
+        addDescriptionLabel(mainLayout, "QToolButton 1");
         auto toolButtonTest3 = new QToolButton(this);
         mainLayout->addWidget(toolButtonTest3);
 
@@ -78,6 +83,7 @@ void MainWindow1::setupUi()
     }
 
     {
+        addDescriptionLabel(mainLayout, "QToolButton 2");
         auto toolButtonTest4 = new QToolButton(this);
         mainLayout->addWidget(toolButtonTest4);
 
@@ -94,6 +100,7 @@ void MainWindow1::setupUi()
     }
 
     {
+        addDescriptionLabel(mainLayout, "QToolButton 3");
         auto toolButtonTest5 = new QToolButton(this);
         mainLayout->addWidget(toolButtonTest5);
 
@@ -110,7 +117,8 @@ void MainWindow1::setupUi()
     }
 
     {
-        auto kreenToolButtonTest1 = new KreenToolButton(this);
+        addDescriptionLabel(mainLayout, "KreenToolButton - simple");
+        auto kreenToolButtonTest1 = new kreen::ui::KreenToolButton(this);
         mainLayout->addWidget(kreenToolButtonTest1);
 
         kreenToolButtonTest1->setText("KreenToolButton - no actions");
@@ -119,7 +127,8 @@ void MainWindow1::setupUi()
     }
 
     {
-        auto kreenToolButtonTest2 = new KreenToolButton(this);
+        addDescriptionLabel(mainLayout, "KreenToolButton - with big icons");
+        auto kreenToolButtonTest2 = new kreen::ui::KreenToolButton(this);
         mainLayout->addWidget(kreenToolButtonTest2);
 
         kreenToolButtonTest2->setText("KreenToolButton - two actions - InstantPopup");
@@ -127,9 +136,9 @@ void MainWindow1::setupUi()
         signalMapper->setMapping(kreenToolButtonTest2, QString("clicked() kreenToolButtonTest2"));
         connect(kreenToolButtonTest2, SIGNAL(clicked()), signalMapper, SLOT(map()));
 
-        auto action1 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/64x64/devices/input-gaming.png"), "input-gaming.png 64x64", this);
-        auto action2 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/16x16/devices/media-floppy.png"), "media-floppy.png 16x16", this);
-        auto action3 = new QAction(QIcon("/home/gregor/kde/share/icons/oxygen/32x32/devices/media-optical-mixed-cd.png"), "media-optical-mixed-cd.png 32x32", this);
+        auto action1 = new QAction(QIcon("/usr/share/icons/oxygen/64x64/devices/input-gaming.png"), "input-gaming.png 64x64", this);
+        auto action2 = new QAction(QIcon("/usr/share/icons/oxygen/16x16/devices/media-floppy.png"), "media-floppy.png 16x16", this);
+        auto action3 = new QAction(QIcon("/usr/share/icons/oxygen/32x32/devices/media-optical-mixed-cd.png"), "media-optical-mixed-cd.png 32x32", this);
 
         kreenToolButtonTest2->addMenuAction(action1);
         kreenToolButtonTest2->addMenuAction(action2);
@@ -139,6 +148,25 @@ void MainWindow1::setupUi()
 
         qDebug() << kreenToolButtonTest2->menu();
     }
+
+    {
+        addDescriptionLabel(mainLayout, "DesktopServices.selectInFilemanager");
+        auto button = new QPushButton("select", this);
+        mainLayout->addWidget(button);
+        connect(button, SIGNAL(clicked()), this, SLOT(slotSelectInFilemanager()));
+    }
+}
+
+void MainWindow1::addDescriptionLabel(QBoxLayout* layout, QString text)
+{
+    auto label = new QLabel(text + ":", this);
+    layout->addWidget(label);
+}
+
+void MainWindow1::slotSelectInFilemanager()
+{
+    kreen::core::DesktopServices::selectInFilemanager("/usr/bin/python");
+    kreen::core::DesktopServices::selectInFilemanager("/usr/bin/pythonOFF");
 }
 
 void MainWindow1::slotMessageBox(QString message)

@@ -16,31 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_MAIN_WINDOW1_H
-#define UI_MAIN_WINDOW1_H
+#ifndef UUID_b000eb02_145d_11e4_bace_002454dd224f
+#define UUID_b000eb02_145d_11e4_bace_002454dd224f
 
-#include <QMainWindow>
-#include <QLayout>
+#include <kreen/util/exportutil.h>
+#include <kreen/util/pimplutil.h>
+#include <QString>
+#include <QUrl>
+#include <QProcess>
+#include <QObject>
 
-class MainWindow1 : public QMainWindow
+namespace kreen {
+namespace core {
+
+/**
+ * additions to QDesktopServices
+ */
+class KREEN_DECL_EXPORT DesktopServices : public QObject
 {
     Q_OBJECT
+public:
+    DesktopServices();
+
+    virtual ~DesktopServices();
 
 public:
-    MainWindow1();
-    virtual ~MainWindow1();
-
-public:
-    void setupUi();
+    /**
+     * Selects the given file in the filemanager (works only for dolphin).
+     * If the url is a directory it is also selected instead of entered.
+     */
+    static void selectInFilemanager(QString filename);
 
 protected Q_SLOTS:
-    void slotMessageBox(QString message);
-    void slotSelectInFilemanager();
-
-private:
-    void addDescriptionLabel(QBoxLayout* layout, QString text);
+//     void slotProcessStarted();
+//     void slotProcessError(QProcess::ProcessError error);
 };
 
-#endif
+}
+}
 
-// kate: indent-mode cstyle; replace-tabs on;
+#endif

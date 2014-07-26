@@ -25,6 +25,9 @@
 
 class QMenu;
 
+namespace kreen {
+namespace ui {
+
 /**
  * Gives more control over the item height of Actions
  */
@@ -51,6 +54,9 @@ public Q_SLOTS:
 private:
     QMenu* _menu;
 };
+
+}
+}
 
 #endif
 

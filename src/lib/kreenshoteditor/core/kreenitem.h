@@ -25,7 +25,6 @@
 #include <QRect>
 #include <QLine>
 #include <QColor>
-#include <memory>
 
 namespace kreen {
 namespace core {

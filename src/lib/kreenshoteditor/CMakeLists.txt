@@ -23,6 +23,7 @@ set(kreenshoteditor_SOURCES
     core/impl/selectionhandlegraphicsitem.cpp
     core/impl/selectionhandles.cpp
 
+    core/desktopservices.cpp
     core/document.cpp
     core/documentfile.cpp
     core/kreenitem.cpp

@@ -28,6 +28,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include "core/settingsmanager.h"
+#include "core/desktopservices.h"
 
 #define tr(arg) QObject::tr(arg)
 
@@ -89,9 +90,7 @@ public:
         }
 
         if (settingsManager->output.afterSaveOpenFileBrowser) {
-            QDesktopServices::openUrl(QFileInfo(filename).dir().absolutePath());
-
-            // TODO: use QProcess to lookup if dolphin exists and use it, else use the existing method
+            DesktopServices::selectInFilemanager(filename);
         }
 
         if (settingsManager->output.afterSaveClipboardFilename) {

@@ -20,6 +20,9 @@
 #include <QProxyStyle>
 #include <QMenu>
 
+namespace kreen {
+namespace ui {
+
 class MyStyle : public QProxyStyle
 {
 public:
@@ -86,4 +89,7 @@ void KreenToolButton::addMenuAction(QAction* action)
 void KreenToolButton::setMaxIconSize(int maxIconSize)
 {
     _menu->setStyle(new MyStyle(maxIconSize));
+}
+
+}
 }
