@@ -26,6 +26,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QSignalMapper>
+#include <QColorDialog>
 #include <QDebug>
 
 MainWindow1::MainWindow1()
@@ -155,6 +156,27 @@ void MainWindow1::setupUi()
         mainLayout->addWidget(button);
         connect(button, SIGNAL(clicked()), this, SLOT(slotSelectInFilemanager()));
     }
+
+    {
+        addDescriptionLabel(mainLayout, "QColorDialog - standard");
+        auto button = new QPushButton("select color", this);
+        mainLayout->addWidget(button);
+        connect(button, SIGNAL(clicked()), this, SLOT(slotChooseColor1()));
+    }
+
+    {
+        addDescriptionLabel(mainLayout, "QColorDialog - with alpha channel");
+        auto button = new QPushButton("select color (alpha)", this);
+        mainLayout->addWidget(button);
+        connect(button, SIGNAL(clicked()), this, SLOT(slotChooseColor2()));
+    }
+
+    {
+        addDescriptionLabel(mainLayout, "QColorDialog - no buttons");
+        auto button = new QPushButton("select color (no buttons)", this);
+        mainLayout->addWidget(button);
+        connect(button, SIGNAL(clicked()), this, SLOT(slotChooseColor3()));
+    }
 }
 
 void MainWindow1::addDescriptionLabel(QBoxLayout* layout, QString text)
@@ -172,4 +194,19 @@ void MainWindow1::slotSelectInFilemanager()
 void MainWindow1::slotMessageBox(QString message)
 {
     QMessageBox::information(this, "slotMessageBox", message);
+}
+
+void MainWindow1::slotChooseColor1()
+{
+    QColor result = QColorDialog::getColor(Qt::white, 0, QString(), 0);
+}
+
+void MainWindow1::slotChooseColor2()
+{
+    QColor result = QColorDialog::getColor(Qt::white, 0, QString(), QColorDialog::ShowAlphaChannel);
+}
+
+void MainWindow1::slotChooseColor3()
+{
+    QColor result = QColorDialog::getColor(Qt::white, 0, QString(), QColorDialog::NoButtons);
 }

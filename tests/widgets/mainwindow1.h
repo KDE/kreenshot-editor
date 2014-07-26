@@ -36,6 +36,9 @@ public:
 protected Q_SLOTS:
     void slotMessageBox(QString message);
     void slotSelectInFilemanager();
+    void slotChooseColor1();
+    void slotChooseColor2();
+    void slotChooseColor3();
 
 private:
     void addDescriptionLabel(QBoxLayout* layout, QString text);
