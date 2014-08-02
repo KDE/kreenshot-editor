@@ -100,6 +100,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
 
     try {
         if (args.length() == 0) {
+            arguments.baseImagePath = "";
             qDebug() << "  baseImagePath: no image given";
         }
         else if (args.length() == 1) {
@@ -140,6 +141,11 @@ Arguments parseArgumentsOrExit(QApplication& app)
 
         arguments.isTreatFileAsNew = parser.isSet(treatAsNewOption);
         qDebug() << "  treatAsNew:" << arguments.isTreatFileAsNew;
+
+        if (arguments.baseImagePath.isEmpty()) {
+            qDebug() << "  treatAsNew: set to true because baseImagePath is empty";
+            arguments.isTreatFileAsNew = true;
+        }
     }
     catch (const std::runtime_error& e) {
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;

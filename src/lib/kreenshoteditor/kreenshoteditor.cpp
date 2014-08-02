@@ -70,7 +70,10 @@ public:
     {
         auto action = new QAction(icon, text, parent);
         action->setShortcut(key);
-        action->setToolTip(text); // todo: more
+
+        text.replace("&", ""); // remove any mnemnic stuff
+        action->setToolTip(text); // todo: more and detailled tooltips
+
         action->setData(actionId);
 
         actionIdToActionMap.insert(actionId, action);
