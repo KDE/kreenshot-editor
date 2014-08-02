@@ -96,12 +96,12 @@ public:
      */
     void removeItems(const QList<KreenItemPtr> items, bool recordUndo = true);
 
+    void operationCrop(QRect rect);
+
     /**
-     * todo: remove later
+     * (this is treated as one undo operation)
      */
     void addDemoItems();
-
-    void operationCrop(QRect rect);
 
     const QList<KreenItemPtr> items();
 

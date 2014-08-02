@@ -24,8 +24,8 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
 #include <QFrame>
-#include <QGraphicsScene> // move to cpp file
-#include <QDebug> // move to cpp file
+#include <QGraphicsScene> // todo: move to cpp file
+#include <QDebug> // todo: move to cpp file
 #include <QLineEdit>
 #include <QPushButton>
 #include <QPainter>

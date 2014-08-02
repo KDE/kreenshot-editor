@@ -148,14 +148,12 @@ void Document::removeItems(const QList< kreen::core::KreenItemPtr > items, bool 
 
 void Document::addDemoItems()
 {
-    d->transientContentId++;
-
-    //TODO
+    d->undoStack.beginMacro("add demo items");
 
     {
         auto item = KreenItem::create("line");
         item->setLine(QLine(QPoint(10, 20), QPoint(30, 40)));
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
@@ -164,13 +162,13 @@ void Document::addDemoItems()
         item->lineColor()->color = Qt::darkGreen;
         item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
         item->lineStyle()->penStyle = Qt::DotLine;
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
         auto item = KreenItem::create("ellipse");
         item->setRect(QRect(10, 40, 40, 40));
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
@@ -179,7 +177,7 @@ void Document::addDemoItems()
         item->lineColor()->color = Qt::blue;
         item->lineStyle()->width = 2;
         item->lineStyle()->penStyle = Qt::DashLine;
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
@@ -188,7 +186,7 @@ void Document::addDemoItems()
         item->lineStyle()->width = 1;
         item->lineStyle()->penStyle = Qt::SolidLine;
         item->dropShadow()->enabled = false;
-        _items.push_back(item);
+        addItem(item);
     }
 
 
@@ -198,7 +196,7 @@ void Document::addDemoItems()
         item->lineColor()->color = Qt::gray;
         item->text = TextProperty::create();
         item->text->text = "Hello from the document";
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
@@ -207,20 +205,22 @@ void Document::addDemoItems()
         item->lineColor()->color = Qt::magenta;
         item->text = TextProperty::create();
         item->text->text = "TODO: apply attributes; fill shape; multiline; edit text";
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
         auto item = KreenItem::create("rect");
         item->setRect(QRect(200, 200, 50, 50));
-        _items.push_back(item);
+        addItem(item);
     }
 
     {
         auto item = KreenItem::create("rect");
         item->setRect(QRect(962-10, 556-10, 10, 10));
-        _items.push_back(item);
+        addItem(item);
     }
+
+    d->undoStack.endMacro();
 
     emit contentChangedSignal();
 }
