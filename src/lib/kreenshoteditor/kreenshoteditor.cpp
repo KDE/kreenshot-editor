@@ -366,18 +366,27 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
     emit documentFileStatusChangedSignal();
 }
 
-void KreenshotEditor::slotDocumentNew()
+bool warnIfDocumentIsNotClean_shouldAbort(KreenshotEditor* this_, DocumentPtr document)
 {
-    if (!document()->isClean()) {
-        int ret = QMessageBox::warning(nullptr, tr("Save file"),
-                           QString(tr("Current document is not saved.\nDo you want to continue?")),
+    if (!document->isClean()) {
+        int ret = QMessageBox::warning(this_->mainEditorWidget(), this_->tr("Save file"),
+                           QString(this_->tr("Current document is not saved.\nDo you want to continue?")),
                            QMessageBox::Yes | QMessageBox::No,
                            QMessageBox::No);
         qDebug() << ret;
         if (ret != QMessageBox::Yes) {
             qDebug() << "not yes => abort";
-            return;
+            return true;
         }
+    }
+
+    return false;
+}
+
+void KreenshotEditor::slotDocumentNew()
+{
+    if (warnIfDocumentIsNotClean_shouldAbort(this, document())) {
+        return;
     }
 
     createNewDocument();
@@ -385,14 +394,25 @@ void KreenshotEditor::slotDocumentNew()
 
 void KreenshotEditor::slotDocumentOpen()
 {
-    // TODO: check for modification;
-    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+    if (warnIfDocumentIsNotClean_shouldAbort(this, document())) {
+        return;
+    }
+
+    QString imageFilename = QFileDialog::getOpenFileName(this->mainEditorWidget(), tr("Open image"),
+                                                    QString(),
+                                                    tr("Images") + " ("
+                                                   + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
+                                                   + ")");
+
+    if (!imageFilename.isEmpty()) {
+        createNewDocumentFromFile(imageFilename);
+    }
 }
 
 void KreenshotEditor::slotDocumentSave()
 {
     if (documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated && QFile::exists(documentFile()->filename())) {
-        int ret = QMessageBox::warning(nullptr, tr("Save file"),
+        int ret = QMessageBox::warning(this->mainEditorWidget(), tr("Save file"),
                            QString(tr("%1 already exists.\nDo you want to replace it?")).arg(documentFile()->filename()),
                            QMessageBox::Yes | QMessageBox::No,
                            QMessageBox::No);

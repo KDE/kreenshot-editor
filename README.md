@@ -43,7 +43,8 @@ $ python -c 'import uuid; print str(uuid.uuid1())'
 
 TODO
 ----
-- Document New, Open
+- Document::Open
+    - plus: Enable DND from Knsapshot
 - QUndostack, Undo, Redo
 - implement SelectionHandles
     - best way to make the item resize?
