@@ -27,6 +27,10 @@ KreenGraphicsView::KreenGraphicsView(ToolManagerPtr toolmanager)
     _toolManager = toolmanager;
 
     setRenderHints(QPainter::Antialiasing/* | QPainter::SmoothPixmapTransform*/);
+
+    // see overriden method drawForeground
+    //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
+    //d->graphicsView->setBackgroundBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern));
 }
 
 void KreenGraphicsView::setHelperBaseImageItem(QGraphicsItem* helperBaseImageItem)
@@ -109,6 +113,34 @@ void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)
 
     QGraphicsView::mouseMoveEvent(event);
 }
+
+void KreenGraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
+{
+    // WORKAROUND: clip painting outside the sceneRect
+    // side effect: nice dimming of outside items which makes it possible to get them even if completely "hidden"
+
+//     painter->setClipping(true);
+//     painter->setClipRect(sceneRect());
+    QRectF sc = sceneRect();
+    int maxScreenWidth = 5000;
+    QRectF r1(sc.width(), 0, maxScreenWidth, maxScreenWidth);
+    QRectF r2(0, sc.height(), sc.width(), maxScreenWidth);
+    painter->save();
+    //painter->setBrush(Qt::white);
+    painter->setBrush(QColor(255, 255, 255, 215)); // dim everything which is outside the sceneRect
+    painter->setPen(Qt::PenStyle::NoPen);
+    // draw with dimming color:
+    painter->drawRect(r1);
+    painter->drawRect(r2);
+    painter->setBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern));
+    // draw again with cross pattern:
+    painter->drawRect(r1);
+    painter->drawRect(r2);
+    painter->restore();
+
+    QGraphicsView::drawForeground(painter, rect); // draw foreground if it is set
+}
+
 
 }
 }

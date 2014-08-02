@@ -307,9 +307,6 @@ void MainEditorWidget::initScene() {
 
     d->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-    //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
-    d->graphicsView->setBackgroundBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern)); // todo: make nicer
-
     // WORKAROUND:
     d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
     d->graphicsView->setScene(d->scene().get());

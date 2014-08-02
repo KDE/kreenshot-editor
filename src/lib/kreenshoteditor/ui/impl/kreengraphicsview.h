@@ -57,6 +57,8 @@ protected:
 
     virtual void mouseMoveEvent(QMouseEvent* event);
 
+    virtual void drawForeground(QPainter * painter, const QRectF & rect);
+
 private:
     kreen::core::ToolManagerPtr _toolManager;
     QGraphicsItem* _helperBaseImageItem;

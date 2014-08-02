@@ -96,7 +96,6 @@ LATER
 - Drag source for image in toolbar
     - this can currently been achieved by lauching default viewer (Ctrl+Alt+L) and use drag source from there
 - "Copy filename to clipboard": show notification that something was copied; show warning if file is not saved yet
-- restrict drawing outside scene rect; clip, clipping
 - how to read/use the scalable image (svg)?
      //baseImage = QIcon::fromTheme("kcmkwm").pixmap(QSize(512, 512)).toImage();
 - ? click on empty space should choose Select tool
@@ -118,6 +117,7 @@ QUESTIONS
 - nullable QPoint for function parameter? --> just use a shared_ptr???
 - statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
 - prepare-include-files.sh: does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
+- restrict drawing outside scene rect; clip, clipping (currently solved with workaround)
 
 Related tools
 -------------
