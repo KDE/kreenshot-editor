@@ -101,6 +101,9 @@ LATER
 - "Open last file storage location" or "Open storage location"
 - Drag source for image in toolbar
     - this can currently been achieved by lauching default viewer (Ctrl+Alt+L) and use drag source from there
+- DND:
+    - Drop image on scene to create an image object not implemented yet.\nDrop the image anywhere else on the window to load it as new base image.
+    - better: not not distinguish between window and scene => maybe show a context menu or similar
 - DND: support dropping images from HTTP browser
     // TODO: support also http images
 - "Copy filename to clipboard": show notification that something was copied; show warning if file is not saved yet

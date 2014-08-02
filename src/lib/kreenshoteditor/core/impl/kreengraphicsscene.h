@@ -77,6 +77,12 @@ protected:
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
+
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
+
 private:
     ToolManagerPtr _toolManager;
     QGraphicsItem* _creatingItem;

@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsscene.h"
+#include <QMessageBox>
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "selectionhandlegraphicsitem.h"
@@ -169,6 +170,27 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     qDebug() << "emit MyQGraphicsScene::mouseReleased";
     emit mouseReleased(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
+}
+
+void KreenGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+    qDebug() << "KreenGraphicsScene::dragEnterEvent";
+    event->accept();
+}
+
+void KreenGraphicsScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+    // this is needed (see http://stackoverflow.com/questions/4177720/accepting-drops-on-a-qgraphicsscene)
+    event->accept();
+}
+
+void KreenGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+    qDebug() << "KreenGraphicsScene::dropEvent";
+    // TODO
+    QMessageBox::warning(nullptr,
+                         tr("Not impl"),
+                         tr("Drop image on scene to create an image object not implemented yet.\nDrop the image anywhere else on the window to load it as new base image."));
 }
 
 }
