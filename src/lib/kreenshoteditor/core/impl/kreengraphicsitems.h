@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_KREENQGRAPHICSITEMS_H
-#define UI_KREENQGRAPHICSITEMS_H
+#ifndef UUID_312a0756_1a8d_11e4_8d2e_002454dd224f
+#define UUID_312a0756_1a8d_11e4_8d2e_002454dd224f
 
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>
@@ -38,10 +38,10 @@
 namespace kreen {
 namespace core {
 
-class KreenQGraphicsRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
+class KreenGraphicsRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenQGraphicsRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -109,10 +109,10 @@ public:
     }
 };
 
-class KreenQGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenQGraphicsItemBase
+class KreenGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenGraphicsItemBase
 {
 public:
-    KreenQGraphicsEllipseItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsEllipseItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -174,10 +174,10 @@ public:
     }
 };
 
-class KreenQGraphicsLineItem : public QGraphicsLineItem, public KreenQGraphicsItemBase
+class KreenGraphicsLineItem : public QGraphicsLineItem, public KreenGraphicsItemBase
 {
 public:
-    KreenQGraphicsLineItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsLineItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -225,10 +225,10 @@ public:
     }
 };
 
-class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
+class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsTextRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsTextRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }
@@ -290,10 +290,10 @@ public:
 
 // ...
 
-class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenQGraphicsItemBase
+class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsOperationCropItem(KreenItemPtr item, QGraphicsScene* scene) : KreenQGraphicsItemBase(this, item, scene)
+    KreenGraphicsOperationCropItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
     {
         initAndConfigureFromModel();
     }

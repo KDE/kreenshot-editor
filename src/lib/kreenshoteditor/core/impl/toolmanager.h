@@ -48,15 +48,15 @@ public:
         // create items
         //
         if (item->typeId == "rect") {
-            auto kgrItem = new KreenQGraphicsRectItem(item, scene);
+            auto kgrItem = new KreenGraphicsRectItem(item, scene);
             return kgrItem;
         }
         else if (item->typeId == "line") {
-            auto kgrItem = new KreenQGraphicsLineItem(item, scene);
+            auto kgrItem = new KreenGraphicsLineItem(item, scene);
             return kgrItem;
         }
         else if (item->typeId == "ellipse") {
-            auto kgrItem = new KreenQGraphicsEllipseItem(item, scene);
+            auto kgrItem = new KreenGraphicsEllipseItem(item, scene);
             return kgrItem;
         }
         else if (item->typeId == "text") {

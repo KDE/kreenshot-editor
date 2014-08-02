@@ -121,7 +121,7 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
         // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
         //                     the underlying item is also blurred
         //                     WTF-->the black selection rects get also blurred
-        auto kGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        auto kGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         if (kGrItem->workaroundIsBlurredOnUnevenHandleWidth()) {
             qDebug() << "INFO: workaround used";
             hw--;

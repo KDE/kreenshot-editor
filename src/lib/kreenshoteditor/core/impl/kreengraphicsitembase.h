@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UI_KREENQGRAPHICSITEMBASE_H
-#define UI_KREENQGRAPHICSITEMBASE_H
+#ifndef UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
+#define UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
 
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>
@@ -40,7 +40,7 @@ namespace core {
 /**
 * Visual representation of a KreenItem
 */
-class KreenQGraphicsItemBase : public QObject
+class KreenGraphicsItemBase : public QObject
 {
     // QObject to have signal/slots
     Q_OBJECT
@@ -59,7 +59,7 @@ public:
      *  - scene rect
      *  - all selected items
      */
-    KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene);
+    KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene);
 
     KreenItemPtr item();
 

@@ -136,7 +136,7 @@ public:
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto grItem = toolManager()->createGraphicsItemFromKreenItem(item, scene().get());
-            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
 
             _owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), _owner, SLOT(slotRedrawSelectionHandles()));
 
@@ -202,13 +202,13 @@ public:
     /**
      * all corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
      */
-    QList<KreenQGraphicsItemBase*> kreenGraphicsItems()
+    QList<KreenGraphicsItemBase*> kreenGraphicsItems()
     {
-        QList<KreenQGraphicsItemBase*> list;
+        QList<KreenGraphicsItemBase*> list;
 
         foreach(auto grItem, graphicsView->items()) {
 
-            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
                 list << grItemBase;
             }
@@ -225,7 +225,7 @@ public:
         foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
 
-            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
 
                 //if (!grItemBase->item()->typeId.startsWith("op-")) {
@@ -246,7 +246,7 @@ public:
     {
         foreach(auto grItem, graphicsView->items()) {
             //qDebug() << "muh";
-            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
                 grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
             }
@@ -406,7 +406,7 @@ void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
-        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         grItemBase->setIsCreating(false);
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(slotImageOperationAccepted()));
@@ -579,7 +579,7 @@ void MainEditorWidget::deleteSelectedItems()
     QList<KreenItemPtr> toBeErased;
     foreach (auto grItem, d->scene()->selectedItems()) {
 
-        auto kGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        auto kGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         toBeErased.append(kGrItem->item());
     }
 

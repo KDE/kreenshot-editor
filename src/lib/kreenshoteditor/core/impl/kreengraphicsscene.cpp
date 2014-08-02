@@ -39,7 +39,7 @@ void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
 {
     foreach (QGraphicsItem* grItem, items()) {
 
-        auto kreenGrItem = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+        auto kreenGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         if (kreenGrItem && kreenGrItem->item()->typeId.startsWith("op-")) { // hide image operations like crop or rip out
             grItem->setVisible(!finalOnly);
         }
@@ -107,7 +107,7 @@ void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         QPoint scenePos = event->scenePos().toPoint();
 
         //qDebug() << scenePos;
-        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
+        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(_creatingItem);
 
         if (isItemForPointToSceneRestriction(grItemBase->item())) {
             restrictPointToScene(&scenePos);
@@ -150,7 +150,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     if (_creatingItem != nullptr) {
         this->removeItem(_creatingItem);
 
-        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(_creatingItem);
+        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(_creatingItem);
         grItemBase->updateModelFromVisualGeometry();
 
         _creatingItem = nullptr;

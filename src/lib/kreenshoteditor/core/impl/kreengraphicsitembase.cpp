@@ -21,7 +21,7 @@
 namespace kreen {
 namespace core {
 
-KreenQGraphicsItemBase::KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene)
+KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene)
 {
     _item = item;
     _graphicsItem = graphicsItem;
@@ -31,19 +31,19 @@ KreenQGraphicsItemBase::KreenQGraphicsItemBase(QGraphicsItem* graphicsItem, Kree
     setMovable(true); // selectable and moveable by default
 }
 
-KreenItemPtr KreenQGraphicsItemBase::item()
+KreenItemPtr KreenGraphicsItemBase::item()
 {
     return _item;
 }
 
-QGraphicsItem* KreenQGraphicsItemBase::graphicsItem()
+QGraphicsItem* KreenGraphicsItemBase::graphicsItem()
 {
     return _graphicsItem;
 }
 
-void KreenQGraphicsItemBase::setMovable(bool isMovable)
+void KreenGraphicsItemBase::setMovable(bool isMovable)
 {
-    qDebug() << "KreenQGraphicsItemBase::setMovable: " << isMovable;
+    qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
     //bool isSelectable = _graphicsItem->flags() | QGraphicsItem::ItemIsSelectable;
     //if (isSelectable != isMovable) {
     _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
@@ -58,7 +58,7 @@ void KreenQGraphicsItemBase::setMovable(bool isMovable)
     }
 }
 
-bool KreenQGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
+bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
 {
     if (_item->lineStyle() != nullptr && _item->lineStyle()->width % 2 == 1) { // uneven
         return true; // special handling for uneven line widths needed
@@ -67,19 +67,19 @@ bool KreenQGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
     return false;
 }
 
-void KreenQGraphicsItemBase::setIsCreating(bool creating)
+void KreenGraphicsItemBase::setIsCreating(bool creating)
 {
     _isCreating = creating;
 }
 
-void KreenQGraphicsItemBase::configurePen(QAbstractGraphicsShapeItem* grItem)
+void KreenGraphicsItemBase::configurePen(QAbstractGraphicsShapeItem* grItem)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
     Q_ASSERT(_item->lineColor());
     Q_ASSERT(_item->lineStyle());
     grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
 }
-void KreenQGraphicsItemBase::configurePen(QGraphicsLineItem* grItem)
+void KreenGraphicsItemBase::configurePen(QGraphicsLineItem* grItem)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
     Q_ASSERT(_item->lineColor());
@@ -87,7 +87,7 @@ void KreenQGraphicsItemBase::configurePen(QGraphicsLineItem* grItem)
     grItem->setPen(QPen(_item->lineColor()->color, _item->lineStyle()->width, _item->lineStyle()->penStyle, Qt::RoundCap, Qt::RoundJoin));
 }
 
-void KreenQGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
+void KreenGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
     Q_ASSERT(_item->dropShadow());
@@ -100,37 +100,37 @@ void KreenQGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius
     }
 }
 
-QRect KreenQGraphicsItemBase::sceneRect()
+QRect KreenGraphicsItemBase::sceneRect()
 {
     return _scene->sceneRect().toRect();
 }
 
-void KreenQGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
+void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
 {
     qDebug() << "connectImageOperationAcceptButton";
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(operationAcceptedSlot()));
 }
 
-void KreenQGraphicsItemBase::connectImageOperationCancelButton(QPushButton* button)
+void KreenGraphicsItemBase::connectImageOperationCancelButton(QPushButton* button)
 {
     qDebug() << "connectImageOperationAcceptButton";
     connect(button, SIGNAL(clicked()), this, SLOT(operationCanceledSlot()));
 }
 
-bool KreenQGraphicsItemBase::mousePressEventImpl(QGraphicsSceneMouseEvent* event)
+bool KreenGraphicsItemBase::mousePressEventImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint origPos = event->scenePos().toPoint();
     //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
     return true;
 }
 
-bool KreenQGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
+bool KreenGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint newPos = event->scenePos().toPoint();
 
     qDebug() << "mouseReleaseEventImpl: updateModelFromVisualGeometry() for all selected items";
     foreach (auto gritem, _scene->selectedItems()) {
-        auto gritemBase = dynamic_cast<KreenQGraphicsItemBase*>(gritem);
+        auto gritemBase = dynamic_cast<KreenGraphicsItemBase*>(gritem);
         if (gritemBase != nullptr) { // there might also be other items
             gritemBase->updateModelFromVisualGeometry();
         }
@@ -155,7 +155,7 @@ bool KreenQGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* eve
     return true;
 }
 
-void KreenQGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     // qDebug() << "itemChangeImpl: " << change;
     if (change == QGraphicsItem::ItemPositionHasChanged) {
