@@ -103,6 +103,50 @@ public:
         kreenshotEditor()->document()->addDemoItems(); // todo: remove later
     }
 
+    void initScene() {
+        QRect rect = getBaseRect();
+        scene()->setSceneRect(rect);
+
+        // WORKAROUND:
+        graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
+        graphicsView->setScene(scene().get());
+        graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
+
+        // scroll to 0,0 / does all not work:
+        //graphicsView->scroll(-100, -100);
+        // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+        // graphicsView->ensureVisible(0, 0, 1, 1);
+
+        createSceneFromModel();
+    }
+
+    /**
+     * recreate the scene to reflect the current kreenshotEditor->document()
+     */
+    void createSceneFromModel()
+    {
+        scene()->clear();
+
+        QPixmap pixmap;
+        pixmap.convertFromImage(kreenshotEditor()->document()->baseImage());
+        baseImageSceneItem = new QGraphicsPixmapItem(pixmap);
+        graphicsView->setHelperBaseImageItem(baseImageSceneItem);
+        scene()->addItem(baseImageSceneItem);
+
+        foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
+
+            auto grItem = toolManager()->createGraphicsItemFromKreenItem(item, scene().get());
+            auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
+
+            _owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), _owner, SLOT(slotRedrawSelectionHandles()));
+
+            scene()->addItem(grItem);
+        }
+
+        slotUpdateItemsGeometryFromModel();
+        updateItemsBehaviourFromChosenTool();
+    }
+
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
 //     const int mouseOverMargin = 2; // TODO later
 
@@ -320,28 +364,11 @@ MainEditorWidget::~MainEditorWidget()
 
 }
 
-void MainEditorWidget::initScene() {
-    QRect rect = d->getBaseRect();
-    d->scene()->setSceneRect(rect);
-
-    // WORKAROUND:
-    d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
-    d->graphicsView->setScene(d->scene().get());
-    d->graphicsView->setSceneRect(rect); // this makes sure the scroll bars are shown for large images
-
-    // scroll to 0,0 / does all not work:
-    //graphicsView->scroll(-100, -100);
-    // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    // graphicsView->ensureVisible(0, 0, 1, 1);
-
-    createSceneFromModel();
-}
-
 void MainEditorWidget::slotDocumentCreated()
 {
     qDebug() << "MainEditorWidget::slotDocumentCreated()";
     d->onNewDocument();
-    initScene();
+    d->initScene();
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
@@ -354,31 +381,7 @@ void MainEditorWidget::slotDocumentCreated()
 
 void MainEditorWidget::slotDocumentContentChanged()
 {
-    createSceneFromModel();
-}
-
-void MainEditorWidget::createSceneFromModel()
-{
-    d->scene()->clear();
-
-    QPixmap pixmap;
-    pixmap.convertFromImage(d->kreenshotEditor()->document()->baseImage());
-    d->baseImageSceneItem = new QGraphicsPixmapItem(pixmap);
-    d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
-    d->scene()->addItem(d->baseImageSceneItem);
-
-    foreach (KreenItemPtr item, d->kreenshotEditor()->document()->items()) {
-
-        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
-        auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
-
-        connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), this, SLOT(slotRedrawSelectionHandles()));
-
-        d->scene()->addItem(grItem);
-    }
-
-    d->slotUpdateItemsGeometryFromModel();
-    d->updateItemsBehaviourFromChosenTool();
+    d->createSceneFromModel();
 }
 
 void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
@@ -516,7 +519,7 @@ void MainEditorWidget::slotImageOperationAcceptedDecoupled()
     d->kreenshotEditor()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
 
     slotUpdateSceneWithImageOperationItem(nullptr); // remove image operation item
-    initScene(); // would causes crash in mouse event if not called in the decoupled method
+    d->initScene(); // would causes crash in mouse event if not called in the decoupled method
     requestTool("select"); // go to Select after an image operation
 }
 
@@ -536,7 +539,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         d->kreenshotEditor()->document()->addItem(item);
 
         // will (must be) called after slotDocumentContentChanged() because there the GraphicsItem is created
-        // (why?? make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
+        // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
         auto newGrItem = d->graphicsItemFromItem(item);
         if (newGrItem != nullptr) {
             newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);

@@ -89,13 +89,6 @@ protected Q_SLOTS:
     void slotRedrawSelectionHandles();
 
 protected:
-    void initScene();
-
-    /**
-     * recreate the scene to reflect the current kreenshotEditor->document()
-     */
-    void createSceneFromModel();
-
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:

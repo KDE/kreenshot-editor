@@ -71,6 +71,10 @@ TODO
 
 LATER
 -----
+- BUG:
+    - Select Tool selected
+    - with mouse over an item ("move" cursor is shown)
+    - Hit ESC => "move" cursor switches to normal and one has to move mouse to restore it
 - new: KreenColorButton with transparency handling etc
 - remove default QGraphicsItem selection marquee
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
