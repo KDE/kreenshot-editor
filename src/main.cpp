@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
     // TODO later: set pattern from command line (--output-file-pattern)
 
     if (arguments.isTreatFileAsNew) {
-        kreenshotEditor->setBaseImageData(QImage(arguments.baseImagePath));
+        kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath));
     }
     else {
-        kreenshotEditor->setBaseImageFromFile(arguments.baseImagePath);
+        kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath);
     }
 
     MainWindow mainWindow(kreenshotEditor);

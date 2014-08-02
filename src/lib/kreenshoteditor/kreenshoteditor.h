@@ -60,15 +60,19 @@ public:
     virtual ~KreenshotEditor();
 
     /**
-     * Set the image data of the image to be edited.
+     * Creates a new document.
+     * Set the base image data (image to be edited) from the given parameter.
      * Since there is no filename given the file is treated as new.
+     * If no image data is given a default image will be used as base image.
      */
-    void setBaseImageData(QImage image);
+    void createNewDocument(QImage image = QImage());
 
     /**
-     * Loads the image data from the given path and set output filename to given filename (with or without path).
+     * Creates a new document.
+     * Loads the image data from the given file path and set output filename
+     * to given filename (with or without path).
      */
-    void setBaseImageFromFile(QString filename);
+    void createNewDocumentFromFile(QString filename);
 
     /**
      * active document which might have a file on disk or not yet
@@ -134,6 +138,8 @@ public:
     QString actionToActionId(QAction* action);
 
 Q_SIGNALS:
+    void newDocumentCreatedSignal();
+
     //// void outputFileStatusChanged();
 
 protected Q_SLOTS:

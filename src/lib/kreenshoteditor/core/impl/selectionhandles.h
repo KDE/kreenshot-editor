@@ -24,8 +24,6 @@
 #include <QObject>
 #include <map>
 
-class QGraphicsItem;
-class QGraphicsRectItem;
 class QGraphicsScene;
 
 namespace kreen {
@@ -33,8 +31,6 @@ namespace core {
 
 KREEN_PIMPL_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
-class MainEditorWidgetImpl;
-class SelectionHandleGraphicsItem;
 
 class SelectionHandles //: public QObject
 {
@@ -43,7 +39,7 @@ class SelectionHandles //: public QObject
 public:
     SelectionHandles(QGraphicsScene* scene);
 
-    virtual ~SelectionHandles() { }
+    virtual ~SelectionHandles();
 
 public:
     /**

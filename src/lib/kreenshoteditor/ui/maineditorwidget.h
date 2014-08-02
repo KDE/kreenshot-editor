@@ -70,6 +70,8 @@ public Q_SLOTS:
     void requestTool(QString toolId);
 
 protected Q_SLOTS:
+    void slotDocumentCreated();
+
     void slotUpdateItemsGeometryFromModel();
     void slotUpdateSceneWithImageOperationItem(KreenItemPtr item);
     void slotImageOperationAccepted();

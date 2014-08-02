@@ -88,13 +88,21 @@ public:
     void init(KreenshotEditorPtr kreenshotEditor_)
     {
         _kreenshotEditor = kreenshotEditor_;
-        selectionHandles = std::make_shared<SelectionHandles>(scene().get()); // needs kreenshotEditor
+
+    }
+
+    void onNewDocument()
+    {
+        selectionHandles = std::make_shared<SelectionHandles>(scene().get()); // needs valid kreenshotEditor
+
+        kreenshotEditor()->documentFile()->document()->graphicsScene()->setToolManager(toolManager());
+
+        kreenshotEditor()->documentFile()->document()->addDemoItems(); // todo: remove later
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
 //     const int mouseOverMargin = 2; // TODO later
 
-public:
     // todo: optimize this method?
     QRect getBaseRect() {
         QImage baseImage = _kreenshotEditor->documentFile()->document()->baseImage();
@@ -206,6 +214,9 @@ public:
         }
     }
 
+    /**
+     * DEPRECATED, todo: remove
+     */
     void createDemoScene()
     {
         QRect rect = getBaseRect();
@@ -259,20 +270,19 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     KREEN_PIMPL_INIT_THIS(MainEditorWidget);
     d->init(kreenshotEditor);
     d->toolManager_ = std::make_shared<ToolManager>();
-    d->kreenshotEditor()->documentFile()->document()->graphicsScene()->setToolManager(d->toolManager());
 
-    bool oldScrollAreaCode = false;
-
-    if (oldScrollAreaCode) {
-        // for QScrollArea:
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        setMinimumSize(d->getBaseRect().size());
-    }
-    else {
-        // use this if not using QScrollArea:
+//     bool oldScrollAreaCode = false;
+//
+//     if (oldScrollAreaCode) {
+//         // for QScrollArea:
+//         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+//         setMinimumSize(d->getBaseRect().size());
+//     }
+//     else {
+//         // use this if not using QScrollArea:
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         setMinimumSize(50, 50);
-    }
+//     }
 
     setMouseTracking(true); // to enable mouseMoveEvent
 
@@ -283,17 +293,10 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     layout->addWidget(d->graphicsView.get(), 0, 0);
     layout->setMargin(0);
 
-    //d->createDemoScene();
-    d->kreenshotEditor()->documentFile()->document()->addDemoItems();
-    initScene();
-
-    // makes sure that every time the mouse is released the whole scene is update from model
-    // to check if everything is ok (e. g. with multiselection moves)
-    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(slotUpdateItemsGeometryFromModel()));
-
-    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
-
-    connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
+    connect(kreenshotEditor.get(), SIGNAL(newDocumentCreatedSignal()), this, SLOT(slotDocumentCreated()));
+    if (kreenshotEditor->documentFile() != nullptr) {
+        slotDocumentCreated();
+    }
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -304,8 +307,6 @@ MainEditorWidget::~MainEditorWidget()
 void MainEditorWidget::initScene() {
     QRect rect = d->getBaseRect();
     d->scene()->setSceneRect(rect);
-
-    d->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     // WORKAROUND:
     d->graphicsView->setSceneRect(0, 0, 10, 10); // this makes sure that the view scrolls to 0, 0
@@ -318,6 +319,21 @@ void MainEditorWidget::initScene() {
     // graphicsView->ensureVisible(0, 0, 1, 1);
 
     createSceneFromModel();
+}
+
+void MainEditorWidget::slotDocumentCreated()
+{
+    qDebug() << "MainEditorWidget::slotDocumentCreated()";
+    d->onNewDocument();
+    initScene();
+
+    // makes sure that every time the mouse is released the whole scene is update from model
+    // to check if everything is ok (e. g. with multiselection moves)
+    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(slotUpdateItemsGeometryFromModel()));
+
+    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
+
+    connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
 }
 
 /**

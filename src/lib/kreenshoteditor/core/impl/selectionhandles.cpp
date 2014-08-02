@@ -34,7 +34,7 @@ class SelectionHandlesImpl
 {
 public:
     SelectionHandles* owner = nullptr;
-    QGraphicsScene* scene;
+    QGraphicsScene* scene = nullptr;
     std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
 
 public:
@@ -67,9 +67,16 @@ public:
 
 
 SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
+    qDebug() << "SelectionHandles::ctor";
     KREEN_PIMPL_INIT_THIS(SelectionHandles);
     d->scene = scene;
 }
+
+SelectionHandles::~SelectionHandles()
+{
+    qDebug() << "SelectionHandles destructor";
+}
+
 
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {

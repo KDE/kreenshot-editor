@@ -44,9 +44,10 @@ class KREEN_DECL_EXPORT Document
 {
 public:
     /**
-     * TODO
+     * Creates a new document.
+     * If baseImage isNull then a default image is used as baseImage.
      */
-    static DocumentPtr create(QImage baseImage);
+    static DocumentPtr create(QImage baseImage = QImage());
 
 public:
     Document();

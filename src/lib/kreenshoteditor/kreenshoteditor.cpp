@@ -196,20 +196,26 @@ void KreenshotEditor::slotRequestToolBySenderAction()
     mainEditorWidget()->requestTool(toolId);
 }
 
-void KreenshotEditor::setBaseImageData(QImage image)
+void KreenshotEditor::createNewDocument(QImage image)
 {
+    qDebug() << "KreenshotEditor::createNewDocument";
+
     d->settingsToOutputFilenameManager();
 
     auto doc = Document::create(image);
     d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
+    emit newDocumentCreatedSignal();
 }
 
-void KreenshotEditor::setBaseImageFromFile(QString filename)
+void KreenshotEditor::createNewDocumentFromFile(QString filename)
 {
+    qDebug() << "KreenshotEditor::createNewDocumentFromFile";
+
     d->outputFilenameGenerator->setFilenamePattern(filename);
 
     auto doc = Document::create(QImage(filename));
     d->documentFile = std::make_shared<DocumentFile>(doc, filename, d->settingsManager);
+    emit newDocumentCreatedSignal();
 }
 
 DocumentFilePtr KreenshotEditor::documentFile()
@@ -344,7 +350,7 @@ void KreenshotEditor::showPreferencesDialog()
 
 void KreenshotEditor::slotDocumentNew()
 {
-    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+    createNewDocument();
 }
 
 void KreenshotEditor::slotDocumentOpen()

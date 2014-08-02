@@ -28,6 +28,9 @@ KreenGraphicsView::KreenGraphicsView(ToolManagerPtr toolmanager)
 
     setRenderHints(QPainter::Antialiasing/* | QPainter::SmoothPixmapTransform*/);
 
+    // "the alignment of the scene in the view when the whole scene is visible."
+    setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
     // see overriden method drawForeground
     //graphicsView->setBackgroundBrush(QBrush(Qt::BDiagPattern));
     //d->graphicsView->setBackgroundBrush(QBrush(Qt::lightGray, Qt::DiagCrossPattern));
