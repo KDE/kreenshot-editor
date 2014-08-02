@@ -95,9 +95,9 @@ public:
     {
         selectionHandles = std::make_shared<SelectionHandles>(scene().get()); // needs valid kreenshotEditor
 
-        kreenshotEditor()->documentFile()->document()->graphicsScene()->setToolManager(toolManager());
+        kreenshotEditor()->document()->graphicsScene()->setToolManager(toolManager());
 
-        kreenshotEditor()->documentFile()->document()->addDemoItems(); // todo: remove later
+        kreenshotEditor()->document()->addDemoItems(); // todo: remove later
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -105,7 +105,7 @@ public:
 
     // todo: optimize this method?
     QRect getBaseRect() {
-        QImage baseImage = _kreenshotEditor->documentFile()->document()->baseImage();
+        QImage baseImage = _kreenshotEditor->document()->baseImage();
         QRect rect(0, 0, baseImage.width(), baseImage.height());
         qDebug() << rect;
         return rect;
@@ -113,7 +113,7 @@ public:
 
     KreenGraphicsScenePtr scene()
     {
-        return _kreenshotEditor->documentFile()->document()->graphicsScene();
+        return _kreenshotEditor->document()->graphicsScene();
     }
 
     ToolManagerPtr toolManager()
@@ -294,7 +294,7 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     layout->setMargin(0);
 
     connect(kreenshotEditor.get(), SIGNAL(newDocumentCreatedSignal()), this, SLOT(slotDocumentCreated()));
-    if (kreenshotEditor->documentFile() != nullptr) {
+    if (kreenshotEditor->document() != nullptr) {
         slotDocumentCreated();
     }
 }
@@ -337,21 +337,21 @@ void MainEditorWidget::slotDocumentCreated()
 }
 
 /**
- * recreate the scene to reflect the current kreenshotEditor->documentFile()->document()
+ * recreate the scene to reflect the current kreenshotEditor->document()
  */
 void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullptr*/)
 {
     d->scene()->clear();
 
     QPixmap pixmap;
-    pixmap.convertFromImage(d->kreenshotEditor()->documentFile()->document()->baseImage());
+    pixmap.convertFromImage(d->kreenshotEditor()->document()->baseImage());
     d->baseImageSceneItem = new QGraphicsPixmapItem(pixmap);
     d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
     d->scene()->addItem(d->baseImageSceneItem);
 
     QGraphicsItem* selectNewItemGrItem = nullptr;
 
-    foreach (KreenItemPtr item, d->kreenshotEditor()->documentFile()->document()->items()) {
+    foreach (KreenItemPtr item, d->kreenshotEditor()->document()->items()) {
 
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
         auto grItemBase = dynamic_cast<KreenQGraphicsItemBase*>(grItem);
@@ -508,7 +508,7 @@ void MainEditorWidget::slotImageOperationAccepted()
 void MainEditorWidget::slotImageOperationAcceptedDecoupled()
 {
     qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
-    d->kreenshotEditor()->documentFile()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
+    d->kreenshotEditor()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
 
     slotUpdateSceneWithImageOperationItem(nullptr); // remove image operation item
     initScene(); // would causes crash in mouse event if not called in the decoupled method
@@ -525,7 +525,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
-        d->kreenshotEditor()->documentFile()->document()->addItem(item);
+        d->kreenshotEditor()->document()->addItem(item);
         createSceneFromModel(item);
     }
     else {
@@ -560,7 +560,7 @@ void MainEditorWidget::deleteSelectedItems()
         toBeErased.append(kGrItem->item());
     }
 
-    d->kreenshotEditor()->documentFile()->document()->removeItems(toBeErased);
+    d->kreenshotEditor()->document()->removeItems(toBeErased);
 
     createSceneFromModel();
 }

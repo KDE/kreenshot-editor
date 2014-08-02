@@ -218,6 +218,15 @@ void KreenshotEditor::createNewDocumentFromFile(QString filename)
     emit newDocumentCreatedSignal();
 }
 
+DocumentPtr KreenshotEditor::document()
+{
+    if (d->documentFile == nullptr) {
+        return nullptr;
+    }
+    
+    return d->documentFile->document();
+}
+
 DocumentFilePtr KreenshotEditor::documentFile()
 {
     return d->documentFile;

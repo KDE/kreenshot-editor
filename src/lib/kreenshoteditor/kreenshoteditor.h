@@ -36,6 +36,7 @@ KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
+KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
 }
 
@@ -75,7 +76,13 @@ public:
     void createNewDocumentFromFile(QString filename);
 
     /**
+     * the active document, see also documentFile()
+     */
+    DocumentPtr document();
+
+    /**
      * active document which might have a file on disk or not yet
+     * documentFile()->document() == document()
      */
     DocumentFilePtr documentFile();
 
