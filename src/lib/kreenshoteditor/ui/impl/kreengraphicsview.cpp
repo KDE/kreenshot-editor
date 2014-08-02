@@ -22,6 +22,8 @@
 namespace kreen {
 namespace ui {
 
+using namespace kreen::core;
+
 KreenGraphicsView::KreenGraphicsView(ToolManagerPtr toolmanager)
 {
     _toolManager = toolmanager;

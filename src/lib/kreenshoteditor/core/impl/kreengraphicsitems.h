@@ -35,8 +35,6 @@
 #include <kreen/core/kreenitem.h>
 #include "kreengraphicsitembase.h"
 
-using namespace kreen::core;
-
 namespace kreen {
 namespace core {
 

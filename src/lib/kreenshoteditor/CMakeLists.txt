@@ -22,6 +22,7 @@ set(kreenshoteditor_SOURCES
     core/impl/outputfilenamegenerator.cpp
     core/impl/selectionhandlegraphicsitem.cpp
     core/impl/selectionhandles.cpp
+    core/impl/undocommands.cpp
 
     core/desktopservices.cpp
     core/document.cpp

@@ -39,7 +39,7 @@ DEV
 Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
 
 Create new header guard UUI:
-$ python -c 'import uuid; print str(uuid.uuid1())'
+$ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", "_"))'
 
 TODO
 ----

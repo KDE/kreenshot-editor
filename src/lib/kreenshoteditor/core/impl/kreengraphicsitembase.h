@@ -34,8 +34,6 @@
 #include <algorithm>
 #include <kreen/core/kreenitem.h>
 
-using namespace kreen::core;
-
 namespace kreen {
 namespace core {
 
