@@ -48,7 +48,12 @@ class ImageProperty;
 class KREEN_DECL_EXPORT KreenItem
 {
 public:
-    KreenItem();
+    /**
+     * see ctor
+     */
+    static KreenItemPtr make_shared(QString typeId);
+
+public:
     /**
      * line (= arrow)
      * rect

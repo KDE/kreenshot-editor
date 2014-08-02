@@ -23,9 +23,9 @@
 namespace kreen {
 namespace core {
 
-KreenItem::KreenItem()
+KreenItemPtr KreenItem::make_shared(QString typeId)
 {
-
+    return std::make_shared<KreenItem>(typeId);
 }
 
 KreenItem::KreenItem(QString typeId)
@@ -40,7 +40,7 @@ KreenItem::~KreenItem()
 
 KreenItemPtr KreenItem::create(QString typeId)
 {
-    auto item = std::make_shared<KreenItem>(typeId);
+    auto item = KreenItem::make_shared(typeId);
 
     if (typeId == "rect") {
         item->_properties.push_back(std::make_shared<LineColorProperty>());
