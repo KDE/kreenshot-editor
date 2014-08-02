@@ -245,6 +245,8 @@ void MainWindow::setupUi()
     d->setupActionsMenuAndToolbar();
 
     d->setupToolActionRelatedWidgetProperties();
+
+    setAcceptDrops(true);
 }
 
 void MainWindow::setupActions()
@@ -264,6 +266,16 @@ void MainWindow::setupActions()
     // actionQuit: connected via Action Editor in designer
 
     connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+    d->kreenshotEditor->dragEnterEventMainWindow(event);
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+    d->kreenshotEditor->dropEventMainWindow(event);
 }
 
 void MainWindow::slotEditPreferences()

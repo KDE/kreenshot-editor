@@ -140,6 +140,16 @@ public:
     void showPreferencesDialog();
 
     /**
+     * To be called in the dragEnterEvent method of the mainwindow.
+     */
+    void dragEnterEventMainWindow(QDragEnterEvent* event);
+
+    /**
+     * see dragEnterEventMainWindow
+     */
+    void dropEventMainWindow(QDropEvent* event);
+
+    /**
      * util method
      */
     QString actionToToolId(QAction* action);

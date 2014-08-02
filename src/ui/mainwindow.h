@@ -47,6 +47,11 @@ public:
     void setupActions();
     void setupUi();
 
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent* event);
+
+    virtual void dropEvent(QDropEvent* event);
+
 protected Q_SLOTS:
     void slotEditPreferences();
     void slotHelpAbout();

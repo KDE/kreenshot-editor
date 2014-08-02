@@ -25,6 +25,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QStringList>
+#include <QDragEnterEvent>
+#include <QMimeData>
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
 #include "core/documentfile.h"
@@ -119,6 +121,23 @@ public:
         return result;
     }
 
+    bool warnIfDocumentIsNotClean_shouldAbort(DocumentPtr document)
+    {
+        if (!document->isClean()) {
+            int ret = QMessageBox::warning(owner->mainEditorWidget(), owner->tr("Document modified warning"),
+                            QString(owner->tr("Current document is not saved.\nDo you want to continue?")),
+                            QMessageBox::Yes | QMessageBox::No,
+                            QMessageBox::No);
+            qDebug() << ret;
+            if (ret != QMessageBox::Yes) {
+                qDebug() << "not yes => abort";
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 public:
     KreenshotEditor* owner = nullptr;
 
@@ -167,6 +186,30 @@ KreenshotEditor::KreenshotEditor()
 KreenshotEditor::~KreenshotEditor()
 {
 
+}
+
+void KreenshotEditor::dragEnterEventMainWindow(QDragEnterEvent* event)
+{
+    qDebug() << "KreenshotEditor::dragEnterEventMainWindow";
+    if (event->mimeData()->hasImage() || event->mimeData()->hasText()) {
+        event->acceptProposedAction();
+    }
+}
+
+void KreenshotEditor::dropEventMainWindow(QDropEvent* event)
+{
+    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
+        return;
+    }
+
+    if (event->mimeData()->hasImage()) {
+        createNewDocument(qvariant_cast<QImage>(event->mimeData()->imageData()));
+    }
+    else if (event->mimeData()->hasText()) {
+        qDebug() << event->mimeData()->text();
+        QUrl url(event->mimeData()->text());
+        createNewDocumentFromFile(url.toLocalFile()); // TODO: support also http images
+    }
 }
 
 QString KreenshotEditor::actionToToolId(QAction* action)
@@ -366,26 +409,9 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
     emit documentFileStatusChangedSignal();
 }
 
-bool warnIfDocumentIsNotClean_shouldAbort(KreenshotEditor* this_, DocumentPtr document)
-{
-    if (!document->isClean()) {
-        int ret = QMessageBox::warning(this_->mainEditorWidget(), this_->tr("Save file"),
-                           QString(this_->tr("Current document is not saved.\nDo you want to continue?")),
-                           QMessageBox::Yes | QMessageBox::No,
-                           QMessageBox::No);
-        qDebug() << ret;
-        if (ret != QMessageBox::Yes) {
-            qDebug() << "not yes => abort";
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void KreenshotEditor::slotDocumentNew()
 {
-    if (warnIfDocumentIsNotClean_shouldAbort(this, document())) {
+    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
         return;
     }
 
@@ -394,7 +420,7 @@ void KreenshotEditor::slotDocumentNew()
 
 void KreenshotEditor::slotDocumentOpen()
 {
-    if (warnIfDocumentIsNotClean_shouldAbort(this, document())) {
+    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
         return;
     }
 

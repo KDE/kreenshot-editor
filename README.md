@@ -68,6 +68,7 @@ TODO
 - think about it: File->New with same filename as before is not good
     - add postfix?
     - set new datetime (has no effect if preferences are not set accordingly)
+        - apply changed prefs for new document (output path) without restart
     - just use empty filename?
 
 LATER
@@ -100,6 +101,8 @@ LATER
 - "Open last file storage location" or "Open storage location"
 - Drag source for image in toolbar
     - this can currently been achieved by lauching default viewer (Ctrl+Alt+L) and use drag source from there
+- DND: support dropping images from HTTP browser
+    // TODO: support also http images
 - "Copy filename to clipboard": show notification that something was copied; show warning if file is not saved yet
 - how to read/use the scalable image (svg)?
      //baseImage = QIcon::fromTheme("kcmkwm").pixmap(QSize(512, 512)).toImage();
