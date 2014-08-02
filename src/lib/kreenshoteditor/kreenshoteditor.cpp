@@ -204,7 +204,11 @@ void KreenshotEditor::createNewDocument(QImage image)
 
     auto doc = Document::create(image);
     d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
+
+    connect(this->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(slotDocumentFileStatusChanged()));
+
     emit newDocumentCreatedSignal();
+    emit documentFileStatusChangedSignal();
 }
 
 void KreenshotEditor::createNewDocumentFromFile(QString filename)
@@ -357,13 +361,31 @@ void KreenshotEditor::showPreferencesDialog()
     }
 }
 
+void KreenshotEditor::slotDocumentFileStatusChanged()
+{
+    emit documentFileStatusChangedSignal();
+}
+
 void KreenshotEditor::slotDocumentNew()
 {
+    if (!document()->isClean()) {
+        int ret = QMessageBox::warning(nullptr, tr("Save file"),
+                           QString(tr("Current document is not saved.\nDo you want to continue?")),
+                           QMessageBox::Yes | QMessageBox::No,
+                           QMessageBox::No);
+        qDebug() << ret;
+        if (ret != QMessageBox::Yes) {
+            qDebug() << "not yes => abort";
+            return;
+        }
+    }
+
     createNewDocument();
 }
 
 void KreenshotEditor::slotDocumentOpen()
 {
+    // TODO: check for modification;
     QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
 }
 
@@ -371,7 +393,7 @@ void KreenshotEditor::slotDocumentSave()
 {
     if (documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated && QFile::exists(documentFile()->filename())) {
         int ret = QMessageBox::warning(nullptr, tr("Save file"),
-                           QString("%1 already exists.\nDo you want to replace it?").arg(documentFile()->filename()),
+                           QString(tr("%1 already exists.\nDo you want to replace it?")).arg(documentFile()->filename()),
                            QMessageBox::Yes | QMessageBox::No,
                            QMessageBox::No);
         qDebug() << ret;

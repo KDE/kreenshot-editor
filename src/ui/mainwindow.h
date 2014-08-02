@@ -43,17 +43,17 @@ public:
     MainWindow(kreen::KreenshotEditorPtr kreenshotEditor);
     virtual ~MainWindow();
 
-public Q_SLOTS:
-    void editPreferences();
-    void helpAbout();
-
-    void slotToolChosen(QString toolId);
-
-    void updateOutputFileStatus();
-
 public:
     void setupActions();
     void setupUi();
+
+protected Q_SLOTS:
+    void slotEditPreferences();
+    void slotHelpAbout();
+
+    void slotToolChosen(QString toolId);
+
+    void slotUpdateDocumentFileStatus();
 
 private:
     MainWindowImplPtr d;

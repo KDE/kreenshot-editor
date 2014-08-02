@@ -223,8 +223,8 @@ MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
     setupUi();
     setupActions();
 
-    connect(d->kreenshotEditor->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(updateOutputFileStatus()));
-    updateOutputFileStatus();
+    connect(d->kreenshotEditor.get(), SIGNAL(documentFileStatusChangedSignal()), this, SLOT(slotUpdateDocumentFileStatus()));
+    slotUpdateDocumentFileStatus();
 
     d->kreenshotEditor->mainEditorWidget()->requestTool("select");
 }
@@ -259,25 +259,27 @@ void MainWindow::setupActions()
         connect(action, SIGNAL(toggled(bool)), d->toolboxButtonFromId(toolId), SLOT(setChecked(bool)));
     }
 
-    connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editPreferences()));
-    connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
+    connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotHelpAbout()));
     // actionQuit: connected via Action Editor in designer
 
     connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
 }
 
-void MainWindow::editPreferences()
+void MainWindow::slotEditPreferences()
 {
     d->kreenshotEditor->showPreferencesDialog();
 }
 
-void MainWindow::helpAbout()
+void MainWindow::slotHelpAbout()
 {
     QMessageBox::information(this, "Not impl", "Not implemented yet");
 }
 
-void MainWindow::updateOutputFileStatus()
+void MainWindow::slotUpdateDocumentFileStatus()
 {
+    qDebug() << "MainWindow::slotUpdateDocumentFileStatus()";
+    
     QString fileStatusPrefix;
     if (d->kreenshotEditor->isFileNew()) {
         fileStatusPrefix = tr("[NEW] ");

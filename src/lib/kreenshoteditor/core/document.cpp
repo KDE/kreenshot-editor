@@ -125,6 +125,8 @@ void Document::removeItems(const QList<KreenItemPtr> items)
 
 void Document::addDemoItems()
 {
+    d->transientContentId++;
+    
     //TODO
 
     {

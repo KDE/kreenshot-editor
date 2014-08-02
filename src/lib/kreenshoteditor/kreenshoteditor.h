@@ -146,10 +146,13 @@ public:
 
 Q_SIGNALS:
     void newDocumentCreatedSignal();
+    void documentFileStatusChangedSignal();
 
     //// void outputFileStatusChanged();
 
 protected Q_SLOTS:
+    void slotDocumentFileStatusChanged();
+
     // document and file actions slots:
     void slotDocumentNew();
     void slotDocumentOpen();
