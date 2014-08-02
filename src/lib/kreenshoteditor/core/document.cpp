@@ -45,6 +45,7 @@ public:
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setBackground(QBrush(Qt::white));
         painter.setBrush(QBrush(Qt::white));
+        painter.setPen(QPen(Qt::white));
         painter.drawRect(0, 0, 400, 300);
         //painter.setBrush(QBrush(Qt::lightGray));
         painter.setPen(QPen(Qt::gray));
