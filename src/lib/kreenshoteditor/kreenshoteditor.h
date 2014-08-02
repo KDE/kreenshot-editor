@@ -56,6 +56,8 @@ class KREEN_DECL_EXPORT KreenshotEditor : public QObject, public std::enable_sha
 {
     Q_OBJECT
 public:
+    KREEN_DEFINE_MAKE_SHARED(KreenshotEditor);
+
     KreenshotEditor();
 
     virtual ~KreenshotEditor();

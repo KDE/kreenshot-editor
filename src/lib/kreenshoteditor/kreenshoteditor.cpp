@@ -42,7 +42,7 @@ public:
     KreenshotEditorImpl(KreenshotEditor* owner_)
     {
         owner = owner_;
-        outputFilenameGenerator = std::make_shared<OutputFilenameGenerator>();
+        outputFilenameGenerator = OutputFilenameGenerator::make_shared();
         settingsManager = SettingsManager::instance();
     }
 
@@ -202,7 +202,7 @@ void KreenshotEditor::createNewDocument(QImage image)
 
     d->settingsToOutputFilenameManager();
 
-    auto doc = Document::create(image);
+    auto doc = Document::make_shared(image);
     d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
 
     connect(this->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(slotDocumentFileStatusChanged()));
@@ -217,7 +217,7 @@ void KreenshotEditor::createNewDocumentFromFile(QString filename)
 
     d->outputFilenameGenerator->setFilenamePattern(filename);
 
-    auto doc = Document::create(QImage(filename));
+    auto doc = Document::make_shared(QImage(filename));
     d->documentFile = std::make_shared<DocumentFile>(doc, filename, d->settingsManager);
     emit newDocumentCreatedSignal();
 }

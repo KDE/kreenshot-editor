@@ -31,15 +31,19 @@ class OrigClassName;\
 typedef std::shared_ptr<OrigClassName> OrigClassName##Ptr;
 
 
+/**
+ * only possible when there are no ctor arguments
+ */
 #define KREEN_DEFINE_MAKE_SHARED(OrigClassName) \
 static OrigClassName##Ptr make_shared() { \
     return std::make_shared<OrigClassName>(); \
 }
 
-#define KREEN_DEFINE_MAKE_SHARED_ARGS(OrigClassName, ARGS) \
-static OrigClassName##Ptr make_shared(ARGS) { \
-    return std::make_shared<OrigClassName>(ARGS); \
-}
+/** not that simple if there are ctor arguments */
+// #define KREEN_DEFINE_MAKE_SHARED_ARGS(OrigClassName, ARGS)
+// static OrigClassName##Ptr make_shared(ARGS) {
+//     return std::make_shared<OrigClassName>(ARGS);
+// }
 
 #endif
 

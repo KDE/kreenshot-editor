@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(version);
     auto arguments = parseArgumentsOrExit(app);
 
-    auto kreenshotEditor = std::make_shared<kreen::KreenshotEditor>();
+    auto kreenshotEditor = kreen::KreenshotEditor::make_shared();
 
     kreenshotEditor->setCaptureTime();
     kreenshotEditor->setDescription(arguments.description);

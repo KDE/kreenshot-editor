@@ -62,19 +62,20 @@ public:
     int transientContentId = 0;
 };
 
-DocumentPtr Document::create(QImage baseImage)
+DocumentPtr Document::make_shared(QImage baseImage)
 {
+    return std::make_shared<Document>(baseImage);
+}
+
+Document::Document(QImage baseImage)
+{
+    KREEN_PIMPL_INIT(Document)
+
     if (baseImage.isNull()) {
         baseImage = DocumentImpl::createDefaultImage();
     }
-    auto doc = std::make_shared<Document>();
-    doc->setBaseImage(baseImage);
-    return doc;
-}
 
-Document::Document()
-{
-    KREEN_PIMPL_INIT(Document)
+    setBaseImage(baseImage);
 }
 
 Document::~Document()

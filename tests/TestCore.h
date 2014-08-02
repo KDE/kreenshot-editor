@@ -57,7 +57,7 @@ private slots:
         QFileInfo file(inputImage1Filename);
         qDebug() << file.absoluteFilePath(); // this will be relative build/tests
 
-        auto doc = Document::create(QImage(inputImage1Filename));
+        auto doc = Document::make_shared(QImage(inputImage1Filename));
         QString filename = "./testdata/output_docfile1.png";
         DocumentFile docFile(doc, filename, settingsManager); // settingsManager not need cause it is optional
         QCOMPARE(docFile.document(), doc);
@@ -79,7 +79,7 @@ private slots:
 
     void DocumentFile_init_modifydoc_saveas()
     {
-        auto doc = Document::create(QImage(inputImage1Filename));
+        auto doc = Document::make_shared(QImage(inputImage1Filename));
         DocumentFile docFile(doc, inputImage1Filename, nullptr);
 
         QString filename = "./testdata/output_docfile2.png";

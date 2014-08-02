@@ -47,10 +47,13 @@ public:
      * Creates a new document.
      * If baseImage isNull then a default image is used as baseImage.
      */
-    static DocumentPtr create(QImage baseImage = QImage());
+    static DocumentPtr make_shared(QImage baseImage = QImage());
 
 public:
-    Document();
+    /**
+     * see make_shared
+     */
+    Document(QImage baseImage = QImage());
 
     virtual ~Document();
 

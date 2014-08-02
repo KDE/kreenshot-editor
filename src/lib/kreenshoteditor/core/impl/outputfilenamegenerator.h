@@ -54,6 +54,8 @@ KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
 class OutputFilenameGenerator
 {
 public:
+    KREEN_DEFINE_MAKE_SHARED(OutputFilenameGenerator)
+    
     /**
      * sets ${user}, ${hostname}
      */
