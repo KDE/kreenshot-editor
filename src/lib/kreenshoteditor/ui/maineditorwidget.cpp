@@ -206,7 +206,7 @@ public:
     {
         QList<KreenGraphicsItemBase*> list;
 
-        foreach(auto grItem, graphicsView->items()) {
+        foreach(auto grItem, scene()->items()) {
 
             auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
             if (grItemBase != nullptr) { // there might also be other items
@@ -222,20 +222,15 @@ public:
      */
     void slotUpdateItemsGeometryFromModel()
     {
-        foreach(auto grItem, graphicsView->items()) {
-            //qDebug() << "muh";
+        foreach(auto grItemBase, kreenGraphicsItems()) {
 
-            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-            if (grItemBase != nullptr) { // there might also be other items
-
-                //if (!grItemBase->item()->typeId.startsWith("op-")) {
-                //qDebug() << "updateGeometryFromModel";
-                grItemBase->updateVisualGeometryFromModel();
+            //if (!grItemBase->item()->typeId.startsWith("op-")) {
+            //qDebug() << "updateGeometryFromModel";
+            grItemBase->updateVisualGeometryFromModel();
 //                 }
 //                 else {
 //                     qDebug() << "updateItemsGeometryFromModel: ignore because of op- item";
 //                 }
-            }
         }
     }
 
@@ -244,12 +239,8 @@ public:
      */
     void updateItemsBehaviourFromChosenTool()
     {
-        foreach(auto grItem, graphicsView->items()) {
-            //qDebug() << "muh";
-            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-            if (grItemBase != nullptr) { // there might also be other items
-                grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
-            }
+        foreach(auto grItemBase, kreenGraphicsItems()) {
+            grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
         }
     }
 

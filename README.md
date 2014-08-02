@@ -51,8 +51,7 @@ TODO
     - do this by cleanly use commands (qundostack)
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - mouse over: draw a light version of the selection rects
-- use more Kreen(Q)GraphicsItemBase::graphicsItem()
-    - instead of graphicsView->items()
+- use more KreenGraphicsItemBase::graphicsItem()
 - enable more item properties (see item.h/cpp)
 - enable hover visual
 - makes sure line has a bigger catch area when trying to move
