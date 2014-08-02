@@ -35,6 +35,24 @@ public:
         scene = std::make_shared<KreenGraphicsScene>();
     }
 
+    /**
+     * this image serves as a placeholder image if no base image is loaded
+     */
+    static QImage createDefaultImage()
+    {
+        QPixmap pixmap(400, 300);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBackground(QBrush(Qt::white));
+        painter.setBrush(QBrush(Qt::white));
+        painter.drawRect(0, 0, 400, 300);
+        //painter.setBrush(QBrush(Qt::lightGray));
+        painter.setPen(QPen(Qt::gray));
+        painter.setFont(QFont("Sans", 16));
+        painter.drawText(QPointF(30.0, 50.0), "No image loaded.");
+        return pixmap.toImage();
+    }
+
 public:
     QImage baseImage;
 
@@ -45,7 +63,9 @@ public:
 
 DocumentPtr Document::create(QImage baseImage)
 {
-    Q_ASSERT_X(!baseImage.isNull(), "create", "image must not be empty");
+    if (baseImage.isNull()) {
+        baseImage = DocumentImpl::createDefaultImage();
+    }
     auto doc = std::make_shared<Document>();
     doc->setBaseImage(baseImage);
     return doc;

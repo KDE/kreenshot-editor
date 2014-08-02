@@ -99,13 +99,17 @@ Arguments parseArgumentsOrExit(QApplication& app)
     Arguments arguments;
 
     try {
-        if (args.length() != 1) {
-            // http://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring
-            throw std::runtime_error("1 positional argument expected");
+        if (args.length() == 0) {
+            qDebug() << "  baseImagePath: no image given";
         }
-
-        arguments.baseImagePath = args[0];
-        qDebug() << "  baseImagePath:" << arguments.baseImagePath;
+        else if (args.length() == 1) {
+            arguments.baseImagePath = args[0];
+            qDebug() << "  baseImagePath:" << arguments.baseImagePath;
+        }
+        else {
+             // http://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring
+             throw std::runtime_error("Zero or one positional argument expected");
+        }
 
         QString image2Filepath = parser.value(image2Option);
         qDebug() << "  image2Filepath:" << image2Filepath;

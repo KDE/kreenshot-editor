@@ -97,12 +97,14 @@ public:
     const QList<KreenItemPtr> items();
 
     /**
-     * TODO: possible to move this away since it looks so like "UI" (and actually came from there but we would like to able to paint the scene here)?
+     * TODO: possible to move this away since it looks so like "UI"
+     * (and actually came from there but we would like to able to paint the scene here)?
      */
     KreenGraphicsScenePtr graphicsScene();
 
     /**
-     * renders the document to a QImage
+     * renders the document to a QImage omitting all graphical elements
+     * like selection rects etc
      */
     QImage renderToImage();
 
