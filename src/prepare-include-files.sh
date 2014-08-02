@@ -7,8 +7,9 @@ INC_TARGET_DIR=$1
 INC_TARGET_DIR_TMP=$1-tmp
 echo "[prepare-include-files.sh] INC_TARGET_DIR=$1"
 
-if [ $INC_TARGET_DIR -eq "" or $INC_TARGET_DIR -eq "/" ]; then
-    echo "[prepare-include-files.sh] Danger. Abort"
+# TODO: does this work?
+if [ "$INC_TARGET_DIR" = "" or "$INC_TARGET_DIR" = "/" ]; then
+    echo "[prepare-include-files.sh] DANGER. Abort."
     exit 1
 fi
 
