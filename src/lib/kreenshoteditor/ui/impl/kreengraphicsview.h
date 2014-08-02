@@ -53,11 +53,11 @@ public:
     void setCursorFromChosenTool(QPoint* pos = nullptr, bool leftButtonDown = false);
 
 protected:
-    virtual void enterEvent(QEvent* event);
+    virtual void enterEvent(QEvent* event) override;
 
-    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event) override;
 
-    virtual void drawForeground(QPainter * painter, const QRectF & rect);
+    virtual void drawForeground(QPainter * painter, const QRectF & rect) override;
 
 private:
     kreen::core::ToolManagerPtr _toolManager;

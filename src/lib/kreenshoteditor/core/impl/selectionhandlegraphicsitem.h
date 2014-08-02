@@ -45,13 +45,13 @@ Q_SIGNALS:
     void handleItemPositionHasChangedSignal(); // TODO: not used yet
 
 protected:
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 private:
     QGraphicsItem* _instrumentedItem;
 };

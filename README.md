@@ -43,8 +43,6 @@ $ python -c 'import uuid; print str(uuid.uuid1())'
 
 TODO
 ----
-- Document::Open
-    - plus: Enable DND from Knsapshot
 - QUndostack, Undo, Redo
 - implement SelectionHandles
     - best way to make the item resize?
@@ -121,6 +119,7 @@ BUGS
 
 QUESTIONS
 ---------
+- search for "WORKAROUND"
 - how to provide own icons?
 - how to install the lib and the app?
     - how to put the include files for dev in the right place?

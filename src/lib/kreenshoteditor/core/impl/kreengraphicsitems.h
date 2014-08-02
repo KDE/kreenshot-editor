@@ -48,50 +48,50 @@ public:
         initAndConfigureFromModel();
     }
 
-    virtual void initAndConfigureFromModel()
+    virtual void initAndConfigureFromModel() override
     {
         configureDropShadow();
         configurePen(this);
     }
 
-    virtual void updateVisualGeometryFromModel()
+    virtual void updateVisualGeometryFromModel() override
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
         this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
         this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
     }
 
-    virtual void updateModelFromVisualGeometry()
+    virtual void updateModelFromVisualGeometry() override
     {
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mousePressEventImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0)
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
     {
         // QGraphicsRectItem::paint(painter, option, widget);
         // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
@@ -119,57 +119,57 @@ public:
         initAndConfigureFromModel();
     }
 
-    virtual void initAndConfigureFromModel()
+    virtual void initAndConfigureFromModel() override
     {
         configureDropShadow();
         configurePen(this);
     }
 
-    virtual void updateVisualGeometryFromModel()
+    virtual void updateVisualGeometryFromModel() override
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
         this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
         this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
     }
 
-    virtual void updateModelFromVisualGeometry()
+    virtual void updateModelFromVisualGeometry() override
     {
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-//     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+//     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override
 //     {
 //         painter->setRenderHint(QPainter::Antialiasing);
 //         QGraphicsEllipseItem::paint(painter, option, widget);
 //         painter->setRenderHint(QPainter::Antialiasing, false);
 //     }
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mousePressEventImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0)
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
     {
         // TODO see Rect: reimpl this method to suppress selection marquee
         QGraphicsEllipseItem::paint(painter, option, widget);
@@ -184,23 +184,23 @@ public:
         initAndConfigureFromModel();
     }
 
-    virtual void initAndConfigureFromModel()
+    virtual void initAndConfigureFromModel() override
     {
         configureDropShadow();
         configurePen(this);
     }
 
-    virtual void updateVisualGeometryFromModel()
+    virtual void updateVisualGeometryFromModel() override
     {
         this->setLine(_item->line());
     }
 
-    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
         this->setLine(QLine(startPoint, endPoint));
     }
 
-    virtual void updateModelFromVisualGeometry()
+    virtual void updateModelFromVisualGeometry() override
     {
         QPoint scenePos = this->pos().toPoint();
         QLine line = this->line().toLine().translated(scenePos); // translate our line to scenePos
@@ -208,19 +208,19 @@ public:
         this->setPos(0.0, 0.0); // reset QGraphicsItem pos to 0|0 because our model only relies on the line (and not additionally on the pos)
     }
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mousePressEventImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
@@ -235,7 +235,7 @@ public:
         initAndConfigureFromModel();
     }
 
-    virtual void initAndConfigureFromModel()
+    virtual void initAndConfigureFromModel() override
     {
         setFlag(QGraphicsItem::ItemClipsChildrenToShape); // do not draw text larger than the rect
 
@@ -253,37 +253,37 @@ public:
 //         proxyTest->setWidget(lineEdit);
     }
 
-    virtual void updateVisualGeometryFromModel()
+    virtual void updateVisualGeometryFromModel() override
     {
         this->setRect(0, 0, _item->rect().width(), _item->rect().height());
         this->setPos(_item->rect().x(), _item->rect().y());
     }
 
-    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
 
     }
 
-    virtual void updateModelFromVisualGeometry()
+    virtual void updateModelFromVisualGeometry() override
     {
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mousePressEventImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
@@ -300,13 +300,13 @@ public:
         initAndConfigureFromModel();
     }
 
-    virtual void initAndConfigureFromModel()
+    virtual void initAndConfigureFromModel() override
     {
         this->setPen(QPen(Qt::black, 1, Qt::DotLine));
         //this-set // set everything else dark
     }
 
-    virtual void updateVisualGeometryFromModel()
+    virtual void updateVisualGeometryFromModel() override
     {
         qDebug() << "KreenGraphicsOperationCropItem: updateVisualGeometryFromModel";
 
@@ -362,19 +362,19 @@ public:
         updateDimRects(rect);
     }
 
-    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint)
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
         this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
         this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
     }
 
-    virtual void updateModelFromVisualGeometry()
+    virtual void updateModelFromVisualGeometry() override
     {
         qDebug() << "KreenGraphicsOperationCropItem: updateModelFromVisualGeometry";
         _item->setRect(modelRectFromGraphicsItem());
     }
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override
     {
         if (change == QGraphicsItem::ItemPositionHasChanged) {
             updateDimRects(modelRectFromGraphicsItem());
@@ -382,13 +382,13 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mousePressEventImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
         if (mouseReleaseEventImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);

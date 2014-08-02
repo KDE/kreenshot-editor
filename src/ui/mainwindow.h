@@ -48,9 +48,9 @@ public:
     void setupUi();
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent* event);
+    virtual void dragEnterEvent(QDragEnterEvent* event) override;
 
-    virtual void dropEvent(QDropEvent* event);
+    virtual void dropEvent(QDropEvent* event) override;
 
 protected Q_SLOTS:
     void slotEditPreferences();

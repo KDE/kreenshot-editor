@@ -67,21 +67,21 @@ Q_SIGNALS:
     void itemCreated(KreenItemPtr item);
 
 protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 
     bool isItemForPointToSceneRestriction(KreenItemPtr item);
 
     void restrictPointToScene(QPoint* pt);
 
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
-    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
 
-    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
 
-    virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
 private:
     ToolManagerPtr _toolManager;

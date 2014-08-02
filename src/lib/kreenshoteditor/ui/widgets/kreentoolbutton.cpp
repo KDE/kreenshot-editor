@@ -32,7 +32,7 @@ public:
     }
 
 protected:
-    virtual int pixelMetric(PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0) const
+    virtual int pixelMetric(PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0) const override
     {
         // http://www.qtcentre.org/threads/15742-How-to-change-Icon-size-in-QMenu
         if (metric == PM_SmallIconSize) {
