@@ -118,6 +118,15 @@ void Document::redo()
     d->undoStack.redo();
 }
 
+// void Document::undoMacroBegin(QString text)
+// {
+//     d->undoStack.beginMacro(text);
+// }
+//
+// void Document::undoMacroEnd()
+// {
+//     d->undoStack.endMacro();
+// }
 
 // int Document::contentHashTransient()
 // {
@@ -138,9 +147,13 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
 
 void Document::removeItems(const QList< kreen::core::KreenItemPtr > items, bool recordUndo)
 {
-    foreach (auto item, items) {
-        d->transientContentId++;
-        _items.removeAll(item);
+    if (recordUndo) {
+        d->undoStack.push(new DeleteItemsCmd(this, items));
+    }
+    else {
+        foreach (auto item, items) {
+            Q_ASSERT(_items.removeOne(item));
+        }
     }
 
     emit contentChangedSignal();

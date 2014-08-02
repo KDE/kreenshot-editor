@@ -76,6 +76,16 @@ public:
 
     void redo();
 
+//     /**
+//      * internal usage (todo: better work with friends?)
+//      */
+//     void undoMacroBegin(QString text);
+//
+//     /**
+//      * internal usage (todo: better work with friends?)
+//      */
+//     void undoMacroEnd();
+
     /**
      * Returns the base image (without any items).
      * TODO: currently after a crop operation the cropped image will be returned. Is this ok? Yes, remove this comment after refac

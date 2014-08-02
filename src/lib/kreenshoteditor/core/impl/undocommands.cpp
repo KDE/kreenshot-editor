@@ -39,6 +39,24 @@ void AddItemCmd::undo()
     _document->removeItems(list);
 }
 
+DeleteItemsCmd::DeleteItemsCmd(Document* document, const QList< KreenItemPtr> items): KreenUndoCmd(document)
+{
+    _items = items;
+}
+
+void DeleteItemsCmd::redo()
+{
+    _document->removeItems(_items, false);
+}
+
+void DeleteItemsCmd::undo()
+{
+    //_document->undoMacroBegin("remove items");
+    foreach(auto item, _items) {
+        _document->addItem(item, false);
+    }
+    //_document->undoMacroEnd();
+}
 
 }
 }

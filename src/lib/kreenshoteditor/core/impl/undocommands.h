@@ -59,9 +59,17 @@ private:
     KreenItemPtr _item;
 };
 
-class DeleteItemCmd : public KreenUndoCmd
+class DeleteItemsCmd : public KreenUndoCmd
 {
 public:
+    DeleteItemsCmd(Document* document, const QList<KreenItemPtr> items);
+
+    virtual void redo();
+
+    virtual void undo();
+
+private:
+    QList<KreenItemPtr> _items;
 
 };
 
