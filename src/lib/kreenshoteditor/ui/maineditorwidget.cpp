@@ -195,6 +195,9 @@ public:
         }
     }
 
+    /**
+     * E. g. if "Select" tool is selected then items are movable. Otherwise not.
+     */
     void updateItemsBehaviourFromChosenTool()
     {
         foreach(auto grItem, graphicsView->items()) {
@@ -215,6 +218,16 @@ public:
         else {
             graphicsView->setDragMode(QGraphicsView::NoDrag);
         }
+    }
+
+    QGraphicsItem* graphicsItemFromItem(KreenItemPtr item)
+    {
+        foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
+            if (kreenGraphicsItemBase->item() == item) {
+                return kreenGraphicsItemBase->graphicsItem();
+            }
+        }
+        return nullptr;
     }
 
     /**
@@ -341,13 +354,10 @@ void MainEditorWidget::slotDocumentCreated()
 
 void MainEditorWidget::slotDocumentContentChanged()
 {
-    createSceneFromModel(); // TODO: select item after creating one
+    createSceneFromModel();
 }
 
-/**
- * recreate the scene to reflect the current kreenshotEditor->document()
- */
-void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullptr*/)
+void MainEditorWidget::createSceneFromModel()
 {
     d->scene()->clear();
 
@@ -357,8 +367,6 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
     d->graphicsView->setHelperBaseImageItem(d->baseImageSceneItem);
     d->scene()->addItem(d->baseImageSceneItem);
 
-    QGraphicsItem* selectNewItemGrItem = nullptr;
-
     foreach (KreenItemPtr item, d->kreenshotEditor()->document()->items()) {
 
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
@@ -367,21 +375,10 @@ void MainEditorWidget::createSceneFromModel(KreenItemPtr selectNewItem /*= nullp
         connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), this, SLOT(slotRedrawSelectionHandles()));
 
         d->scene()->addItem(grItem);
-
-        if (selectNewItem == item) {
-            selectNewItemGrItem = grItem;
-        }
     }
 
     d->slotUpdateItemsGeometryFromModel();
     d->updateItemsBehaviourFromChosenTool();
-
-    // make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override
-    if (selectNewItemGrItem != nullptr) {
-        selectNewItemGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        selectNewItemGrItem->setSelected(true);
-        qDebug() << "isSelected: " << selectNewItemGrItem->isSelected();
-    }
 }
 
 void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
@@ -531,10 +528,25 @@ void MainEditorWidget::slotImageOperationCanceled()
 
 void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 {
+    Q_ASSERT(item != nullptr);
+
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         d->kreenshotEditor()->document()->addItem(item);
+
+        // will (must be) called after slotDocumentContentChanged() because there the GraphicsItem is created
+        // (why?? make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
+        auto newGrItem = d->graphicsItemFromItem(item);
+        if (newGrItem != nullptr) {
+            newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            newGrItem->setSelected(true);
+            // qDebug() << "isSelected: " << grItem->isSelected();
+        }
+        else {
+            Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
+        }
+
     }
     else {
         slotUpdateSceneWithImageOperationItem(item);

@@ -92,11 +92,11 @@ protected:
     void initScene();
 
     /**
-     * if selectNewItem is not nullptr, then it will be selected
+     * recreate the scene to reflect the current kreenshotEditor->document()
      */
-    void createSceneFromModel(KreenItemPtr selectNewItem = nullptr);
+    void createSceneFromModel();
 
-    void paintEvent(QPaintEvent* event);
+    virtual void paintEvent(QPaintEvent* event) override;
 
 private:
     MainEditorWidgetImplPtr d;
