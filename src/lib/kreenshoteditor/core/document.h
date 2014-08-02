@@ -40,8 +40,10 @@ KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
  * Contains all items like Rects, Ellipses, Text, Blurring etc.
  * Manages Z-Order.
  */
-class KREEN_DECL_EXPORT Document
+class KREEN_DECL_EXPORT Document : public QObject
 {
+    Q_OBJECT
+
 public:
     /**
      * Creates a new document.
@@ -70,6 +72,10 @@ public:
      */
     void setClean();
 
+    void undo();
+
+    void redo();
+
     /**
      * Returns the base image (without any items).
      * TODO: currently after a crop operation the cropped image will be returned. Is this ok? Yes, remove this comment after refac
@@ -82,14 +88,13 @@ public:
     void setBaseImage(QImage image);
 
     /**
-     * TODO: put to undostack
      */
-    void addItem(KreenItemPtr item);
+    void addItem(KreenItemPtr item, bool recordUndo = true);
 
     /**
      * TODO: put to undostack
      */
-    void removeItems(const QList<KreenItemPtr> items);
+    void removeItems(const QList<KreenItemPtr> items, bool recordUndo = true);
 
     /**
      * todo: remove later
@@ -113,6 +118,12 @@ public:
     QImage renderToImage();
 
     void copyImageToClipboard();
+
+Q_SIGNALS:
+    /**
+     * document's content was changed (add item, remove item, set base image after crop, ...)
+     */
+    void contentChangedSignal();
 
 private:
     QList<KreenItemPtr> _items;

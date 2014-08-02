@@ -21,8 +21,10 @@
 #include <QPainter>
 #include <QApplication>
 #include <QClipboard>
+#include <QUndoStack>
 #include "impl/kreengraphicsscene.h"
 #include "impl/toolmanager.h"
+#include "impl/undocommands.h"
 
 namespace kreen {
 namespace core {
@@ -59,7 +61,8 @@ public:
 
     KreenGraphicsScenePtr scene;
 
-    int transientContentId = 0;
+    QUndoStack undoStack;
+    int transientContentId = 0; // TMP, todo
 };
 
 DocumentPtr Document::make_shared(QImage baseImage)
@@ -105,23 +108,42 @@ void Document::setClean()
     d->transientContentId = 0;
 }
 
+void Document::undo()
+{
+    d->undoStack.undo();
+}
+
+void Document::redo()
+{
+    d->undoStack.redo();
+}
+
+
 // int Document::contentHashTransient()
 // {
 //     return d->transientContentId;
 // }
 
-void Document::addItem(KreenItemPtr item)
+void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
-    d->transientContentId++;
-    _items.push_back(item);
+    if (recordUndo) {
+        d->undoStack.push(new AddItemCmd(this, item)); // this will call addItem with recordUndo=false
+    }
+    else {
+        _items.push_back(item);
+    }
+
+    emit contentChangedSignal();
 }
 
-void Document::removeItems(const QList<KreenItemPtr> items)
+void Document::removeItems(const QList< kreen::core::KreenItemPtr > items, bool recordUndo)
 {
     foreach (auto item, items) {
         d->transientContentId++;
         _items.removeAll(item);
     }
+
+    emit contentChangedSignal();
 }
 
 void Document::addDemoItems()
@@ -199,6 +221,8 @@ void Document::addDemoItems()
         item->setRect(QRect(962-10, 556-10, 10, 10));
         _items.push_back(item);
     }
+
+    emit contentChangedSignal();
 }
 
 void Document::operationCrop(QRect rect)
@@ -208,6 +232,8 @@ void Document::operationCrop(QRect rect)
     foreach (auto item, items()) {
         item->translate(-rect.x(), -rect.y());
     }
+
+    emit contentChangedSignal();
 }
 
 const QList<KreenItemPtr> Document::items()

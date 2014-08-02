@@ -71,6 +71,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void slotDocumentCreated();
+    void slotDocumentContentChanged();
 
     void slotUpdateItemsGeometryFromModel();
     void slotUpdateSceneWithImageOperationItem(KreenItemPtr item);

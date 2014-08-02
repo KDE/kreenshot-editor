@@ -19,6 +19,7 @@
 #ifndef UUID_689145c4_1a7e_11e4_b715_002454dd224f
 #define UUID_689145c4_1a7e_11e4_b715_002454dd224f
 
+#include "../../util/sharedptrutil.h"
 #include <QUndoCommand>
 
 /**
@@ -27,34 +28,56 @@
 namespace kreen {
 namespace core {
 
+KREEN_SHAREDPTR_FORWARD_DECL(Document)
+KREEN_SHAREDPTR_FORWARD_DECL(KreenItem)
+
 /**
 *
 */
 class KreenUndoCmd : public QUndoCommand
 {
 public:
+    KreenUndoCmd(Document* document = nullptr)
+    {
+        _document = document;
+    }
 
+protected:
+    Document* _document;
 };
 
-class AddItem : public KreenUndoCmd
+class AddItemCmd : public KreenUndoCmd
+{
+public:
+    AddItemCmd(Document* document, KreenItemPtr item);
+
+    virtual void redo();
+
+    virtual void undo();
+
+private:
+    KreenItemPtr _item;
+};
+
+class DeleteItemCmd : public KreenUndoCmd
 {
 public:
 
 };
 
-class MoveItem : public KreenUndoCmd
+class MoveItemCmd : public KreenUndoCmd
 {
 public:
 
 };
 
-class ResizeItem : public KreenUndoCmd
+class ResizeItemCmd : public KreenUndoCmd
 {
 public:
 
 };
 
-class ApplyImageOperation : public KreenUndoCmd
+class ApplyImageOperationCmd : public KreenUndoCmd
 {
 public:
 

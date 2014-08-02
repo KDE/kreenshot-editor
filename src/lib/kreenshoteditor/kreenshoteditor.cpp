@@ -468,32 +468,32 @@ void KreenshotEditor::slotDocumentSaveAs()
 
 void KreenshotEditor::slotDocumentCopyImageToClipboard()
 {
-    d->documentFile->document()->copyImageToClipboard();
+    document()->copyImageToClipboard();
 }
 
 void KreenshotEditor::slotDocumentCopyFilenameToClipboard()
 {
-    d->documentFile->copyFilenameToClipboard();
+    documentFile()->copyFilenameToClipboard();
 }
 
 void KreenshotEditor::slotDocumentSelectInFilemanager()
 {
-    d->documentFile->selectInFilemanager();
+    documentFile()->selectInFilemanager();
 }
 
 void KreenshotEditor::slotDocumentLaunchDefaultViewer()
 {
-    d->documentFile->launchDefaultImageViewer();
+    documentFile()->launchDefaultImageViewer();
 }
 
 void KreenshotEditor::slotEditUndo()
 {
-    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+    document()->undo();
 }
 
 void KreenshotEditor::slotEditRedo()
 {
-    QMessageBox::information(this->mainEditorWidget(), "Not impl", "Not implemented yet");
+    document()->redo();
 }
 
 void KreenshotEditor::slotEditDeleteSelectedItems()

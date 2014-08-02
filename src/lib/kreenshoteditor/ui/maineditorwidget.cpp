@@ -97,6 +97,9 @@ public:
 
         kreenshotEditor()->document()->graphicsScene()->setToolManager(toolManager());
 
+        _owner->connect(kreenshotEditor()->document().get(), SIGNAL(contentChangedSignal()),
+                _owner, SLOT(slotDocumentContentChanged()));
+
         kreenshotEditor()->document()->addDemoItems(); // todo: remove later
     }
 
@@ -336,6 +339,11 @@ void MainEditorWidget::slotDocumentCreated()
     connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
 }
 
+void MainEditorWidget::slotDocumentContentChanged()
+{
+    createSceneFromModel(); // TODO: select item after creating one
+}
+
 /**
  * recreate the scene to reflect the current kreenshotEditor->document()
  */
@@ -525,8 +533,8 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 {
     qDebug() << "add item: " << item->rect();
     if (!item->typeId.startsWith("op-")) {
+        // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         d->kreenshotEditor()->document()->addItem(item);
-        createSceneFromModel(item);
     }
     else {
         slotUpdateSceneWithImageOperationItem(item);
@@ -560,9 +568,8 @@ void MainEditorWidget::deleteSelectedItems()
         toBeErased.append(kGrItem->item());
     }
 
+    // emits contentChangedSignal() which triggers slotDocumentContentChanged()
     d->kreenshotEditor()->document()->removeItems(toBeErased);
-
-    createSceneFromModel();
 }
 
 void MainEditorWidget::selectAllItems()

@@ -17,9 +17,28 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "undocommands.h"
+#include <kreen/core/document.h>
 
 namespace kreen {
 namespace core {
+
+AddItemCmd::AddItemCmd(kreen::core::Document* document, KreenItemPtr item) : KreenUndoCmd(document)
+{
+    _item = item;
+}
+
+void AddItemCmd::redo()
+{
+    _document->addItem(_item, false);
+}
+
+void AddItemCmd::undo()
+{
+    QList<KreenItemPtr> list;
+    list << _item;
+    _document->removeItems(list);
+}
+
 
 }
 }
