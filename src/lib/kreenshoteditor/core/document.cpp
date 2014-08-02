@@ -32,7 +32,7 @@ class DocumentImpl
 public:
     DocumentImpl()
     {
-        scene = std::make_shared<KreenGraphicsScene>();
+        scene = KreenGraphicsScene::make_shared();
     }
 
     /**
@@ -126,7 +126,7 @@ void Document::removeItems(const QList<KreenItemPtr> items)
 void Document::addDemoItems()
 {
     d->transientContentId++;
-    
+
     //TODO
 
     {

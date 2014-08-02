@@ -43,6 +43,8 @@ class KreenGraphicsScene : public QGraphicsScene
     Q_OBJECT
 
 public:
+    KREEN_DEFINE_MAKE_SHARED(KreenGraphicsScene)
+
     KreenGraphicsScene();
 
     /**

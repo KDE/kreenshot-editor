@@ -64,6 +64,10 @@ TODO
     - Ctrl for propertional
 - draw arrow
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
+- think about it: File->New with same filename as before is not good
+    - add postfix?
+    - set new datetime (has no effect if preferences are not set accordingly)
+    - just use empty filename?
 
 LATER
 -----
