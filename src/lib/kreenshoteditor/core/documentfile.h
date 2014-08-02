@@ -77,13 +77,13 @@ public:
     FileStatus fileStatus();
 
     /**
-     * save file to filename()
+     * save file to filename() (without asking if file already exists)
      * sets Document clean if saving succeeds
      */
     ErrorStatus save();
 
     /**
-     * save file to filename
+     * save file to filename (without asking if file already exists)
      * sets Document clean if saving succeeds
      * filename() then will return the new filename, if saving succeeds
      */

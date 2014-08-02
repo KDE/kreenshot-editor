@@ -162,18 +162,6 @@ ErrorStatus DocumentFile::save()
 {
     qDebug() << "DocumentFile::save()";
 
-    if (d->fileStatus == FileStatus_NotCreated && QFile::exists(filename())) {
-        int ret = QMessageBox::warning(nullptr, tr("Save file"),
-                           QString("%1 already exists.\nDo you want to replace it?").arg(filename()),
-                           QMessageBox::Yes | QMessageBox::No,
-                           QMessageBox::No);
-        qDebug() << ret;
-        if (ret != QMessageBox::Yes) {
-            qDebug() << "not yes => abort";
-            return "";
-        }
-    }
-
     auto errorStatus = d->saveToFile(filename());
     if (errorStatus.isEmpty()) {
         d->fileStatus = FileStatus_Saved;

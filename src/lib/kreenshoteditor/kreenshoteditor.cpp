@@ -223,7 +223,7 @@ DocumentPtr KreenshotEditor::document()
     if (d->documentFile == nullptr) {
         return nullptr;
     }
-    
+
     return d->documentFile->document();
 }
 
@@ -369,6 +369,18 @@ void KreenshotEditor::slotDocumentOpen()
 
 void KreenshotEditor::slotDocumentSave()
 {
+    if (documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated && QFile::exists(documentFile()->filename())) {
+        int ret = QMessageBox::warning(nullptr, tr("Save file"),
+                           QString("%1 already exists.\nDo you want to replace it?").arg(documentFile()->filename()),
+                           QMessageBox::Yes | QMessageBox::No,
+                           QMessageBox::No);
+        qDebug() << ret;
+        if (ret != QMessageBox::Yes) {
+            qDebug() << "not yes => abort";
+            return;
+        }
+    }
+
     ErrorStatus errorStatus = documentFile()->save();
     d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
 }
