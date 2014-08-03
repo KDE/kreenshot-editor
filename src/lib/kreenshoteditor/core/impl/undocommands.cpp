@@ -22,6 +22,8 @@
 namespace kreen {
 namespace core {
 
+/////////////////////////////////////////////////////////////////////
+
 AddItemCmd::AddItemCmd(kreen::core::Document* document, KreenItemPtr item) : KreenUndoCmd(document)
 {
     _item = item;
@@ -34,29 +36,47 @@ void AddItemCmd::redo()
 
 void AddItemCmd::undo()
 {
-    QList<KreenItemPtr> list;
-    list << _item;
-    _document->removeItems(list);
+    _document->deleteItem(_item, false);
 }
 
-DeleteItemsCmd::DeleteItemsCmd(Document* document, const QList< KreenItemPtr> items): KreenUndoCmd(document)
+/////////////////////////////////////////////////////////////////////
+
+DeleteItemCmd::DeleteItemCmd(Document* document, KreenItemPtr item): KreenUndoCmd(document)
 {
-    _items = items;
+    _item = item;
 }
 
-void DeleteItemsCmd::redo()
+void DeleteItemCmd::redo()
 {
-    _document->removeItems(_items, false);
+    _document->deleteItem(_item, false);
 }
 
-void DeleteItemsCmd::undo()
+void DeleteItemCmd::undo()
 {
-    //_document->undoMacroBegin("remove items");
-    foreach(auto item, _items) {
-        _document->addItem(item, false);
-    }
-    //_document->undoMacroEnd();
+    _document->addItem(_item, false);
 }
+
+/////////////////////////////////////////////////////////////////////
+
+SetBaseImageCmd::SetBaseImageCmd(Document* document, QImage image): KreenUndoCmd(document)
+{
+    _image = image;
+}
+
+void SetBaseImageCmd::redo()
+{
+    _origImage = _document->baseImage();
+    Q_ASSERT(!_origImage.isNull());
+    _document->setBaseImage(_image, false);
+}
+
+void SetBaseImageCmd::undo()
+{
+    Q_ASSERT(!_origImage.isNull());
+    _document->setBaseImage(_origImage, false);
+}
+
+/////////////////////////////////////////////////////////////////////
 
 }
 }

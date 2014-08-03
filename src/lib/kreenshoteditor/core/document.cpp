@@ -56,13 +56,23 @@ public:
         return pixmap.toImage();
     }
 
+    bool contentChangedNotificationGroupActive()
+    {
+        return contentChangedNotificationGroupDepth > 0;
+    }
+
 public:
     QImage baseImage;
 
-    KreenGraphicsScenePtr scene;
+    KreenGraphicsScenePtr scene = nullptr;
 
     QUndoStack undoStack;
     int transientContentId = 0; // TMP, todo
+    /**
+     * greater than 0 if during macro recording mode
+     */
+    int contentChangedNotificationGroupDepth = 0;
+    bool contentChangedNotificationGroupRecordUndo = false;
 };
 
 DocumentPtr Document::make_shared(QImage baseImage)
@@ -78,7 +88,7 @@ Document::Document(QImage baseImage)
         baseImage = DocumentImpl::createDefaultImage();
     }
 
-    setBaseImage(baseImage);
+    setBaseImage(baseImage, false);
 }
 
 Document::~Document()
@@ -91,9 +101,14 @@ QImage Document::baseImage()
     return d->baseImage;
 }
 
-void Document::setBaseImage(QImage image)
+void Document::setBaseImage(QImage image, bool recordUndo)
 {
-    d->baseImage = image;
+    if (recordUndo) {
+        d->undoStack.push(new SetBaseImageCmd(this, image)); // this will call setBaseImage with recordUndo=false
+    }
+    else {
+        d->baseImage = image;
+    }
 }
 
 bool Document::isClean()
@@ -110,23 +125,40 @@ void Document::setClean()
 
 void Document::undo()
 {
+    contentChangedNotificationGroupBegin(false);
     d->undoStack.undo();
+    contentChangedNotificationGroupEnd();
 }
 
 void Document::redo()
 {
+    contentChangedNotificationGroupBegin(false);
     d->undoStack.redo();
+    contentChangedNotificationGroupEnd();
 }
 
-// void Document::undoMacroBegin(QString text)
-// {
-//     d->undoStack.beginMacro(text);
-// }
-//
-// void Document::undoMacroEnd()
-// {
-//     d->undoStack.endMacro();
-// }
+void Document::contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText)
+{
+    d->contentChangedNotificationGroupDepth++;
+    d->contentChangedNotificationGroupRecordUndo = recordUndo;
+
+    if (recordUndo) {
+        d->undoStack.beginMacro(undoMacroText);
+    }
+}
+
+void Document::contentChangedNotificationGroupEnd()
+{
+    Q_ASSERT(d->contentChangedNotificationGroupDepth > 0);
+    d->contentChangedNotificationGroupDepth--;
+
+    if (d->contentChangedNotificationGroupRecordUndo) {
+        d->undoStack.endMacro();
+        d->contentChangedNotificationGroupRecordUndo = false;
+    }
+
+    emit contentChangedSignal();
+}
 
 // int Document::contentHashTransient()
 // {
@@ -135,6 +167,10 @@ void Document::redo()
 
 void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
+    if (d->contentChangedNotificationGroupActive()) {
+        Q_ASSERT(d->contentChangedNotificationGroupRecordUndo == recordUndo);
+    }
+
     if (recordUndo) {
         d->undoStack.push(new AddItemCmd(this, item)); // this will call addItem with recordUndo=false
     }
@@ -142,18 +178,18 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
         _items.push_back(item);
     }
 
-    emit contentChangedSignal();
+    if (!d->contentChangedNotificationGroupActive()) {
+        emit contentChangedSignal();
+    }
 }
 
-void Document::removeItems(const QList< kreen::core::KreenItemPtr > items, bool recordUndo)
+void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 {
     if (recordUndo) {
-        d->undoStack.push(new DeleteItemsCmd(this, items));
+        d->undoStack.push(new DeleteItemCmd(this, item));
     }
     else {
-        foreach (auto item, items) {
-            Q_ASSERT(_items.removeOne(item));
-        }
+        Q_ASSERT(_items.removeOne(item));
     }
 
     emit contentChangedSignal();
@@ -224,7 +260,6 @@ void Document::addDemoItems()
     {
         auto item = KreenItem::create("rect");
         item->setRect(QRect(200, 200, 50, 50));
-        addItem(item);
     }
 
     {
@@ -240,11 +275,16 @@ void Document::addDemoItems()
 
 void Document::operationCrop(QRect rect)
 {
-    setBaseImage(baseImage().copy(rect));
+    d->undoStack.beginMacro("Image operation crop");
 
+    setBaseImage(baseImage().copy(rect), true);
+
+    // TODO: undo these translations also!!!
     foreach (auto item, items()) {
         item->translate(-rect.x(), -rect.y());
     }
+
+    d->undoStack.endMacro();
 
     emit contentChangedSignal();
 }

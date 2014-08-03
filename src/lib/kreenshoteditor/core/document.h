@@ -76,35 +76,37 @@ public:
 
     void redo();
 
-//     /**
-//      * internal usage (todo: better work with friends?)
-//      */
-//     void undoMacroBegin(QString text);
-//
-//     /**
-//      * internal usage (todo: better work with friends?)
-//      */
-//     void undoMacroEnd();
+    /**
+     * Use it to suppress emitting of contentChangedSignal during
+     * a composite operation.
+     * The contentChangedSignal will not be called until contentChangedNotificationGroupEnd() is called.
+     */
+    void contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText = QString());
+
+    /**
+     * See contentChangedNotificationGroupBegin(). Emits contentChangedSignal()
+     */
+    void contentChangedNotificationGroupEnd();
 
     /**
      * Returns the base image (without any items).
-     * TODO: currently after a crop operation the cropped image will be returned. Is this ok? Yes, remove this comment after refac
+     * Note that after a crop operation or any other "image operation" the baseImage is changed
      */
     QImage baseImage();
 
     /**
-     * TODO: put to undostack
+     * Sets the background image (base image).
+     * The contentChangedSignal will NOT be called. Use macroBegin/End if you need it to be called.
      */
-    void setBaseImage(QImage image);
+    void setBaseImage(QImage image, bool recordUndo);
 
     /**
      */
     void addItem(KreenItemPtr item, bool recordUndo = true);
 
     /**
-     * TODO: put to undostack
      */
-    void removeItems(const QList<KreenItemPtr> items, bool recordUndo = true);
+    void deleteItem(KreenItemPtr item, bool recordUndo = true);
 
     void operationCrop(QRect rect);
 

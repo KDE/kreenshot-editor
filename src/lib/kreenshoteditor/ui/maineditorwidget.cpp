@@ -567,15 +567,21 @@ void MainEditorWidget::slotRedrawSelectionHandles()
 
 void MainEditorWidget::deleteSelectedItems()
 {
-    QList<KreenItemPtr> toBeErased;
+    QList<KreenItemPtr> toBeDeleted;
     foreach (auto grItem, d->scene()->selectedItems()) {
 
         auto kGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-        toBeErased.append(kGrItem->item());
+        toBeDeleted.append(kGrItem->item());
+    }
+
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
+        true, QString("Delete %1 item(s)").arg(toBeDeleted.length()));
+    foreach (auto item, toBeDeleted) {
+        d->kreenshotEditor()->document()->deleteItem(item);
     }
 
     // emits contentChangedSignal() which triggers slotDocumentContentChanged()
-    d->kreenshotEditor()->document()->removeItems(toBeErased);
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupEnd();
 }
 
 void MainEditorWidget::selectAllItems()

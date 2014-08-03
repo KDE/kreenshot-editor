@@ -21,6 +21,7 @@
 
 #include "../../util/sharedptrutil.h"
 #include <QUndoCommand>
+#include <QImage>
 
 /**
  * This file contains serveral QUndoCommand derivates
@@ -50,27 +51,31 @@ class AddItemCmd : public KreenUndoCmd
 {
 public:
     AddItemCmd(Document* document, KreenItemPtr item);
-
     virtual void redo();
-
     virtual void undo();
-
 private:
     KreenItemPtr _item;
 };
 
-class DeleteItemsCmd : public KreenUndoCmd
+class DeleteItemCmd : public KreenUndoCmd
 {
 public:
-    DeleteItemsCmd(Document* document, const QList<KreenItemPtr> items);
-
+    DeleteItemCmd(Document* document, const KreenItemPtr item);
     virtual void redo();
-
     virtual void undo();
-
 private:
-    QList<KreenItemPtr> _items;
+    KreenItemPtr _item;
+};
 
+class SetBaseImageCmd : public KreenUndoCmd
+{
+public:
+    SetBaseImageCmd(Document* document, QImage image);
+    virtual void redo();
+    virtual void undo();
+private:
+    QImage _image;
+    QImage _origImage;
 };
 
 class MoveItemCmd : public KreenUndoCmd
@@ -80,12 +85,6 @@ public:
 };
 
 class ResizeItemCmd : public KreenUndoCmd
-{
-public:
-
-};
-
-class ApplyImageOperationCmd : public KreenUndoCmd
 {
 public:
 

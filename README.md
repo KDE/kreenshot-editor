@@ -44,6 +44,10 @@ $ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", "_"))'
 TODO
 ----
 - QUndostack, Undo, Redo
+    - OP-crop is not finished yet (notificationGroup etc)
+    - after OP-crop etc: "QGraphicsScene::removeItem: item 0x1183580's scene (0x7fa4ed478f20) is different from this scene (0xe83b18)"
+        - find out if this happens again
+    - do remaining commands (move item)
 - implement SelectionHandles
     - best way to make the item resize?
     - (oder zuerst QUndostack?)
