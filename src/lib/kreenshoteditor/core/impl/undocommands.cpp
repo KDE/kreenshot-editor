@@ -78,5 +78,24 @@ void SetBaseImageCmd::undo()
 
 /////////////////////////////////////////////////////////////////////
 
+ImageOperationCropCmd::ImageOperationCropCmd(Document* document, QRect rect): KreenUndoCmd(document)
+{
+    _rect = rect;
+}
+
+void ImageOperationCropCmd::redo()
+{
+    //_document->imageOpCrop(_rect, false); // todo
+
+    // TODO: first implement MoveItemCmd!!!
+}
+
+void ImageOperationCropCmd::undo()
+{
+    // TODO
+}
+
+/////////////////////////////////////////////////////////////////////
+
 }
 }

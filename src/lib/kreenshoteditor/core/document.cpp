@@ -32,8 +32,9 @@ namespace core {
 class DocumentImpl
 {
 public:
-    DocumentImpl()
+    DocumentImpl(Document* owner_)
     {
+        owner = owner_;
         scene = KreenGraphicsScene::make_shared();
     }
 
@@ -61,7 +62,22 @@ public:
         return contentChangedNotificationGroupDepth > 0;
     }
 
+    void contentChangedNotificationGroupMethodEnter(bool recordUndo)
+    {
+        if (contentChangedNotificationGroupActive()) {
+            Q_ASSERT(contentChangedNotificationGroupRecordUndo == recordUndo);
+        }
+    }
+
+    void contentChangedNotificationGroupMethodLeave()
+    {
+        if (!contentChangedNotificationGroupActive()) {
+            emit owner->contentChangedSignal();
+        }
+    }
+
 public:
+    Document* owner;
     QImage baseImage;
 
     KreenGraphicsScenePtr scene = nullptr;
@@ -82,7 +98,7 @@ DocumentPtr Document::make_shared(QImage baseImage)
 
 Document::Document(QImage baseImage)
 {
-    KREEN_PIMPL_INIT(Document)
+    KREEN_PIMPL_INIT_THIS(Document)
 
     if (baseImage.isNull()) {
         baseImage = DocumentImpl::createDefaultImage();
@@ -167,9 +183,7 @@ void Document::contentChangedNotificationGroupEnd()
 
 void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
-    if (d->contentChangedNotificationGroupActive()) {
-        Q_ASSERT(d->contentChangedNotificationGroupRecordUndo == recordUndo);
-    }
+    d->contentChangedNotificationGroupMethodEnter(recordUndo);
 
     if (recordUndo) {
         d->undoStack.push(new AddItemCmd(this, item)); // this will call addItem with recordUndo=false
@@ -178,13 +192,13 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
         _items.push_back(item);
     }
 
-    if (!d->contentChangedNotificationGroupActive()) {
-        emit contentChangedSignal();
-    }
+    d->contentChangedNotificationGroupMethodLeave();
 }
 
 void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 {
+    d->contentChangedNotificationGroupMethodEnter(recordUndo);
+
     if (recordUndo) {
         d->undoStack.push(new DeleteItemCmd(this, item));
     }
@@ -192,8 +206,14 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
         Q_ASSERT(_items.removeOne(item));
     }
 
-    emit contentChangedSignal();
+    d->contentChangedNotificationGroupMethodLeave();
 }
+
+void Document::applyItemPropertyChange(KreenItemPtr item)
+{
+    // TODO
+}
+
 
 void Document::addDemoItems()
 {
@@ -273,13 +293,13 @@ void Document::addDemoItems()
     emit contentChangedSignal();
 }
 
-void Document::operationCrop(QRect rect)
+void Document::imageOpCrop(QRect rect)
 {
     d->undoStack.beginMacro("Image operation crop");
 
     setBaseImage(baseImage().copy(rect), true);
 
-    // TODO: undo these translations also!!!
+    // TODO: undo these translations also!!! use registerItemPropertyChange ....
     foreach (auto item, items()) {
         item->translate(-rect.x(), -rect.y());
     }

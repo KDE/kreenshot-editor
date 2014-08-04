@@ -507,7 +507,7 @@ void MainEditorWidget::slotImageOperationAccepted()
 void MainEditorWidget::slotImageOperationAcceptedDecoupled()
 {
     qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
-    d->kreenshotEditor()->document()->operationCrop(d->imgOpHandling.imageOperationItem->rect());
+    d->kreenshotEditor()->document()->imageOpCrop(d->imgOpHandling.imageOperationItem->rect());
 
     slotUpdateSceneWithImageOperationItem(nullptr); // remove image operation item
     d->initScene(); // would causes crash in mouse event if not called in the decoupled method

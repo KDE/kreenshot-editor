@@ -108,7 +108,21 @@ public:
      */
     void deleteItem(KreenItemPtr item, bool recordUndo = true);
 
-    void operationCrop(QRect rect);
+    /**
+     * Call this if one or several properties of a KreenItem has changed
+     * to apply them to the document content and to register it for undo/redo.
+     *
+     * This is needed because the document keeps secret copies of all added items
+     * so that changes to the items from the outside have no effect on the
+     * document's content.
+     */
+    void applyItemPropertyChange(KreenItemPtr item);
+
+    /**
+     * operates on the base image:
+     * keeps only the given @param rect and moves all items accordingly
+     */
+    void imageOpCrop(QRect rect);
 
     /**
      * (this is treated as one undo operation)
