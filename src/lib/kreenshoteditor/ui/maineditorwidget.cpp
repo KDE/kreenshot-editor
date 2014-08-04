@@ -258,7 +258,7 @@ public:
     QGraphicsItem* graphicsItemFromItem(KreenItemPtr item)
     {
         foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
-            if (kreenGraphicsItemBase->item() == item) {
+            if (kreenGraphicsItemBase->item()->id() == item->id()) { // compare by id because Document holds secret copies.
                 return kreenGraphicsItemBase->graphicsItem();
             }
         }

@@ -45,7 +45,7 @@ TODO
 ----
 - QUndostack, Undo, Redo
     - first: MoveItemCmd (see uncommitted code; does not compile yet)
-    - OP-crop is not finished yet (notificationGroup etc)
+    - OP-crop is not finished yet (notificationGroup etc, setSceneRect seems not to be called after undo)
     - after OP-crop etc: "QGraphicsScene::removeItem: item 0x1183580's scene (0x7fa4ed478f20) is different from this scene (0xe83b18)"
         - find out if this happens again
     - do remaining commands (move item)

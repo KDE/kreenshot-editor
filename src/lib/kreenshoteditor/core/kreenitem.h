@@ -66,12 +66,31 @@ public:
      * op-ripout
      */
     KreenItem(QString typeId);
+
     virtual ~KreenItem();
 
+    /**
+     * returns a deep copy and including the id
+     */
+    KreenItemPtr deepCopy();
+
+    /**
+     * unique id within a Document
+     */
+    int id();
+
+    /**
+     * To be used only internally by the Document. Returns the old id.
+     */
+    int setId(int id);
+
+    /**
+     * set geometry (position and size) of the item
+     */
     void setRect(QRect rect);
 
     /**
-     * only used for "line"
+     * only used for "line": set geometry (position and length) of the line
      */
     void setLine(QLine line);
 
@@ -115,6 +134,13 @@ public:
     ImageProperty* image; // image data (e. g. the cursor)
 
 private:
+
+private:
+    /**
+     * see id()
+     */
+    int _id = -1;
+
     QRect _rect;
     QLine _line;
 

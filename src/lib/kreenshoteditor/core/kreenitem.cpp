@@ -38,6 +38,24 @@ KreenItem::~KreenItem()
 
 }
 
+KreenItemPtr KreenItem::deepCopy()
+{
+    auto obj = *this; // deference and invoke copy ctor (TODO: we have to copy everything!)
+    return std::make_shared<KreenItem>(obj);
+}
+
+int KreenItem::id()
+{
+    return _id;
+}
+
+int KreenItem::setId(int id)
+{
+    int oldId = _id;
+    _id = id;
+    return oldId;
+}
+
 KreenItemPtr KreenItem::create(QString typeId)
 {
     auto item = KreenItem::make_shared(typeId);

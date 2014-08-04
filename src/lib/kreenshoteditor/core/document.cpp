@@ -62,13 +62,17 @@ public:
         return contentChangedNotificationGroupDepth > 0;
     }
 
-    void contentChangedNotificationGroupMethodEnter(bool recordUndo)
-    {
-        if (contentChangedNotificationGroupActive()) {
-            Q_ASSERT(contentChangedNotificationGroupRecordUndo == recordUndo);
-        }
-    }
+    // needed at all?
+//     void contentChangedNotificationGroupMethodEnter(bool recordUndo)
+//     {
+//         if (contentChangedNotificationGroupActive()) {
+//             Q_ASSERT(contentChangedNotificationGroupRecordUndo == recordUndo);
+//         }
+//     }
 
+    /**
+     * emits the contentChangedSignal() if group is closed
+     */
     void contentChangedNotificationGroupMethodLeave()
     {
         if (!contentChangedNotificationGroupActive()) {
@@ -77,15 +81,31 @@ public:
     }
 
 public:
-    Document* owner;
+    Document* owner = nullptr;
     QImage baseImage;
+    QMap<int, KreenItemPtr> itemMap;
 
+    /**
+     * simple id generator (will be just incremeted)
+     */
+    int idGenerator = 0;
+
+    /**
+     * holds the latest copy of the items of itemMap
+     */
+    QList<KreenItemPtr> itemsCache;
+    bool itemsCacheDirty = true;
+
+    /**
+     * Needed because the Document must know how to draw itself on an image
+     * (see renderToImage()) and screen and bitmap output result should be as similar as possible
+     */
     KreenGraphicsScenePtr scene = nullptr;
 
     QUndoStack undoStack;
-    int transientContentId = 0; // TMP, todo
+    int transientContentId = 0; // TMP, TODO: remove when undoStack usage is complete
     /**
-     * greater than 0 if during macro recording mode
+     * greater than 0 if during a contentChangedNotificationGroup
      */
     int contentChangedNotificationGroupDepth = 0;
     bool contentChangedNotificationGroupRecordUndo = false;
@@ -183,13 +203,20 @@ void Document::contentChangedNotificationGroupEnd()
 
 void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
-    d->contentChangedNotificationGroupMethodEnter(recordUndo);
+    //d->contentChangedNotificationGroupMethodEnter(recordUndo);
 
     if (recordUndo) {
+        Q_ASSERT(item->id() == -1);
         d->undoStack.push(new AddItemCmd(this, item)); // this will call addItem with recordUndo=false
     }
     else {
-        _items.push_back(item);
+        if (item->id() == -1) { // only create new id if not in recordUndo mode
+            int newId = ++(d->idGenerator);
+            item->setId(newId); // caller will see the given id
+
+        }
+        d->itemMap.insert(item->id(), item->deepCopy()); // store (add or replace) item including id in the map
+        d->itemsCacheDirty = true;
     }
 
     d->contentChangedNotificationGroupMethodLeave();
@@ -197,13 +224,15 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
 
 void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 {
-    d->contentChangedNotificationGroupMethodEnter(recordUndo);
+    //d->contentChangedNotificationGroupMethodEnter(recordUndo);
 
     if (recordUndo) {
         d->undoStack.push(new DeleteItemCmd(this, item));
     }
     else {
-        Q_ASSERT(_items.removeOne(item));
+        Q_ASSERT(d->itemMap.contains(item->id()));
+        d->itemsCacheDirty = true;
+        Q_ASSERT(d->itemMap.remove(item->id()) == 1);
     }
 
     d->contentChangedNotificationGroupMethodLeave();
@@ -211,9 +240,10 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 
 void Document::applyItemPropertyChange(KreenItemPtr item)
 {
+    d->itemsCacheDirty = true;
+
     // TODO
 }
-
 
 void Document::addDemoItems()
 {
@@ -311,7 +341,17 @@ void Document::imageOpCrop(QRect rect)
 
 const QList<KreenItemPtr> Document::items()
 {
-    return _items;
+    if (d->itemsCacheDirty) {
+        d->itemsCache.clear();
+
+        foreach(auto item, d->itemMap.values()) {
+            d->itemsCache.append(item->deepCopy()); // deep copy!
+        }
+
+        d->itemsCacheDirty = false;
+    }
+
+    return d->itemsCache;
 }
 
 KreenGraphicsScenePtr Document::graphicsScene()

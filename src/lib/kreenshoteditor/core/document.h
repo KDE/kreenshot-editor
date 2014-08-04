@@ -101,10 +101,17 @@ public:
     void setBaseImage(QImage image, bool recordUndo);
 
     /**
+     * Adds the given item to the Document.
+     * A unique id will be generated and be available through the id() method.
+     * If the id of the given item is not the default (-1) an assertion will fail.
+     * But if recordUndo is false the id will be used to replace the given item.
      */
     void addItem(KreenItemPtr item, bool recordUndo = true);
 
     /**
+     * Deletes the item from the Document.
+     * The item is identified by id().
+     * Differences in the content of the document's and the given item will be ignored (for now).
      */
     void deleteItem(KreenItemPtr item, bool recordUndo = true);
 
@@ -150,9 +157,6 @@ Q_SIGNALS:
      * document's content was changed (add item, remove item, set base image after crop, ...)
      */
     void contentChangedSignal();
-
-private:
-    QList<KreenItemPtr> _items;
 
 private:
     DocumentImplPtr d;
