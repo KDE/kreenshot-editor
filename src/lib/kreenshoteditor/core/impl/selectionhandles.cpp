@@ -56,7 +56,7 @@ public:
         grItem->setPen(Qt::NoPen);
         grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
         grItem->setFlag(QGraphicsItem::ItemIsMovable, true);
-        qDebug() << "newRectItemWithCursor, setCursor";
+        // qDebug() << "newRectItemWithCursor, setCursor";
         grItem->setCursor(cursor);
 
         // connect(grItem, itemPositionHasChangedSignal, owner, // TODO later or go directly to the instrumentedItem

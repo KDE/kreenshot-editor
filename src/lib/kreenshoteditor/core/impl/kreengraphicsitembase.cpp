@@ -43,11 +43,8 @@ QGraphicsItem* KreenGraphicsItemBase::graphicsItem()
 
 void KreenGraphicsItemBase::setMovable(bool isMovable)
 {
-    qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
-    //bool isSelectable = _graphicsItem->flags() | QGraphicsItem::ItemIsSelectable;
-    //if (isSelectable != isMovable) {
+    // qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
     _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
-    //}
     _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
 
     if (isMovable) {
