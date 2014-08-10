@@ -75,11 +75,6 @@ protected Q_SLOTS:
 
     void slotUpdateItemsGeometryFromModel();
 
-    /**
-     * todo: doc
-     */
-    void slotUpdateSceneWithImageOperationItem(KreenItemPtr imageOperationItem);
-
     void slotImageOperationAccepted();
     void slotImageOperationAcceptedDecoupled();
     void slotImageOperationCanceled();
@@ -92,6 +87,13 @@ protected Q_SLOTS:
 
     void slotSceneSelectionChanged();
     void slotRedrawSelectionHandles();
+
+protected:
+    /**
+     * todo: doc
+     * todo: move to impl
+     */
+    void setSceneImageOperationItem(KreenItemPtr imageOperationItem);
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

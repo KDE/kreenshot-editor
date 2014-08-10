@@ -133,7 +133,7 @@ protected:
     /**
      * user is still moving the mouse with pressed button
      */
-    bool _isCreating;
+    bool _isCreating = false;
 
 private:
     QGraphicsItem* _graphicsItem;

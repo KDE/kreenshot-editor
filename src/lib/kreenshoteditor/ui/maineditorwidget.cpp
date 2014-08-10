@@ -52,16 +52,23 @@ namespace ui {
 class ImageOperationHandling
 {
 public:
-    /**
-     * not nullptr if there is an image operation item (like crop) waiting for the user
-     */
-    QGraphicsItem* imageOperationGraphicsItem; // TODO: rename to imgOpGraphicsItem
-    KreenItemPtr imageOperationItem; // imgOpItem
+    void reset()
+    {
+        imageOperationGraphicsItem = nullptr; // todo: memleak?
+        imageOperationItem = nullptr;
+    }
 
     bool imageOperationItemActive()
     {
-        return imageOperationGraphicsItem != nullptr;
+        return imageOperationItem != nullptr;
     }
+
+public: // todo: make private
+    /**
+     * not nullptr if there is an image operation item (like crop) waiting for the user
+     */
+    QGraphicsItem* imageOperationGraphicsItem = nullptr; // TODO: rename to imgOpGraphicsItem
+    KreenItemPtr imageOperationItem = nullptr; // imgOpItem
 };
 
 class MainEditorWidgetImpl
@@ -82,7 +89,6 @@ public:
     MainEditorWidgetImpl(MainEditorWidget* owner)
     {
         _owner = owner;
-        imgOpHandling.imageOperationGraphicsItem = nullptr;
     }
 
     void init(KreenshotEditorPtr kreenshotEditor_)
@@ -100,6 +106,8 @@ public:
             baseImageSceneItem = nullptr;
         }
 
+        imgOpHandling.reset();
+
         scene()->clear();
 
         QRect baseRect = kreenshotEditor()->document()->baseImage().rect();
@@ -116,6 +124,10 @@ public:
         // graphicsView->ensureVisible(0, 0, 1, 1);
 
         createSceneFromModel();
+
+        // cancel current img op or anything else
+        // also prevents some bugs from happening when opening a new document
+        _owner->requestTool("select");
     }
 
     /**
@@ -376,30 +388,26 @@ void MainEditorWidget::slotDocumentContentChanged()
     d->createSceneFromModel();
 }
 
-void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr imageOperationItem)
+void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationItem)
 {
-    qDebug() << "updateSceneWithImageOperationItem";
+    qDebug() << "setSceneImageOperationItem" << imageOperationItem.get();
 
-    d->imgOpHandling.imageOperationItem = imageOperationItem;
-    d->toolManager()->setImageOperationActive(imageOperationItem != nullptr);
+    d->imgOpHandling.imageOperationItem = imageOperationItem; // this makes imgOpHandling.imageOperationItemActive() to be true
+    d->toolManager()->setImageOperationActive(d->imgOpHandling.imageOperationItemActive());
 
+    // first remove img op graphics item and reset imgOpHandling
     if (d->imgOpHandling.imageOperationGraphicsItem != nullptr) {
         d->scene()->removeItem(d->imgOpHandling.imageOperationGraphicsItem);
-        d->imgOpHandling.imageOperationGraphicsItem = nullptr;
-        d->imgOpHandling.imageOperationItem = nullptr;
+        d->imgOpHandling.reset();
     }
 
-    if (imageOperationItem != nullptr) {
-
-//             auto dimRect = new QGraphicsRectItem();
-//             //dimRect->setBrush();
-//             scene.addItem(dimRect);
-
+    // then depending on active or not:
+    if (d->imgOpHandling.imageOperationItemActive()) {
         auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-        grItemBase->setIsCreating(false);
+        grItemBase->setIsCreating(false); // todo: needed?
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(slotImageOperationAccepted()));
         connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(slotImageOperationCanceled()));
@@ -484,7 +492,7 @@ void MainEditorWidget::requestTool(QString toolId)
 
     // remove current image operation if another tool is selected
     if (!toolId.startsWith("op-")) {
-        slotUpdateSceneWithImageOperationItem(nullptr);
+        setSceneImageOperationItem(nullptr);
     }
 
     d->graphicsView->setCursorFromChosenTool();
@@ -526,7 +534,7 @@ void MainEditorWidget::slotImageOperationAcceptedDecoupled()
     qDebug() << "MainEditorWidget::imageOperationAcceptedDecoupled()";
     d->kreenshotEditor()->document()->imageOpCrop(d->imgOpHandling.imageOperationItem->rect());
 
-    slotUpdateSceneWithImageOperationItem(nullptr); // remove image operation item
+    setSceneImageOperationItem(nullptr); // remove image operation item
 
     // would causes crash in mouse event if not called in the decoupled method
     // TODO: is above statement still true?
@@ -537,7 +545,7 @@ void MainEditorWidget::slotImageOperationAcceptedDecoupled()
 
 void MainEditorWidget::slotImageOperationCanceled()
 {
-    slotUpdateSceneWithImageOperationItem(nullptr);
+    setSceneImageOperationItem(nullptr);
 }
 
 void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
@@ -564,7 +572,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 
     }
     else {
-        slotUpdateSceneWithImageOperationItem(item);
+        setSceneImageOperationItem(item);
     }
 }
 
