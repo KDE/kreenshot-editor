@@ -43,7 +43,6 @@ void KreenGraphicsView::setHelperBaseImageItem(QGraphicsItem* helperBaseImageIte
     _helperBaseImageItem = helperBaseImageItem;
 }
 
-
 void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos, bool leftButtonDown)
 {
     Q_ASSERT(_helperBaseImageItem != nullptr); // TODO: also verify if _helperBaseImageItem exists in scene

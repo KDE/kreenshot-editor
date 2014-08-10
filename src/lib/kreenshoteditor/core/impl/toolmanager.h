@@ -43,28 +43,28 @@ KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 class ToolManager
 {
 public:
-    static QGraphicsItem* createGraphicsItemFromKreenItem(KreenItemPtr item, QGraphicsScene* scene)
+    static QGraphicsItem* createGraphicsItemFromKreenItem(KreenItemPtr item)
     {
         // create items
         //
         if (item->typeId == "rect") {
-            auto kgrItem = new KreenGraphicsRectItem(item, scene);
+            auto kgrItem = new KreenGraphicsRectItem(item);
             return kgrItem;
         }
         else if (item->typeId == "line") {
-            auto kgrItem = new KreenGraphicsLineItem(item, scene);
+            auto kgrItem = new KreenGraphicsLineItem(item);
             return kgrItem;
         }
         else if (item->typeId == "ellipse") {
-            auto kgrItem = new KreenGraphicsEllipseItem(item, scene);
+            auto kgrItem = new KreenGraphicsEllipseItem(item);
             return kgrItem;
         }
         else if (item->typeId == "text") {
-            auto kgrItem = new KreenGraphicsTextRectItem(item, scene);
+            auto kgrItem = new KreenGraphicsTextRectItem(item);
             return kgrItem;
         }
         else if (item->typeId == "op-crop") {
-            auto kgrItem = new KreenGraphicsOperationCropItem(item, scene);
+            auto kgrItem = new KreenGraphicsOperationCropItem(item);
             return kgrItem;
         }
         else {

@@ -143,6 +143,7 @@ void Document::setBaseImage(QImage image, bool recordUndo)
         d->undoStack.push(new SetBaseImageCmd(this, image)); // this will call setBaseImage with recordUndo=false
     }
     else {
+        qDebug() << "Document::setBaseImage: d->baseImage = image";
         d->baseImage = image;
     }
 }
@@ -238,6 +239,8 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 
 void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 {
+    qDebug() << "Document::applyItemPropertyChanges";
+
     Q_ASSERT(d->itemMap.contains(item->id()));
 
     if (recordUndo) {
@@ -334,9 +337,9 @@ void Document::imageOpCrop(QRect rect)
 
     setBaseImage(baseImage().copy(rect), true);
 
-    // TODO: undo these translations also!!! use registerItemPropertyChange ....
     foreach (auto item, items()) {
         item->translate(-rect.x(), -rect.y());
+        applyItemPropertyChanges(item); // recordUndo = true
     }
 
     d->undoStack.endMacro();

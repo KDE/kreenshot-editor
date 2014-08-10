@@ -21,11 +21,10 @@
 namespace kreen {
 namespace core {
 
-KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene)
+KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item)
 {
     _item = item;
     _graphicsItem = graphicsItem;
-    _scene = scene;
 
     _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     setMovable(true); // selectable and moveable by default
@@ -99,7 +98,7 @@ void KreenGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
 
 QRect KreenGraphicsItemBase::sceneRect()
 {
-    return _scene->sceneRect().toRect();
+    return _graphicsItem->scene()->sceneRect().toRect();
 }
 
 void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
@@ -126,7 +125,7 @@ bool KreenGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* even
     //QPoint newPos = event->scenePos().toPoint();
 
     qDebug() << "mouseReleaseEventImpl: updateModelFromVisualGeometry() for all selected items";
-    foreach (auto gritem, _scene->selectedItems()) {
+    foreach (auto gritem, _graphicsItem->scene()->selectedItems()) {
         auto gritemBase = dynamic_cast<KreenGraphicsItemBase*>(gritem);
         if (gritemBase != nullptr) { // there might also be other items
             gritemBase->updateModelFromVisualGeometry();

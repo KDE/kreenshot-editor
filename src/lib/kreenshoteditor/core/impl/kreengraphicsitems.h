@@ -41,7 +41,7 @@ namespace core {
 class KreenGraphicsRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
+    KreenGraphicsRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
     }
@@ -112,7 +112,7 @@ public:
 class KreenGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsEllipseItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
+    KreenGraphicsEllipseItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
     }
@@ -177,7 +177,7 @@ public:
 class KreenGraphicsLineItem : public QGraphicsLineItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsLineItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
+    KreenGraphicsLineItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
     }
@@ -228,7 +228,7 @@ public:
 class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsTextRectItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
+    KreenGraphicsTextRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
     }
@@ -259,7 +259,7 @@ public:
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
-
+        // todo?
     }
 
     virtual void updateModelFromVisualGeometry() override
@@ -293,7 +293,7 @@ public:
 class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
-    KreenGraphicsOperationCropItem(KreenItemPtr item, QGraphicsScene* scene) : KreenGraphicsItemBase(this, item, scene)
+    KreenGraphicsOperationCropItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
     }
@@ -308,31 +308,12 @@ public:
     {
         qDebug() << "KreenGraphicsOperationCropItem: updateVisualGeometryFromModel";
 
-        QRect rect = _item->rect();
-        this->setRect(0, 0, rect.width(), rect.height());
-        this->setPos(rect.x(), rect.y());
+        QRect itemRect = _item->rect(); // in KreenItems the position is coded in the rect's top/left coordinate
+        // here we translate it into QGraphicsItems way:
+        this->setRect(0, 0, itemRect.width(), itemRect.height());
+        this->setPos(itemRect.x(), itemRect.y());
 
         if (_interactionWidget == nullptr) { // TODO: rename this variable
-            std::vector<QGraphicsRectItem*> dimRects;
-            // 1  2  4
-            // 1     4
-            // 1  3  4
-            _dimRect1 = new QGraphicsRectItem(0, 0, 0, 0, this);
-            _dimRect2 = new QGraphicsRectItem(0, 0, 0, 0, this);
-            _dimRect3 = new QGraphicsRectItem(0, 0, 0, 0, this);
-            _dimRect4 = new QGraphicsRectItem(0, 0, 0, 0, this);
-            dimRects.push_back(_dimRect1); // 1
-            dimRects.push_back(_dimRect2); // 2
-            dimRects.push_back(_dimRect3); // 3
-            dimRects.push_back(_dimRect4); // 4
-
-            // updateDimRects(_item->rect()); // later
-
-            foreach (auto dimRect, dimRects) {
-                dimRect->setBrush(QBrush(QColor(0, 0, 0, 128)));
-                dimRect->setPen(Qt::NoPen);
-            }
-
             if (!_isCreating) {
                 qDebug() << "crop create proxywidget";
                 // TODO: center and make frame transparent
@@ -353,17 +334,24 @@ public:
                 // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
                 // TODO: 2014-06-18: seems not to be an issue anymore...
                 //_interactionWidget->setPos(-_interactionWidget->widget()->width(), -_interactionWidget->widget()->height());
-                _interactionWidget->setPos(rect.width(), rect.height());
+                _interactionWidget->setPos(itemRect.width(), itemRect.height());
             }
         }
 
-        updateDimRects(rect);
+        updateDimRects(itemRect);
     }
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
-        this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
-        this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
+        qDebug() << "KreenGraphicsOperationCropItem::updateVisualGeometryFromPoints";
+        QRect rect = QRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
+        QPoint pos = QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y()));
+        this->setRect(rect);
+        this->setPos(pos);
+
+        // updateDimRects needs the itemRect (with position encoded in top/left of the rect)
+        QRect itemRect(pos.x(), pos.y(), rect.width(), rect.height());
+        updateDimRects(itemRect);
     }
 
     virtual void updateModelFromVisualGeometry() override
@@ -402,8 +390,29 @@ private:
 
     void updateDimRects(QRect itemRect)
     {
-        if (_dimRect1 == nullptr) // if the rects are not created yet
-            return;
+        if (_dimRect1 == nullptr) {
+            // if the rects are not created yet => create them
+
+            std::vector<QGraphicsRectItem*> dimRects;
+            // 1  2  4
+            // 1     4
+            // 1  3  4
+            _dimRect1 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect2 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect3 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            _dimRect4 = new QGraphicsRectItem(0, 0, 0, 0, this);
+            dimRects.push_back(_dimRect1); // 1
+            dimRects.push_back(_dimRect2); // 2
+            dimRects.push_back(_dimRect3); // 3
+            dimRects.push_back(_dimRect4); // 4
+
+            // updateDimRects(_item->rect()); // later
+
+            foreach (auto dimRect, dimRects) {
+                dimRect->setBrush(QBrush(QColor(0, 0, 0, 128)));
+                dimRect->setPen(Qt::NoPen);
+            }
+        }
 
         QRect rect = itemRect;
         // 1  2  4
@@ -417,10 +426,10 @@ private:
 
 private:
     QGraphicsProxyWidget* _interactionWidget = nullptr;
-    QGraphicsRectItem* _dimRect1;
-    QGraphicsRectItem* _dimRect2;
-    QGraphicsRectItem* _dimRect3;
-    QGraphicsRectItem* _dimRect4;
+    QGraphicsRectItem* _dimRect1 = nullptr;
+    QGraphicsRectItem* _dimRect2 = nullptr;
+    QGraphicsRectItem* _dimRect3 = nullptr;
+    QGraphicsRectItem* _dimRect4 = nullptr;
 };
 
 }

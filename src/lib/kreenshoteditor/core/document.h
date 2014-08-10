@@ -126,8 +126,9 @@ public:
     void applyItemPropertyChanges(KreenItemPtr item, bool recordUndo = true);
 
     /**
-     * operates on the base image:
-     * keeps only the given @param rect and moves all items accordingly
+     * Operates on the base image:
+     * keeps only the given @param rect and moves all items accordingly.
+     * Records undo by default.
      */
     void imageOpCrop(QRect rect);
 

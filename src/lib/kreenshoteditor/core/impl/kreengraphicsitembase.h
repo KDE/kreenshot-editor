@@ -55,11 +55,8 @@ Q_SIGNALS:
 
 public:
     /**
-     * scene: to get:
-     *  - scene rect
-     *  - all selected items
      */
-    KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item, QGraphicsScene* scene);
+    KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item);
 
     KreenItemPtr item();
 
@@ -140,7 +137,6 @@ protected:
 
 private:
     QGraphicsItem* _graphicsItem;
-    QGraphicsScene* _scene;
 };
 
 }
