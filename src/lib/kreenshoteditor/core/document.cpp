@@ -163,6 +163,7 @@ void Document::setClean()
 void Document::undo()
 {
     contentChangedNotificationGroupBegin(false);
+    qDebug() << "Document::undo(), " << d->undoStack.undoText();
     d->undoStack.undo();
     contentChangedNotificationGroupEnd();
 }
@@ -170,6 +171,7 @@ void Document::undo()
 void Document::redo()
 {
     contentChangedNotificationGroupBegin(false);
+    qDebug() << "Document::redo(), " << d->undoStack.redoText();
     d->undoStack.redo();
     contentChangedNotificationGroupEnd();
 }
@@ -239,14 +241,13 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 
 void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 {
-    qDebug() << "Document::applyItemPropertyChanges";
-
     Q_ASSERT(d->itemMap.contains(item->id()));
 
     if (recordUndo) {
         d->undoStack.push(new ApplyItemPropertyChangesCmd(this, item, d->itemMap[item->id()]));
     }
     else {
+        qDebug() << "[DEBUG] Document::applyItemPropertyChanges (itemMap.insert)";
         d->itemMap.insert(item->id(), item->deepCopy());
         d->itemsCacheDirty = true;
         d->contentChangedNotificationGroupMethodLeave();
@@ -255,7 +256,7 @@ void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 
 void Document::addDemoItems()
 {
-    d->undoStack.beginMacro("add demo items");
+    contentChangedNotificationGroupBegin(true, "add demo items");
 
     {
         auto item = KreenItem::create("line");
@@ -326,14 +327,12 @@ void Document::addDemoItems()
         addItem(item);
     }
 
-    d->undoStack.endMacro();
-
-    emit contentChangedSignal();
+    contentChangedNotificationGroupEnd();
 }
 
 void Document::imageOpCrop(QRect rect)
 {
-    d->undoStack.beginMacro("Image operation crop");
+    contentChangedNotificationGroupBegin(true, "Image operation crop");
 
     setBaseImage(baseImage().copy(rect), true);
 
@@ -342,9 +341,7 @@ void Document::imageOpCrop(QRect rect)
         applyItemPropertyChanges(item); // recordUndo = true
     }
 
-    d->undoStack.endMacro();
-
-    emit contentChangedSignal();
+    contentChangedNotificationGroupEnd();
 }
 
 const QList<KreenItemPtr> Document::items()

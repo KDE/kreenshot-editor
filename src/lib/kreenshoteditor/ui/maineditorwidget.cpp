@@ -132,7 +132,7 @@ public:
         scene()->saveCurrentKreenItemsSelection();
 
         // Remove all KreenItems and base image item
-        // but NOT the one possible image operation
+        // but NOT the one possible image operation (see imgOpHandling.imageOperationItemActive())
         //
         foreach (auto item, scene()->kreenGraphicsItems()) {
             if (!item->item()->isImageOperation()) {
@@ -169,14 +169,6 @@ public:
             //_owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal(KreenItem)), _owner, SLOT(slotRedrawSelectionHandles()));
 
             scene()->addItem(grItem);
-        }
-
-        // add a potential active image operation
-        // TODO: TMP (workaround for correct behaviour when moving an image operation)
-        //
-        if (imgOpHandling.imageOperationItemActive()) {
-            // NOTE: only works because we do not use scene()->clear() which also DELETES the items
-            scene()->addItem(imgOpHandling.imageOperationGraphicsItem);
         }
 
         slotUpdateItemsGeometryFromModel();

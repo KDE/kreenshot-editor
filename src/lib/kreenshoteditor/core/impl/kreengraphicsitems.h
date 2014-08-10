@@ -343,7 +343,8 @@ public:
 
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
-        qDebug() << "KreenGraphicsOperationCropItem::updateVisualGeometryFromPoints";
+        //qDebug() << "KreenGraphicsOperationCropItem::updateVisualGeometryFromPoints";
+        
         QRect rect = QRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
         QPoint pos = QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y()));
         this->setRect(rect);

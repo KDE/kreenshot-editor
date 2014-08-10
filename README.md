@@ -43,7 +43,6 @@ $ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", "_"))'
 
 TODO
 ----
-crop: QGraphicsScene::addItem: item has already been added to this scene
 +// TODO: do not apply EVERY mouse release (only those with real changes)
 +// TODO: creating a new item crashes
 +// TODO: the selection is lost after mouse release!
