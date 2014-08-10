@@ -26,7 +26,7 @@ namespace core {
 
 AddItemCmd::AddItemCmd(kreen::core::Document* document, KreenItemPtr item) : KreenUndoCmd(document)
 {
-    _item = item;
+    _item = item->deepCopy();
 }
 
 void AddItemCmd::redo()
@@ -43,7 +43,7 @@ void AddItemCmd::undo()
 
 DeleteItemCmd::DeleteItemCmd(Document* document, KreenItemPtr item): KreenUndoCmd(document)
 {
-    _item = item;
+    _item = item->deepCopy();
 }
 
 void DeleteItemCmd::redo()
@@ -74,6 +74,27 @@ void SetBaseImageCmd::undo()
 {
     Q_ASSERT(!_origImage.isNull());
     _document->setBaseImage(_origImage, false);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+ApplyItemPropertyChangesCmd::ApplyItemPropertyChangesCmd(Document* document,
+                                                         const KreenItemPtr item,
+                                                         const KreenItemPtr oldItem
+                                                        ): KreenUndoCmd(document)
+{
+    _item = item->deepCopy();
+    _oldItem = oldItem->deepCopy();
+}
+
+void ApplyItemPropertyChangesCmd::redo()
+{
+    _document->applyItemPropertyChanges(_item, false);
+}
+
+void ApplyItemPropertyChangesCmd::undo()
+{
+    _document->applyItemPropertyChanges(_oldItem, false);
 }
 
 /////////////////////////////////////////////////////////////////////

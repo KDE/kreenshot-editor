@@ -35,6 +35,35 @@ void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
     _toolManager = toolManager;
 }
 
+QList<KreenGraphicsItemBase*> KreenGraphicsScene::selectedKreenGraphicsItems()
+{
+    QList<KreenGraphicsItemBase*> result;
+
+    foreach (auto grItem, selectedItems()) {
+
+        auto kGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
+        if (kGrItem != nullptr) {
+            result.append(kGrItem);
+        }
+        else {
+            Q_ASSERT(false); // todo?
+        }
+    }
+
+    return result;
+}
+
+QList<KreenItemPtr> KreenGraphicsScene::selectedKreenItems()
+{
+    QList<KreenItemPtr> result;
+
+    foreach (auto kGrItem, selectedKreenGraphicsItems()) {
+        result.append(kGrItem->item());
+    }
+
+    return result;
+}
+
 void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
 {
     foreach (QGraphicsItem* grItem, items()) {
@@ -148,6 +177,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     qDebug() << "MyQGraphicsScene::mouseReleaseEvent enter";
 
     if (_creatingItem != nullptr) {
+        // remove this temporary item from the scene because we will add it to the document
         this->removeItem(_creatingItem);
 
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(_creatingItem);
@@ -168,8 +198,8 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     QGraphicsScene::mouseReleaseEvent(event);
 
-    qDebug() << "emit MyQGraphicsScene::mouseReleased";
-    emit mouseReleased(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
+    qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
+    emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
 }
 
 void KreenGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)

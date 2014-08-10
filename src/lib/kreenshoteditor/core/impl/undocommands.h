@@ -78,6 +78,17 @@ private:
     QImage _origImage;
 };
 
+class ApplyItemPropertyChangesCmd : public KreenUndoCmd
+{
+public:
+    ApplyItemPropertyChangesCmd(Document* document, const KreenItemPtr item, const KreenItemPtr oldItem);
+    virtual void redo();
+    virtual void undo();
+private:
+    KreenItemPtr _item;
+    KreenItemPtr _oldItem;
+};
+
 class ImageOperationCropCmd : public KreenUndoCmd
 {
 public:
@@ -86,18 +97,6 @@ public:
     virtual void undo();
 private:
     QRect _rect;
-};
-
-class MoveItemCmd : public KreenUndoCmd
-{
-public:
-
-};
-
-class ResizeItemCmd : public KreenUndoCmd
-{
-public:
-
 };
 
 }

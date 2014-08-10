@@ -123,7 +123,7 @@ public:
      * so that changes to the items from the outside have no effect on the
      * document's content.
      */
-    void applyItemPropertyChange(KreenItemPtr item);
+    void applyItemPropertyChanges(KreenItemPtr item, bool recordUndo = true);
 
     /**
      * operates on the base image:

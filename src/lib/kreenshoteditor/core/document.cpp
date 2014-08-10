@@ -217,32 +217,37 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
         }
         d->itemMap.insert(item->id(), item->deepCopy()); // store (add or replace) item including id in the map
         d->itemsCacheDirty = true;
+        d->contentChangedNotificationGroupMethodLeave();
     }
-
-    d->contentChangedNotificationGroupMethodLeave();
 }
 
 void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 {
     //d->contentChangedNotificationGroupMethodEnter(recordUndo);
+    Q_ASSERT(d->itemMap.contains(item->id()));
 
     if (recordUndo) {
         d->undoStack.push(new DeleteItemCmd(this, item));
     }
     else {
-        Q_ASSERT(d->itemMap.contains(item->id()));
-        d->itemsCacheDirty = true;
         Q_ASSERT(d->itemMap.remove(item->id()) == 1);
+        d->itemsCacheDirty = true;
+        d->contentChangedNotificationGroupMethodLeave();
     }
-
-    d->contentChangedNotificationGroupMethodLeave();
 }
 
-void Document::applyItemPropertyChange(KreenItemPtr item)
+void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 {
-    d->itemsCacheDirty = true;
+    Q_ASSERT(d->itemMap.contains(item->id()));
 
-    // TODO
+    if (recordUndo) {
+        d->undoStack.push(new ApplyItemPropertyChangesCmd(this, item, d->itemMap[item->id()]));
+    }
+    else {
+        d->itemMap.insert(item->id(), item->deepCopy());
+        d->itemsCacheDirty = true;
+        d->contentChangedNotificationGroupMethodLeave();
+    }
 }
 
 void Document::addDemoItems()

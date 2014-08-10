@@ -24,6 +24,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QList>
 #include <memory>
 #include <kreen/kreenshoteditor.h>
 #include <kreen/core/document.h>
@@ -33,6 +34,8 @@ namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
+
+class KreenGraphicsItemBase;
 
 /**
  * TODO: move all logic from MyQGraphicsView to here to potentially solve the wrong-drawing-when-scrolling-bug
@@ -58,11 +61,15 @@ public:
      */
     void setToolManager(ToolManagerPtr toolManager);
 
+    QList<KreenGraphicsItemBase*> selectedKreenGraphicsItems();
+
+    QList<KreenItemPtr> selectedKreenItems();
+
 Q_SIGNALS:
-    void mouseReleased();
+    void mouseReleasedSignal();
 
     /**
-     * this can be drawn item like rect or an operation op-crop
+     * this can be a drawn item like rect or an operation op-crop
      */
     void itemCreated(KreenItemPtr item);
 

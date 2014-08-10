@@ -363,7 +363,7 @@ void MainEditorWidget::slotDocumentCreated()
 
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
-    connect(d->scene().get(), SIGNAL(mouseReleased()), this, SLOT(slotUpdateItemsGeometryFromModel()));
+    connect(d->scene().get(), SIGNAL(mouseReleasedSignal()), this, SLOT(slotUpdateItemsGeometryFromModel()));
 
     connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
 
@@ -491,11 +491,24 @@ void MainEditorWidget::requestTool(QString toolId)
     emit toolChosenSignal(toolId);
 }
 
+// TODO: do not apply EVERY mouse release (only those with real changes)
+// TODO: creating a new item crashes
+// TODO: the selection is lost after mouse release!
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
     qDebug() << "updateItemsGeometryFromModel";
+
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
+        true, QString("slotUpdateItemsGeometryFromModel___todo"));
+    foreach (auto item, d->scene()->selectedKreenItems()) {
+        d->kreenshotEditor()->document()->applyItemPropertyChanges(item);
+    }
+
     d->slotUpdateItemsGeometryFromModel();
     d->selectionHandles->redrawSelectionHandles(true);
+
+    // emits contentChangedSignal() which triggers slotDocumentContentChanged()
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupEnd();
 }
 
 void MainEditorWidget::slotImageOperationAccepted()
@@ -513,7 +526,6 @@ void MainEditorWidget::slotImageOperationAcceptedDecoupled()
     d->initScene(); // would causes crash in mouse event if not called in the decoupled method
     requestTool("select"); // go to Select after an image operation
 }
-
 
 void MainEditorWidget::slotImageOperationCanceled()
 {
@@ -567,12 +579,7 @@ void MainEditorWidget::slotRedrawSelectionHandles()
 
 void MainEditorWidget::deleteSelectedItems()
 {
-    QList<KreenItemPtr> toBeDeleted;
-    foreach (auto grItem, d->scene()->selectedItems()) {
-
-        auto kGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-        toBeDeleted.append(kGrItem->item());
-    }
+    QList<KreenItemPtr> toBeDeleted = d->scene()->selectedKreenItems();
 
     d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
         true, QString("Delete %1 item(s)").arg(toBeDeleted.length()));
