@@ -85,6 +85,11 @@ public:
     int setId(int id);
 
     /**
+     * typeId.startsWith("op-")
+     */
+    bool isImageOperation();
+
+    /**
      * set geometry (position and size) of the item
      */
     void setRect(QRect rect);

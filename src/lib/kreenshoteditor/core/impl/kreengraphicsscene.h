@@ -61,9 +61,36 @@ public:
      */
     void setToolManager(ToolManagerPtr toolManager);
 
+    /**
+    * All corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
+    * Use graphicsItem() on the returned KreenGraphicsItemBase to get the underlying QGraphicsItem.
+    */
+    QList<KreenGraphicsItemBase*> kreenGraphicsItems();
+
+    /**
+     * TODO: return KreenGraphicsItemBase* instead of QGraphicsItem*
+     */
+    QGraphicsItem* graphicsItemFromItem(KreenItemPtr item);
+
+    /**
+     * retrieves a list of all selected KreenGraphicsItems
+     * TODO: what happens on active image operation?
+     */
     QList<KreenGraphicsItemBase*> selectedKreenGraphicsItems();
 
+    /**
+     * returns a list of all selected KreenItems
+     * TODO: what happens on active image operation?
+     */
     QList<KreenItemPtr> selectedKreenItems();
+
+    void saveCurrentKreenItemsSelection();
+
+    /**
+     * Sets the selection previously saved by saveCurrentKreenItemsSelection().
+     * NOTE that the selection is set ONLY. Items that are already selected will NOT be deselected.
+     */
+    void restoreSavedKreenItemsSelection_1();
 
 Q_SIGNALS:
     void mouseReleasedSignal();
@@ -74,13 +101,14 @@ Q_SIGNALS:
     void itemCreated(KreenItemPtr item);
 
 protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-
     bool isItemForPointToSceneRestriction(KreenItemPtr item);
 
     void restrictPointToScene(QPoint* pt);
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
@@ -94,6 +122,7 @@ private:
     ToolManagerPtr _toolManager;
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
+    QList<KreenItemPtr> _savedSelection;
 };
 
 }

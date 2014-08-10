@@ -18,6 +18,7 @@
  */
 #include "kreengraphicsscene.h"
 #include <QMessageBox>
+#include <QDebug>
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "selectionhandlegraphicsitem.h"
@@ -58,10 +59,29 @@ QList<KreenItemPtr> KreenGraphicsScene::selectedKreenItems()
     QList<KreenItemPtr> result;
 
     foreach (auto kGrItem, selectedKreenGraphicsItems()) {
+        //qDebug() << (long)kGrItem << kGrItem->item()->typeId;
         result.append(kGrItem->item());
     }
 
     return result;
+}
+
+void KreenGraphicsScene::saveCurrentKreenItemsSelection()
+{
+    _savedSelection = selectedKreenItems();
+}
+
+void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
+{
+    // TODO: optimize this double loop
+
+    foreach (auto kreenItem, _savedSelection) {
+        foreach (auto kGrItem, kreenGraphicsItems()) {
+            if (kGrItem->item()->id() == kreenItem->id()) {
+                kGrItem->graphicsItem()->setSelected(true);
+            }
+        }
+    }
 }
 
 void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
@@ -69,7 +89,7 @@ void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
     foreach (QGraphicsItem* grItem, items()) {
 
         auto kreenGrItem = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-        if (kreenGrItem && kreenGrItem->item()->typeId.startsWith("op-")) { // hide image operations like crop or rip out
+        if (kreenGrItem && kreenGrItem->item()->isImageOperation()) { // hide image operations like crop or rip out
             grItem->setVisible(!finalOnly);
         }
 
@@ -170,6 +190,34 @@ void KreenGraphicsScene::restrictPointToScene(QPoint* pt)
     if (pt->y() > this->height()) {
         pt->setY(this->height());
     }
+}
+
+/**
+    * all corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
+    */
+QList<KreenGraphicsItemBase*> KreenGraphicsScene::kreenGraphicsItems()
+{
+    QList<KreenGraphicsItemBase*> list;
+
+    foreach(auto grItem, this->items()) {
+
+        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
+        if (grItemBase != nullptr) { // there might also be other items
+            list << grItemBase;
+        }
+    }
+
+    return list;
+}
+
+QGraphicsItem* KreenGraphicsScene::graphicsItemFromItem(KreenItemPtr item)
+{
+    foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
+        if (kreenGraphicsItemBase->item()->id() == item->id()) { // compare by id because Document holds secret copies.
+            return kreenGraphicsItemBase->graphicsItem();
+        }
+    }
+    return nullptr;
 }
 
 void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)

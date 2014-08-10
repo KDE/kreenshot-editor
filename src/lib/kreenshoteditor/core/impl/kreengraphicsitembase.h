@@ -51,7 +51,7 @@ Q_SIGNALS:
     void operationAccepted();
     void operationCanceled();
 
-    void itemPositionHasChangedSignal();
+    void itemPositionHasChangedSignal(KreenItemPtr item);
 
 public:
     /**
@@ -63,6 +63,9 @@ public:
 
     KreenItemPtr item();
 
+    /**
+     * the underlying QGraphicsItem
+     */
     QGraphicsItem* graphicsItem();
 
     /**

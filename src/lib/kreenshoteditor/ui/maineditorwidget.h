@@ -74,7 +74,12 @@ protected Q_SLOTS:
     void slotDocumentContentChanged();
 
     void slotUpdateItemsGeometryFromModel();
-    void slotUpdateSceneWithImageOperationItem(KreenItemPtr item);
+
+    /**
+     * todo: doc
+     */
+    void slotUpdateSceneWithImageOperationItem(KreenItemPtr imageOperationItem);
+
     void slotImageOperationAccepted();
     void slotImageOperationAcceptedDecoupled();
     void slotImageOperationCanceled();

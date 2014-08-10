@@ -56,6 +56,11 @@ int KreenItem::setId(int id)
     return oldId;
 }
 
+bool KreenItem::isImageOperation()
+{
+    return typeId.startsWith("op-");
+}
+
 KreenItemPtr KreenItem::create(QString typeId)
 {
     auto item = KreenItem::make_shared(typeId);

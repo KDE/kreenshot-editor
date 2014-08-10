@@ -122,9 +122,12 @@ public:
 
     /**
      * recreate the scene to reflect the current kreenshotEditor->document()
+     * TODO: move this to KreenGraphicsScene?
      */
     void createSceneFromModel()
     {
+        scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
+
         scene()->clear();
 
         QPixmap pixmap;
@@ -138,13 +141,22 @@ public:
             auto grItem = toolManager()->createGraphicsItemFromKreenItem(item, scene().get());
             auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
 
-            _owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal()), _owner, SLOT(slotRedrawSelectionHandles()));
+            // todo: connect in kreengraphicsscene to remember which item was moved until mouse button up
+            //_owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal(KreenItem)), _owner, SLOT(slotRedrawSelectionHandles()));
 
             scene()->addItem(grItem);
         }
 
         slotUpdateItemsGeometryFromModel();
         updateItemsBehaviourFromChosenTool();
+
+        // TODO: TMP (workaround for correct behaviour when moving an image operation)
+        if (imgOpHandling.imageOperationItemActive()) {
+            // TODO: this fails because scene()->clear() also DELETES the items!!!
+            //scene()->addItem(imgOpHandling.imageOperationGraphicsItem);
+        }
+
+        scene()->restoreSavedKreenItemsSelection_1();
     }
 
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
@@ -198,31 +210,12 @@ public:
 //                 scene.addItem(rectItem);
 //             }
 
-
-    /**
-     * all corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
-     */
-    QList<KreenGraphicsItemBase*> kreenGraphicsItems()
-    {
-        QList<KreenGraphicsItemBase*> list;
-
-        foreach(auto grItem, scene()->items()) {
-
-            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-            if (grItemBase != nullptr) { // there might also be other items
-                list << grItemBase;
-            }
-        }
-
-        return list;
-    }
-
     /**
      * update positions and sizes from model
      */
     void slotUpdateItemsGeometryFromModel()
     {
-        foreach(auto grItemBase, kreenGraphicsItems()) {
+        foreach(auto grItemBase, scene()->kreenGraphicsItems()) {
 
             //if (!grItemBase->item()->typeId.startsWith("op-")) {
             //qDebug() << "updateGeometryFromModel";
@@ -239,7 +232,7 @@ public:
      */
     void updateItemsBehaviourFromChosenTool()
     {
-        foreach(auto grItemBase, kreenGraphicsItems()) {
+        foreach(auto grItemBase, scene()->kreenGraphicsItems()) {
             grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
         }
     }
@@ -253,16 +246,6 @@ public:
         else {
             graphicsView->setDragMode(QGraphicsView::NoDrag);
         }
-    }
-
-    QGraphicsItem* graphicsItemFromItem(KreenItemPtr item)
-    {
-        foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
-            if (kreenGraphicsItemBase->item()->id() == item->id()) { // compare by id because Document holds secret copies.
-                return kreenGraphicsItemBase->graphicsItem();
-            }
-        }
-        return nullptr;
     }
 
     /**
@@ -375,12 +358,12 @@ void MainEditorWidget::slotDocumentContentChanged()
     d->createSceneFromModel();
 }
 
-void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
+void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr imageOperationItem)
 {
     qDebug() << "updateSceneWithImageOperationItem";
 
-    d->imgOpHandling.imageOperationItem = item;
-    d->toolManager()->setImageOperationActive(item != nullptr);
+    d->imgOpHandling.imageOperationItem = imageOperationItem;
+    d->toolManager()->setImageOperationActive(imageOperationItem != nullptr);
 
     if (d->imgOpHandling.imageOperationGraphicsItem != nullptr) {
         d->scene()->removeItem(d->imgOpHandling.imageOperationGraphicsItem);
@@ -388,13 +371,13 @@ void MainEditorWidget::slotUpdateSceneWithImageOperationItem(KreenItemPtr item)
         d->imgOpHandling.imageOperationItem = nullptr;
     }
 
-    if (item != nullptr) {
+    if (imageOperationItem != nullptr) {
 
 //             auto dimRect = new QGraphicsRectItem();
 //             //dimRect->setBrush();
 //             scene.addItem(dimRect);
 
-        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(item, d->scene().get());
+        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem, d->scene().get());
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
@@ -496,12 +479,15 @@ void MainEditorWidget::requestTool(QString toolId)
 // TODO: the selection is lost after mouse release!
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
-    qDebug() << "updateItemsGeometryFromModel";
+    qDebug() << "slotUpdateItemsGeometryFromModel";
 
     d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
         true, QString("slotUpdateItemsGeometryFromModel___todo"));
+
     foreach (auto item, d->scene()->selectedKreenItems()) {
-        d->kreenshotEditor()->document()->applyItemPropertyChanges(item);
+        if (!item->isImageOperation()) {
+            d->kreenshotEditor()->document()->applyItemPropertyChanges(item);
+        }
     }
 
     d->slotUpdateItemsGeometryFromModel();
@@ -541,17 +527,18 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         d->kreenshotEditor()->document()->addItem(item);
 
+        // TODO: reenable!!!
         // will (must be) called after slotDocumentContentChanged() because there the GraphicsItem is created
         // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
-        auto newGrItem = d->graphicsItemFromItem(item);
-        if (newGrItem != nullptr) {
-            newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            newGrItem->setSelected(true);
-            // qDebug() << "isSelected: " << grItem->isSelected();
-        }
-        else {
-            Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
-        }
+//         auto newGrItem = d->scene()->graphicsItemFromItem(item);
+//         if (newGrItem != nullptr) {
+//             newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+//             newGrItem->setSelected(true);
+//             // qDebug() << "isSelected: " << grItem->isSelected();
+//         }
+//         else {
+//             Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
+//         }
 
     }
     else {
@@ -596,7 +583,7 @@ void MainEditorWidget::selectAllItems()
     requestTool("select");
     
     // todo: potential optimization: disable events before the loop and enable afterwards
-    foreach(auto kreenGraphicsItemBase, d->kreenGraphicsItems()) {
+    foreach(auto kreenGraphicsItemBase, d->scene()->kreenGraphicsItems()) {
         kreenGraphicsItemBase->graphicsItem()->setSelected(true);
     }
 }

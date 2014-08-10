@@ -43,6 +43,15 @@ $ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", "_"))'
 
 TODO
 ----
++// TODO: do not apply EVERY mouse release (only those with real changes)
++// TODO: creating a new item crashes
++// TODO: the selection is lost after mouse release!
+QString("slotUpdateItemsGeometryFromModel___todo"));
+TODO: return KreenGraphicsItemBase* instead of QGraphicsItem*
+TODO: what happens on active image operation?
+scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
++        // TODO: reenable!!!
+
 - QUndostack, Undo, Redo
     - first: MoveItemCmd (see uncommitted code; does not compile yet)
     - OP-crop is not finished yet (notificationGroup etc, setSceneRect seems not to be called after undo)
