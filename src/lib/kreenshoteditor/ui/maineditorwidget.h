@@ -90,8 +90,9 @@ protected Q_SLOTS:
 
 protected:
     /**
-     * todo: doc
-     * todo: move to impl
+     * If given imageOperationItem is not null the one image operation
+     * an editor can have at a time will be set.
+     * If null, then it will be removed
      */
     void setSceneImageOperationItem(KreenItemPtr imageOperationItem);
 

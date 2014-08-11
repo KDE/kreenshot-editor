@@ -385,6 +385,7 @@ void MainEditorWidget::slotDocumentCreated()
 
 void MainEditorWidget::slotDocumentContentChanged()
 {
+    qDebug() << "MainEditorWidget::slotDocumentContentChanged()";
     d->createSceneFromModel();
 }
 
@@ -553,23 +554,25 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
     Q_ASSERT(item != nullptr);
 
     qDebug() << "add item: " << item->rect();
-    if (!item->typeId.startsWith("op-")) {
+    if (!item->isImageOperation()) {
+
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         d->kreenshotEditor()->document()->addItem(item);
 
-        // TODO: reenable!!!
-        // will (must be) called after slotDocumentContentChanged() because there the GraphicsItem is created
-        // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
-//         auto newGrItem = d->scene()->graphicsItemFromItem(item);
-//         if (newGrItem != nullptr) {
-//             newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-//             newGrItem->setSelected(true);
-//             // qDebug() << "isSelected: " << grItem->isSelected();
-//         }
-//         else {
-//             Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
-//         }
+        qDebug() << "add item id: " << item->id(); // id was assigned by addItem
 
+        // must be called after slotDocumentContentChanged() because there the GraphicsItem is created
+        // todo: find a better place for this?
+        // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
+        auto newGrItem = d->scene()->graphicsItemFromItem(item); // todo: use method from GrItemBase
+        if (newGrItem != nullptr) {
+            newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            newGrItem->setSelected(true);
+            // qDebug() << "isSelected: " << grItem->isSelected();
+        }
+        else {
+            Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
+        }
     }
     else {
         setSceneImageOperationItem(item);

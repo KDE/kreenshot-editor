@@ -210,7 +210,13 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
 
     if (recordUndo) {
         Q_ASSERT(item->id() == -1);
-        d->undoStack.push(new AddItemCmd(this, item)); // this will call addItem with recordUndo=false
+        auto copiedItem = item->deepCopy();
+        d->undoStack.push(new AddItemCmd(this, copiedItem)); // this will call addItem with recordUndo=false
+        // 1. push calls redo
+        // 2. redo call addItem with recordUndo false
+        // 3. addItem generates id and sets it in given item
+        // 4. we set the id so it is available to the caller
+        item->setId(copiedItem->id());
     }
     else {
         if (item->id() == -1) { // only create new id if not in recordUndo mode

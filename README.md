@@ -50,7 +50,6 @@ QString("slotUpdateItemsGeometryFromModel___todo"));
 TODO: return KreenGraphicsItemBase* instead of QGraphicsItem*
 TODO: what happens on active image operation?
 scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
-+        // TODO: reenable!!!
 document.applyProperties: do not do anything if there are no properties that have changed
 - MOVE todo to another file
 

@@ -26,7 +26,7 @@ namespace core {
 
 AddItemCmd::AddItemCmd(kreen::core::Document* document, KreenItemPtr item) : KreenUndoCmd(document)
 {
-    _item = item->deepCopy();
+    _item = item;
 }
 
 void AddItemCmd::redo()
@@ -43,7 +43,7 @@ void AddItemCmd::undo()
 
 DeleteItemCmd::DeleteItemCmd(Document* document, KreenItemPtr item): KreenUndoCmd(document)
 {
-    _item = item->deepCopy();
+    _item = item->deepCopy(); // todo: make analog to AddItemCmd? Or better not?
 }
 
 void DeleteItemCmd::redo()
