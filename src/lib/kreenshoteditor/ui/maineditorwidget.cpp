@@ -511,6 +511,8 @@ void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 
     foreach (auto item, d->scene()->selectedKreenItems()) {
         if (!item->isImageOperation()) {
+            // only KreenItems which are not the
+            // potential image operation item because it does not belong to the document
             d->kreenshotEditor()->document()->applyItemPropertyChanges(item);
         }
     }
@@ -601,7 +603,9 @@ void MainEditorWidget::deleteSelectedItems()
     d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
         true, QString("Delete %1 item(s)").arg(toBeDeleted.length()));
     foreach (auto item, toBeDeleted) {
-        d->kreenshotEditor()->document()->deleteItem(item);
+        if (!item->isImageOperation()) { // not the image operation
+            d->kreenshotEditor()->document()->deleteItem(item);
+        }
     }
 
     // emits contentChangedSignal() which triggers slotDocumentContentChanged()

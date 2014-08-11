@@ -79,8 +79,8 @@ public:
     QList<KreenGraphicsItemBase*> selectedKreenGraphicsItems();
 
     /**
-     * returns a list of all selected KreenItems
-     * TODO: what happens on active image operation?
+     * Returns a list of all selected KreenItems
+     * INCLUDING the image operation item if exists and selected
      */
     QList<KreenItemPtr> selectedKreenItems();
 
