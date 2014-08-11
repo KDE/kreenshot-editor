@@ -68,9 +68,9 @@ public:
     QList<KreenGraphicsItemBase*> kreenGraphicsItems();
 
     /**
-     * TODO: return KreenGraphicsItemBase* instead of QGraphicsItem*
+     * returns the corresponding KreenGraphicsItemBase* for item or nullptr if not found
      */
-    QGraphicsItem* graphicsItemFromItem(KreenItemPtr item);
+    KreenGraphicsItemBase* graphicsItemFromItem(KreenItemPtr item);
 
     /**
      * retrieves a list of all selected KreenGraphicsItems

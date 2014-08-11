@@ -210,13 +210,14 @@ QList<KreenGraphicsItemBase*> KreenGraphicsScene::kreenGraphicsItems()
     return list;
 }
 
-QGraphicsItem* KreenGraphicsScene::graphicsItemFromItem(KreenItemPtr item)
+KreenGraphicsItemBase* KreenGraphicsScene::graphicsItemFromItem(KreenItemPtr item)
 {
     foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
         if (kreenGraphicsItemBase->item()->id() == item->id()) { // compare by id because Document holds secret copies.
-            return kreenGraphicsItemBase->graphicsItem();
+            return kreenGraphicsItemBase;
         }
     }
+    
     return nullptr;
 }
 

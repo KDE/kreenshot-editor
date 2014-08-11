@@ -1,10 +1,7 @@
 TODO
 ----
 +// TODO: do not apply EVERY mouse release (only those with real changes)
-+// TODO: creating a new item crashes
-+// TODO: the selection is lost after mouse release!
 QString("slotUpdateItemsGeometryFromModel___todo"));
-TODO: return KreenGraphicsItemBase* instead of QGraphicsItem*
 TODO: what happens on active image operation?
 scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
 document.applyProperties: do not do anything if there are no properties that have changed

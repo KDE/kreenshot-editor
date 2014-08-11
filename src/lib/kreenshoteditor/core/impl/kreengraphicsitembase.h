@@ -68,7 +68,7 @@ public:
     /**
      * selectable and moveable
      */
-    void setMovable(bool isMovable);
+    void setSelectableAndMovable(bool isMovable);
 
     /**
      * WORKAROUND:

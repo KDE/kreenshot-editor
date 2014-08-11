@@ -27,7 +27,7 @@ KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenI
     _graphicsItem = graphicsItem;
 
     _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
-    setMovable(true); // selectable and moveable by default
+    setSelectableAndMovable(true); // selectable and moveable by default
 }
 
 KreenItemPtr KreenGraphicsItemBase::item()
@@ -40,7 +40,7 @@ QGraphicsItem* KreenGraphicsItemBase::graphicsItem()
     return _graphicsItem;
 }
 
-void KreenGraphicsItemBase::setMovable(bool isMovable)
+void KreenGraphicsItemBase::setSelectableAndMovable(bool isMovable)
 {
     // qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
     _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);

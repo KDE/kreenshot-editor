@@ -255,7 +255,7 @@ public:
     void updateItemsBehaviourFromChosenTool()
     {
         foreach(auto grItemBase, scene()->kreenGraphicsItems()) {
-            grItemBase->setMovable(toolManager()->chosenTool() == ToolEnum::Select);
+            grItemBase->setSelectableAndMovable(toolManager()->chosenTool() == ToolEnum::Select);
         }
     }
 
@@ -502,8 +502,6 @@ void MainEditorWidget::requestTool(QString toolId)
 }
 
 // TODO: do not apply EVERY mouse release (only those with real changes)
-// TODO: creating a new item crashes
-// TODO: the selection is lost after mouse release!
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
     qDebug() << "slotUpdateItemsGeometryFromModel";
@@ -564,11 +562,10 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         // must be called after slotDocumentContentChanged() because there the GraphicsItem is created
         // todo: find a better place for this?
         // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
-        auto newGrItem = d->scene()->graphicsItemFromItem(item); // todo: use method from GrItemBase
-        if (newGrItem != nullptr) {
-            newGrItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            newGrItem->setSelected(true);
-            // qDebug() << "isSelected: " << grItem->isSelected();
+        auto newKGrItem = d->scene()->graphicsItemFromItem(item); // todo: use method from GrItemBase
+        if (newKGrItem != nullptr) {
+            newKGrItem->setSelectableAndMovable(true);
+            newKGrItem->graphicsItem()->setSelected(true);
         }
         else {
             Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
