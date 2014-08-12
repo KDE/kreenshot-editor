@@ -160,7 +160,7 @@ void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange cha
         //QPoint newPos = value.toPoint();
         //updateVisualGeometryFromModel();
 
-        //qDebug() << "emit itemPositionHasChangedSignal();";
+        //qDebug() << "emit itemPositionHasChangedSignal(item());";
         emit itemPositionHasChangedSignal(item());
     }
 }

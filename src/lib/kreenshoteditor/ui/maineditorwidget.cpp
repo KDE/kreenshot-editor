@@ -75,7 +75,9 @@ class MainEditorWidgetImpl
 {
 public:
     MainEditorWidget* _owner;
-    KreenshotEditorPtr kreenshotEditor() { return _kreenshotEditor; };
+    KreenshotEditorPtr kreenshotEditor() {
+        return _kreenshotEditor;
+    };
     ToolManagerPtr toolManager_;
     KreenGraphicsViewPtr graphicsView;
     QGraphicsPixmapItem* baseImageSceneItem = nullptr;
@@ -170,15 +172,12 @@ public:
         scene()->setSceneRect(baseRect);
         graphicsView->setSceneRect(baseRect); // needed, otherwise no visual update
 
-        // add all document items
+        // create and add all document items
         //
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto grItem = toolManager()->createGraphicsItemFromKreenItem(item);
             auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-
-            // todo: connect in kreengraphicsscene to remember which item was moved until mouse button up
-            //_owner->connect(grItemBase, SIGNAL(itemPositionHasChangedSignal(KreenItem)), _owner, SLOT(slotRedrawSelectionHandles()));
 
             scene()->addItem(grItem);
         }
@@ -335,8 +334,8 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
 //     }
 //     else {
 //         // use this if not using QScrollArea:
-        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        setMinimumSize(50, 50);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setMinimumSize(50, 50);
 //     }
 
     setMouseTracking(true); // to enable mouseMoveEvent
@@ -501,27 +500,55 @@ void MainEditorWidget::requestTool(QString toolId)
     emit toolChosenSignal(toolId);
 }
 
-// TODO: do not apply EVERY mouse release (only those with real changes)
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
     qDebug() << "slotUpdateItemsGeometryFromModel";
 
-    d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
-        true, QString("slotUpdateItemsGeometryFromModel___todo"));
+    // NOTE that slotUpdateItemsGeometryFromModel() is currently
+    // always called when the mouse button is released.
+    // This is not that bad. And later we will have the same with
+    // key presses (only after the key is released after pressing it a while that slot will be called).
+    //
+    // First we find out if any changes actually happen:
+    //
 
+    // find relevant items:
+    //
+    QList<KreenItemPtr> relevantItems;
     foreach (auto item, d->scene()->selectedKreenItems()) {
         if (!item->isImageOperation()) {
             // only KreenItems which are not the
             // potential image operation item because it does not belong to the document
-            d->kreenshotEditor()->document()->applyItemPropertyChanges(item);
+            relevantItems << item;
         }
     }
 
-    d->slotUpdateItemsGeometryFromModel();
-    d->selectionHandles->redrawSelectionHandles(true);
+    // find if any change has happend:
+    //
+    bool hasAnyItemChanged = false;
+    auto doc = d->kreenshotEditor()->document();
 
-    // emits contentChangedSignal() which triggers slotDocumentContentChanged()
-    d->kreenshotEditor()->document()->contentChangedNotificationGroupEnd();
+    foreach (auto item, relevantItems) {
+        hasAnyItemChanged = hasAnyItemChanged || doc->hasItemPropertiesChanged(item);
+    }
+
+    // if yet, apply to document and do some updates
+    //
+    if (hasAnyItemChanged) {
+
+        doc->contentChangedNotificationGroupBegin(
+            true, QString("At least one property change"));
+
+        foreach (auto item, relevantItems) {
+            doc->applyItemPropertyChanges(item);
+        }
+
+        d->slotUpdateItemsGeometryFromModel();
+        d->selectionHandles->redrawSelectionHandles(true);
+
+        // emits contentChangedSignal() which triggers slotDocumentContentChanged()
+        doc->contentChangedNotificationGroupEnd();
+    }
 }
 
 void MainEditorWidget::slotImageOperationAccepted()
@@ -615,7 +642,7 @@ void MainEditorWidget::deleteSelectedItems()
 void MainEditorWidget::selectAllItems()
 {
     requestTool("select");
-    
+
     // todo: potential optimization: disable events before the loop and enable afterwards
     foreach(auto kreenGraphicsItemBase, d->scene()->kreenGraphicsItems()) {
         kreenGraphicsItemBase->graphicsItem()->setSelected(true);

@@ -245,12 +245,25 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
     }
 }
 
-void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
+bool Document::hasItemPropertiesChanged(KreenItemPtr item)
+{
+    Q_ASSERT(d->itemMap.contains(item->id()));
+    auto docItem = d->itemMap[item->id()];
+    return !item->deepEquals(docItem);
+}
+
+bool Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 {
     Q_ASSERT(d->itemMap.contains(item->id()));
 
+    if (!hasItemPropertiesChanged(item)) {
+        qDebug() << "[INFO] Document::applyItemPropertyChanges items are equal. Return false";
+        return false;
+    }
+
     if (recordUndo) {
-        d->undoStack.push(new ApplyItemPropertyChangesCmd(this, item, d->itemMap[item->id()]));
+        auto oldItem = d->itemMap[item->id()];
+        d->undoStack.push(new ApplyItemPropertyChangesCmd(this, item, oldItem));
     }
     else {
         qDebug() << "[DEBUG] Document::applyItemPropertyChanges (itemMap.insert)";
@@ -258,6 +271,8 @@ void Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
         d->itemsCacheDirty = true;
         d->contentChangedNotificationGroupMethodLeave();
     }
+
+    return true;
 }
 
 void Document::addDemoItems()

@@ -75,6 +75,11 @@ public:
     KreenItemPtr deepCopy();
 
     /**
+     * todo: not complete yet
+     */
+    bool deepEquals(KreenItemPtr other);
+
+    /**
      * unique id within a Document
      */
     int id();

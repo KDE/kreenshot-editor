@@ -1,13 +1,11 @@
 TODO
 ----
-+// TODO: do not apply EVERY mouse release (only those with real changes)
-QString("slotUpdateItemsGeometryFromModel___todo"));
+- QUndostack, Undo, Redo
+    - disable buttons if not available
 scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
 document.applyProperties: do not do anything if there are no properties that have changed
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
-- QUndostack, Undo, Redo
-    - disable buttons if not available
 - implement SelectionHandles
     - best way to make the item resize?
     - BUG: create item, create another item by clicking the selection handle, move one of the items

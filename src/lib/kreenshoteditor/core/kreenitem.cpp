@@ -44,6 +44,18 @@ KreenItemPtr KreenItem::deepCopy()
     return std::make_shared<KreenItem>(obj);
 }
 
+bool KreenItem::deepEquals(kreen::core::KreenItemPtr other)
+{
+    // TODO: not complete yet
+    
+    return _id == other->_id
+           && typeId == other->typeId
+           && _rect == other->_rect
+           && _line == other->_line
+           && _properties == other->_properties
+           ;
+}
+
 int KreenItem::id()
 {
     return _id;

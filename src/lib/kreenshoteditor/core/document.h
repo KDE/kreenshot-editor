@@ -116,14 +116,24 @@ public:
     void deleteItem(KreenItemPtr item, bool recordUndo = true);
 
     /**
+     * returns true if the given item's properties have changed compared
+     * to the stored one (identified by id()) in the document
+     */
+    bool hasItemPropertiesChanged(KreenItemPtr item);
+
+    /**
      * Call this if one or several properties of a KreenItem has changed
      * to apply them to the document content and to register it for undo/redo.
      *
      * This is needed because the document keeps secret copies of all added items
      * so that changes to the items from the outside have no effect on the
      * document's content.
+     *
+     * Return false if new and old item were different.
+     * Returns false if new and old item were equal and the operation was canceled.
+     * TODO: return value not used; remove it?
      */
-    void applyItemPropertyChanges(KreenItemPtr item, bool recordUndo = true);
+    bool applyItemPropertyChanges(KreenItemPtr item, bool recordUndo = true);
 
     /**
      * Operates on the base image:
