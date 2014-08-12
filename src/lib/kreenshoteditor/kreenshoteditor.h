@@ -178,8 +178,11 @@ protected Q_SLOTS:
     // edit actions slots:
     void slotEditUndo();
     void slotEditRedo();
+    void slotEditUndoRedoActionEnabledUpdate();
+
     void slotEditDeleteSelectedItems();
-    void slotActionItemDeleteUpdateEnabledState();
+    void slotEditDeleteSelectedItemsActionEnabledUpdate();
+
     void slotEditSelectAll();
 
     // tool action slots:

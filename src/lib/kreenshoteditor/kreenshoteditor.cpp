@@ -159,6 +159,8 @@ public:
     // edit actions:
     QAction* actionEditSelectAll;
     QAction* actionEditItemDelete;
+    QAction* actionEditUndo;
+    QAction* actionEditRedo;
     // tool actions:
     QActionGroup* toolActionGroup = nullptr;
     // all actions:
@@ -249,6 +251,7 @@ void KreenshotEditor::createNewDocument(QImage image)
     d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
 
     connect(this->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(slotDocumentFileStatusChanged()));
+    connect(this->document().get(), SIGNAL(contentChangedSignal()), this, SLOT(slotEditUndoRedoActionEnabledUpdate()));
 
     emit newDocumentCreatedSignal();
     emit documentFileStatusChangedSignal();
@@ -297,7 +300,7 @@ MainEditorWidget* KreenshotEditor::mainEditorWidget()
         d->mainEditorWidget = mainEditorWidget;
 //         }
 
-        connect(d->mainEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(slotActionItemDeleteUpdateEnabledState()));
+        connect(d->mainEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(slotEditDeleteSelectedItemsActionEnabledUpdate()));
     }
 
     return d->mainEditorWidget;
@@ -349,9 +352,11 @@ QStringList KreenshotEditor::allActionIds()
         //
         auto action = d->newAction("edit-undo", QIcon::fromTheme("edit-undo"), "Undo", this, QKeySequence(tr("Ctrl+Z")));
         connect(action, SIGNAL(triggered()), this, SLOT(slotEditUndo()));
+        d->actionEditUndo = action;
 
         action = d->newAction("edit-redo", QIcon::fromTheme("edit-redo"), "Redo", this, QKeySequence(tr("Ctrl+Y")));
         connect(action, SIGNAL(triggered()), this, SLOT(slotEditRedo()));
+        d->actionEditRedo = action;
     }
 
     return d->actionIdToActionMap.keys();
@@ -496,14 +501,20 @@ void KreenshotEditor::slotEditRedo()
     document()->redo();
 }
 
+void KreenshotEditor::slotEditUndoRedoActionEnabledUpdate()
+{
+    d->actionEditUndo->setEnabled(document()->canUndo());
+    d->actionEditRedo->setEnabled(document()->canRedo());
+}
+
 void KreenshotEditor::slotEditDeleteSelectedItems()
 {
     mainEditorWidget()->deleteSelectedItems();
 }
 
-void KreenshotEditor::slotActionItemDeleteUpdateEnabledState()
+void KreenshotEditor::slotEditDeleteSelectedItemsActionEnabledUpdate()
 {
-    qDebug() << "slotActionItemDeleteUpdateEnabledState";
+    qDebug() << "slotEditDeleteSelectedItemsActionEnabledUpdate";
     d->actionEditItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
 }
 

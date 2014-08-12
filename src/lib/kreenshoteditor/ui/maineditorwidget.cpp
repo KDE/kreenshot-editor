@@ -172,13 +172,12 @@ public:
         scene()->setSceneRect(baseRect);
         graphicsView->setSceneRect(baseRect); // needed, otherwise no visual update
 
-        // create and add all document items
+        //
+        // create QGraphicsItems from all document KreenItems and add them to scene
         //
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto grItem = toolManager()->createGraphicsItemFromKreenItem(item);
-            auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-
             scene()->addItem(grItem);
         }
 

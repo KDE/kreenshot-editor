@@ -176,6 +176,16 @@ void Document::redo()
     contentChangedNotificationGroupEnd();
 }
 
+bool Document::canUndo()
+{
+    return d->undoStack.canUndo();
+}
+
+bool Document::canRedo()
+{
+    return d->undoStack.canRedo();
+}
+
 void Document::contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText)
 {
     d->contentChangedNotificationGroupDepth++;

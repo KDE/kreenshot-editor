@@ -76,6 +76,10 @@ public:
 
     void redo();
 
+    bool canUndo();
+
+    bool canRedo();
+
     /**
      * Use it to suppress emitting of contentChangedSignal during
      * a composite operation.

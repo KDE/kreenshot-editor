@@ -1,7 +1,5 @@
 TODO
 ----
-- QUndostack, Undo, Redo
-    - disable buttons if not available
 scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
 document.applyProperties: do not do anything if there are no properties that have changed
 - when document is modified, it file status should become "modified"
