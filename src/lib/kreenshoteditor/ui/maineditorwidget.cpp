@@ -133,7 +133,8 @@ public:
     }
 
     /**
-     * recreate the scene to reflect the current kreenshotEditor->document()
+     * (Re)create the scene to reflect the current kreenshotEditor->document().
+     * Saves and restores the selected items.
      */
     void createSceneFromModel()
     {

@@ -84,6 +84,9 @@ public:
      */
     QList<KreenItemPtr> selectedKreenItems();
 
+    /**
+     * Remembers all items that are currently selected
+     */
     void saveCurrentKreenItemsSelection();
 
     /**
