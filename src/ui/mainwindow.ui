@@ -41,6 +41,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelpAboutDnd"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -549,6 +550,11 @@
   <action name="actionFileActionsPlaceholder">
    <property name="text">
     <string>FileActionsPlaceholder</string>
+   </property>
+  </action>
+  <action name="actionHelpAboutDnd">
+   <property name="text">
+    <string>Help about drag and drop...</string>
    </property>
   </action>
  </widget>

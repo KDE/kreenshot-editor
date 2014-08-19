@@ -264,6 +264,7 @@ void MainWindow::setupActions()
 
     connect(d->ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
     connect(d->ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotHelpAbout()));
+    connect(d->ui->actionHelpAboutDnd, SIGNAL(triggered()), this, SLOT(slotHelpAboutDnd()));
     // actionQuit: connected via Action Editor in designer
 
     connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
@@ -290,12 +291,18 @@ void MainWindow::dropEvent(QDropEvent* event)
 
 void MainWindow::slotEditPreferences()
 {
-    d->kreenshotEditor->showPreferencesDialog();
+    d->kreenshotEditor->showPreferencesDialog(this);
 }
 
 void MainWindow::slotHelpAbout()
 {
-    QMessageBox::information(this, "Not impl", "Not implemented yet");
+    d->kreenshotEditor->showAboutDialog(this);
+}
+
+void MainWindow::slotHelpAboutDnd()
+{
+    QMessageBox::information(this, tr("About Drag and Drop"),
+                             tr("When you drag and drop an image file to the kreenshot-editor main window there are two regions that behave differently:\n\n(1) Drop on the graphics scene (base image and objects)\n  => Dropped image will be added as new object.\n\n(2) Drop everywhere else (toolbars etc.)\n  => A new document will be created with the dropped image as base image."));
 }
 
 void MainWindow::slotUpdateDocumentFileStatus()

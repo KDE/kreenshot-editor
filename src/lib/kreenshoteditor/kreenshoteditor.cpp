@@ -401,7 +401,7 @@ bool KreenshotEditor::warnIfDocumentIsNotClean_shouldContinue()
     return d->warnIfDocumentIsNotClean_shouldContinue(document());
 }
 
-void KreenshotEditor::showPreferencesDialog()
+void KreenshotEditor::showPreferencesDialog(QWidget* parent)
 {
     ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameGenerator);
     if (prefsDialog.exec() == QDialog::Accepted) {
@@ -411,6 +411,12 @@ void KreenshotEditor::showPreferencesDialog()
             d->settingsToOutputFilenameManager();
         }
     }
+}
+
+void KreenshotEditor::showAboutDialog(QWidget* parent)
+{
+    QMessageBox::information(parent, tr("About kreenshot-editor"),
+                             tr("kreenshot-editor - screenshot image editing\n\n(c) 2014 by Gregor Mi\n\nIRC contact: #kreenshot-editor on irc.freenode.net\n\nBug reports go to codestruct@posteo.org\n(until offical issue tracker is initialized)\n\nWebsite: http://kreenshot.wordpress.com"));
 }
 
 void KreenshotEditor::slotDocumentFileStatusChanged()

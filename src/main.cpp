@@ -72,7 +72,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.setApplicationDescription("Image editor for screenshots, (C) 2014");
+    parser.setApplicationDescription("screenshot image editing, (c) 2014");
 
     parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
 

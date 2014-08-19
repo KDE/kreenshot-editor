@@ -57,6 +57,7 @@ protected:
 protected Q_SLOTS:
     void slotEditPreferences();
     void slotHelpAbout();
+    void slotHelpAboutDnd();
 
     void slotToolChosen(QString toolId);
 

@@ -151,9 +151,15 @@ public:
     bool warnIfDocumentIsNotClean_shouldContinue();
 
     /**
-     * opens the Preferences dialog to let the user view and edit settings
+     * Opens the Preferences dialog to let the user view and edit settings.
+     * todo: center on parent
      */
-    void showPreferencesDialog();
+    void showPreferencesDialog(QWidget* parent);
+
+    /**
+     * todo: center on parent
+     */
+    void showAboutDialog(QWidget* parent);
 
     /**
      * To be called in the dragEnterEvent method of the mainwindow.
@@ -171,6 +177,7 @@ public:
     QString actionToToolId(QAction* action);
 
     QString actionToActionId(QAction* action);
+
 
 Q_SIGNALS:
     void newDocumentCreatedSignal();
