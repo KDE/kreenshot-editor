@@ -68,13 +68,13 @@ private slots:
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated); // no change because file is not saved
 
         QCOMPARE(docFile.save(), QString());
-        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_CreatedAndClean);
 
         doc->addItem(KreenItem::create("rect"));
-        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Modified);
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_CreatedAndModified);
 
         docFile.save();
-        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_CreatedAndClean);
     }
 
     void DocumentFile_init_modifydoc_saveas()
@@ -84,7 +84,7 @@ private slots:
 
         QString filename = "./testdata/output_docfile2.png";
         QCOMPARE(docFile.saveAs(filename), QString());
-        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_Saved);
+        QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_CreatedAndClean);
         QCOMPARE(docFile.filename(), filename);
     }
 

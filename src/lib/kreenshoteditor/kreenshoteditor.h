@@ -123,16 +123,24 @@ public:
     QAction* actionFromId(QString actionId);
 
     /**
-     * returns true if the file is not saved yet (not stored on disk yet)
+     * Returns true if the document has not been saved to a file. (This does not mean that the document is clean.)
+     * Rationale: If a document is created it will automatically get an associated filename.
+     * Either the user saves to this filename, to another or he/she discards the document.
+     * As long as the file is not created yet, changes to the output filename preferences will have an
+     * effect to the filename.
      */
-    bool isFileNew();
+    bool isDocumentFileNotCreated();
 
     /**
-     * TODO
+     * Returns true if the document is clean (see "Clean State" of QUndoStack)
      *
-     * Is saved file modified? Always false if file is new.
+     * If the document file is not created yet
+     * it returns false if there were any changes made to the document after the base image was set.
+     *
+     * If the document file is already created
+     * it returns the true if the documents state does not differ from the save state.
      */
-    bool isFileModified();
+    bool isDocumentClean();
 
     /**
      * Convenience method that shows a warning to the user if the document is not clean

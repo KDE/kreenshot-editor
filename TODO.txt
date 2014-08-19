@@ -1,7 +1,5 @@
 TODO
 ----
-- when document is modified, it file status should become "modified"
-    - do this by cleanly use commands (qundostack)
 - Menu Help --> About DND
 - File -> New from clipboard (and as command line)
     - ask if doc is modified
@@ -45,6 +43,7 @@ IDEAS
 
 LATER
 -----
+- New file => create new filename instead of keeping the old one
 - BUG:
     - Select Tool selected
     - with mouse over an item ("move" cursor is shown)

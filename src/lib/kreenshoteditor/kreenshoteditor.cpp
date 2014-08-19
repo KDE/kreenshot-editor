@@ -386,14 +386,14 @@ void KreenshotEditor::setDescription(QString text)
     d->outputFilenameGenerator->setDescription(text);
 }
 
-bool KreenshotEditor::isFileNew()
+bool KreenshotEditor::isDocumentFileNotCreated()
 {
     return documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated;
 }
 
-bool KreenshotEditor::isFileModified()
+bool KreenshotEditor::isDocumentClean()
 {
-    return documentFile()->fileStatus() == DocumentFile::FileStatus_Modified;
+    return document()->isClean();
 }
 
 bool KreenshotEditor::warnIfDocumentIsNotClean_shouldContinue()
@@ -406,7 +406,7 @@ void KreenshotEditor::showPreferencesDialog()
     ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameGenerator);
     if (prefsDialog.exec() == QDialog::Accepted) {
         // only if file is still new (= not stored yet to disk) apply the new file path settings
-        if (isFileNew()) {
+        if (isDocumentFileNotCreated()) {
             qDebug() << "settingsToOutputFilenameManager";
             d->settingsToOutputFilenameManager();
         }

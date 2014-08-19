@@ -45,8 +45,8 @@ public:
     enum FileStatus
     {
         FileStatus_NotCreated,
-        FileStatus_Saved,
-        FileStatus_Modified
+        FileStatus_CreatedAndClean,
+        FileStatus_CreatedAndModified
     };
 
     /**
@@ -74,6 +74,9 @@ public:
      */
     QString filename();
 
+    /**
+     * todo: only FileStatus_NotCreated is used at the moment
+     */
     FileStatus fileStatus();
 
     /**

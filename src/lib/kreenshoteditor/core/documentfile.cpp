@@ -151,10 +151,10 @@ DocumentFile::FileStatus DocumentFile::fileStatus()
         return d->fileStatus;
     }
     else if (d->doc->isClean()) {
-        return FileStatus_Saved;
+        return FileStatus_CreatedAndClean;
     }
     else {
-        return FileStatus_Modified;
+        return FileStatus_CreatedAndModified;
     }
 }
 
@@ -164,7 +164,7 @@ ErrorStatus DocumentFile::save()
 
     auto errorStatus = d->saveToFile(filename());
     if (errorStatus.isEmpty()) {
-        d->fileStatus = FileStatus_Saved;
+        d->fileStatus = FileStatus_CreatedAndClean;
         d->doc->setClean();
     }
     else {
@@ -180,7 +180,7 @@ ErrorStatus DocumentFile::saveAs(QString filename)
     auto errorStatus = d->saveToFile(filename);
     if (errorStatus.isEmpty()) {
         d->filename = filename;
-        d->fileStatus = FileStatus_Saved;
+        d->fileStatus = FileStatus_CreatedAndClean;
         d->doc->setClean();
     }
     else {

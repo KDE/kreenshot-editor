@@ -42,14 +42,14 @@ public:
         QStringList fileActions;
         // all document and file actions
         fileActions << "document-new" << "document-open"
-            << "---"
-            << "document-save" << "document-save-as"
-            << "---"
-            << "document-image-to-clipboard"
-            << "document-filename-to-clipboard"
-            << "document-file-select-in-filemanager"
-            << "document-launch-default-viewer"
-            ;
+                    << "---"
+                    << "document-save" << "document-save-as"
+                    << "---"
+                    << "document-image-to-clipboard"
+                    << "document-filename-to-clipboard"
+                    << "document-file-select-in-filemanager"
+                    << "document-launch-default-viewer"
+                    ;
         insertEditActionsForPlaceholder(ui->menuFile, ui->actionFileActionsPlaceholder, fileActions);
         // in the toolbar we don't want to have all items
         fileActions.removeAll("document-new");
@@ -301,13 +301,14 @@ void MainWindow::slotHelpAbout()
 void MainWindow::slotUpdateDocumentFileStatus()
 {
     qDebug() << "MainWindow::slotUpdateDocumentFileStatus()";
-    
+
     QString fileStatusPrefix;
-    if (d->kreenshotEditor->isFileNew()) {
-        fileStatusPrefix = tr("[NEW] ");
+    if (d->kreenshotEditor->isDocumentFileNotCreated()) {
+        fileStatusPrefix = tr("[NO FILE] ");
     }
-    else if (d->kreenshotEditor->isFileModified()) {
-        fileStatusPrefix = tr("* ");
+
+    if (!d->kreenshotEditor->isDocumentClean()) {
+        fileStatusPrefix += tr("* ");
     }
 
     setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->documentFile()->filename()).arg(d->baseWindowTitle));
