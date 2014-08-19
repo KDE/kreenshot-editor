@@ -77,6 +77,8 @@ public:
      */
     void createNewDocumentFromFile(QString filename);
 
+    void createNewDocumentFromClipbard();
+
     /**
      * the active document, see also documentFile()
      */

@@ -33,7 +33,8 @@ class Arguments
 public:
     QString baseImagePath;
     QString description;
-    bool isTreatFileAsNew;
+    bool treatFileAsNew;
+    bool newFromClipboard;
 };
 
 Arguments parseArgumentsOrExit(QApplication& app);
@@ -51,11 +52,16 @@ int main(int argc, char *argv[])
     kreenshotEditor->setDescription(arguments.description);
     // TODO later: set pattern from command line (--output-file-pattern)
 
-    if (arguments.isTreatFileAsNew) {
-        kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath));
+    if (arguments.newFromClipboard) {
+        kreenshotEditor->createNewDocumentFromClipbard();
     }
     else {
-        kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath);
+        if (arguments.treatFileAsNew) {
+            kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath));
+        }
+        else {
+            kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath);
+        }
     }
 
     MainWindow mainWindow(kreenshotEditor);
@@ -76,10 +82,12 @@ Arguments parseArgumentsOrExit(QApplication& app)
 
     parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
 
-    QCommandLineOption treatAsNewOption(QStringList() << "treat-as-new", tr("when set the given primary image path will be used as image data source only and not as save target"));
+    QCommandLineOption treatAsNewOption(QStringList() << "treat-as-new", tr("the given primary image path will be used as image data source only and not as save target"));
     parser.addOption(treatAsNewOption);
 
-    //QCommandLineOption deviceOption(QStringList() << "i" << "image", "file path of image to be loaded", "file path");
+    QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard", tr("if the clipboard contains image data it will be used as primary image. The --treat-as-new option will be ignored."));
+    parser.addOption(newFromClipboardOption);
+
     QCommandLineOption image2Option(QStringList() << "image2", tr("file path to (optional) secondary image to be inserted as object, e. g. captured mouse cursor"), tr("file path"));
     parser.addOption(image2Option);
 
@@ -108,8 +116,8 @@ Arguments parseArgumentsOrExit(QApplication& app)
             qDebug() << "  baseImagePath:" << arguments.baseImagePath;
         }
         else {
-             // http://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring
-             throw std::runtime_error("Zero or one positional argument expected");
+            // http://stackoverflow.com/questions/4214369/how-to-convert-qstring-to-stdstring
+            throw std::runtime_error("Zero or one positional argument expected");
         }
 
         QString image2Filepath = parser.value(image2Option);
@@ -139,13 +147,16 @@ Arguments parseArgumentsOrExit(QApplication& app)
         arguments.description = descriptionStr;
         qDebug() << "  description:" << arguments.description;
 
-        arguments.isTreatFileAsNew = parser.isSet(treatAsNewOption);
-        qDebug() << "  treatAsNew:" << arguments.isTreatFileAsNew;
+        arguments.treatFileAsNew = parser.isSet(treatAsNewOption);
+        qDebug() << "  treatAsNew:" << arguments.treatFileAsNew;
 
         if (arguments.baseImagePath.isEmpty()) {
             qDebug() << "  treatAsNew: set to true because baseImagePath is empty";
-            arguments.isTreatFileAsNew = true;
+            arguments.treatFileAsNew = true;
         }
+
+        arguments.newFromClipboard = parser.isSet(newFromClipboardOption);
+        qDebug() << "  newFromClipboard:" << arguments.newFromClipboard;
     }
     catch (const std::runtime_error& e) {
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;

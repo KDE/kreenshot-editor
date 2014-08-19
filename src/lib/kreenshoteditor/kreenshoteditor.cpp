@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
+#include <QApplication>
+#include <QClipboard>
 #include <QDir>
 #include <QStringList>
 #include <QDragEnterEvent>
@@ -267,6 +269,13 @@ void KreenshotEditor::createNewDocumentFromFile(QString filename)
     createNewDocument(QImage(filename));
 }
 
+void KreenshotEditor::createNewDocumentFromClipbard()
+{
+    QClipboard* clipboard = QApplication::clipboard();
+    auto image = clipboard->image();
+    createNewDocument(image);
+}
+
 DocumentPtr KreenshotEditor::document()
 {
     if (d->documentFile == nullptr) {
@@ -447,7 +456,7 @@ void KreenshotEditor::slotDocumentNewFromClipboard()
         return;
     }
 
-    createNewDocument();
+    createNewDocumentFromClipbard();
 }
 
 void KreenshotEditor::slotDocumentOpen()

@@ -1,9 +1,5 @@
 TODO
 ----
-- File -> New from clipboard (and as command line)
-    - ask if doc is modified
-- bug: redo button not activated!!! (after dropping an image via DND)
-    - dropping an image via DND should be the same as "new from clipboard"
 - scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
 - implement SelectionHandles
     - best way to make the item resize?
@@ -42,6 +38,7 @@ IDEAS
 
 LATER
 -----
+- select no tool => zoom to fit
 - New file => create new filename instead of keeping the old one
 - BUG:
     - Select Tool selected
