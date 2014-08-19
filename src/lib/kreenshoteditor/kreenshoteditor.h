@@ -135,6 +135,14 @@ public:
     bool isFileModified();
 
     /**
+     * Convenience method that shows a warning to the user if the document is not clean
+     * and asks to continue or not.
+     * Returns true if the action should be continued and false if not (= abort).
+     * If the document is clean it returns true (= continue)
+     */
+    bool warnIfDocumentIsNotClean_shouldContinue();
+
+    /**
      * opens the Preferences dialog to let the user view and edit settings
      */
     void showPreferencesDialog();

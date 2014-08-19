@@ -23,6 +23,7 @@
 #include <QMessageBox>
 #include <QUrl>
 #include <QFileDialog>
+#include <QCloseEvent>
 #include <kreen/kreenshoteditor.h>
 #include <kreen/ui/maineditorwidget.h>
 #include <kreen/core/documentfile.h>
@@ -266,6 +267,15 @@ void MainWindow::setupActions()
     // actionQuit: connected via Action Editor in designer
 
     connect(d->kreenshotEditor->mainEditorWidget(), SIGNAL(toolChosenSignal(QString)), this, SLOT(slotToolChosen(QString)));
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    if (d->kreenshotEditor->warnIfDocumentIsNotClean_shouldContinue()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)

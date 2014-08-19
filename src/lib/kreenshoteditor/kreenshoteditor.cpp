@@ -121,21 +121,21 @@ public:
         return result;
     }
 
-    bool warnIfDocumentIsNotClean_shouldAbort(DocumentPtr document)
+    bool warnIfDocumentIsNotClean_shouldContinue(DocumentPtr document)
     {
         if (!document->isClean()) {
             int ret = QMessageBox::warning(owner->mainEditorWidget(), owner->tr("Document modified warning"),
-                            QString(owner->tr("Current document is not saved.\nDo you want to continue?")),
+                            QString(owner->tr("Current document is not saved to a file.\nWould you like to continue (and loose unsaved changes)?")),
                             QMessageBox::Yes | QMessageBox::No,
                             QMessageBox::No);
             qDebug() << ret;
             if (ret != QMessageBox::Yes) {
                 qDebug() << "not yes => abort";
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true; // continue
     }
 
 public:
@@ -200,7 +200,7 @@ void KreenshotEditor::dragEnterEventMainWindow(QDragEnterEvent* event)
 
 void KreenshotEditor::dropEventMainWindow(QDropEvent* event)
 {
-    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
+    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
         return;
     }
 
@@ -396,6 +396,11 @@ bool KreenshotEditor::isFileModified()
     return documentFile()->fileStatus() == DocumentFile::FileStatus_Modified;
 }
 
+bool KreenshotEditor::warnIfDocumentIsNotClean_shouldContinue()
+{
+    return d->warnIfDocumentIsNotClean_shouldContinue(document());
+}
+
 void KreenshotEditor::showPreferencesDialog()
 {
     ui::settings::PreferencesDialog prefsDialog(d->settingsManager, d->outputFilenameGenerator);
@@ -420,7 +425,7 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
 
 void KreenshotEditor::slotDocumentNew()
 {
-    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
+    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
         return;
     }
 
@@ -429,7 +434,7 @@ void KreenshotEditor::slotDocumentNew()
 
 void KreenshotEditor::slotDocumentOpen()
 {
-    if (d->warnIfDocumentIsNotClean_shouldAbort(document())) {
+    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
         return;
     }
 

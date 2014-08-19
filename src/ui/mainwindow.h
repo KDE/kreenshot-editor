@@ -48,6 +48,8 @@ public:
     void setupUi();
 
 protected:
+    virtual void closeEvent(QCloseEvent* event);
+
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
 
     virtual void dropEvent(QDropEvent* event) override;
