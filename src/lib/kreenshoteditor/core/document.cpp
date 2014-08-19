@@ -103,7 +103,6 @@ public:
     KreenGraphicsScenePtr scene = nullptr;
 
     QUndoStack undoStack;
-    int transientContentId = 0; // TMP, TODO: remove when undoStack usage is complete
     /**
      * greater than 0 if during a contentChangedNotificationGroup
      */
@@ -125,6 +124,7 @@ Document::Document(QImage baseImage)
     }
 
     setBaseImage(baseImage, false);
+    setClean();
 }
 
 Document::~Document()
@@ -150,14 +150,12 @@ void Document::setBaseImage(QImage image, bool recordUndo)
 
 bool Document::isClean()
 {
-    // TMP, TODO: use QUndoStack
-    return d->transientContentId == 0;
+    return d->undoStack.isClean();
 }
 
 void Document::setClean()
 {
-    // TMP, TODO: use QUndoStack
-    d->transientContentId = 0;
+    d->undoStack.setClean();
 }
 
 void Document::undo()

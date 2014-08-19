@@ -252,6 +252,7 @@ void KreenshotEditor::createNewDocument(QImage image)
 
     connect(this->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(slotDocumentFileStatusChanged()));
     connect(this->document().get(), SIGNAL(contentChangedSignal()), this, SLOT(slotEditUndoRedoActionEnabledUpdate()));
+    connect(this->document().get(), SIGNAL(contentChangedSignal()), this, SLOT(slotDocumentFileStatusChanged()));
 
     emit newDocumentCreatedSignal();
     emit documentFileStatusChangedSignal();
@@ -263,9 +264,7 @@ void KreenshotEditor::createNewDocumentFromFile(QString filename)
 
     d->outputFilenameGenerator->setFilenamePattern(filename);
 
-    auto doc = Document::make_shared(QImage(filename));
-    d->documentFile = std::make_shared<DocumentFile>(doc, filename, d->settingsManager);
-    emit newDocumentCreatedSignal();
+    createNewDocument(QImage(filename));
 }
 
 DocumentPtr KreenshotEditor::document()
@@ -411,6 +410,11 @@ void KreenshotEditor::showPreferencesDialog()
 
 void KreenshotEditor::slotDocumentFileStatusChanged()
 {
+    // the save button should be enabled when the file is not created yet
+    // or the document is not clean
+    d->actionDocumentSave->setEnabled(documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated
+    || !document()->isClean());
+
     emit documentFileStatusChangedSignal();
 }
 

@@ -224,7 +224,7 @@ MainWindow::MainWindow(kreen::KreenshotEditorPtr kreenshotEditor)
     setupActions();
 
     connect(d->kreenshotEditor.get(), SIGNAL(documentFileStatusChangedSignal()), this, SLOT(slotUpdateDocumentFileStatus()));
-    slotUpdateDocumentFileStatus();
+    slotUpdateDocumentFileStatus(); // initial call. todo: still needed?
 
     d->kreenshotEditor->mainEditorWidget()->requestTool("select");
 }

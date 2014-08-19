@@ -48,6 +48,7 @@ public:
     /**
      * Creates a new document.
      * If baseImage isNull then a default image is used as baseImage.
+     * The document will be "clean".
      */
     static DocumentPtr make_shared(QImage baseImage = QImage());
 

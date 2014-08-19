@@ -1,13 +1,18 @@
 TODO
 ----
-scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
-document.applyProperties: do not do anything if there are no properties that have changed
 - when document is modified, it file status should become "modified"
     - do this by cleanly use commands (qundostack)
+- Menu Help --> About DND
+- File -> New from clipboard (and as command line)
+    - ask if doc is modified
+- bug: redo button not activated!!! (after dropping an image via DND)
+    - dropping an image via DND should be the same as "new from clipboard"
+- scene()->saveCurrentKreenItemsSelection(); // TODO: ok here and below?
 - implement SelectionHandles
     - best way to make the item resize?
     - BUG: create item, create another item by clicking the selection handle, move one of the items
       => position jumps to 0,0. WHY?
+        First of all: new item should be selected but NOT movable
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - mouse over: draw a light version of the selection rects
 - enable more item properties (see item.h/cpp)
@@ -25,6 +30,18 @@ document.applyProperties: do not do anything if there are no properties that hav
     - set new datetime (has no effect if preferences are not set accordingly)
         - apply changed prefs for new document (output path) without restart
     - just use empty filename?
+
+IDEAS
+-----
+- In toolbar: combobox for applying preset properties (content depends on current tool)
+    - "image object" is also a tool (todo)
+        - insert from file
+        - insert from clipboard
+    - same props => same preset name? --> yes, but per tool
+- Arrow/line, 4 buttons in props toolbar for arrow top: none, start, end, both
+- Replacement for Imageviewer:
+    Select no tool: zoom to fit. Any tool or Select: zoom 100%, show edit toolbar
+
 
 LATER
 -----
