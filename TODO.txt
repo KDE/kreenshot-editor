@@ -6,6 +6,7 @@ TODO
       => position jumps to 0,0. WHY?
         First of all: new item should be selected but NOT movable
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
+- Crop: implement Enter and Esc
 - mouse over: draw a light version of the selection rects
 - enable more item properties (see item.h/cpp)
 - enable hover visual
@@ -33,7 +34,9 @@ IDEAS
 - Arrow/line, 4 buttons in props toolbar for arrow top: none, start, end, both
 - Replacement for Imageviewer:
     Select no tool: zoom to fit. Any tool or Select: zoom 100%, show edit toolbar
-
+- rounded rect
+        //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+        //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
 LATER
 -----

@@ -102,10 +102,6 @@ public:
         //painter->restore();
 
         // omit the selected rect because we draw it ourselves
-
-        // TODO: idea: round rect
-        //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-        //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
     }
 };
 
@@ -288,7 +284,71 @@ public:
     }
 };
 
-// ...
+class KreenGraphicsObfuscateItem : public QGraphicsRectItem, public KreenGraphicsItemBase
+{
+public:
+    KreenGraphicsObfuscateItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
+    {
+        initAndConfigureFromModel();
+    }
+
+    virtual void initAndConfigureFromModel() override
+    {
+        configureDropShadow();
+        configurePen(this);
+
+        auto effect = new QGraphicsBlurEffect();
+        effect->setBlurRadius(10);
+        setGraphicsEffect(effect);
+    }
+
+    virtual void updateVisualGeometryFromModel() override
+    {
+        this->setRect(0, 0, _item->rect().width(), _item->rect().height());
+        this->setPos(_item->rect().x(), _item->rect().y());
+    }
+
+    virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
+    {
+        this->setRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
+        this->setPos(QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y())));
+    }
+
+    virtual void updateModelFromVisualGeometry() override
+    {
+        QPoint scenePos = this->pos().toPoint();
+        QRect grRect = this->rect().toRect();
+        _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
+    }
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
+    {
+        itemChangeImpl(change, value);
+        return QGraphicsItem::itemChange(change, value);
+    }
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
+    {
+        if (mousePressEventImpl(event))
+            QGraphicsItem::mousePressEvent(event);
+    }
+
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
+    {
+        if (mouseReleaseEventImpl(event))
+            QGraphicsItem::mouseReleaseEvent(event);
+    }
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
+    {
+        // see KreenGraphicsRectItem
+
+        Q_UNUSED(widget);
+        painter->setPen(pen());
+        painter->setBrush(brush());
+        painter->drawRect(rect());
+    }
+};
 
 class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {

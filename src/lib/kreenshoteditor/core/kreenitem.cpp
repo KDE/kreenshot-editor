@@ -119,6 +119,16 @@ KreenItemPtr KreenItem::create(QString typeId)
         // TODO: fillcolor solid
         item->dropShadow()->enabled = true;
     }
+    else if (typeId == "obfuscate") {
+        item->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->_properties.push_back(std::make_shared<DropShadowProperty>());
+
+        item->lineColor()->color = Qt::black;
+        item->lineStyle()->width = 1;
+        item->lineStyle()->penStyle = Qt::SolidLine;
+        item->dropShadow()->enabled = false;
+    }
     else if (typeId == "op-crop") {
         // no settings
     }

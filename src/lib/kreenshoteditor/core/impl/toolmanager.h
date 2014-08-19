@@ -34,7 +34,7 @@ enum ToolEnum
     DrawEllipse,
     DrawLine,
     DrawText,
-    // ...
+    DrawObfuscate,
     OperationCrop
 };
 
@@ -61,6 +61,10 @@ public:
         }
         else if (item->typeId == "text") {
             auto kgrItem = new KreenGraphicsTextRectItem(item);
+            return kgrItem;
+        }
+        else if (item->typeId == "obfuscate") {
+            auto kgrItem = new KreenGraphicsObfuscateItem(item);
             return kgrItem;
         }
         else if (item->typeId == "op-crop") {

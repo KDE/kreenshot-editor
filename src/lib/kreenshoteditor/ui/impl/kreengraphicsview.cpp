@@ -78,6 +78,9 @@ void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos, bool leftButtonDown
     else if (tool == DrawText) {
         newCursorShape = Qt::CrossCursor;
     }
+    else if (tool == DrawObfuscate) {
+        newCursorShape = Qt::CrossCursor;
+    }
     else if (tool == OperationCrop) {
         newCursorShape = Qt::CrossCursor;
     }

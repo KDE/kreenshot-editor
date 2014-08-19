@@ -130,6 +130,16 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
             this->addItem(_creatingItem);
         }
+//         else if (tool == DrawText) {
+//             item = KreenItem::create("text");
+//             _creatingItem = _toolManager->createGraphicsItemFromKreenItem...(item);
+//             this->addItem(_creatingItem);
+//         }
+        else if (tool == DrawObfuscate) {
+            item = KreenItem::create("obfuscate");
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            this->addItem(_creatingItem);
+        }
         else if (tool == OperationCrop) {
             item = KreenItem::create("op-crop");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);

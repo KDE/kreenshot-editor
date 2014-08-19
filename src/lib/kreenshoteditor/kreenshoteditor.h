@@ -102,9 +102,9 @@ public:
     void setDescription(QString text);
 
     /**
-     * singleton
-     *
-     * TODO: does shared_ptr makes sense here?
+     * Returns the singleton instance of the main editor widget that
+     * contains the QGraphicsView with the base image and created items.
+     * (Toolbars and menus are created elsewhere)
      */
     MainEditorWidget* mainEditorWidget();
 

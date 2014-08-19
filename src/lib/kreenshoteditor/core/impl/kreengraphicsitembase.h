@@ -70,11 +70,6 @@ public:
      */
     void setSelectableAndMovable(bool isMovable);
 
-    /**
-     * WORKAROUND:
-     */
-    bool workaroundIsBlurredOnUnevenHandleWidth();
-
     virtual void updateModelFromVisualGeometry() = 0;
 
     virtual void updateVisualGeometryFromModel() = 0;
@@ -88,6 +83,12 @@ public:
      * when user is releases the mouse button when creating an item
      */
     virtual void setIsCreating(bool creating);
+
+public:
+    /**
+     * WORKAROUND:
+     */
+    bool workaroundIsBlurredOnUnevenHandleWidth();
 
 protected:
     /**

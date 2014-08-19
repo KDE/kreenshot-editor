@@ -475,6 +475,9 @@ void MainEditorWidget::requestTool(QString toolId)
     else if (toolId == "line") {
         toolEnum = ToolEnum::DrawLine;
     }
+    else if (toolId == "obfuscate") {
+        toolEnum = ToolEnum::DrawObfuscate;
+    }
     else if (toolId == "op-crop") {
         toolEnum = ToolEnum::OperationCrop;
     }
