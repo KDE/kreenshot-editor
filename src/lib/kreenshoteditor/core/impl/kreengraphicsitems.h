@@ -297,9 +297,13 @@ public:
         configureDropShadow();
         configurePen(this);
 
-        auto effect = new QGraphicsBlurEffect();
-        effect->setBlurRadius(10);
-        setGraphicsEffect(effect);
+//        // this is just a black semitransparent rect with blurred borders
+//         QColor color(Qt::black);
+//         color.setAlpha(200);
+//         setBrush(QBrush(color));
+//         auto effect = new QGraphicsBlurEffect();
+//         effect->setBlurRadius(10);
+//         setGraphicsEffect(effect);
     }
 
     virtual void updateVisualGeometryFromModel() override
@@ -339,14 +343,41 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
+    // TMP: prevents paint method from painting itself while painting on the working pixmap
+    bool inImagePainting = false;
+
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
     {
         // see KreenGraphicsRectItem
+
+        if (inImagePainting) {
+            return;
+        }
 
         Q_UNUSED(widget);
         painter->setPen(pen());
         painter->setBrush(brush());
         painter->drawRect(rect());
+
+        auto sc = scene();
+        auto r = rect();
+        qreal x = pos().x();
+        qreal y = pos().y();
+        qreal w = r.width();
+        qreal h = r.height();
+        QImage image(w, h, QImage::Format_ARGB32); // todo: format ok???
+        QPainter painterImage(&image);
+        painterImage.setRenderHint(QPainter::Antialiasing);
+
+        inImagePainting = true;
+        sc->render(&painterImage, QRectF(0, 0, w, h), QRectF(x, y, w, h));
+        // TODO: if z-order of Item is greater (on top) of the current item do not draw it because result would be undefined
+        inImagePainting = false;
+        painterImage.drawPixmap(QRect(0, 0, 10, 10), QPixmap::fromImage(image), QRect(0, 0, w, h)); // pixelize: make small
+        painterImage.drawPixmap(QRect(0, 0, w, h), QPixmap::fromImage(image), QRect(0, 0, 10, 10)); // pixelize: make big from small
+
+
+        painter->drawPixmap(0, 0, w, h, QPixmap::fromImage(image));
     }
 };
 
