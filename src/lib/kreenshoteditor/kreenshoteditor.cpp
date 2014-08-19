@@ -315,6 +315,9 @@ QStringList KreenshotEditor::allActionIds()
         d->actionDocumentNew = d->newAction("document-new", QIcon::fromTheme("document-new"), tr("&New"), this, QKeySequence(tr("Ctrl+N")));
         connect(d->actionDocumentNew, SIGNAL(triggered()), this, SLOT(slotDocumentNew()));
 
+        auto actionDocumentNewFromClipboard = d->newAction("document-new-from-clipboard", QIcon::fromTheme("document-new"), tr("&New from clipboard"), this, QKeySequence(tr("Ctrl+Shift+N")));
+        connect(actionDocumentNewFromClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentNewFromClipboard()));
+
         d->actionDocumentOpen = d->newAction("document-open", QIcon::fromTheme("document-open"), tr("&Open"), this, QKeySequence(tr("Ctrl+O")));
         connect(d->actionDocumentOpen, SIGNAL(triggered()), this, SLOT(slotDocumentOpen()));
 
@@ -430,6 +433,15 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
 }
 
 void KreenshotEditor::slotDocumentNew()
+{
+    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
+        return;
+    }
+
+    createNewDocument();
+}
+
+void KreenshotEditor::slotDocumentNewFromClipboard()
 {
     if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
         return;

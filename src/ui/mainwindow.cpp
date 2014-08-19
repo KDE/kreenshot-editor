@@ -41,7 +41,7 @@ public:
         //
         QStringList fileActions;
         // all document and file actions
-        fileActions << "document-new" << "document-open"
+        fileActions << "document-new" << "document-new-from-clipboard" << "document-open"
                     << "---"
                     << "document-save" << "document-save-as"
                     << "---"

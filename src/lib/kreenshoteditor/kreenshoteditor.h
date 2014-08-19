@@ -190,6 +190,7 @@ protected Q_SLOTS:
 
     // document and file actions slots:
     void slotDocumentNew();
+    void slotDocumentNewFromClipboard();
     void slotDocumentOpen();
     void slotDocumentSave();
     void slotDocumentSaveAs();

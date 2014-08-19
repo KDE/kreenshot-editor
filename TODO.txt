@@ -1,6 +1,5 @@
 TODO
 ----
-- Menu Help --> About DND
 - File -> New from clipboard (and as command line)
     - ask if doc is modified
 - bug: redo button not activated!!! (after dropping an image via DND)
