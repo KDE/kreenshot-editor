@@ -37,53 +37,53 @@ RenderVisibilityControl::~RenderVisibilityControl()
 
 }
 
-// static int count = 0;
-
-void RenderVisibilityControl::initPainting()
-{
-    if (!_paintUpToItemStack.empty()) { // do not init if within painting
-        return;
-    }
-
-    //_paintUpToItemReached = false;
-//     count = 0;
-}
-
-void RenderVisibilityControl::pushPaintUpToItem(QGraphicsItem* grItem)
-{
-    _paintUpToItemStack.push(grItem);
-    _paintUpToItemReachedStack.push(false);
-}
-
-void RenderVisibilityControl::popPaintUpToItem()
-{
-    _paintUpToItemStack.pop();
-    _paintUpToItemReachedStack.pop();
-}
-
-
-bool RenderVisibilityControl::onPaintEnter(QGraphicsItem* grItem)
-{
-    if (_paintUpToItemStack.empty()) {
-        return true;
-    }
-
-//     count++;
-//     if (count > 6) {
-//         paintUpToItemReached = true;
+// // static int count = 0;
+//
+// void RenderVisibilityControl::initPainting()
+// {
+//     if (!_paintUpToItemStack.empty()) { // do not init if within painting
+//         return;
 //     }
-
-    if (_paintUpToItemReachedStack.top()) {
-        return false;
-    }
-
-    if (grItem == _paintUpToItemStack.top()) {
-        _paintUpToItemReachedStack.top() = true;
-        return false;
-    }
-
-    return true;
-}
+// 
+//     //_paintUpToItemReached = false;
+// //     count = 0;
+// }
+//
+// void RenderVisibilityControl::pushPaintUpToItem(QGraphicsItem* grItem)
+// {
+//     _paintUpToItemStack.push(grItem);
+//     _paintUpToItemReachedStack.push(false);
+// }
+//
+// void RenderVisibilityControl::popPaintUpToItem()
+// {
+//     _paintUpToItemStack.pop();
+//     _paintUpToItemReachedStack.pop();
+// }
+//
+//
+// bool RenderVisibilityControl::onPaintEnter(QGraphicsItem* grItem)
+// {
+//     if (_paintUpToItemStack.empty()) {
+//         return true;
+//     }
+//
+// //     count++;
+// //     if (count > 6) {
+// //         paintUpToItemReached = true;
+// //     }
+//
+//     if (_paintUpToItemReachedStack.top()) {
+//         return false;
+//     }
+//
+//     if (grItem == _paintUpToItemStack.top()) {
+//         _paintUpToItemReachedStack.top() = true;
+//         return false;
+//     }
+//
+//     return true;
+// }
 
 }
 }

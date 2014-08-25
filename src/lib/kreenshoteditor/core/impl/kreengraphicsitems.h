@@ -270,6 +270,8 @@ public:
 class KreenGraphicsObfuscateItem : public QGraphicsRectItem, public KreenGraphicsItemBase
 {
 public:
+    bool pixelizeEffect = false; // true if pixelizeEffect else blur        // TODO: make configurable via properties
+
     KreenGraphicsObfuscateItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
@@ -287,6 +289,12 @@ public:
 //         auto effect = new QGraphicsBlurEffect();
 //         effect->setBlurRadius(10);
 //         setGraphicsEffect(effect);
+
+        if (!pixelizeEffect) { // ggf. auch pixelize und blur
+            auto blurEffect = new QGraphicsBlurEffect();
+            blurEffect->setBlurRadius(5);
+            this->setGraphicsEffect(blurEffect);
+        }
     }
 
     virtual void updateVisualGeometryFromModel() override
@@ -311,6 +319,11 @@ public:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeImpl(change, value);
+        if (change == QGraphicsItem::ItemPositionHasChanged) {
+            // here we trigger an item update to immediately show the recalcuted
+            // obfuscated image area while moving the item around
+            update();
+        }
         return QGraphicsItem::itemChange(change, value);
     }
 

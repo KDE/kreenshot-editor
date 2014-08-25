@@ -20,15 +20,17 @@
 #include "kreengraphicsscene.h"
 #include "rendervisibilitycontrol.h"
 #include <QGraphicsView>
+#include <QLabel>
 
 namespace kreen {
 namespace core {
 
 void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
-        return;
-    }
+    // todo remove later
+//     if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
+//         return;
+//     }
 
     // QGraphicsRectItem::paint(painter, option, widget);
     // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
@@ -45,92 +47,106 @@ void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsI
 
 void KreenGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    qDebug() << "KreenGraphicsEllipseItem::paint";
-    if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
-        return;
-    }
+    // todo remove later
+//     if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
+//         return;
+//     }
 
     // TODO see Rect: reimpl this method to suppress selection marquee
     QGraphicsEllipseItem::paint(painter, option, widget);
 }
 
+/**
+ * from http://stackoverflow.com/questions/3903223/qt4-how-to-blur-qpixmap-image
+ */
+// does not work
+// QPixmap BlurAPixmap(QPixmap inPixmap)
+// {
+//     QLabel* label = new QLabel();
+//     label->setPixmap(inPixmap);
+//     auto blurEffect = new QGraphicsBlurEffect();
+//     blurEffect->setBlurRadius(20);
+//     label->setGraphicsEffect(blurEffect);
+//     QPixmap outputPixmap(inPixmap.width(), inPixmap.height());
+//     QPainter painter(&outputPixmap);
+//     label->render(&painter);
+//     return outputPixmap;
+// }
+
+/**
+ * from http://stackoverflow.com/questions/3903223/qt4-how-to-blur-qpixmap-image
+ */
+// QPixmap BlurAPixmap(QPixmap inPixmap)
+// {
+//     QImage image = inPixmap.toImage();
+//     QImage output(image.width(), image.height(), image.format());
+//     for (int y=0; y<image.height(); ++y)
+//     for (int x=0; x<image.width(); ++x)
+//         output.setPixel((image, x, y)); // where is this method???
+//     return output;
+// }
+
+//int NOT_RENDER = 0; // almost works
+
+//
+// see commit d1021d6329680c6c67c2a78d30723538f18ff876 for some experiments
+//
 void KreenGraphicsObfuscateItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
-        return;
-    }
-
-//     if (painterImage.isActive()) {
-//         //qDebug() << "return";
-//         return;
-//     }
-
-//     if (!painter->isActive()) {
-//         return;
-//     }
-
-    // see also KreenGraphicsRectItem
-
     Q_UNUSED(widget);
 
     auto kScene = getScene(this);
+
+//     if (NOT_RENDER > 0) return;
+//     qDebug() << NOT_RENDER;
+//     NOT_RENDER++;
+//     auto TESTIMAGE = kScene->document()->renderToImage();
+//     NOT_RENDER--;
+
     auto r = rect();
     qreal x = pos().x();
     qreal y = pos().y();
+    qDebug() << "x, y" << x << y;
     qreal w = r.width();
     qreal h = r.height();
-    int pixSize = 4;
+    int pixSize = 8;
     qreal pixW = ceil(w / pixSize);
     qreal pixH = ceil(h / pixSize);
-    //qDebug() << "w, h" << w << h;
 
     // http://developer.nokia.com/community/wiki/QPainter::begin:Paint_device_returned_engine_%3D%3D_0_%28Known_Issue%29
     if (w == 0 || h == 0) {
         return;
     }
 
-    QPixmap image(w, h);
-    image.fill(Qt::white);
-
-    //qDebug() << &image;
-    //qDebug() << painter->device();
-
-    //qDebug() << "go";
+    QPixmap baseImageForItem(w, h); // will hold the base image cutout suitable for the current obfuscate item
+    baseImageForItem.fill(Qt::white);
 
     {
-        QPainter painterImage(&image);
-        painterImage.setRenderHint(QPainter::Antialiasing);
-        //sc->renderFinalImageOnly(true);
-
-        kScene->renderVisibilityControl()->pushPaintUpToItem(this);
-
-        //QGraphicsView view1(sc);
-        const QRectF targetRect(0, 0, w, h);
-        const QRectF sourceRect(x, y, w, h);
-        //view1.render(&painterImage, targetRect.toRect(), sourceRect.toRect(), Qt::KeepAspectRatio);
-        kScene->render(&painterImage, targetRect, sourceRect);
-
-        kScene->renderVisibilityControl()->popPaintUpToItem();
-
-        painterImage.drawEllipse(0, 0, w, h);
-        //sc->renderFinalImageOnly(false);
+        QPainter imagePainter(&baseImageForItem);
+        imagePainter.setRenderHint(QPainter::Antialiasing);
+        imagePainter.drawImage(QRectF(0, 0, w, h), kScene->document()->baseImage(), QRectF(x, y, w, h));
+        //imagePainter.drawImage(QRectF(0, 0, w, h), TESTIMAGE, QRectF(x, y, w, h)); // try later
     }
 
-    // TODO: disable selection handles
-    // TODO: if z-order of Item is greater (on top) of the current item do not draw it because result would be undefined
+    {
+        QPixmap itemImage = baseImageForItem.copy();
 
-    QPixmap subPixmap = image.copy();
-    QPainter painter2(&subPixmap);
-    painter2.drawPixmap(QRect(0, 0, pixW, pixH), image, QRect(0, 0, w, h)); // pixelize: make small
-    QPixmap subPixmap2 = subPixmap.copy();
-    painter2.drawPixmap(QRect(0.0, 0.0, w, h), subPixmap2, QRect(0, 0, pixW, pixH)); // pixelize: make big from small
-    painter->drawPixmap(0, 0, subPixmap);
+        if (pixelizeEffect) {
+            QPainter imagePainter(&itemImage);
+            imagePainter.drawPixmap(QRect(0, 0, pixW, pixH), baseImageForItem, QRect(0, 0, w, h)); // pixelize: make small
+            QPixmap itemImageSmall = itemImage.copy();
+            imagePainter.drawPixmap(QRect(0.0, 0.0, w, h), itemImageSmall, QRect(0, 0, pixW, pixH)); // pixelize: make big from small
+        }
+        else {
+            // is done implicitly by the set Blur effect
+        }
+
+        painter->drawPixmap(0, 0, itemImage);
+    }
 
     painter->setPen(pen());
     painter->setBrush(brush());
     painter->drawRect(rect());
-
-    //painter->drawPixmap(0, 0, image);
 }
 
 }

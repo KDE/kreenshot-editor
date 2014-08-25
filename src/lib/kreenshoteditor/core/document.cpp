@@ -36,6 +36,7 @@ public:
     {
         owner = owner_;
         scene = KreenGraphicsScene::make_shared();
+        scene->setDocument(owner); // see usages of document()
     }
 
     /**

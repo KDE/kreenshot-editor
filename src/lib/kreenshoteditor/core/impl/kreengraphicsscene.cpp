@@ -33,6 +33,16 @@ KreenGraphicsScene::KreenGraphicsScene()
     _renderVisibilityControl = RenderVisibilityControl::make_shared();
 }
 
+void KreenGraphicsScene::setDocument(kreen::core::Document* document)
+{
+    _document = document;
+}
+
+Document* KreenGraphicsScene::document()
+{
+    return _document;
+}
+
 void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
 {
     _toolManager = toolManager;
@@ -286,8 +296,8 @@ void KreenGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
 void KreenGraphicsScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    //qDebug() << "KreenGraphicsScene::drawBackground";
-    _renderVisibilityControl->initPainting();
+//     //qDebug() << "KreenGraphicsScene::drawBackground";
+//     _renderVisibilityControl->initPainting(); // todo remove later
     QGraphicsScene::drawBackground(painter, rect);
 }
 

@@ -33,6 +33,7 @@ namespace kreen {
 namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
+KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 KREEN_SHAREDPTR_FORWARD_DECL(RenderVisibilityControl)
 
@@ -52,15 +53,22 @@ public:
     KreenGraphicsScene();
 
     /**
-     * When image is saved to file things like crop operation tool or selection rects
-     * should not be drawn. This is done by hiding all other elements
+     * to retrieve the base image for the obfuscate tool
      */
-    void renderFinalImageOnly(bool finalOnly);
+    void setDocument(Document* document);
+
+    Document* document();
 
     /**
      * for interactive handling
      */
     void setToolManager(ToolManagerPtr toolManager);
+
+    /**
+     * When image is saved to file things like crop operation tool or selection rects
+     * should not be drawn. This is done by hiding all other elements
+     */
+    void renderFinalImageOnly(bool finalOnly);
 
     /**
     * All corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
@@ -127,6 +135,7 @@ protected:
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
 private:
+    Document* _document;
     ToolManagerPtr _toolManager;
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
