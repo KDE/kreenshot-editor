@@ -596,7 +596,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
         auto newKGrItem = d->scene()->graphicsItemFromItem(item); // todo: use method from GrItemBase
         if (newKGrItem != nullptr) {
-            newKGrItem->setSelectableAndMovable(true);
+            newKGrItem->setSelectable(true); // not movable because we are still in creating mode but we would like to be able to resize the new item using the handles
             newKGrItem->graphicsItem()->setSelected(true);
         }
         else {

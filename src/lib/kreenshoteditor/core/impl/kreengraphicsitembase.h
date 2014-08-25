@@ -68,7 +68,12 @@ public:
     /**
      * selectable and moveable
      */
-    void setSelectableAndMovable(bool isMovable);
+    void setSelectableAndMovable(bool isSelectableAndMovable);
+
+    /**
+     * selectable only (after a new item was created; to be able to resize instantly)
+     */
+    void setSelectable(bool isSelectable);
 
     //bool isStackedBefore(KreenGraphicsItemBase* rhs);
 

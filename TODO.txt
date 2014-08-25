@@ -1,15 +1,13 @@
 TODO
 ----
-- BUG: create item after save => save button gets not active
-    - Load image, draw, save, draw ellipse => Save button is not enabled
 - move pimpl forward decl to private: class Impl; ImplPtr* d;              cpp: A::Impl ...
 - cmd line: new-from-file instead of treat-as-new
-- bug: open file which should not be new but it saiys [new file]
+- bug: open file which should not be new but it says [new file]
+    - bug: open file via open says it was a "new file"
 - implement SelectionHandles
     - best way to make the item resize?
     - BUG: create item, create another item by clicking the selection handle, move one of the items
       => position jumps to 0,0. WHY?
-        First of all: new item should be selected but NOT movable
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - Crop: implement Enter and Esc
 - mouse over: draw a light version of the selection rects
@@ -45,6 +43,8 @@ IDEAS
 
 LATER
 -----
+- Obfuscate:
+    - ggf. nochmal probieren: jedes Bild upToAnItem einzeln rendern und das dann jeweils als baseImage verwenden
 - select no tool => zoom to fit
 - New file => create new filename instead of keeping the old one
 - BUG:

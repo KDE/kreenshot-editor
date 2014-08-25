@@ -60,6 +60,7 @@ public:
 
     bool contentChangedNotificationGroupActive()
     {
+        qDebug() << "contentChangedNotificationGroupActive" << contentChangedNotificationGroupDepth;
         return contentChangedNotificationGroupDepth > 0;
     }
 
@@ -125,7 +126,12 @@ Document::Document(QImage baseImage)
     }
 
     setBaseImage(baseImage, false);
-    setClean();
+
+    //setClean(); // todo: 2014-08-25: needed? (todo: remove later)
+
+    // Will emit contentChangedSignal; this might lead to duplicate emitting of contentChangedSignal
+    // but this can be dealt later if it even gets important
+    connect(&d->undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(slotContentChangedSignalEmitter()));
 }
 
 Document::~Document()
@@ -215,12 +221,14 @@ void Document::contentChangedNotificationGroupEnd()
 
 void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
+    qDebug() << "Document::addItem(KreenItemPtr item, bool recordUndo)" << item.get() << recordUndo;
     //d->contentChangedNotificationGroupMethodEnter(recordUndo);
 
     if (recordUndo) {
         Q_ASSERT(item->id() == -1);
         auto copiedItem = item->deepCopy();
         d->undoStack.push(new AddItemCmd(this, copiedItem)); // this will call addItem with recordUndo=false
+        //qDebug() << "(2) d->undoStack.isClean()" << d->undoStack.isClean(); // second because of recursion
         // 1. push calls redo
         // 2. redo call addItem with recordUndo false
         // 3. addItem generates id and sets it in given item
@@ -235,6 +243,12 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
         }
         d->itemMap.insert(item->id(), item->deepCopy()); // store (add or replace) item including id in the map
         d->itemsCacheDirty = true;
+        //qDebug() << "(1) d->undoStack.isClean()" << d->undoStack.isClean();
+
+        // corner case: adding an item on a clean state document:
+        //   If the document was clean the receiver of the following call will still receive the clean state.
+        //   We compensate for this by connecting the cleanChanged() signal => the receiver will get the correct value.
+        //   The concept of the ContentChangedNotificationGroup will not be hurt in the general case.
         d->contentChangedNotificationGroupMethodLeave();
     }
 }
@@ -327,7 +341,6 @@ void Document::addDemoItems()
         addItem(item);
     }
 
-
     {
         auto item = KreenItem::create("text");
         item->setRect(QRect(10, 120, 200, 40));
@@ -411,6 +424,11 @@ void Document::copyImageToClipboard()
     QImage image = renderToImage();
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setImage(image);
+}
+
+void Document::slotContentChangedSignalEmitter()
+{
+    emit contentChangedSignal();
 }
 
 }

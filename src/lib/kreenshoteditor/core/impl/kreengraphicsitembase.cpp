@@ -59,18 +59,23 @@ KreenGraphicsScene* KreenGraphicsItemBase::getScene()
     return (KreenGraphicsScene*)graphicsItem()->scene();
 }
 
-void KreenGraphicsItemBase::setSelectableAndMovable(bool isMovable)
+void KreenGraphicsItemBase::setSelectableAndMovable(bool isSelectableAndMovable)
 {
     // qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
-    _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isMovable);
-    _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isMovable);
+    _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isSelectableAndMovable);
+    _graphicsItem->setFlag(QGraphicsItem::ItemIsMovable, isSelectableAndMovable);
 
-    if (isMovable) {
+    if (isSelectableAndMovable) {
         _graphicsItem->setCursor(Qt::SizeAllCursor);
     }
     else {
         _graphicsItem->unsetCursor();
     }
+}
+
+void KreenGraphicsItemBase::setSelectable(bool isSelectable)
+{
+    _graphicsItem->setFlag(QGraphicsItem::ItemIsSelectable, isSelectable);
 }
 
 // NOT TESTED

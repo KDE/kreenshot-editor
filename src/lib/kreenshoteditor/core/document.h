@@ -174,6 +174,12 @@ Q_SIGNALS:
      */
     void contentChangedSignal();
 
+private Q_SLOTS:
+    /**
+     * will emit contentChangedSignal
+     */
+    void slotContentChangedSignalEmitter();
+
 private:
     DocumentImplPtr d;
 };

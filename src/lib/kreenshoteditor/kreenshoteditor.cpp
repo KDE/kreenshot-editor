@@ -433,6 +433,8 @@ void KreenshotEditor::showAboutDialog(QWidget* parent)
 
 void KreenshotEditor::slotDocumentFileStatusChanged()
 {
+    qDebug() << "KreenshotEditor::slotDocumentFileStatusChanged() fileStatus:" << documentFile()->fileStatus() << "isClean:" << document()->isClean();
+
     // the save button should be enabled when the file is not created yet
     // or the document is not clean
     d->actionDocumentSave->setEnabled(documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated
