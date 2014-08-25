@@ -28,7 +28,7 @@ namespace core {
 void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // todo remove later
-//     if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
+//     if (!getScene()->renderVisibilityControl()->onPaintEnter(this)) {
 //         return;
 //     }
 
@@ -48,43 +48,13 @@ void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsI
 void KreenGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // todo remove later
-//     if (!getScene(this)->renderVisibilityControl()->onPaintEnter(this)) {
+//     if (!getScene()->renderVisibilityControl()->onPaintEnter(this)) {
 //         return;
 //     }
 
     // TODO see Rect: reimpl this method to suppress selection marquee
     QGraphicsEllipseItem::paint(painter, option, widget);
 }
-
-/**
- * from http://stackoverflow.com/questions/3903223/qt4-how-to-blur-qpixmap-image
- */
-// does not work
-// QPixmap BlurAPixmap(QPixmap inPixmap)
-// {
-//     QLabel* label = new QLabel();
-//     label->setPixmap(inPixmap);
-//     auto blurEffect = new QGraphicsBlurEffect();
-//     blurEffect->setBlurRadius(20);
-//     label->setGraphicsEffect(blurEffect);
-//     QPixmap outputPixmap(inPixmap.width(), inPixmap.height());
-//     QPainter painter(&outputPixmap);
-//     label->render(&painter);
-//     return outputPixmap;
-// }
-
-/**
- * from http://stackoverflow.com/questions/3903223/qt4-how-to-blur-qpixmap-image
- */
-// QPixmap BlurAPixmap(QPixmap inPixmap)
-// {
-//     QImage image = inPixmap.toImage();
-//     QImage output(image.width(), image.height(), image.format());
-//     for (int y=0; y<image.height(); ++y)
-//     for (int x=0; x<image.width(); ++x)
-//         output.setPixel((image, x, y)); // where is this method???
-//     return output;
-// }
 
 //int NOT_RENDER = 0; // almost works
 
@@ -95,18 +65,24 @@ void KreenGraphicsObfuscateItem::paint(QPainter* painter, const QStyleOptionGrap
 {
     Q_UNUSED(widget);
 
-    auto kScene = getScene(this);
+//     if (!getScene()->renderVisibilityControl()->onPaintEnter(this)) {
+//         return;
+//     }
+
+    auto kScene = getScene();
 
 //     if (NOT_RENDER > 0) return;
 //     qDebug() << NOT_RENDER;
 //     NOT_RENDER++;
-//     auto TESTIMAGE = kScene->document()->renderToImage();
+//     kScene->renderVisibilityControl()->pushPaintUpToItem(this);
+//     auto TESTIMAGE = kScene->document()->renderToImage(this);
+//     kScene->renderVisibilityControl()->popPaintUpToItem();
 //     NOT_RENDER--;
 
     auto r = rect();
     qreal x = pos().x();
     qreal y = pos().y();
-    qDebug() << "x, y" << x << y;
+    //qDebug() << "x, y" << x << y;
     qreal w = r.width();
     qreal h = r.height();
     int pixSize = 8;
@@ -125,7 +101,7 @@ void KreenGraphicsObfuscateItem::paint(QPainter* painter, const QStyleOptionGrap
         QPainter imagePainter(&baseImageForItem);
         imagePainter.setRenderHint(QPainter::Antialiasing);
         imagePainter.drawImage(QRectF(0, 0, w, h), kScene->document()->baseImage(), QRectF(x, y, w, h));
-        //imagePainter.drawImage(QRectF(0, 0, w, h), TESTIMAGE, QRectF(x, y, w, h)); // try later
+        //imagePainter.drawImage(QRectF(0, 0, w, h), TESTIMAGE, QRectF(x, y, w, h)); // todo: try later
     }
 
     {

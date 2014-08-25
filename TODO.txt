@@ -1,11 +1,10 @@
 TODO
 ----
-- isStackedBefore --> damit wird alles einfacher für Obfuscate stuff!!! (?)
 - BUG: create item after save => save button gets not active
+    - Load image, draw, save, draw ellipse => Save button is not enabled
 - move pimpl forward decl to private: class Impl; ImplPtr* d;              cpp: A::Impl ...
 - cmd line: new-from-file instead of treat-as-new
 - bug: open file which should not be new but it saiys [new file]
-- Load image, draw, save, draw ellipse => Save button is not enabled
 - implement SelectionHandles
     - best way to make the item resize?
     - BUG: create item, create another item by clicking the selection handle, move one of the items

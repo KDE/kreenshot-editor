@@ -19,20 +19,13 @@
 #ifndef UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
 #define UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
 
-#include <QGraphicsDropShadowEffect>
-#include <QAbstractGraphicsShapeItem>
-#include <QGraphicsProxyWidget>
-#include <QGraphicsLinearLayout>
-#include <QFrame>
-#include <QGraphicsScene> // move to cpp file
-#include <QDebug> // move to cpp file
-#include <QLineEdit>
-#include <QPushButton>
-#include <QPainter>
-#include <QHBoxLayout>
-#include <cmath>
-#include <algorithm>
 #include <kreen/core/kreenitem.h>
+#include <QGraphicsItem>
+
+class QPushButton;
+class QAbstractGraphicsShapeItem;
+class QGraphicsLineItem;
+class QGraphicsSceneMouseEvent;
 
 namespace kreen {
 namespace core {
@@ -70,12 +63,14 @@ public:
     /**
      * return the KreenGraphicsScene* belonging to the grItem by casting the result of scene()
      */
-    KreenGraphicsScene* getScene(QGraphicsItem* grItem);
+    KreenGraphicsScene* getScene();
 
     /**
      * selectable and moveable
      */
     void setSelectableAndMovable(bool isMovable);
+
+    //bool isStackedBefore(KreenGraphicsItemBase* rhs);
 
     virtual void updateModelFromVisualGeometry() = 0;
 
@@ -123,17 +118,9 @@ protected:
     void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
 protected Q_SLOTS:
-    void operationAcceptedSlot()
-    {
-        qDebug() << "emit operationAccepted";
-        emit operationAccepted();
-    }
+    void operationAcceptedSlot();
 
-    void operationCanceledSlot()
-    {
-        qDebug() << "emit operationCanceled";
-        emit operationCanceled();
-    }
+    void operationCanceledSlot();
 
 protected:
     KreenItemPtr _item;

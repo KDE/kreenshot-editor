@@ -24,6 +24,7 @@
 #include <QStack>
 
 class QGraphicsItem;
+class KreenGraphicsItemBase;
 
 namespace kreen {
 namespace core {
@@ -65,8 +66,6 @@ public:
 
 private:
     QStack<QGraphicsItem*> _paintUpToItemStack;
-    QGraphicsItem* _paintUpToItem = nullptr;
-    QStack<bool> _paintUpToItemReachedStack;
 };
 
 }

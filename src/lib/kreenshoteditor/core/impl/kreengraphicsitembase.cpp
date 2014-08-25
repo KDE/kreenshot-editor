@@ -17,6 +17,20 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsitembase.h"
+#include "kreengraphicsscene.h"
+#include <QGraphicsScene>
+#include <QDebug>
+#include <QFrame>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QPainter>
+#include <QHBoxLayout>
+#include <QGraphicsDropShadowEffect>
+#include <QAbstractGraphicsShapeItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsLinearLayout>
+#include <cmath>
+#include <algorithm>
 
 namespace kreen {
 namespace core {
@@ -40,9 +54,9 @@ QGraphicsItem* KreenGraphicsItemBase::graphicsItem()
     return _graphicsItem;
 }
 
-KreenGraphicsScene* KreenGraphicsItemBase::getScene(QGraphicsItem* grItem)
+KreenGraphicsScene* KreenGraphicsItemBase::getScene()
 {
-    return (KreenGraphicsScene*)grItem->scene();
+    return (KreenGraphicsScene*)graphicsItem()->scene();
 }
 
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isMovable)
@@ -58,6 +72,13 @@ void KreenGraphicsItemBase::setSelectableAndMovable(bool isMovable)
         _graphicsItem->unsetCursor();
     }
 }
+
+// NOT TESTED
+// bool KreenGraphicsItemBase::isStackedBefore(KreenGraphicsItemBase* rhs)
+// {
+//     auto list = rhs->getScene()->kreenGraphicsItems();
+//     return list.indexOf(this) < list.indexOf(rhs);
+// }
 
 bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
 {
@@ -168,6 +189,18 @@ void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange cha
         //qDebug() << "emit itemPositionHasChangedSignal(item());";
         emit itemPositionHasChangedSignal(item());
     }
+}
+
+void KreenGraphicsItemBase::operationAcceptedSlot()
+{
+    qDebug() << "emit operationAccepted";
+    emit operationAccepted();
+}
+
+void KreenGraphicsItemBase::operationCanceledSlot()
+{
+    qDebug() << "emit operationCanceled";
+    emit operationCanceled();
 }
 
 }

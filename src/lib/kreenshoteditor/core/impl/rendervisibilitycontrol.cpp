@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "rendervisibilitycontrol.h"
+#include "kreengraphicsitembase.h"
 #include <QDebug>
 
 namespace kreen {
@@ -44,7 +45,7 @@ RenderVisibilityControl::~RenderVisibilityControl()
 //     if (!_paintUpToItemStack.empty()) { // do not init if within painting
 //         return;
 //     }
-// 
+//
 //     //_paintUpToItemReached = false;
 // //     count = 0;
 // }
@@ -52,15 +53,12 @@ RenderVisibilityControl::~RenderVisibilityControl()
 // void RenderVisibilityControl::pushPaintUpToItem(QGraphicsItem* grItem)
 // {
 //     _paintUpToItemStack.push(grItem);
-//     _paintUpToItemReachedStack.push(false);
 // }
 //
 // void RenderVisibilityControl::popPaintUpToItem()
 // {
 //     _paintUpToItemStack.pop();
-//     _paintUpToItemReachedStack.pop();
 // }
-//
 //
 // bool RenderVisibilityControl::onPaintEnter(QGraphicsItem* grItem)
 // {
@@ -68,21 +66,13 @@ RenderVisibilityControl::~RenderVisibilityControl()
 //         return true;
 //     }
 //
-// //     count++;
-// //     if (count > 6) {
-// //         paintUpToItemReached = true;
-// //     }
-//
-//     if (_paintUpToItemReachedStack.top()) {
-//         return false;
+//     auto lhs = dynamic_cast<KreenGraphicsItemBase*>(grItem);
+//     auto rhs = dynamic_cast<KreenGraphicsItemBase*>(_paintUpToItemStack.top());
+//     if (lhs && rhs && lhs->isStackedBefore(rhs)) {
+//         return true;
 //     }
 //
-//     if (grItem == _paintUpToItemStack.top()) {
-//         _paintUpToItemReachedStack.top() = true;
-//         return false;
-//     }
-//
-//     return true;
+//     return false;
 // }
 
 }
