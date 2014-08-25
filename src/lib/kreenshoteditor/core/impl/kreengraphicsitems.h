@@ -89,20 +89,7 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
-    {
-        // QGraphicsRectItem::paint(painter, option, widget);
-        // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
-
-        Q_UNUSED(widget);
-        //painter->save();
-        painter->setPen(pen());
-        painter->setBrush(brush());
-        painter->drawRect(rect());
-        //painter->restore();
-
-        // omit the selected rect because we draw it ourselves
-    }
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
 };
 
 class KreenGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenGraphicsItemBase
@@ -163,11 +150,7 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
-    {
-        // TODO see Rect: reimpl this method to suppress selection marquee
-        QGraphicsEllipseItem::paint(painter, option, widget);
-    }
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
 };
 
 class KreenGraphicsLineItem : public QGraphicsLineItem, public KreenGraphicsItemBase
@@ -343,42 +326,7 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
-    // TMP: prevents paint method from painting itself while painting on the working pixmap
-    bool inImagePainting = false;
-
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
-    {
-        // see KreenGraphicsRectItem
-
-        if (inImagePainting) {
-            return;
-        }
-
-        Q_UNUSED(widget);
-        painter->setPen(pen());
-        painter->setBrush(brush());
-        painter->drawRect(rect());
-
-        auto sc = scene();
-        auto r = rect();
-        qreal x = pos().x();
-        qreal y = pos().y();
-        qreal w = r.width();
-        qreal h = r.height();
-        QImage image(w, h, QImage::Format_ARGB32); // todo: format ok???
-        QPainter painterImage(&image);
-        painterImage.setRenderHint(QPainter::Antialiasing);
-
-        inImagePainting = true;
-        sc->render(&painterImage, QRectF(0, 0, w, h), QRectF(x, y, w, h));
-        // TODO: if z-order of Item is greater (on top) of the current item do not draw it because result would be undefined
-        inImagePainting = false;
-        painterImage.drawPixmap(QRect(0, 0, 10, 10), QPixmap::fromImage(image), QRect(0, 0, w, h)); // pixelize: make small
-        painterImage.drawPixmap(QRect(0, 0, w, h), QPixmap::fromImage(image), QRect(0, 0, 10, 10)); // pixelize: make big from small
-
-
-        painter->drawPixmap(0, 0, w, h, QPixmap::fromImage(image));
-    }
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
 };
 
 class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenGraphicsItemBase

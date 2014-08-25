@@ -34,6 +34,7 @@ namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
+KREEN_SHAREDPTR_FORWARD_DECL(RenderVisibilityControl)
 
 class KreenGraphicsItemBase;
 
@@ -95,6 +96,8 @@ public:
      */
     void restoreSavedKreenItemsSelection_1();
 
+    RenderVisibilityControlPtr renderVisibilityControl() { return _renderVisibilityControl; }
+
 Q_SIGNALS:
     void mouseReleasedSignal();
 
@@ -121,11 +124,14 @@ protected:
 
     virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
+    virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
+
 private:
     ToolManagerPtr _toolManager;
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
     QList<KreenItemPtr> _savedSelection;
+    RenderVisibilityControlPtr _renderVisibilityControl;
 };
 
 }

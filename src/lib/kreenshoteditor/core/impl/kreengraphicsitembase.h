@@ -37,6 +37,8 @@
 namespace kreen {
 namespace core {
 
+class KreenGraphicsScene;
+
 /**
 * Visual representation of a KreenItem
 */
@@ -64,6 +66,11 @@ public:
      * the underlying QGraphicsItem
      */
     QGraphicsItem* graphicsItem();
+
+    /**
+     * return the KreenGraphicsScene* belonging to the grItem by casting the result of scene()
+     */
+    KreenGraphicsScene* getScene(QGraphicsItem* grItem);
 
     /**
      * selectable and moveable

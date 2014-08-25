@@ -22,6 +22,7 @@
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "selectionhandlegraphicsitem.h"
+#include "rendervisibilitycontrol.h"
 
 namespace kreen {
 namespace core {
@@ -29,6 +30,7 @@ namespace core {
 KreenGraphicsScene::KreenGraphicsScene()
 {
     _creatingItem = nullptr;
+    _renderVisibilityControl = RenderVisibilityControl::make_shared();
 }
 
 void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
@@ -280,6 +282,13 @@ void KreenGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event)
     QMessageBox::warning(nullptr,
                          tr("Not impl"),
                          tr("Drop image on scene to create an image object not implemented yet.\nDrop the image anywhere else on the window to load it as new base image."));
+}
+
+void KreenGraphicsScene::drawBackground(QPainter* painter, const QRectF& rect)
+{
+    //qDebug() << "KreenGraphicsScene::drawBackground";
+    _renderVisibilityControl->initPainting();
+    QGraphicsScene::drawBackground(painter, rect);
 }
 
 }

@@ -40,6 +40,11 @@ QGraphicsItem* KreenGraphicsItemBase::graphicsItem()
     return _graphicsItem;
 }
 
+KreenGraphicsScene* KreenGraphicsItemBase::getScene(QGraphicsItem* grItem)
+{
+    return (KreenGraphicsScene*)grItem->scene();
+}
+
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isMovable)
 {
     // qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
