@@ -80,24 +80,35 @@ Arguments parseArgumentsOrExit(QApplication& app)
     parser.addVersionOption();
     parser.setApplicationDescription("screenshot image editing, (c) 2014");
 
-    parser.addPositionalArgument("image", tr("file path to primary image to be loaded"), tr("imagefile"));
+    parser.addPositionalArgument("image", tr("Filename (i.e. with or without path) of primary image to be loaded."),
+                                 tr("filename"));
 
-    QCommandLineOption treatAsNewOption(QStringList() << "treat-as-new", tr("the given primary image path will be used as image data source only and not as save target"));
+    QCommandLineOption treatAsNewOption(QStringList() << "new-from-file",
+                                        tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically."));
     parser.addOption(treatAsNewOption);
 
-    QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard", tr("if the clipboard contains image data it will be used as primary image. The --treat-as-new option will be ignored."));
+    QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard",
+                                              tr("Like --new-from-file but takes the image date from the clipboard if it contains image data (otherwise a default image will be loaded). The --new-from-file option will be ignored."));
     parser.addOption(newFromClipboardOption);
 
-    QCommandLineOption image2Option(QStringList() << "image2", tr("file path to (optional) secondary image to be inserted as object, e. g. captured mouse cursor"), tr("file path"));
+    QCommandLineOption image2Option(QStringList() << "image2",
+                                    tr("Filename (i.e. with or without path) of secondary image to be inserted as object, e. g. the captured mouse cursor."),
+                                    tr("filename"));
     parser.addOption(image2Option);
 
-    QCommandLineOption image2xOption(QStringList() << "image2x", tr("x coordinate (upper left corner) of the secondary image. Default value is 0."), tr("x in pixel"));
+    QCommandLineOption image2xOption(QStringList() << "image2x",
+                                     tr("X coordinate in pixel of the upper left corner of the secondary image provided by --image2. Default value is 0."),
+                                     tr("number"));
     parser.addOption(image2xOption);
 
-    QCommandLineOption image2yOption(QStringList() << "image2y", tr("y coordinate. Default value is 0."), tr("y in pixel"));
+    QCommandLineOption image2yOption(QStringList() << "image2y",
+                                     tr("Y coordinate, see --image2x."),
+                                     tr("number"));
     parser.addOption(image2yOption);
 
-    QCommandLineOption descriptionOption(QStringList() << "description", tr("description, e. g. window title of the captured window"), tr("text"));
+    QCommandLineOption descriptionOption(QStringList() << "description",
+                                         tr("Description, e. g. window title of the captured window."),
+                                         tr("text"));
     parser.addOption(descriptionOption);
 
     parser.process(app);

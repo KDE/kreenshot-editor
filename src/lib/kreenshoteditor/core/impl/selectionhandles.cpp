@@ -77,7 +77,6 @@ SelectionHandles::~SelectionHandles()
     qDebug() << "SelectionHandles destructor";
 }
 
-
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
 {
     if (createNewHandles) {
