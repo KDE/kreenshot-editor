@@ -183,6 +183,10 @@ public:
             return true; // continue
         }
         else if (QMessageBox::Discard == response) {
+            // If we do not set the document clean, it will trigger some cleanChanged signal which
+            // will crash the program if it was closed by the user.
+            // Thus, we set it clean which also makes some sense because we are about to willingly discard it.
+            owner->document()->setClean();
             return true; // continue
         }
         else {
