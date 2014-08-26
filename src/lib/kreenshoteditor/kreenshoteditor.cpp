@@ -50,6 +50,42 @@ public:
         settingsManager = SettingsManager::instance();
     }
 
+    /**
+     * Creates a new document.
+     * Set the base image data (image where you can add items) from the given parameter.
+     * If there is no filename given the file is treated as new;
+     *   else the given filename is associated with the document.
+     * If no image data is given a default image will be used as base image.
+     */
+    void createNewDocument(QImage image, QString associatedFilename)
+    {
+        qDebug() << "KreenshotEditor::createNewDocument internal";
+
+        settingsToOutputFilenameManager();
+
+        QString filename;
+        DocumentFile::FileStatus fileStatus;
+        if (!associatedFilename.isEmpty()) { // file was loaded from disk
+            fileStatus = DocumentFile::FileStatus_CreatedAndClean;
+            filename = associatedFilename;
+        }
+        else {
+            fileStatus = DocumentFile::DocumentFile::FileStatus_NotCreated;
+            filename = outputFilenameGenerator->resultingFilename();
+        }
+
+        auto doc = Document::make_shared(image);
+        documentFile = std::make_shared<DocumentFile>(doc, filename, fileStatus);
+        documentFile->setSettingsManager(settingsManager);
+
+        owner->connect(owner->documentFile().get(), SIGNAL(fileStatusChanged()), owner, SLOT(slotDocumentFileStatusChanged()));
+        owner->connect(owner->document().get(), SIGNAL(contentChangedSignal()), owner, SLOT(slotEditUndoRedoActionEnabledUpdate()));
+        owner->connect(owner->document().get(), SIGNAL(contentChangedSignal()), owner, SLOT(slotDocumentFileStatusChanged()));
+
+        owner->emit newDocumentCreatedSignal();
+        owner->emit documentFileStatusChangedSignal();
+    }
+
     void settingsToOutputFilenameManager()
     {
         auto outputSettings = settingsManager->output;
@@ -246,27 +282,13 @@ void KreenshotEditor::slotRequestToolBySenderAction()
 void KreenshotEditor::createNewDocument(QImage image)
 {
     qDebug() << "KreenshotEditor::createNewDocument";
-
-    d->settingsToOutputFilenameManager();
-
-    auto doc = Document::make_shared(image);
-    d->documentFile = std::make_shared<DocumentFile>(doc, d->outputFilenameGenerator->resultingFilename(), d->settingsManager);
-
-    connect(this->documentFile().get(), SIGNAL(fileStatusChanged()), this, SLOT(slotDocumentFileStatusChanged()));
-    connect(this->document().get(), SIGNAL(contentChangedSignal()), this, SLOT(slotEditUndoRedoActionEnabledUpdate()));
-    connect(this->document().get(), SIGNAL(contentChangedSignal()), this, SLOT(slotDocumentFileStatusChanged()));
-
-    emit newDocumentCreatedSignal();
-    emit documentFileStatusChangedSignal();
+    d->createNewDocument(image, QString());
 }
 
 void KreenshotEditor::createNewDocumentFromFile(QString filename)
 {
     qDebug() << "KreenshotEditor::createNewDocumentFromFile";
-
-    d->outputFilenameGenerator->setFilenamePattern(filename);
-
-    createNewDocument(QImage(filename));
+    d->createNewDocument(QImage(filename), filename);
 }
 
 void KreenshotEditor::createNewDocumentFromClipbard()

@@ -89,7 +89,8 @@ public:
     void afterSaveAction(QString filename)
     {
         if (!settingsManager) {
-            qDebug() << "[INFO] DocumentFile.afterSaveAction will not work because settingsManager is nullptr";
+            qDebug() << "[INFO] DocumentFile.afterSaveAction will not work because settingsManager is nullptr.";
+            Q_ASSERT(false);
             return;
         }
 
@@ -107,6 +108,15 @@ public:
             doc->copyImageToClipboard();
         }
     }
+
+    void afterSaveToFile(ErrorStatus errorStatus)
+    {
+        if (errorStatus.isEmpty()) {
+            afterSaveAction(filename);
+        }
+
+        owner->emit fileStatusChanged();
+    }
 };
 
 QList<QString> DocumentFile::supportedImageFormats()
@@ -119,20 +129,23 @@ QList<QString> DocumentFile::supportedImageFormats()
     return list;
 }
 
-
-DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager)
+DocumentFile::DocumentFile(kreen::core::DocumentPtr doc, QString filename, FileStatus fileStatus)
 {
     KREEN_PIMPL_INIT_THIS(DocumentFile)
 
     d->doc = doc;
     d->filename = filename;
-    d->fileStatus = FileStatus_NotCreated;
-    d->settingsManager = settingsManager;
+    d->fileStatus = fileStatus;
 }
 
 DocumentFile::~DocumentFile()
 {
 
+}
+
+void DocumentFile::setSettingsManager(SettingsManagerPtr settingsManager)
+{
+    d->settingsManager = settingsManager;
 }
 
 DocumentPtr DocumentFile::document()
@@ -171,7 +184,7 @@ ErrorStatus DocumentFile::save()
         qDebug() << errorStatus;
     }
 
-    afterSaveToFile(errorStatus);
+    d->afterSaveToFile(errorStatus);
     return errorStatus;
 }
 
@@ -187,17 +200,8 @@ ErrorStatus DocumentFile::saveAs(QString filename)
         qDebug() << errorStatus;
     }
 
-    afterSaveToFile(errorStatus);
+    d->afterSaveToFile(errorStatus);
     return errorStatus;
-}
-
-void DocumentFile::afterSaveToFile(ErrorStatus errorStatus)
-{
-    if (errorStatus.isEmpty()) {
-        d->afterSaveAction(filename());
-    }
-
-    emit fileStatusChanged();
 }
 
 void DocumentFile::copyFilenameToClipboard()

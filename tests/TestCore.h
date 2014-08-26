@@ -59,7 +59,8 @@ private slots:
 
         auto doc = Document::make_shared(QImage(inputImage1Filename));
         QString filename = "./testdata/output_docfile1.png";
-        DocumentFile docFile(doc, filename, settingsManager); // settingsManager not need cause it is optional
+        DocumentFile docFile(doc, filename, DocumentFile::FileStatus_NotCreated);
+        docFile.setSettingsManager(settingsManager);
         QCOMPARE(docFile.document(), doc);
         QCOMPARE(docFile.filename(), filename);
         QCOMPARE(docFile.fileStatus(), DocumentFile::FileStatus_NotCreated);
@@ -80,7 +81,8 @@ private slots:
     void DocumentFile_init_modifydoc_saveas()
     {
         auto doc = Document::make_shared(QImage(inputImage1Filename));
-        DocumentFile docFile(doc, inputImage1Filename, nullptr);
+        DocumentFile docFile(doc, inputImage1Filename, DocumentFile::FileStatus_NotCreated);
+        docFile.setSettingsManager(settingsManager);
 
         QString filename = "./testdata/output_docfile2.png";
         QCOMPARE(docFile.saveAs(filename), QString());

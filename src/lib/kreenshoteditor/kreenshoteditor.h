@@ -65,7 +65,7 @@ public:
     /**
      * Creates a new document.
      * Set the base image data (image to be edited) from the given parameter.
-     * Since there is no filename given the file is treated as new.
+     * Since there is no filename the document is treated as new.
      * If no image data is given a default image will be used as base image.
      */
     void createNewDocument(QImage image = QImage());

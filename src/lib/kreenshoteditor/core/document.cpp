@@ -127,7 +127,7 @@ Document::Document(QImage baseImage)
 
     setBaseImage(baseImage, false);
 
-    //setClean(); // todo: 2014-08-25: needed? (todo: remove later)
+    setClean(); // a new document with a base image has to be clean
 
     // Will emit contentChangedSignal; this might lead to duplicate emitting of contentChangedSignal
     // but this can be dealt later if it even gets important

@@ -57,12 +57,17 @@ public:
 public:
     /**
      * Inits the DocumentFile with a Document and a filename (i. e. path to file).
-     * The initial FileStatus will be NotCreated (i. e. nothing gets loaded or stored to disk yet)
-     * settingsManager is optional: a warning will be printed to console and afterSaveAction won't work
+     * The initial FileStatus given should be either FileStatus_NotCreated or FileStatus_CreatedAndClean
      */
-    DocumentFile(DocumentPtr doc, QString filename, SettingsManagerPtr settingsManager = nullptr);
+    DocumentFile(kreen::core::DocumentPtr doc, QString filename, FileStatus fileStatus);
 
     virtual ~DocumentFile();
+
+    /**
+     * used for performing the after save action
+     * (todo: could be done via signal/slot)
+     */
+    void setSettingsManager(SettingsManagerPtr settingsManager);
 
     /**
      * associated document
@@ -75,7 +80,8 @@ public:
     QString filename();
 
     /**
-     * todo: only FileStatus_NotCreated is used at the moment
+     * TODO: make better because only FileStatus_NotCreated is used at the moment
+     *          otherwise confusion
      */
     FileStatus fileStatus();
 
@@ -103,9 +109,6 @@ Q_SIGNALS:
      * when status of file has changed (after save() or saveAs() is called, NOT by ctor)
      */
     void fileStatusChanged();
-
-private:
-    void afterSaveToFile(ErrorStatus errorStatus);
 
 private:
     DocumentFileImplPtr d;

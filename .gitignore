@@ -2,3 +2,4 @@
 /src/generated-include/
 /src/generated-include-tmp/
 /.kateproject.d/notes.txt
+*.kate-swp
