@@ -29,10 +29,10 @@
 namespace kreen {
 namespace core {
 
-class DocumentImpl
+class Document::Impl
 {
 public:
-    DocumentImpl(Document* owner_)
+    Impl(Document* owner_)
     {
         owner = owner_;
         scene = KreenGraphicsScene::make_shared();
@@ -122,7 +122,7 @@ Document::Document(QImage baseImage)
     KREEN_PIMPL_INIT_THIS(Document)
 
     if (baseImage.isNull()) {
-        baseImage = DocumentImpl::createDefaultImage();
+        baseImage = Document::Impl::createDefaultImage();
     }
 
     setBaseImage(baseImage, false);

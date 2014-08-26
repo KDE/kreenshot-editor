@@ -28,7 +28,6 @@
 namespace kreen {
 namespace core {
 
-KREEN_PIMPL_FORWARD_DECL(OutputFilenameGenerator)
 KREEN_SHAREDPTR_FORWARD_DECL(OutputFilenameGenerator)
 
 /**
@@ -89,7 +88,7 @@ public:
 public:
 
 private:
-    OutputFilenameGeneratorImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

@@ -214,8 +214,7 @@ protected Q_SLOTS:
     void slotRequestToolBySenderAction();
 
 private:
-    KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
-    KreenshotEditorImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

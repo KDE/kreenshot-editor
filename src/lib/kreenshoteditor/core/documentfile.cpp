@@ -36,10 +36,10 @@
 namespace kreen {
 namespace core {
 
-class DocumentFileImpl
+class DocumentFile::Impl
 {
 public:
-    DocumentFileImpl(DocumentFile* owner_)
+    Impl(DocumentFile* owner_)
     {
         owner = owner_;
     }

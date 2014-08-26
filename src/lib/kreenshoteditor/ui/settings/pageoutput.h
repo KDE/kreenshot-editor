@@ -30,8 +30,6 @@ namespace settings {
 
 using namespace kreen::core;
 
-KREEN_PIMPL_FORWARD_DECL(PageOutput)
-
 class PageOutput : public QWidget
 {
     Q_OBJECT
@@ -55,8 +53,7 @@ private:
     void setupUi();
 
 private:
-    PageOutputImplPtr d;
-
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

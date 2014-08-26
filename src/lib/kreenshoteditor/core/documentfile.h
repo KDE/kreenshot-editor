@@ -29,8 +29,6 @@
 namespace kreen {
 namespace core {
 
-KREEN_PIMPL_FORWARD_DECL(DocumentFile)
-
 KREEN_SHAREDPTR_FORWARD_DECL(DocumentFile)
 KREEN_SHAREDPTR_FORWARD_DECL(SettingsManager)
 
@@ -111,7 +109,7 @@ Q_SIGNALS:
     void fileStatusChanged();
 
 private:
-    DocumentFileImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

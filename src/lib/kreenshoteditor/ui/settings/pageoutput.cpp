@@ -32,14 +32,14 @@ namespace settings {
 
 #define tr(arg) QObject::tr(arg)
 
-class PageOutputImpl
+class PageOutput::Impl
 {
 public:
     Ui::pageOutput ui;
     PageOutput* owner;
 
 public:
-    PageOutputImpl(PageOutput* owner_)
+    Impl(PageOutput* owner_)
     {
         owner = owner_;
     }

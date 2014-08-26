@@ -22,7 +22,7 @@
 namespace kreen {
 namespace core {
 
-class OutputFilenameGeneratorImpl
+class OutputFilenameGenerator::Impl
 {
 public:
     QDateTime captureTime;

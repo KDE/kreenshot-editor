@@ -30,22 +30,23 @@
  * - Use OrigClassName##ImplPtr to define a private d pointer in the h file
  * - Define a class OrigClassName##Impl in the cpp file
  */
-#define KREEN_PIMPL_FORWARD_DECL(OrigClassName) \
-class OrigClassName##Impl; \
-typedef std::shared_ptr<OrigClassName##Impl> OrigClassName##ImplPtr;
+#define KREEN_PIMPL_DEFINE_D_PTR \
+class Impl; \
+typedef std::shared_ptr<Impl> ImplPtr; \
+ImplPtr d;
+
 
 /**
  * call this as first line in the ctor
  * example: KREEN_PIMPL_INIT(Document)
  */
-#define KREEN_PIMPL_INIT(OrigClassName) d = std::make_shared<OrigClassName##Impl>();
+#define KREEN_PIMPL_INIT(OrigClassName) d = std::make_shared<OrigClassName::Impl>();
 
 /**
  * call this as first line in the ctor and give this as first parameter
  * example: KREEN_PIMPL_INIT(Document)
  */
-#define KREEN_PIMPL_INIT_THIS(OrigClassName) d = std::make_shared<OrigClassName##Impl>(this);
-
+#define KREEN_PIMPL_INIT_THIS(OrigClassName) d = std::make_shared<OrigClassName::Impl>(this);
 
 #endif
 

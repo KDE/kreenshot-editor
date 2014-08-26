@@ -71,7 +71,7 @@ public: // todo: make private
     KreenItemPtr imageOperationItem = nullptr; // imgOpItem
 };
 
-class MainEditorWidgetImpl
+class MainEditorWidget::Impl
 {
 public:
     MainEditorWidget* _owner;
@@ -88,7 +88,7 @@ private:
     KreenshotEditorPtr _kreenshotEditor;
 
 public:
-    MainEditorWidgetImpl(MainEditorWidget* owner)
+    Impl(MainEditorWidget* owner)
     {
         _owner = owner;
     }

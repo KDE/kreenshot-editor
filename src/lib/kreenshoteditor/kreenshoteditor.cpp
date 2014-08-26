@@ -40,10 +40,10 @@ namespace kreen {
 
 #define tr(arg) QObject::tr(arg)
 
-class KreenshotEditor::KreenshotEditorImpl
+class KreenshotEditor::Impl
 {
 public:
-    KreenshotEditorImpl(KreenshotEditor* owner_)
+    Impl(KreenshotEditor* owner_)
     {
         owner = owner_;
         outputFilenameGenerator = OutputFilenameGenerator::make_shared();

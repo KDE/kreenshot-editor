@@ -25,15 +25,13 @@ namespace kreen {
 namespace ui {
 namespace settings {
 
-class PreferencesDialogImpl
+class PreferencesDialog::Impl
 {
 public:
     SettingsManagerPtr settingsManager;
     OutputFilenameGeneratorPtr outputFilenameGenerator;
     Ui::dialogSettings ui;
     PageOutput* pageOutput;
-
-private:
 };
 
 PreferencesDialog::PreferencesDialog(SettingsManagerPtr settingsManager, OutputFilenameGeneratorPtr outputFilenameGenerator)

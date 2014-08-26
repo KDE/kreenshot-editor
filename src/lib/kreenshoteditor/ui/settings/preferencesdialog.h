@@ -30,8 +30,6 @@ namespace settings {
 
 using namespace kreen::core;
 
-KREEN_PIMPL_FORWARD_DECL(PreferencesDialog)
-
 /**
  * The accepted signal is handled internally and then the settings are stored
  */
@@ -56,7 +54,7 @@ private:
     void pushSettingsToUi();
 
 private:
-    PreferencesDialogImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

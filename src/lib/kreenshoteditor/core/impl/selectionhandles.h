@@ -29,7 +29,6 @@ class QGraphicsScene;
 namespace kreen {
 namespace core {
 
-KREEN_PIMPL_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 
 class SelectionHandles //: public QObject
@@ -48,7 +47,7 @@ public:
     void redrawSelectionHandles(bool createNewHandles);
 
 private:
-    SelectionHandlesImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

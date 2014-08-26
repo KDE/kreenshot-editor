@@ -30,8 +30,6 @@
 namespace kreen {
 namespace core {
 
-KREEN_PIMPL_FORWARD_DECL(Document)
-
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 
@@ -181,7 +179,7 @@ private Q_SLOTS:
     void slotContentChangedSignalEmitter();
 
 private:
-    DocumentImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

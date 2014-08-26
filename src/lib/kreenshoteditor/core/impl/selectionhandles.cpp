@@ -30,7 +30,7 @@
 namespace kreen {
 namespace core {
 
-class SelectionHandlesImpl
+class SelectionHandles::Impl
 {
 public:
     SelectionHandles* owner = nullptr;
@@ -38,7 +38,7 @@ public:
     std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
 
 public:
-    SelectionHandlesImpl(SelectionHandles* owner_)
+    Impl(SelectionHandles* owner_)
     {
         owner = owner_;
     }

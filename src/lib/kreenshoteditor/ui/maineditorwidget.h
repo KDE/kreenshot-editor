@@ -36,8 +36,6 @@ namespace ui {
 
 class KreenGraphicsView;
 
-KREEN_PIMPL_FORWARD_DECL(MainEditorWidget)
-
 class KREEN_DECL_EXPORT MainEditorWidget : public QWidget
 {
     Q_OBJECT
@@ -100,7 +98,7 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    MainEditorWidgetImplPtr d;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }
