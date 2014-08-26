@@ -272,7 +272,7 @@ void MainWindow::setupActions()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    if (d->kreenshotEditor->warnIfDocumentIsNotClean_shouldContinue()) {
+    if (d->kreenshotEditor->askUserOnUnsavedData_handleAnswer_shouldContinue()) {
         event->accept();
     } else {
         event->ignore();

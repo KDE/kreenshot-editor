@@ -32,7 +32,6 @@ class QImage;
 
 namespace kreen {
 
-KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenshotEditor)
 
 namespace core {
@@ -150,7 +149,7 @@ public:
      * Returns true if the action should be continued and false if not (= abort).
      * If the document is clean it returns true (= continue)
      */
-    bool warnIfDocumentIsNotClean_shouldContinue();
+    bool askUserOnUnsavedData_handleAnswer_shouldContinue();
 
     /**
      * Opens the Preferences dialog to let the user view and edit settings.
@@ -215,6 +214,7 @@ protected Q_SLOTS:
     void slotRequestToolBySenderAction();
 
 private:
+    KREEN_PIMPL_FORWARD_DECL(KreenshotEditor)
     KreenshotEditorImplPtr d;
 };
 

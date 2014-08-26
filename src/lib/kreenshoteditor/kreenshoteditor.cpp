@@ -40,7 +40,7 @@ namespace kreen {
 
 #define tr(arg) QObject::tr(arg)
 
-class KreenshotEditorImpl
+class KreenshotEditor::KreenshotEditorImpl
 {
 public:
     KreenshotEditorImpl(KreenshotEditor* owner_)
@@ -159,21 +159,35 @@ public:
         return result;
     }
 
-    bool warnIfDocumentIsNotClean_shouldContinue(DocumentPtr document)
+    bool askUserOnUnsavedData_handleAnswer_shouldContinue()
     {
-        if (!document->isClean()) {
-            int ret = QMessageBox::warning(owner->mainEditorWidget(), owner->tr("Document modified warning"),
-                            QString(owner->tr("Current document is not saved to a file.\nWould you like to continue (and loose unsaved changes)?")),
-                            QMessageBox::Yes | QMessageBox::No,
-                            QMessageBox::No);
-            qDebug() << ret;
-            if (ret != QMessageBox::Yes) {
-                qDebug() << "not yes => abort";
-                return false;
-            }
+        int response;
+        if (owner->isDocumentFileNotCreated()) {
+            response = QMessageBox::information(owner->mainEditorWidget(), owner->tr("Document modified / No file for document"),
+                                                QString(owner->tr("The current document is not saved to a file.\nYou can save it to the predefined filename now, discard the changes or cancel the current action.")),
+                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                                                QMessageBox::Save);
+        }
+        else if (!owner->document()->isClean()) {
+            response = QMessageBox::information(owner->mainEditorWidget(), owner->tr("Document modified"),
+                                                QString(owner->tr("The current document changes are not saved to a file.\nYou can save it now, discard the changes or cancel the current action.")),
+                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                                                QMessageBox::Save);
+        }
+        else {
+            return true; // continue
         }
 
-        return true; // continue
+        if (QMessageBox::Save == response) {
+            owner->slotDocumentSave();
+            return true; // continue
+        }
+        else if (QMessageBox::Discard == response) {
+            return true; // continue
+        }
+        else {
+            return false; // abort calling action
+        }
     }
 
 public:
@@ -238,7 +252,7 @@ void KreenshotEditor::dragEnterEventMainWindow(QDragEnterEvent* event)
 
 void KreenshotEditor::dropEventMainWindow(QDropEvent* event)
 {
-    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
+    if (!d->askUserOnUnsavedData_handleAnswer_shouldContinue()) {
         return;
     }
 
@@ -430,9 +444,9 @@ bool KreenshotEditor::isDocumentClean()
     return document()->isClean();
 }
 
-bool KreenshotEditor::warnIfDocumentIsNotClean_shouldContinue()
+bool KreenshotEditor::askUserOnUnsavedData_handleAnswer_shouldContinue()
 {
-    return d->warnIfDocumentIsNotClean_shouldContinue(document());
+    return d->askUserOnUnsavedData_handleAnswer_shouldContinue();
 }
 
 void KreenshotEditor::showPreferencesDialog(QWidget* parent)
@@ -459,15 +473,14 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
 
     // the save button should be enabled when the file is not created yet
     // or the document is not clean
-    d->actionDocumentSave->setEnabled(documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated
-    || !document()->isClean());
+    d->actionDocumentSave->setEnabled(isDocumentFileNotCreated() || !document()->isClean());
 
     emit documentFileStatusChangedSignal();
 }
 
 void KreenshotEditor::slotDocumentNew()
 {
-    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
+    if (!d->askUserOnUnsavedData_handleAnswer_shouldContinue()) {
         return;
     }
 
@@ -476,7 +489,7 @@ void KreenshotEditor::slotDocumentNew()
 
 void KreenshotEditor::slotDocumentNewFromClipboard()
 {
-    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
+    if (!d->askUserOnUnsavedData_handleAnswer_shouldContinue()) {
         return;
     }
 
@@ -485,15 +498,15 @@ void KreenshotEditor::slotDocumentNewFromClipboard()
 
 void KreenshotEditor::slotDocumentOpen()
 {
-    if (!d->warnIfDocumentIsNotClean_shouldContinue(document())) {
+    if (!d->askUserOnUnsavedData_handleAnswer_shouldContinue()) {
         return;
     }
 
     QString imageFilename = QFileDialog::getOpenFileName(this->mainEditorWidget(), tr("Open image"),
-                                                    QString(),
-                                                    tr("Images") + " ("
-                                                   + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
-                                                   + ")");
+                            QString(),
+                            tr("Images") + " ("
+                            + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
+                            + ")");
 
     if (!imageFilename.isEmpty()) {
         createNewDocumentFromFile(imageFilename);
@@ -502,11 +515,11 @@ void KreenshotEditor::slotDocumentOpen()
 
 void KreenshotEditor::slotDocumentSave()
 {
-    if (documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated && QFile::exists(documentFile()->filename())) {
+    if (isDocumentFileNotCreated() && QFile::exists(documentFile()->filename())) {
         int ret = QMessageBox::warning(this->mainEditorWidget(), tr("Save file"),
-                           QString(tr("%1 already exists.\nDo you want to replace it?")).arg(documentFile()->filename()),
-                           QMessageBox::Yes | QMessageBox::No,
-                           QMessageBox::No);
+                                       QString(tr("%1 already exists.\nDo you want to replace it?")).arg(documentFile()->filename()),
+                                       QMessageBox::Yes | QMessageBox::No,
+                                       QMessageBox::No);
         qDebug() << ret;
         if (ret != QMessageBox::Yes) {
             qDebug() << "not yes => abort";
@@ -521,10 +534,10 @@ void KreenshotEditor::slotDocumentSave()
 void KreenshotEditor::slotDocumentSaveAs()
 {
     QString filename = QFileDialog::getSaveFileName(this->mainEditorWidget(), tr("Save file as"),
-                                                    documentFile()->filename(),
-                                                    tr("Images") + " ("
-                                                   + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
-                                                   + ")");
+                       documentFile()->filename(),
+                       tr("Images") + " ("
+                       + d->saveFileNameFilterStringFromImageFileExtensions(DocumentFile::supportedImageFormats())
+                       + ")");
     if (!filename.isEmpty()) {
         ErrorStatus errorStatus = documentFile()->saveAs(filename);
         d->handleSaveImageError(this->mainEditorWidget(), errorStatus);
