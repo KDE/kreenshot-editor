@@ -158,6 +158,13 @@ QString DocumentFile::filename()
     return d->filename;
 }
 
+void DocumentFile::setProposedFilename(QString filename)
+{
+    Q_ASSERT(fileStatus() == FileStatus_NotCreated);
+    d->filename = filename;
+    emit fileStatusChanged();
+}
+
 DocumentFile::FileStatus DocumentFile::fileStatus()
 {
     if (d->fileStatus == FileStatus_NotCreated) {

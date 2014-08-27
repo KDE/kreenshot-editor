@@ -73,9 +73,14 @@ public:
     DocumentPtr document();
 
     /**
-     * path to file
+     * filename of existing file or proposed filename (i.e. with or without path)
      */
     QString filename();
+
+    /**
+     * Only allowed if file is not created yet. Emits fileStatusChanged().
+     */
+    void setProposedFilename(QString filename);
 
     /**
      * TODO: make better because only FileStatus_NotCreated is used at the moment

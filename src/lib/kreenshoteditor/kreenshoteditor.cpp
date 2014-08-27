@@ -61,7 +61,7 @@ public:
     {
         qDebug() << "KreenshotEditor::createNewDocument internal";
 
-        settingsToOutputFilenameManager();
+        settingsToOutputFilenameGenerator();
 
         QString filename;
         DocumentFile::FileStatus fileStatus;
@@ -86,7 +86,7 @@ public:
         owner->emit documentFileStatusChangedSignal();
     }
 
-    void settingsToOutputFilenameManager()
+    void settingsToOutputFilenameGenerator()
     {
         auto outputSettings = settingsManager->output;
         //                                                                                     == PathCombine
@@ -465,7 +465,9 @@ void KreenshotEditor::showPreferencesDialog(QWidget* parent)
         // only if file is still new (= not stored yet to disk) apply the new file path settings
         if (isDocumentFileNotCreated()) {
             qDebug() << "settingsToOutputFilenameManager";
-            d->settingsToOutputFilenameManager();
+            d->settingsToOutputFilenameGenerator();
+            // d->outputFilenameGenerator->initCaptureTime(); // we explicitly do not change the capture time here
+            documentFile()->setProposedFilename(d->outputFilenameGenerator->resultingFilename()); // emits fileStatusChanged() / to update filename in title bar
         }
     }
 }

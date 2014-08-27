@@ -1,5 +1,6 @@
 TODO
 ----
+- pimpl: CHECK: "::" instead of using owner
 - implement SelectionHandles
     - best way to make the item resize?
     - BUG: create item, create another item by clicking the selection handle, move one of the items
@@ -17,11 +18,10 @@ TODO
     - Ctrl for propertional
 - draw arrow (use QPainterPath from TikzKit)
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
-- think about it: File->New with same filename as before is not good
-    - add postfix?
-    - set new datetime (has no effect if preferences are not set accordingly)
+- File->New with same filename as before is not good
+    - set new datetime (has no effect if preferences are not set accordingly --> dann Pech)
         - apply changed prefs for new document (output path) without restart
-    - just use empty filename?
+    - just use empty filename? --> nein
 
 IDEAS
 -----
