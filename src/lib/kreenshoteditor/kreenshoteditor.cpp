@@ -83,7 +83,7 @@ public:
         owner->connect(owner->document().get(), SIGNAL(contentChangedSignal()), owner, SLOT(slotDocumentFileStatusChanged()));
 
         owner->emit newDocumentCreatedSignal();
-        owner->emit documentFileStatusChangedSignal();
+        owner->slotDocumentFileStatusChanged(); // emits documentFileStatusChangedSignal() and set some action enabledness (save, undo, redo)
     }
 
     void settingsToOutputFilenameGenerator()
@@ -488,6 +488,7 @@ void KreenshotEditor::slotDocumentFileStatusChanged()
     // the save button should be enabled when the file is not created yet
     // or the document is not clean
     d->actionDocumentSave->setEnabled(isDocumentFileNotCreated() || !document()->isClean());
+    slotEditUndoRedoActionEnabledUpdate(); // also update undo/redo enabledness
 
     emit documentFileStatusChangedSignal();
 }
