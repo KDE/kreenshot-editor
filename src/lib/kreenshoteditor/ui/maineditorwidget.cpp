@@ -378,8 +378,6 @@ void MainEditorWidget::slotDocumentCreated()
     connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
 
     connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
-
-    d->kreenshotEditor()->document()->addDemoItems(); // TODO: remove later
 }
 
 void MainEditorWidget::slotDocumentContentChanged()

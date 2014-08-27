@@ -438,6 +438,11 @@ void KreenshotEditor::setDescription(QString text)
     d->outputFilenameGenerator->setDescription(text);
 }
 
+void KreenshotEditor::addDemoItems()
+{
+    document()->addDemoItems();
+}
+
 bool KreenshotEditor::isDocumentFileNotCreated()
 {
     return documentFile()->fileStatus() == DocumentFile::FileStatus_NotCreated;

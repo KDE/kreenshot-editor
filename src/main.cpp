@@ -33,8 +33,9 @@ class Arguments
 public:
     QString baseImagePath;
     QString description;
-    bool treatFileAsNew;
+    bool newFromFile;
     bool newFromClipboard;
+    bool addDemoItems;
 };
 
 Arguments parseArgumentsOrExit(QApplication& app);
@@ -56,12 +57,16 @@ int main(int argc, char *argv[])
         kreenshotEditor->createNewDocumentFromClipbard();
     }
     else {
-        if (arguments.treatFileAsNew) {
+        if (arguments.newFromFile) {
             kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath)); // load base image data from file
         }
         else {
             kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath); // load document from file
         }
+    }
+
+    if (arguments.addDemoItems) {
+        kreenshotEditor->addDemoItems();
     }
 
     MainWindow mainWindow(kreenshotEditor);
@@ -80,12 +85,12 @@ Arguments parseArgumentsOrExit(QApplication& app)
     parser.addVersionOption();
     parser.setApplicationDescription("screenshot image editing, (c) 2014");
 
-    parser.addPositionalArgument("image", tr("Filename (i.e. with or without path) of primary image to be loaded."),
+    parser.addPositionalArgument("image", tr("Filename (i.e. with or without path) of primary image to be loaded. If file does not exist, default image data will be used."),
                                  tr("[filename]")); // optional
 
-    QCommandLineOption treatAsNewOption(QStringList() << "new-from-file",
+    QCommandLineOption newFromFileOption(QStringList() << "new-from-file",
                                         tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically. Not allowed with --new-from-clipboard."));
-    parser.addOption(treatAsNewOption);
+    parser.addOption(newFromFileOption);
 
     QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard",
                                               tr("Like --new-from-file but takes the image data from the clipboard (image data or filename of image). If no valid image data present a default image will be used. Not allowed with --new-from-file. Positional image filename argument not allowed."));
@@ -110,6 +115,10 @@ Arguments parseArgumentsOrExit(QApplication& app)
                                          tr("Description, e. g. window title of the captured window."),
                                          tr("text"));
     parser.addOption(descriptionOption);
+
+    QCommandLineOption addDemoItemsOption(QStringList() << "add-demo-items",
+                                         tr("Adds a set of demo items to the loaded image."));
+    parser.addOption(addDemoItemsOption);
 
     parser.process(app);
 
@@ -158,19 +167,21 @@ Arguments parseArgumentsOrExit(QApplication& app)
         arguments.description = descriptionStr;
         qDebug() << "  description:" << arguments.description;
 
-        arguments.treatFileAsNew = parser.isSet(treatAsNewOption);
-        qDebug() << "  treatAsNew:" << arguments.treatFileAsNew;
+        arguments.newFromFile = parser.isSet(newFromFileOption);
+        qDebug() << "  treatAsNew:" << arguments.newFromFile;
 
         arguments.newFromClipboard = parser.isSet(newFromClipboardOption);
         qDebug() << "  newFromClipboard:" << arguments.newFromClipboard;
 
+        arguments.addDemoItems = parser.isSet(addDemoItemsOption);
+
         // check for invalid combinations
         //
-        if (arguments.newFromClipboard && arguments.treatFileAsNew) {
+        if (arguments.newFromClipboard && arguments.newFromFile) {
             throw std::runtime_error(tr("--new-from-file not allowed together with --new-from-clipboard.").toUtf8().constData());
         }
 
-        if (arguments.treatFileAsNew && arguments.baseImagePath.isEmpty()) {
+        if (arguments.newFromFile && arguments.baseImagePath.isEmpty()) {
             throw std::runtime_error(tr("Positional image filename argument is required for --new-from-file.").toUtf8().constData());
         }
 

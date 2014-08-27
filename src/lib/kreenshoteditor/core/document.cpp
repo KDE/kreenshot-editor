@@ -54,7 +54,8 @@ public:
         //painter.setBrush(QBrush(Qt::lightGray));
         painter.setPen(QPen(Qt::gray));
         painter.setFont(QFont("Sans", 16));
-        painter.drawText(QPointF(30.0, 50.0), "No image loaded.");
+        painter.drawText(QPointF(30.0, 50.0), "No image data present:");
+        painter.drawText(QPointF(30.0, 90.0), "Default image data.");
         return pixmap.toImage();
     }
 

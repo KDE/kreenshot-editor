@@ -106,6 +106,11 @@ public:
     void setDescription(QString text);
 
     /**
+     * Adds some demo items to the current document for testing and demo purposes
+     */
+    void addDemoItems();
+
+    /**
      * Returns the singleton instance of the main editor widget that
      * contains the QGraphicsView with the base image and created items.
      * (Toolbars and menus are created elsewhere)
