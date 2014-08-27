@@ -64,19 +64,24 @@ public:
     /**
      * Creates a new document.
      * Set the base image data (image to be edited) from the given parameter.
-     * Since there is no filename the document is treated as new.
+     * If there is no filename given the document is treated as new. (todo, later?: Else it will be used as proposed filename.)
      * If no image data is given a default image will be used as base image.
+     *
      */
-    void createNewDocument(QImage image = QImage());
+    void createNewDocument(QImage image = QImage()/*, QString filename = QString()*/);
 
     /**
      * Creates a new document.
      * Loads the image data from the given file path and set output filename
-     * to given filename (with or without path).
+     * to given filename (i.e. with or without path).
      */
     void createNewDocumentFromFile(QString filename);
 
-    void createNewDocumentFromClipbard();
+    /**
+     * Creates a new document with image data from clipboard.
+     * (todo, later?: if filename is not empty then it will be used as proposed filename.)
+     */
+    void createNewDocumentFromClipbard(/*QString filename = QString()*/);
 
     /**
      * the active document, see also documentFile()

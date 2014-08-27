@@ -297,7 +297,7 @@ void KreenshotEditor::slotRequestToolBySenderAction()
     mainEditorWidget()->requestTool(toolId);
 }
 
-void KreenshotEditor::createNewDocument(QImage image)
+void KreenshotEditor::createNewDocument(QImage image/*, QString filename*/)
 {
     qDebug() << "KreenshotEditor::createNewDocument";
     d->createNewDocument(image, QString());
@@ -309,11 +309,11 @@ void KreenshotEditor::createNewDocumentFromFile(QString filename)
     d->createNewDocument(QImage(filename), filename);
 }
 
-void KreenshotEditor::createNewDocumentFromClipbard()
+void KreenshotEditor::createNewDocumentFromClipbard(/*QString filename*/)
 {
     QClipboard* clipboard = QApplication::clipboard();
     auto image = clipboard->image();
-    createNewDocument(image);
+    d->createNewDocument(image, QString());
 }
 
 DocumentPtr KreenshotEditor::document()

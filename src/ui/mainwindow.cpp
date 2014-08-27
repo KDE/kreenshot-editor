@@ -310,12 +310,13 @@ void MainWindow::slotUpdateDocumentFileStatus()
     qDebug() << "MainWindow::slotUpdateDocumentFileStatus()";
 
     QString fileStatusPrefix;
-    if (d->kreenshotEditor->isDocumentFileNotCreated()) {
-        fileStatusPrefix = tr("[NO FILE] ");
-    }
 
     if (!d->kreenshotEditor->isDocumentClean()) {
         fileStatusPrefix += tr("* ");
+    }
+
+    if (d->kreenshotEditor->isDocumentFileNotCreated()) {
+        fileStatusPrefix += tr("NOT CREATED: ");
     }
 
     setWindowTitle(QString("%1%2 - %3").arg(fileStatusPrefix).arg(d->kreenshotEditor->documentFile()->filename()).arg(d->baseWindowTitle));

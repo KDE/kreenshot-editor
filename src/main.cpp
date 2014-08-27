@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     }
     else {
         if (arguments.treatFileAsNew) {
-            kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath));
+            kreenshotEditor->createNewDocument(QImage(arguments.baseImagePath)); // load base image data from file
         }
         else {
-            kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath);
+            kreenshotEditor->createNewDocumentFromFile(arguments.baseImagePath); // load document from file
         }
     }
 
@@ -81,14 +81,14 @@ Arguments parseArgumentsOrExit(QApplication& app)
     parser.setApplicationDescription("screenshot image editing, (c) 2014");
 
     parser.addPositionalArgument("image", tr("Filename (i.e. with or without path) of primary image to be loaded."),
-                                 tr("filename"));
+                                 tr("[filename]")); // optional
 
     QCommandLineOption treatAsNewOption(QStringList() << "new-from-file",
-                                        tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically."));
+                                        tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically. Not allowed with --new-from-clipboard."));
     parser.addOption(treatAsNewOption);
 
     QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard",
-                                              tr("Like --new-from-file but takes the image date from the clipboard if it contains image data (otherwise a default image will be loaded). The --new-from-file option will be ignored."));
+                                              tr("Like --new-from-file but takes the image data from the clipboard (image data or filename of image). If no valid image data present a default image will be used. Not allowed with --new-from-file. Positional image filename argument not allowed."));
     parser.addOption(newFromClipboardOption);
 
     QCommandLineOption image2Option(QStringList() << "image2",
@@ -140,7 +140,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
         if (!image2xStr.isEmpty()) {
             bool ok;
             image2x = image2xStr.toInt(&ok);
-            if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse x value)").toUtf8().constData());
+            if (!ok) throw std::runtime_error(tr("Wrong argument (cannot parse x value)").toUtf8().constData());
         }
         qDebug() << "  image2x:" << image2x;
 
@@ -150,7 +150,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
         if (!image2yStr.isEmpty()) {
             bool ok;
             image2y = image2yStr.toInt(&ok);
-            if (!ok) throw std::runtime_error(tr("wrong argument (cannot parse y value)").toUtf8().constData());
+            if (!ok) throw std::runtime_error(tr("Wrong argument (cannot parse y value)").toUtf8().constData());
         }
         qDebug() << "  image2y:" << image2y;
 
@@ -161,13 +161,22 @@ Arguments parseArgumentsOrExit(QApplication& app)
         arguments.treatFileAsNew = parser.isSet(treatAsNewOption);
         qDebug() << "  treatAsNew:" << arguments.treatFileAsNew;
 
-        if (arguments.baseImagePath.isEmpty()) {
-            qDebug() << "  treatAsNew: set to true because baseImagePath is empty";
-            arguments.treatFileAsNew = true;
-        }
-
         arguments.newFromClipboard = parser.isSet(newFromClipboardOption);
         qDebug() << "  newFromClipboard:" << arguments.newFromClipboard;
+
+        // check for invalid combinations
+        //
+        if (arguments.newFromClipboard && arguments.treatFileAsNew) {
+            throw std::runtime_error(tr("--new-from-file not allowed together with --new-from-clipboard.").toUtf8().constData());
+        }
+
+        if (arguments.treatFileAsNew && arguments.baseImagePath.isEmpty()) {
+            throw std::runtime_error(tr("Positional image filename argument is required for --new-from-file.").toUtf8().constData());
+        }
+
+        if (arguments.newFromClipboard && !arguments.baseImagePath.isEmpty()) {
+            throw std::runtime_error(tr("Positional image filename argument not allowed together with --new-from-clipboard.").toUtf8().constData());
+        }
     }
     catch (const std::runtime_error& e) {
         std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;
