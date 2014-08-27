@@ -83,6 +83,7 @@ LATER
 - "Copy filename to clipboard": show notification that something was copied; show warning if file is not saved yet
 - how to read/use the scalable image (svg)?
      //baseImage = QIcon::fromTheme("kcmkwm").pixmap(QSize(512, 512)).toImage();
+- ? do not ask to save document if default image is loaded and document is clean
 - ? load default image from a resource
 - ? click on empty space should choose Select tool
 - ? use m4 to generate settings class

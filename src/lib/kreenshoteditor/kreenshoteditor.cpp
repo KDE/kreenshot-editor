@@ -300,12 +300,14 @@ void KreenshotEditor::slotRequestToolBySenderAction()
 void KreenshotEditor::createNewDocument(QImage image/*, QString filename*/)
 {
     qDebug() << "KreenshotEditor::createNewDocument";
+    d->outputFilenameGenerator->initCaptureTime(); // set time to current for new document (with or without default image; todo: this might change in the future)
     d->createNewDocument(image, QString());
 }
 
 void KreenshotEditor::createNewDocumentFromFile(QString filename)
 {
     qDebug() << "KreenshotEditor::createNewDocumentFromFile";
+    d->outputFilenameGenerator->initCaptureTime(); // set time to current for new document from file
     d->createNewDocument(QImage(filename), filename);
 }
 
@@ -313,6 +315,7 @@ void KreenshotEditor::createNewDocumentFromClipbard(/*QString filename*/)
 {
     QClipboard* clipboard = QApplication::clipboard();
     auto image = clipboard->image();
+    d->outputFilenameGenerator->initCaptureTime(); // set time to current for new document from clipboard
     d->createNewDocument(image, QString());
 }
 
