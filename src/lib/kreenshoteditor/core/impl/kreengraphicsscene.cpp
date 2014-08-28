@@ -129,17 +129,17 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         }
         else if (tool == DrawRect) {
             item = KreenItem::create("rect");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
             this->addItem(_creatingItem);
         }
         else if (tool == DrawEllipse) {
             item = KreenItem::create("ellipse");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
             this->addItem(_creatingItem);
         }
         else if (tool == DrawLine) {
             item = KreenItem::create("line");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
             this->addItem(_creatingItem);
         }
 //         else if (tool == DrawText) {
@@ -149,12 +149,12 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 //         }
         else if (tool == DrawObfuscate) {
             item = KreenItem::create("obfuscate");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
             this->addItem(_creatingItem);
         }
         else if (tool == OperationCrop) {
             item = KreenItem::create("op-crop");
-            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item);
+            _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
             this->addItem(_creatingItem);
         }
         else {

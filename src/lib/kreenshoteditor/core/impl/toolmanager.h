@@ -43,33 +43,38 @@ KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 class ToolManager
 {
 public:
-    static QGraphicsItem* createGraphicsItemFromKreenItem(KreenItemPtr item)
+    /**
+     * todo: return value could also be QGraphicsItem*
+     */
+    static KreenGraphicsItemBase* createGraphicsItemFromKreenItem(KreenItemPtr item)
     {
+        KreenGraphicsItemBase* kGrItem;
+
         // create items
         //
         if (item->typeId == "rect") {
-            auto kgrItem = new KreenGraphicsRectItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsRectItem(item);
+            return kGrItem;
         }
         else if (item->typeId == "line") {
-            auto kgrItem = new KreenGraphicsLineItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsLineItem(item);
+            return kGrItem;
         }
         else if (item->typeId == "ellipse") {
-            auto kgrItem = new KreenGraphicsEllipseItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsEllipseItem(item);
+            return kGrItem;
         }
         else if (item->typeId == "text") {
-            auto kgrItem = new KreenGraphicsTextRectItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsTextRectItem(item);
+            return kGrItem;
         }
         else if (item->typeId == "obfuscate") {
-            auto kgrItem = new KreenGraphicsObfuscateItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsObfuscateItem(item);
+            return kGrItem;
         }
         else if (item->typeId == "op-crop") {
-            auto kgrItem = new KreenGraphicsOperationCropItem(item);
-            return kgrItem;
+            kGrItem = new KreenGraphicsOperationCropItem(item);
+            return kGrItem;
         }
         else {
             qDebug() << "unknown item->typeId: " << item->typeId;

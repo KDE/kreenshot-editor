@@ -5,7 +5,6 @@ TODO
     - BUG: create item, create another item by clicking the selection handle, move one of the items
       => position jumps to 0,0. WHY?
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
-- Crop: implement Enter and Esc (e. g. via Actions)
 - mouse over: draw a light version of the selection rects
 - enable more item properties (see item.h/cpp)
 - enable hover visual

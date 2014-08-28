@@ -140,7 +140,7 @@ void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* accep
 
 void KreenGraphicsItemBase::connectImageOperationCancelButton(QPushButton* button)
 {
-    qDebug() << "connectImageOperationAcceptButton";
+    qDebug() << "connectImageOperationCancelButton";
     connect(button, SIGNAL(clicked()), this, SLOT(operationCanceledSlot()));
 }
 

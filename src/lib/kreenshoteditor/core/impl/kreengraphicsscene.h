@@ -137,6 +137,10 @@ protected:
 private:
     Document* _document;
     ToolManagerPtr _toolManager;
+    /**
+     * The item that is drawn when user clicks and holds the mouse button and drags. It will be replaced with
+     * another one as soon as the item is created.
+     */
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
     QList<KreenItemPtr> _savedSelection;

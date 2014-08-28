@@ -82,6 +82,7 @@ public:
     QGraphicsPixmapItem* baseImageSceneItem = nullptr;
     ImageOperationHandling imgOpHandling;
     SelectionHandlesPtr selectionHandles;
+    QAction* actionImageOperationAccept = nullptr;
 
 private:
     KreenshotEditorPtr _kreenshotEditor;
@@ -177,7 +178,7 @@ public:
         //
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
-            auto grItem = toolManager()->createGraphicsItemFromKreenItem(item);
+            auto grItem = toolManager()->createGraphicsItemFromKreenItem(item)->graphicsItem();
             scene()->addItem(grItem);
         }
 
@@ -353,6 +354,15 @@ MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
     if (kreenshotEditor->document() != nullptr) {
         slotDocumentCreated();
     }
+
+    //
+    // connect image operation accept action
+    //
+    d->actionImageOperationAccept = new QAction(this);
+    d->actionImageOperationAccept->setEnabled(false);
+    d->actionImageOperationAccept->setShortcut(QKeySequence(tr("Return")));
+    addAction(d->actionImageOperationAccept); // otherwise keyboard shortcut will not work (http://stackoverflow.com/questions/9319407/qaction-shortcut-doesnt-always-work)
+    connect(d->actionImageOperationAccept, SIGNAL(triggered()), this, SLOT(slotImageOperationAccepted()));
 }
 
 MainEditorWidget::~MainEditorWidget()
@@ -399,11 +409,13 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
     if (d->imgOpHandling.imageOperationGraphicsItem != nullptr) {
         d->scene()->removeItem(d->imgOpHandling.imageOperationGraphicsItem);
         d->imgOpHandling.reset();
+        d->actionImageOperationAccept->setEnabled(false);
     }
 
     // then depending on active or not:
     if (d->imgOpHandling.imageOperationItemActive()) {
-        auto grItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
+        auto kGrItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
+        auto grItem = kGrItem->graphicsItem();
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
@@ -411,6 +423,7 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(slotImageOperationAccepted()));
         connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(slotImageOperationCanceled()));
+        d->actionImageOperationAccept->setEnabled(true);
     }
 }
 
@@ -556,7 +569,8 @@ void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 
 void MainEditorWidget::slotImageOperationAccepted()
 {
-    qDebug() << "MainEditorWidget::imageOperationAccepted(). Forward to imageOperationAcceptedDecoupled() because otherwise some mouse release event will crash because image operation object will be remove";
+    Q_ASSERT(d->toolManager()->isImageOperationActive());
+    qDebug() << "MainEditorWidget::slotImageOperationAccepted(). Forward to imageOperationAcceptedDecoupled() because otherwise some mouse release event will crash because image operation object will be remove";
     QTimer::singleShot(0, this, SLOT(slotImageOperationAcceptedDecoupled()));
 }
 
