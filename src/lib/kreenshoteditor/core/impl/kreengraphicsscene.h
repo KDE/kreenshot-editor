@@ -35,6 +35,7 @@ namespace core {
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(RenderVisibilityControl)
 
 class KreenGraphicsItemBase;
@@ -63,6 +64,11 @@ public:
      * for interactive handling
      */
     void setToolManager(ToolManagerPtr toolManager);
+
+    /**
+     * for disabling creating of new items if mouse is over a selection handle
+     */
+    void setSelectionHandles(SelectionHandlesPtr selectionHandles);
 
     /**
      * When image is saved to file things like crop operation tool or selection rects
@@ -144,6 +150,7 @@ private:
     QGraphicsItem* _creatingItem;
     QPoint _creatingItemStartPoint;
     QList<KreenItemPtr> _savedSelection;
+    SelectionHandlesPtr _selectionHandles;
     RenderVisibilityControlPtr _renderVisibilityControl;
 };
 

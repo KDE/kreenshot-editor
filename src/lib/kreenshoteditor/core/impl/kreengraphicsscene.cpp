@@ -22,6 +22,7 @@
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "selectionhandlegraphicsitem.h"
+#include "selectionhandles.h"
 #include "rendervisibilitycontrol.h"
 
 namespace kreen {
@@ -46,6 +47,11 @@ Document* KreenGraphicsScene::document()
 void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
 {
     _toolManager = toolManager;
+}
+
+void KreenGraphicsScene::setSelectionHandles(SelectionHandlesPtr selectionHandles)
+{
+    _selectionHandles = selectionHandles;
 }
 
 QList<KreenGraphicsItemBase*> KreenGraphicsScene::selectedKreenGraphicsItems()
@@ -116,6 +122,13 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     qDebug() << "MyQGraphicsScene::mousePressEvent";
     Q_ASSERT(_toolManager != nullptr);
+
+    // if mouse is over a handle, no new item should be created on mouse press:
+    if (_selectionHandles->isMouseHoveringOnAnyHandle()) {
+        qDebug() << "_selectionHandles->isMouseHoveringOnAnyHandle()";
+        QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
+        return;
+    }
 
     _creatingItemStartPoint = event->scenePos().toPoint();
 

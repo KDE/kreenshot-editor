@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "selectionhandlegraphicsitem.h"
+#include "selectionhandles.h"
 #include <QRect>
 #include <QCursor>
 #include <QGraphicsScene>
@@ -24,19 +25,23 @@
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 
 namespace kreen {
 namespace core {
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem)
- : SelectionHandleGraphicsItem(instrumentedItem, QRectF())
-{
-}
+// SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem)
+//  : SelectionHandleGraphicsItem(instrumentedItem, QRectF())
+// {
+//
+// }
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, QGraphicsItem* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
 {
+    _manager = manager;
     _instrumentedItem = instrumentedItem;
     setAcceptHoverEvents(true);
+    setFlag(QGraphicsItem::ItemIsMovable, true);
 }
 
 SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
@@ -46,6 +51,11 @@ SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 
 void SelectionHandleGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
+    qDebug() << "SelectionHandleGraphicsItem::hoverEnterEvent";
+
+    // NOTE, that this event is not called right away after creating a new item and the mouse cursor already stays
+    // over the handle; we will use SelectionHandles::isMouseHoveringOnAnyHandle() to compensate for that
+
     QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -56,18 +66,20 @@ void SelectionHandleGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* even
 
 void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    qDebug() << "SelectionHandleGraphicsItem::mousePressEvent";
+
     // The mouse is over a SelectionHandle and the user
     // clicks to move the Handle. If we would not disable
-    // Movement of the instrumentedItem then the item would move because it is selected
+    // Movement of the instrumentedItem, then the item would move because it is selected
     // and all selected items are moved automatically.
-    _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+    _manager->setAllItemsWithHandlesMovable(false);
     QGraphicsItem::mousePressEvent(event);
 }
 
 void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     // see mousePressEvent
-    _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+    _manager->setAllItemsWithHandlesMovable(true);
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -77,7 +89,7 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
         emit handleItemPositionHasChangedSignal();
     }
     else if (change == QGraphicsItem::ItemPositionChange) {
-        _instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+        // ...
     }
 
     return QGraphicsItem::itemChange(change, value);

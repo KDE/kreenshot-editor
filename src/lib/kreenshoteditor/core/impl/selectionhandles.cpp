@@ -50,11 +50,10 @@ public:
      */
     SelectionHandleGraphicsItem* createSelectionHandleItem(QGraphicsItem* instrumentedItem, QRectF rect, const QCursor& cursor)
     {
-        auto grItem = new SelectionHandleGraphicsItem(instrumentedItem, rect);
+        auto grItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
         grItem->setBrush(QBrush(Qt::black));
         grItem->setPen(Qt::NoPen);
         grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-        grItem->setFlag(QGraphicsItem::ItemIsMovable, true);
         // qDebug() << "newRectItemWithCursor, setCursor";
         grItem->setCursor(cursor);
 
@@ -77,6 +76,27 @@ SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
 SelectionHandles::~SelectionHandles()
 {
     qDebug() << "SelectionHandles destructor";
+}
+
+bool SelectionHandles::isMouseHoveringOnAnyHandle()
+{
+    foreach (auto grItemPair, d->currentHandles) {
+        foreach (auto grItem, grItemPair.second) {
+            if (grItem->isUnderMouse()) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void SelectionHandles::setAllItemsWithHandlesMovable(bool isMoveable)
+{
+    foreach (auto grItemPair, d->currentHandles) {
+        auto instrumentedItem = grItemPair.first;
+        instrumentedItem->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
+    }
 }
 
 void SelectionHandles::redrawSelectionHandles(bool createNewHandles)

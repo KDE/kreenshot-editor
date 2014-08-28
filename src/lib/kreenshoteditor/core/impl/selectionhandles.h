@@ -20,6 +20,7 @@
 #define UUID_c01b9a44c6643c4eb71e9b4b53b9b71f
 
 #include <kreen/util/pimplutil.h>
+#include "selectionhandlegraphicsitem.h"
 #include <QString>
 #include <QObject>
 #include <map>
@@ -35,6 +36,8 @@ class SelectionHandles //: public QObject
 {
     //Q_OBJECT
 
+    friend SelectionHandleGraphicsItem;
+
 public:
     SelectionHandles(QGraphicsScene* scene);
 
@@ -42,9 +45,18 @@ public:
 
 public:
     /**
+     * True if the user begins to drag a handle.
+     * In this case other mouse down actions like create a new item must be prohibited
+     */
+    bool isMouseHoveringOnAnyHandle();
+
+    /**
      * TMP?
      */
     void redrawSelectionHandles(bool createNewHandles);
+
+protected:
+    void setAllItemsWithHandlesMovable(bool isMoveable);
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR

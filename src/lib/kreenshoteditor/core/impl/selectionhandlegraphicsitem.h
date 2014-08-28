@@ -28,6 +28,7 @@ namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
 class MainEditorWidgetImpl;
+class SelectionHandles;
 
 class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
 {
@@ -35,9 +36,9 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     Q_OBJECT
 
 public:
-    SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem);
+    //SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem);
 
-    SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, QGraphicsItem* instrumentedItem, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 
@@ -52,7 +53,12 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+
 private:
+    SelectionHandles* _manager;
+    /**
+     * TODO: not used
+     */
     QGraphicsItem* _instrumentedItem;
 };
 

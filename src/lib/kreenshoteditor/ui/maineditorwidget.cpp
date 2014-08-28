@@ -376,7 +376,9 @@ void MainEditorWidget::slotDocumentCreated()
 
     d->selectionHandles = std::make_shared<SelectionHandles>(d->scene().get()); // needs valid kreenshotEditor
 
-    d->kreenshotEditor()->document()->graphicsScene()->setToolManager(d->toolManager());
+    auto kreenGrScene = d->kreenshotEditor()->document()->graphicsScene();
+    kreenGrScene->setToolManager(d->toolManager());
+    kreenGrScene->setSelectionHandles(d->selectionHandles);
 
     connect(d->kreenshotEditor()->document().get(), SIGNAL(contentChangedSignal()),
             this, SLOT(slotDocumentContentChanged()));
@@ -598,6 +600,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
     Q_ASSERT(item != nullptr);
 
     qDebug() << "add item: " << item->rect();
+
     if (!item->isImageOperation()) {
 
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
