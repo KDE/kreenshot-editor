@@ -366,28 +366,26 @@ public:
         this->setPos(itemRect.x(), itemRect.y());
 
         if (_interactionWidget == nullptr) { // TODO: rename this variable
-            if (!_isCreating) {
-                qDebug() << "crop create proxywidget";
-                // TODO: center and make frame transparent
-                auto okButton = new QPushButton("Crop (Enter)");
-                connectImageOperationAcceptButton(okButton); // from base
-                auto cancelButton = new QPushButton("Cancel (Esc)");
-                connectImageOperationCancelButton(cancelButton); // from base
-                auto hLayout = new QHBoxLayout();
-                hLayout->addWidget(okButton);
-                hLayout->addWidget(cancelButton);
-                auto frame = new QFrame();
-                frame->setLayout(hLayout);
+            qDebug() << "crop create proxywidget";
+            // TODO: center and make frame transparent
+            auto okButton = new QPushButton("Crop (Enter)");
+            connectImageOperationAcceptButton(okButton); // from base
+            auto cancelButton = new QPushButton("Cancel (Esc)");
+            connectImageOperationCancelButton(cancelButton); // from base
+            auto hLayout = new QHBoxLayout();
+            hLayout->addWidget(okButton);
+            hLayout->addWidget(cancelButton);
+            auto frame = new QFrame();
+            frame->setLayout(hLayout);
 
-                auto widgetProxy = new QGraphicsProxyWidget(this);
-                widgetProxy->setWidget(frame);
-                _interactionWidget = widgetProxy;
+            auto widgetProxy = new QGraphicsProxyWidget(this);
+            widgetProxy->setWidget(frame);
+            _interactionWidget = widgetProxy;
 
-                // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
-                // TODO: 2014-06-18: seems not to be an issue anymore...
-                //_interactionWidget->setPos(-_interactionWidget->widget()->width(), -_interactionWidget->widget()->height());
-                _interactionWidget->setPos(itemRect.width(), itemRect.height());
-            }
+            // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
+            // TODO: 2014-06-18: seems not to be an issue anymore...
+            //_interactionWidget->setPos(-_interactionWidget->widget()->width(), -_interactionWidget->widget()->height());
+            _interactionWidget->setPos(itemRect.width(), itemRect.height());
         }
 
         updateDimRects(itemRect);
@@ -396,7 +394,7 @@ public:
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) override
     {
         //qDebug() << "KreenGraphicsOperationCropItem::updateVisualGeometryFromPoints";
-        
+
         QRect rect = QRect(0, 0, abs(endPoint.x() - startPoint.x()), abs(endPoint.y() - startPoint.y()));
         QPoint pos = QPoint(std::min(startPoint.x(), endPoint.x()), std::min(startPoint.y(), endPoint.y()));
         this->setRect(rect);
@@ -415,6 +413,7 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override
     {
+        itemChangeImpl(change, value); // default handling by base impl
         if (change == QGraphicsItem::ItemPositionHasChanged) {
             updateDimRects(modelRectFromGraphicsItem());
         }

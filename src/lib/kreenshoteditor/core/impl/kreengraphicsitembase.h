@@ -85,12 +85,6 @@ public:
      * used when creating an item
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
-
-    /**
-     * when user is releases the mouse button when creating an item
-     */
-    virtual void setIsCreating(bool creating);
-
 public:
     /**
      * WORKAROUND:
@@ -129,11 +123,6 @@ protected Q_SLOTS:
 
 protected:
     KreenItemPtr _item;
-
-    /**
-     * user is still moving the mouse with pressed button
-     */
-    bool _isCreating = false;
 
 private:
     QGraphicsItem* _graphicsItem;

@@ -418,11 +418,12 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
     // then depending on active or not:
     if (d->imgOpHandling.imageOperationItemActive()) {
         auto kGrItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
+        connect(kGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), this, SLOT(slotRedrawSelectionHandles())); // TODO: this connection is also made for regular items. Maybe use some common code.
         auto grItem = kGrItem->graphicsItem();
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
-        grItemBase->setIsCreating(false); // todo: needed?
+        grItem->setSelected(true); // selected by default so that the user sees that the area can be resized
         grItemBase->updateVisualGeometryFromModel();
         connect(grItemBase, SIGNAL(operationAcceptedSignal()), this, SLOT(slotImageOperationAccepted()));
         connect(grItemBase, SIGNAL(operationCanceledSignal()), this, SLOT(slotImageOperationCanceled()));

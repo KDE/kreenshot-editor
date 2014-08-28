@@ -94,11 +94,6 @@ bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
     return false;
 }
 
-void KreenGraphicsItemBase::setIsCreating(bool creating)
-{
-    _isCreating = creating;
-}
-
 void KreenGraphicsItemBase::configurePen(QAbstractGraphicsShapeItem* grItem)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)
