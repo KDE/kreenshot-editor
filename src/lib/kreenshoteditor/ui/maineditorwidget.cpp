@@ -562,7 +562,7 @@ void MainEditorWidget::slotUpdateItemsGeometryFromModel()
         }
 
         d->slotUpdateItemsGeometryFromModel();
-        d->selectionHandles->redrawSelectionHandles(true);
+        d->selectionHandles->createSelectionHandles();
 
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         doc->contentChangedNotificationGroupEnd();
@@ -615,6 +615,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         if (newKGrItem != nullptr) {
             newKGrItem->setSelectable(true); // not movable because we are still in creating mode but we would like to be able to resize the new item using the handles
             newKGrItem->graphicsItem()->setSelected(true);
+            //connect(newKGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), this, SLOT(slotRedrawSelectionHandles()));
         }
         else {
             Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
@@ -632,7 +633,7 @@ void MainEditorWidget::slotSceneSelectionChanged()
     qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
     d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
 
-    d->selectionHandles->redrawSelectionHandles(true);
+    d->selectionHandles->createSelectionHandles();
 
     emit itemSelectionChanged();
 }
@@ -640,7 +641,7 @@ void MainEditorWidget::slotSceneSelectionChanged()
 void MainEditorWidget::slotRedrawSelectionHandles()
 {
     //qDebug() << "SLOT redrawSelectionHandles";
-    d->selectionHandles->redrawSelectionHandles(false);
+    d->selectionHandles->redrawSelectionHandles();
 }
 
 void MainEditorWidget::deleteSelectedItems()

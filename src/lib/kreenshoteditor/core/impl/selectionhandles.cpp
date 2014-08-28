@@ -51,14 +51,7 @@ public:
     SelectionHandleGraphicsItem* createSelectionHandleItem(QGraphicsItem* instrumentedItem, QRectF rect, const QCursor& cursor)
     {
         auto grItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
-        grItem->setBrush(QBrush(Qt::black));
-        grItem->setPen(Qt::NoPen);
-        grItem->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
-        // qDebug() << "newRectItemWithCursor, setCursor";
         grItem->setCursor(cursor);
-
-        // connect(grItem, itemPositionHasChangedSignal, owner, // TODO later or go directly to the instrumentedItem
-
         return grItem;
     }
 
@@ -76,6 +69,16 @@ SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
 SelectionHandles::~SelectionHandles()
 {
     qDebug() << "SelectionHandles destructor";
+}
+
+void SelectionHandles::createSelectionHandles()
+{
+    redrawSelectionHandles(true);
+}
+
+void SelectionHandles::redrawSelectionHandles()
+{
+    redrawSelectionHandles(false);
 }
 
 bool SelectionHandles::isMouseHoveringOnAnyHandle()

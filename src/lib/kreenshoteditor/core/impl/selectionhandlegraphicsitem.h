@@ -43,7 +43,7 @@ public:
     virtual ~SelectionHandleGraphicsItem();
 
 Q_SIGNALS:
-    void handleItemPositionHasChangedSignal(); // TODO: not used yet
+    void handlePositionHasChangedSignal(); // TODO: not used yet
 
 protected:
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

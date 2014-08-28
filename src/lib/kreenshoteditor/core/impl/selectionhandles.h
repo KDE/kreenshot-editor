@@ -50,12 +50,15 @@ public:
      */
     bool isMouseHoveringOnAnyHandle();
 
+    void createSelectionHandles();
+
+    void redrawSelectionHandles();
+protected:
     /**
      * TMP?
      */
     void redrawSelectionHandles(bool createNewHandles);
 
-protected:
     void setAllItemsWithHandlesMovable(bool isMoveable);
 
 private:

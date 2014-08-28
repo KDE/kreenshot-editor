@@ -42,6 +42,10 @@ SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manag
     _instrumentedItem = instrumentedItem;
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+
+    setBrush(QBrush(Qt::black));
+    setPen(Qt::NoPen);
 }
 
 SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
@@ -86,7 +90,7 @@ void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* ev
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
 {
     if (change == QGraphicsItem::ItemPositionHasChanged) {
-        emit handleItemPositionHasChangedSignal();
+        emit handlePositionHasChangedSignal();
     }
     else if (change == QGraphicsItem::ItemPositionChange) {
         // ...
