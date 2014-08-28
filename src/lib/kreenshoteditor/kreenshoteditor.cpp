@@ -43,9 +43,9 @@ namespace kreen {
 class KreenshotEditor::Impl
 {
 public:
-    Impl(KreenshotEditor* owner_)
+    Impl(KreenshotEditor* owner)
     {
-        owner = owner_;
+        _owner = owner;
         outputFilenameGenerator = OutputFilenameGenerator::make_shared();
         settingsManager = SettingsManager::instance();
     }
@@ -78,12 +78,12 @@ public:
         documentFile = std::make_shared<DocumentFile>(doc, filename, fileStatus);
         documentFile->setSettingsManager(settingsManager);
 
-        owner->connect(owner->documentFile().get(), SIGNAL(fileStatusChanged()), owner, SLOT(slotDocumentFileStatusChanged()));
-        owner->connect(owner->document().get(), SIGNAL(contentChangedSignal()), owner, SLOT(slotEditUndoRedoActionEnabledUpdate()));
-        owner->connect(owner->document().get(), SIGNAL(contentChangedSignal()), owner, SLOT(slotDocumentFileStatusChanged()));
+        _owner->connect(_owner->documentFile().get(), SIGNAL(fileStatusChanged()), _owner, SLOT(slotDocumentFileStatusChanged()));
+        _owner->connect(_owner->document().get(), SIGNAL(contentChangedSignal()), _owner, SLOT(slotEditUndoRedoActionEnabledUpdate()));
+        _owner->connect(_owner->document().get(), SIGNAL(contentChangedSignal()), _owner, SLOT(slotDocumentFileStatusChanged()));
 
-        owner->emit newDocumentCreatedSignal();
-        owner->slotDocumentFileStatusChanged(); // emits documentFileStatusChangedSignal() and set some action enabledness (save, undo, redo)
+        _owner->emit newDocumentCreatedSignal();
+        _owner->slotDocumentFileStatusChanged(); // emits documentFileStatusChangedSignal() and set some action enabledness (save, undo, redo)
     }
 
     void settingsToOutputFilenameGenerator()
@@ -127,7 +127,7 @@ public:
     QList<QAction*> toolActions()
     {
         if (toolActionGroup == nullptr) {
-            toolActionGroup = new QActionGroup(owner);
+            toolActionGroup = new QActionGroup(_owner);
             newToolAction("select", QIcon::fromTheme("edit-select"), tr("Select"), toolActionGroup, QKeySequence(tr("Esc")));
             newToolAction("rect", QIcon::fromTheme("draw-rectangle"), tr("Rectangle"), toolActionGroup, QKeySequence(tr("R")));
             newToolAction("ellipse", QIcon::fromTheme("draw-circle"), tr("Ellipse or circle"), toolActionGroup, QKeySequence(tr("E")));
@@ -162,15 +162,15 @@ public:
     bool askUserOnUnsavedData_handleAnswer_shouldContinue()
     {
         int response;
-        if (owner->isDocumentFileNotCreated()) {
-            response = QMessageBox::information(owner->mainEditorWidget(), owner->tr("Document modified / No file for document"),
-                                                QString(owner->tr("The current document is not saved to a file.\nYou can save it to the predefined filename now, discard the changes or cancel the current action.")),
+        if (_owner->isDocumentFileNotCreated()) {
+            response = QMessageBox::information(_owner->mainEditorWidget(), _owner->tr("Document modified / No file for document"),
+                                                QString(_owner->tr("The current document is not saved to a file.\nYou can save it to the predefined filename now, discard the changes or cancel the current action.")),
                                                 QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                                 QMessageBox::Save);
         }
-        else if (!owner->document()->isClean()) {
-            response = QMessageBox::information(owner->mainEditorWidget(), owner->tr("Document modified"),
-                                                QString(owner->tr("The current document changes are not saved to a file.\nYou can save it now, discard the changes or cancel the current action.")),
+        else if (!_owner->document()->isClean()) {
+            response = QMessageBox::information(_owner->mainEditorWidget(), _owner->tr("Document modified"),
+                                                QString(_owner->tr("The current document changes are not saved to a file.\nYou can save it now, discard the changes or cancel the current action.")),
                                                 QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                                 QMessageBox::Save);
         }
@@ -179,14 +179,14 @@ public:
         }
 
         if (QMessageBox::Save == response) {
-            owner->slotDocumentSave();
+            _owner->slotDocumentSave();
             return true; // continue
         }
         else if (QMessageBox::Discard == response) {
             // If we do not set the document clean, it will trigger some cleanChanged signal which
             // will crash the program if it was closed by the user.
             // Thus, we set it clean which also makes some sense because we are about to willingly discard it.
-            owner->document()->setClean();
+            _owner->document()->setClean();
             return true; // continue
         }
         else {
@@ -195,8 +195,6 @@ public:
     }
 
 public:
-    KreenshotEditor* owner = nullptr;
-
     DocumentFilePtr documentFile;
     OutputFilenameGeneratorPtr outputFilenameGenerator;
     SettingsManagerPtr settingsManager;
@@ -221,6 +219,9 @@ public:
     QActionGroup* toolActionGroup = nullptr;
     // all actions:
     QMap<QString, QAction*> actionIdToActionMap;
+
+private:
+    KreenshotEditor* _owner = nullptr;
 };
 
 #undef tr

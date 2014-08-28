@@ -32,11 +32,11 @@ namespace core {
 class Document::Impl
 {
 public:
-    Impl(Document* owner_)
+    Impl(Document* owner)
     {
-        owner = owner_;
+        _owner = owner;
         scene = KreenGraphicsScene::make_shared();
-        scene->setDocument(owner); // see usages of document()
+        scene->setDocument(_owner); // see usages of document()
     }
 
     /**
@@ -79,12 +79,11 @@ public:
     void contentChangedNotificationGroupMethodLeave()
     {
         if (!contentChangedNotificationGroupActive()) {
-            emit owner->contentChangedSignal();
+            emit _owner->contentChangedSignal();
         }
     }
 
 public:
-    Document* owner = nullptr;
     QImage baseImage;
     QMap<int, KreenItemPtr> itemMap;
 
@@ -111,6 +110,9 @@ public:
      */
     int contentChangedNotificationGroupDepth = 0;
     bool contentChangedNotificationGroupRecordUndo = false;
+
+private:
+    Document* _owner = nullptr;
 };
 
 DocumentPtr Document::make_shared(QImage baseImage)

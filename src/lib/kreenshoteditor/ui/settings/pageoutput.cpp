@@ -36,12 +36,11 @@ class PageOutput::Impl
 {
 public:
     Ui::pageOutput ui;
-    PageOutput* owner;
 
 public:
-    Impl(PageOutput* owner_)
+    Impl(PageOutput* owner)
     {
-        owner = owner_;
+        _owner = owner;
     }
 
     void instrumentResetFilenamepatternButton()
@@ -51,12 +50,13 @@ public:
 
         // InstantPopup was set by designer
 
-        auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", owner);
-        owner->connect(action, SIGNAL(triggered()), owner, SLOT(slotResetFilenamePattern()));
+        auto action = new QAction(QIcon::fromTheme("edit-undo"), "Reset filename pattern to default", _owner);
+        _owner->connect(action, SIGNAL(triggered()), _owner, SLOT(slotResetFilenamePattern()));
         ui.toolButtonRestoreDefaultFilenamePattern->addAction(action);
     }
 
 private:
+    PageOutput* _owner;
 };
 
 #undef tr

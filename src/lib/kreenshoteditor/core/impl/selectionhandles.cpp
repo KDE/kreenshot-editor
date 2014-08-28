@@ -33,14 +33,13 @@ namespace core {
 class SelectionHandles::Impl
 {
 public:
-    SelectionHandles* owner = nullptr;
     QGraphicsScene* scene = nullptr;
     std::map<QGraphicsItem*, std::vector<SelectionHandleGraphicsItem*>> currentHandles;
 
 public:
-    Impl(SelectionHandles* owner_)
+    Impl(SelectionHandles* owner)
     {
-        owner = owner_;
+        _owner = owner;
     }
 
     /**
@@ -63,6 +62,9 @@ public:
 
         return grItem;
     }
+
+private:
+    SelectionHandles* _owner = nullptr;
 };
 
 

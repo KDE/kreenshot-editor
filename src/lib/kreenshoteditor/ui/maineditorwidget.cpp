@@ -74,7 +74,6 @@ public: // todo: make private
 class MainEditorWidget::Impl
 {
 public:
-    MainEditorWidget* _owner;
     KreenshotEditorPtr kreenshotEditor() {
         return _kreenshotEditor;
     };
@@ -317,6 +316,9 @@ public:
             scene()->addItem(textItem);
         }
     }
+
+private:
+    MainEditorWidget* _owner;
 };
 
 MainEditorWidget::MainEditorWidget(KreenshotEditorPtr kreenshotEditor)
