@@ -43,8 +43,8 @@ class KreenGraphicsItemBase : public QObject
 public:
 
 Q_SIGNALS:
-    void operationAccepted();
-    void operationCanceled();
+    void operationAcceptedSignal();
+    void operationCanceledSignal();
 
     void itemPositionHasChangedSignal(KreenItemPtr item);
 
@@ -123,9 +123,9 @@ protected:
     void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
 protected Q_SLOTS:
-    void operationAcceptedSlot();
+    void slotOperationAccepted();
 
-    void operationCanceledSlot();
+    void slotOperationCanceled();
 
 protected:
     KreenItemPtr _item;

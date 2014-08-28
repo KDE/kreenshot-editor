@@ -423,8 +423,8 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         grItemBase->setIsCreating(false); // todo: needed?
         grItemBase->updateVisualGeometryFromModel();
-        connect(grItemBase, SIGNAL(operationAccepted()), this, SLOT(slotImageOperationAccepted()));
-        connect(grItemBase, SIGNAL(operationCanceled()), this, SLOT(slotImageOperationCanceled()));
+        connect(grItemBase, SIGNAL(operationAcceptedSignal()), this, SLOT(slotImageOperationAccepted()));
+        connect(grItemBase, SIGNAL(operationCanceledSignal()), this, SLOT(slotImageOperationCanceled()));
         d->actionImageOperationAccept->setEnabled(true);
     }
 }

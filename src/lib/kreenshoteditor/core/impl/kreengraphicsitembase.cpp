@@ -135,13 +135,13 @@ QRect KreenGraphicsItemBase::sceneRect()
 void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
 {
     qDebug() << "connectImageOperationAcceptButton";
-    connect(acceptButton, SIGNAL(clicked()), this, SLOT(operationAcceptedSlot()));
+    connect(acceptButton, SIGNAL(clicked()), this, SLOT(slotOperationAccepted()));
 }
 
 void KreenGraphicsItemBase::connectImageOperationCancelButton(QPushButton* button)
 {
     qDebug() << "connectImageOperationCancelButton";
-    connect(button, SIGNAL(clicked()), this, SLOT(operationCanceledSlot()));
+    connect(button, SIGNAL(clicked()), this, SLOT(slotOperationCanceled()));
 }
 
 bool KreenGraphicsItemBase::mousePressEventImpl(QGraphicsSceneMouseEvent* event)
@@ -196,16 +196,16 @@ void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange cha
     }
 }
 
-void KreenGraphicsItemBase::operationAcceptedSlot()
+void KreenGraphicsItemBase::slotOperationAccepted()
 {
     qDebug() << "emit operationAccepted";
-    emit operationAccepted();
+    emit operationAcceptedSignal();
 }
 
-void KreenGraphicsItemBase::operationCanceledSlot()
+void KreenGraphicsItemBase::slotOperationCanceled()
 {
     qDebug() << "emit operationCanceled";
-    emit operationCanceled();
+    emit operationCanceledSignal();
 }
 
 }
