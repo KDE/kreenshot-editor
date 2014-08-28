@@ -178,8 +178,9 @@ public:
         //
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
-            auto grItem = toolManager()->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            scene()->addItem(grItem);
+            auto kGrItem = toolManager()->createGraphicsItemFromKreenItem(item);
+            _owner->connect(kGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), _owner, SLOT(slotRedrawSelectionHandles()));
+            scene()->addItem(kGrItem->graphicsItem());
         }
 
         slotUpdateItemsGeometryFromModel();
@@ -615,7 +616,6 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         if (newKGrItem != nullptr) {
             newKGrItem->setSelectable(true); // not movable because we are still in creating mode but we would like to be able to resize the new item using the handles
             newKGrItem->graphicsItem()->setSelected(true);
-            //connect(newKGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), this, SLOT(slotRedrawSelectionHandles()));
         }
         else {
             Q_ASSERT_X(false, "MainEditorWidget::slotHandleNewItem", "should never happen");
