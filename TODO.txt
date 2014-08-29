@@ -3,10 +3,7 @@ TODO
 - implement SelectionHandles
     - best way to make the item resize?
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
-- mouse over: draw a light version of the selection rects
 - enable more item properties (see item.h/cpp)
-- enable hover visual
-- makes sure line has a bigger catch area when trying to move
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking
 - add context menu to select tools
@@ -31,6 +28,9 @@ IDEAS
 
 LATER
 -----
+- enable hover visual
+    - mouse over: draw a light version of the selection rects
+    - maybe: make sure line has a bigger catch area when trying to move
 - Obfuscate:
     - ggf. nochmal probieren: jedes Bild upToAnItem einzeln rendern und das dann jeweils als baseImage verwenden
 - select no tool => zoom to fit

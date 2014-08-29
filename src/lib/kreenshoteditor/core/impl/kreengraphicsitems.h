@@ -73,19 +73,19 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
-        itemChangeImpl(change, value);
+        itemChangeBaseImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
@@ -134,19 +134,19 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
-        itemChangeImpl(change, value);
+        itemChangeBaseImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
@@ -187,19 +187,19 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
-        itemChangeImpl(change, value);
+        itemChangeBaseImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 };
@@ -250,19 +250,19 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
-        itemChangeImpl(change, value);
+        itemChangeBaseImpl(change, value);
         return QGraphicsItem::itemChange(change, value);
     }
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 };
@@ -318,7 +318,7 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
-        itemChangeImpl(change, value);
+        itemChangeBaseImpl(change, value);
         if (change == QGraphicsItem::ItemPositionHasChanged) {
             // here we trigger an item update to immediately show the recalcuted
             // obfuscated image area while moving the item around
@@ -329,13 +329,13 @@ public:
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
@@ -413,7 +413,7 @@ public:
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override
     {
-        itemChangeImpl(change, value); // default handling by base impl
+        itemChangeBaseImpl(change, value); // default handling by base impl
         if (change == QGraphicsItem::ItemPositionHasChanged) {
             updateDimRects(modelRectFromGraphicsItem());
         }
@@ -422,13 +422,13 @@ public:
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mousePressEventImpl(event))
+        if (mousePressEventBaseImpl(event))
             QGraphicsItem::mousePressEvent(event);
     }
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
     {
-        if (mouseReleaseEventImpl(event))
+        if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
 

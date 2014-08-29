@@ -72,10 +72,12 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
 {
     qDebug() << "SelectionHandleGraphicsItem::mousePressEvent";
 
-    // The mouse is over a SelectionHandle and the user
-    // clicks to move the Handle. If we would not disable
-    // Movement of the instrumentedItem, then the item would move because it is selected
+    // The mouse is over a SelectionHandle and the user clicks to move the Handle.
+    // during item creating mode (not Select mode; for this see MainEditorWidget::slotFixSelectableAndMovable()).
+    // If we would not disable Movement of the instrumentedItem,
+    // then the item would move because it is selected
     // and all selected items are moved automatically.
+    //
     _manager->setAllItemsWithHandlesMovable(false);
     QGraphicsItem::mousePressEvent(event);
 }
@@ -83,7 +85,9 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
 void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     // see mousePressEvent
-    _manager->setAllItemsWithHandlesMovable(true);
+    // we do NOT call this here because it would make items unmovable when using handles in Select mode:
+    //   _manager->setAllItemsWithHandlesMovable(true);
+    // but see MainEditorWidget::slotFixSelectableAndMovable()
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -93,7 +97,16 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
         emit handlePositionHasChangedSignal();
     }
     else if (change == QGraphicsItem::ItemPositionChange) {
-        // ...
+        //
+        // handle movement restrictions
+        //
+        QPointF oldPos = pos();
+        QPointF curPos = value.toPointF();
+
+        QPointF newPos(oldPos.x(), curPos.y()); // todo
+
+
+        return newPos;
     }
 
     return QGraphicsItem::itemChange(change, value);

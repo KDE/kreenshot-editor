@@ -386,6 +386,11 @@ void MainEditorWidget::slotDocumentCreated()
 
     d->initScene();
 
+    // kind of workaround:
+    // after mouse release of a selection handle all items set to not movable
+    // this will fix the movable state
+    connect(d->scene().get(), SIGNAL(mouseReleasedSignal()), this, SLOT(slotFixSelectableAndMovable()));
+
     // makes sure that every time the mouse is released the whole scene is update from model
     // to check if everything is ok (e. g. with multiselection moves)
     connect(d->scene().get(), SIGNAL(mouseReleasedSignal()), this, SLOT(slotUpdateItemsGeometryFromModel()));
@@ -520,6 +525,20 @@ void MainEditorWidget::requestTool(QString toolId)
     emit toolChosenSignal(toolId);
 }
 
+void MainEditorWidget::slotFixSelectableAndMovable()
+{
+    qDebug() << "MainEditorWidget::slotFixSelectableAndMovable";
+    // alle selected kreen items sollen auch movable und selectable sein,
+    // nachdem die Maustaste wieder losgelassen wurde, aber nur, wenn
+    // nicht im Draw-Modus
+    foreach (auto item, d->scene()->selectedKreenItems()) {
+        auto kGrItem = d->scene()->graphicsItemBaseFromItem(item);
+        if (d->toolManager()->chosenTool() == ToolEnum::Select) {
+            kGrItem->setSelectableAndMovable(true);
+        }
+    }
+}
+
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
     qDebug() << "slotUpdateItemsGeometryFromModel";
@@ -613,7 +632,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
         // must be called after slotDocumentContentChanged() because there the GraphicsItem is created
         // todo: find a better place for this?
         // (why? still valid comment? -> make item selectable AFTER calling updateItemsBehaviourFromChosenTool() because we might override)
-        auto newKGrItem = d->scene()->graphicsItemFromItem(item); // todo: use method from GrItemBase
+        auto newKGrItem = d->scene()->graphicsItemBaseFromItem(item);
         if (newKGrItem != nullptr) {
             newKGrItem->setSelectable(true); // not movable because we are still in creating mode but we would like to be able to resize the new item using the handles
             newKGrItem->graphicsItem()->setSelected(true);

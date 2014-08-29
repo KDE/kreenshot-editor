@@ -91,13 +91,10 @@ void KreenGraphicsScene::saveCurrentKreenItemsSelection()
 
 void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
 {
-    // TODO: optimize this double loop
-
     foreach (auto kreenItem, _savedSelection) {
-        foreach (auto kGrItem, kreenGraphicsItems()) {
-            if (kGrItem->item()->id() == kreenItem->id()) {
-                kGrItem->graphicsItem()->setSelected(true);
-            }
+        auto kGrItem = graphicsItemBaseFromItem(kreenItem);
+        if (kGrItem != nullptr) { // item might be deleted already (e. g. after Undo)
+            kGrItem->graphicsItem()->setSelected(true);
         }
     }
 }
@@ -245,7 +242,7 @@ QList<KreenGraphicsItemBase*> KreenGraphicsScene::kreenGraphicsItems()
     return list;
 }
 
-KreenGraphicsItemBase* KreenGraphicsScene::graphicsItemFromItem(KreenItemPtr item)
+KreenGraphicsItemBase* KreenGraphicsScene::graphicsItemBaseFromItem(KreenItemPtr item)
 {
     foreach(auto kreenGraphicsItemBase, kreenGraphicsItems()) {
         if (kreenGraphicsItemBase->item()->id() == item->id()) { // compare by id because Document holds secret copies.

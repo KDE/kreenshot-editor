@@ -109,12 +109,15 @@ protected:
 
     void connectImageOperationCancelButton(QPushButton* button);
 
-    bool mousePressEventImpl(QGraphicsSceneMouseEvent* event);
+    bool mousePressEventBaseImpl(QGraphicsSceneMouseEvent* event);
 
-    bool mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event);
+    bool mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* event);
 
-    // TMP (TODO)
-    void itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+    // TMP (TODO: doc)
+    void itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+
+    // TMP
+    void afterPaintBaseImpl(QPainter* painter);
 
 protected Q_SLOTS:
     void slotOperationAccepted();

@@ -29,6 +29,7 @@
 #include <QAbstractGraphicsShapeItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
+#include <QPainter>
 #include <cmath>
 #include <algorithm>
 
@@ -139,14 +140,14 @@ void KreenGraphicsItemBase::connectImageOperationCancelButton(QPushButton* butto
     connect(button, SIGNAL(clicked()), this, SLOT(slotOperationCanceled()));
 }
 
-bool KreenGraphicsItemBase::mousePressEventImpl(QGraphicsSceneMouseEvent* event)
+bool KreenGraphicsItemBase::mousePressEventBaseImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint origPos = event->scenePos().toPoint();
     //qDebug() << "1. mousePressEvent: " << "origPos: " << origPos << "item rect: " << _item->rect();
     return true;
 }
 
-bool KreenGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* event)
+bool KreenGraphicsItemBase::mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* event)
 {
     //QPoint newPos = event->scenePos().toPoint();
 
@@ -177,7 +178,7 @@ bool KreenGraphicsItemBase::mouseReleaseEventImpl(QGraphicsSceneMouseEvent* even
     return true;
 }
 
-void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     // qDebug() << "itemChangeImpl: " << change;
     if (change == QGraphicsItem::ItemPositionHasChanged) {
@@ -188,6 +189,24 @@ void KreenGraphicsItemBase::itemChangeImpl(QGraphicsItem::GraphicsItemChange cha
 
         //qDebug() << "EMIT itemPositionHasChangedSignal(item());";
         emit itemPositionHasChangedSignal(item());
+    }
+}
+
+// TMP
+bool showDebugInfo = false;
+
+void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)
+{
+    if (showDebugInfo) {
+        QString debugInfo = QString("selectable:%1; movable:%2")
+        .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsSelectable) > 0)
+        .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsMovable) > 0);
+
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(QBrush(Qt::white));
+        painter->drawRect(0, 0, 200, 20);
+        painter->setPen(Qt::black);
+        painter->drawText(0, 10, debugInfo);
     }
 }
 

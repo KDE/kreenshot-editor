@@ -114,7 +114,7 @@ void SelectionHandles::redrawSelectionHandles(bool createNewHandles)
         d->currentHandles.clear();
     }
 
-    const qreal handleWidth = 10.0;
+    const qreal handleWidth = 8.0;
 
     //
     // 1   2   3

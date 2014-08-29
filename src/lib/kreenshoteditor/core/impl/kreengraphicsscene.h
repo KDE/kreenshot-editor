@@ -85,7 +85,7 @@ public:
     /**
      * returns the corresponding KreenGraphicsItemBase* for item or nullptr if not found
      */
-    KreenGraphicsItemBase* graphicsItemFromItem(KreenItemPtr item);
+    KreenGraphicsItemBase* graphicsItemBaseFromItem(KreenItemPtr item);
 
     /**
      * retrieves a list of all selected KreenGraphicsItems

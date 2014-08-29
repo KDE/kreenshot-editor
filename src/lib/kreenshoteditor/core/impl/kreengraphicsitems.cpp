@@ -42,7 +42,9 @@ void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     painter->drawRect(rect());
     //painter->restore();
 
-    // omit the selected rect because we draw it ourselves
+    // omit the selected rect of original source code because we draw it ourselves
+
+    afterPaintBaseImpl(painter);
 }
 
 void KreenGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

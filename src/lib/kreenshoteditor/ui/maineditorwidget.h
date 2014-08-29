@@ -71,6 +71,7 @@ protected Q_SLOTS:
     void slotDocumentCreated();
     void slotDocumentContentChanged();
 
+    void slotFixSelectableAndMovable();
     void slotUpdateItemsGeometryFromModel();
 
     void slotImageOperationAccepted();
