@@ -212,7 +212,11 @@ void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange
     // qDebug() << "itemChangeImpl: " << change;
     if (change == QGraphicsItem::ItemPositionHasChanged) {
         if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            //qDebug() << "_selectionHandlesMgr->allHandlesRenderVisible()" << _selectionHandlesMgr->allHandlesRenderVisible();
             _selectionHandlesMgr->onItemPositionHasChanged(this);
+            if (_selectionHandlesMgr->allHandlesRenderVisible()) {
+                _selectionHandlesMgr->setAllHandlesRenderVisible(false);
+            }
         }
 
         //qDebug() << "EMIT itemPositionHasChangedSignal(item());";

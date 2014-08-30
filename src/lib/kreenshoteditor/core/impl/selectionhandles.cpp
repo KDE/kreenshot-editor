@@ -36,6 +36,7 @@ class SelectionHandles::Impl
 public:
     KreenGraphicsScenePtr scene;
     std::vector<QCursor> cursors;
+    bool allRenderVisible = true;
 
 public:
     Impl(SelectionHandles* owner)
@@ -182,6 +183,8 @@ void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, boo
         handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r7, d->cursors[7]));
         handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r8, d->cursors[8]));
         handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r9, d->cursors[9]));
+
+        setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
     }
     else {
         std::vector<SelectionHandleGraphicsItem*> handles = kGrItem->_selectionHandles;
@@ -224,12 +227,21 @@ void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 
 void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
 {
+    qDebug() << "SelectionHandles::setAllHandlesRenderVisible:" << isVisible;
+
     foreach (auto grItem, d->scene->selectedKreenGraphicsItems()) {
         foreach (auto handleItem, grItem->_selectionHandles) {
             handleItem->setRenderVisible(isVisible);
+            handleItem->update(); // otherwise only the current's item handles disappear or the handles do not disappear at all when moving items
         }
-        grItem->graphicsItem()->update(); // otherwise only the current's item handles disappear
     }
+
+    d->allRenderVisible = isVisible;
+}
+
+bool SelectionHandles::allHandlesRenderVisible()
+{
+    return d->allRenderVisible;
 }
 
 }

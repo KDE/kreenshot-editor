@@ -67,10 +67,18 @@ public:
      */
     void createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, bool createNewHandles);
 
+    /**
+     * WARN: isVisible is a cached value because we do not want to iterate over all handles all over again
+     */
+    bool allHandlesRenderVisible();
+
+    /**
+     * WARN: isVisible is a cached value
+     */
+    void setAllHandlesRenderVisible(bool isVisible);
+
 protected:
     void setAllSelectedItemsMovable(bool isMoveable); // used by friend
-
-    void setAllHandlesRenderVisible(bool isVisible); // used by friend
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR
