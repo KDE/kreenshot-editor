@@ -68,8 +68,6 @@ public:
     SelectionHandleGraphicsItem* createSelectionHandleItem(KreenGraphicsItemBase* instrumentedItem, QRectF rect, const QCursor& cursor)
     {
         auto handleItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
-//         handleItem->connect(handleItem, SIGNAL(handlePositionHasChangedSignal(SelectionHandleGraphicsItem*, QPointF)),
-//                 instrumentedItem, SLOT(slotHandlePositionHasChanged(SelectionHandleGraphicsItem*, QPointF)));
         handleItem->setCursor(cursor);
         return handleItem;
     }
@@ -221,6 +219,16 @@ void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 {
     foreach (auto kGrItem, d->scene->selectedKreenGraphicsItems()) {
         kGrItem->graphicsItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
+    }
+}
+
+void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
+{
+    foreach (auto grItem, d->scene->selectedKreenGraphicsItems()) {
+        foreach (auto handleItem, grItem->_selectionHandles) {
+            handleItem->setRenderVisible(isVisible);
+        }
+        grItem->graphicsItem()->update(); // otherwise only the current's item handles disappear
     }
 }
 

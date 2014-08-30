@@ -31,16 +31,21 @@
 namespace kreen {
 namespace core {
 
-// SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(QGraphicsItem* instrumentedItem)
-//  : SelectionHandleGraphicsItem(instrumentedItem, QRectF())
-// {
-//
-// }
+class SelectionHandleGraphicsItem::Impl
+{
+public:
+    SelectionHandles* manager = nullptr;
+    KreenGraphicsItemBase* instrumentedItem = nullptr;
+    QPointF startPos;
+    bool renderVisible = true;
+};
 
 SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, KreenGraphicsItemBase* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
 {
-    _manager = manager;
-    _instrumentedItem = instrumentedItem;
+    KREEN_PIMPL_INIT(SelectionHandleGraphicsItem);
+
+    d->manager = manager;
+    d->instrumentedItem = instrumentedItem;
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
@@ -56,9 +61,9 @@ SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 
 void SelectionHandleGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    qDebug() << "SelectionHandleGraphicsItem::hoverEnterEvent";
+    //qDebug() << "SelectionHandleGraphicsItem::hoverEnterEvent";
 
-    // NOTE, that this event is not called right away after creating a new item and the mouse cursor already stays
+    // NOTE, that this event is not triggered right away after creating a new item and the mouse cursor already stays
     // over the handle; we will use SelectionHandles::isMouseHoveringOnAnyHandle() to compensate for that
 
     QGraphicsItem::hoverEnterEvent(event);
@@ -79,43 +84,60 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
     // then the item would move because it is selected
     // and all selected items are moved automatically.
     //
-    _manager->setAllSelectedItemsMovable(false);
-    _startPos = pos();
+    d->manager->setAllSelectedItemsMovable(false);
+    d->startPos = pos();
     QGraphicsItem::mousePressEvent(event);
-    _instrumentedItem->_activeHandle = this;
-    _instrumentedItem->slotHandleStartDrag();
+    d->instrumentedItem->_activeHandle = this;
+    d->instrumentedItem->slotHandleStartDrag();
+}
+
+QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
+{
+//     if (change == QGraphicsItem::ItemPositionChange) {
+//         //
+//         // handle movement restrictions; delegate to instrumented Item?
+//         // --> TODO change: draw selection handles from within item!!!
+//         //
+//         QPointF oldPos = pos();
+//         QPointF curPos = value.toPointF();
+//
+//         QPointF newPos(oldPos.x(), curPos.y()); // todo
+//
+//         return newPos;
+//     }
+//     else
+    if (change == QGraphicsItem::ItemPositionHasChanged) {
+        if (d->instrumentedItem->_activeHandle && d->renderVisible) {
+            d->manager->setAllHandlesRenderVisible(false);
+        }
+        QPointF curPos = pos();
+        d->instrumentedItem->slotHandlePositionHasChanged(curPos - d->startPos);
+    }
+
+    return QGraphicsItem::itemChange(change, value);
 }
 
 void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     // see mousePressEvent
     // we do NOT call this here because it would make items unmovable when using handles in Select mode:
-    //   _manager->setAllItemsWithHandlesMovable(true);
+    //   d->manager->setAllItemsWithHandlesMovable(true);
     // but see MainEditorWidget::slotFixSelectableAndMovable()
     QGraphicsItem::mouseReleaseEvent(event);
-    _instrumentedItem->_activeHandle = nullptr;
+    d->instrumentedItem->_activeHandle = nullptr;
+    d->manager->setAllHandlesRenderVisible(true);
 }
 
-QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
+void SelectionHandleGraphicsItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (change == QGraphicsItem::ItemPositionChange) {
-        //
-        // handle movement restrictions; delegate to instrumented Item?
-        // --> TODO change: draw selection handles from within item!!!
-        //
-        QPointF oldPos = pos();
-        QPointF curPos = value.toPointF();
-
-        QPointF newPos(oldPos.x(), curPos.y()); // todo
-
-        return newPos;
+    if (d->renderVisible) {
+        QGraphicsRectItem::paint(painter, option, widget);
     }
-    else if (change == QGraphicsItem::ItemPositionHasChanged) {
-        QPointF curPos = pos();
-        _instrumentedItem->slotHandlePositionHasChanged(curPos - _startPos);
-    }
+}
 
-    return QGraphicsItem::itemChange(change, value);
+void SelectionHandleGraphicsItem::setRenderVisible(bool visible)
+{
+    d->renderVisible = visible;
 }
 
 }

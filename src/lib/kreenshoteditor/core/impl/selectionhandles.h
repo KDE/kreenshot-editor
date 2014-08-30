@@ -70,6 +70,8 @@ public:
 protected:
     void setAllSelectedItemsMovable(bool isMoveable); // used by friend
 
+    void setAllHandlesRenderVisible(bool isVisible); // used by friend
+
 private:
     KREEN_PIMPL_DEFINE_D_PTR
 };

@@ -33,11 +33,12 @@ class KreenGraphicsItemBase;
 
 class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
 {
-    // QObject to have signal/slots
-    Q_OBJECT
+    Q_OBJECT // QObject to have signal/slots
+
+    friend SelectionHandles;
 
 public:
-    SelectionHandleGraphicsItem(kreen::core::SelectionHandles* manager, kreen::core::KreenGraphicsItemBase* instrumentedItem, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, kreen::core::KreenGraphicsItemBase* instrumentedItem, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 
@@ -48,12 +49,15 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
+protected:
+    void setRenderVisible(bool visible); // used by friend
+
 private:
-    SelectionHandles* _manager;
-    KreenGraphicsItemBase* _instrumentedItem;
-    QPointF _startPos;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }
