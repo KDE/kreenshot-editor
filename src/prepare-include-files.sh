@@ -7,9 +7,9 @@ INC_TARGET_DIR=$1
 INC_TARGET_DIR_TMP=$1-tmp
 echo "[prepare-include-files.sh] INC_TARGET_DIR=$1"
 
-# TODO: does this work?
-if [ "$INC_TARGET_DIR" = "" or "$INC_TARGET_DIR" = "/" ]; then
-    echo "[prepare-include-files.sh] DANGER. Abort."
+# TODO: test it
+if [ "$INC_TARGET_DIR" = "" ] || [ "$INC_TARGET_DIR" = "/" ]; then
+    echo "[prepare-include-files.sh] DANGER (INC_TARGET_DIR is empty or / which might cause the whole HD to be deleted). Abort."
     exit 1
 fi
 
