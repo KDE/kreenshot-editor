@@ -23,7 +23,7 @@
 #include <QLabel>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {

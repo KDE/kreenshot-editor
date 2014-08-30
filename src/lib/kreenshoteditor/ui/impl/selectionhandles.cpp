@@ -29,7 +29,7 @@
 #include "selectionhandlegraphicsitem.h"
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 class SelectionHandles::Impl
 {

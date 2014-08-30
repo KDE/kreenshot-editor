@@ -28,10 +28,14 @@
 #include <QImage>
 
 namespace kreen {
+
+namespace ui {
+    KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
+}
+
 namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
-KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 
 /**
  * The "document"
@@ -153,10 +157,10 @@ public:
     const QList<KreenItemPtr> items();
 
     /**
-     * TODO: possible to move this away since it looks so like "UI"
-     * (and actually came from there but we would like to able to paint the scene here)?
+     * TODO: move this away since it is "UI"
+     * (but we would like to able to paint the scene here)?
      */
-    KreenGraphicsScenePtr graphicsScene();
+    kreen::ui::KreenGraphicsScenePtr graphicsScene();
 
     /**
      * renders the document to a QImage omitting all graphical elements

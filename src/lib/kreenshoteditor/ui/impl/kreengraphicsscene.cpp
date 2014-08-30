@@ -26,7 +26,7 @@
 #include "rendervisibilitycontrol.h"
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KreenGraphicsScene::KreenGraphicsScene()
 {
@@ -39,7 +39,7 @@ void KreenGraphicsScene::setDocument(kreen::core::Document* document)
     _document = document;
 }
 
-Document* KreenGraphicsScene::document()
+kreen::core::Document* KreenGraphicsScene::document()
 {
     return _document;
 }

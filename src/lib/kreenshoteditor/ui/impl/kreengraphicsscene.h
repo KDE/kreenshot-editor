@@ -30,7 +30,7 @@
 #include <kreen/core/document.h>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
@@ -56,9 +56,9 @@ public:
     /**
      * to retrieve the base image for the obfuscate tool
      */
-    void setDocument(Document* document);
+    void setDocument(kreen::core::Document* document);
 
-    Document* document();
+    kreen::core::Document* document();
 
     /**
      * for interactive handling
@@ -141,7 +141,7 @@ protected:
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
 private:
-    Document* _document;
+    kreen::core::Document* _document;
     ToolManagerPtr _toolManager;
     /**
      * The item that is drawn when user clicks and holds the mouse button and drags. It will be replaced with

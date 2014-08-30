@@ -21,7 +21,7 @@
 #include <QDebug>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 RenderVisibilityControlPtr RenderVisibilityControl::make_shared()
 {

@@ -29,7 +29,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 class SelectionHandleGraphicsItem::Impl
 {

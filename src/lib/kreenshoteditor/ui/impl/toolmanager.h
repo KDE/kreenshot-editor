@@ -25,7 +25,7 @@
 #include "kreengraphicsitems.h"
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 enum ToolEnum
 {

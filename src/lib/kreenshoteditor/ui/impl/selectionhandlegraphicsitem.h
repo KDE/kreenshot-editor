@@ -24,7 +24,7 @@
 #include <QGraphicsRectItem>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
 class MainEditorWidgetImpl;
@@ -38,7 +38,7 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     friend SelectionHandles;
 
 public:
-    SelectionHandleGraphicsItem(SelectionHandles* manager, kreen::core::KreenGraphicsItemBase* instrumentedItem, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, KreenGraphicsItemBase* instrumentedItem, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 

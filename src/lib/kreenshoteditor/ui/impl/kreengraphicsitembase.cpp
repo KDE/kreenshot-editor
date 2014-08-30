@@ -36,7 +36,7 @@
 #include <algorithm>
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen::core::KreenItemPtr item)
 {
@@ -52,7 +52,7 @@ void KreenGraphicsItemBase::setSelectionHandlesMgr(SelectionHandlesPtr selection
     _selectionHandlesMgr = selectionHandles;
 }
 
-KreenItemPtr KreenGraphicsItemBase::item()
+kreen::core::KreenItemPtr KreenGraphicsItemBase::item()
 {
     return _item;
 }

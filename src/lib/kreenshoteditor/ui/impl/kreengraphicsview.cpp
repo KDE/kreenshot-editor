@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsview.h"
-#include "../../core/impl/toolmanager.h"
+#include "toolmanager.h"
 
 namespace kreen {
 namespace ui {

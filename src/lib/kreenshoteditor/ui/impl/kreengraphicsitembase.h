@@ -29,7 +29,7 @@ class QGraphicsLineItem;
 class QGraphicsSceneMouseEvent;
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 
@@ -50,7 +50,7 @@ Q_SIGNALS:
     void operationAcceptedSignal();
     void operationCanceledSignal();
 
-    void itemPositionHasChangedSignal(KreenItemPtr item);
+    void itemPositionHasChangedSignal(kreen::core::KreenItemPtr item);
 
 //public Q_SLOTS:
 public:
@@ -62,14 +62,14 @@ public:
     /**
      * ctor
      */
-    KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item);
+    KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen::core::KreenItemPtr item);
 
     /**
      * if the items should support selection handles, this has to be set
      */
     void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
 
-    KreenItemPtr item();
+    kreen::core::KreenItemPtr item();
 
     /**
      * the underlying QGraphicsItem
@@ -165,7 +165,7 @@ protected Q_SLOTS:
     void slotOperationCanceled();
 
 protected:
-    KreenItemPtr _item;
+    kreen::core::KreenItemPtr _item;
     SelectionHandlesPtr _selectionHandlesMgr;
     QRect _startRect; // for rect-base items, todo: move elsewhere?
     QLine _startLine; // for line-base items, todo: move elsewhere?

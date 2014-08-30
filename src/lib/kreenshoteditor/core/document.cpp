@@ -22,8 +22,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QUndoStack>
-#include "impl/kreengraphicsscene.h"
-#include "impl/toolmanager.h"
+#include "../ui/impl/kreengraphicsscene.h" // TODO: try to remove the UI dependency
 #include "impl/undocommands.h"
 
 namespace kreen {
@@ -35,7 +34,7 @@ public:
     Impl(Document* owner)
     {
         _owner = owner;
-        scene = KreenGraphicsScene::make_shared();
+        scene = kreen::ui::KreenGraphicsScene::make_shared();
         scene->setDocument(_owner); // see usages of document()
     }
 
@@ -405,7 +404,7 @@ const QList<KreenItemPtr> Document::items()
     return d->itemsCache;
 }
 
-KreenGraphicsScenePtr Document::graphicsScene()
+kreen::ui::KreenGraphicsScenePtr Document::graphicsScene()
 {
     return d->scene;
 }

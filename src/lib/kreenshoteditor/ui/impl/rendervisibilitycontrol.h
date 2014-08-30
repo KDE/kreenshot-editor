@@ -27,7 +27,7 @@ class QGraphicsItem;
 class KreenGraphicsItemBase;
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(RenderVisibilityControl)
 

@@ -16,13 +16,7 @@ include_directories(
 )
 
 set(kreenshoteditor_SOURCES
-    core/impl/kreengraphicsitembase.cpp
-    core/impl/kreengraphicsitems.cpp
-    core/impl/kreengraphicsscene.cpp
     core/impl/outputfilenamegenerator.cpp
-    core/impl/rendervisibilitycontrol.cpp
-    core/impl/selectionhandlegraphicsitem.cpp
-    core/impl/selectionhandles.cpp
     core/impl/undocommands.cpp
 
     core/desktopservices.cpp
@@ -32,7 +26,13 @@ set(kreenshoteditor_SOURCES
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
 
+    ui/impl/kreengraphicsitembase.cpp
+    ui/impl/kreengraphicsitems.cpp
+    ui/impl/kreengraphicsscene.cpp
     ui/impl/kreengraphicsview.cpp
+    ui/impl/rendervisibilitycontrol.cpp
+    ui/impl/selectionhandlegraphicsitem.cpp
+    ui/impl/selectionhandles.cpp
 
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp

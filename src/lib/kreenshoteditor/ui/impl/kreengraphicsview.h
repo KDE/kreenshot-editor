@@ -27,12 +27,8 @@
 #include <memory>
 
 namespace kreen {
-namespace core {
-    KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
-}
-
 namespace ui {
-
+KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsView)
 
 class KreenGraphicsView : public QGraphicsView
@@ -40,7 +36,7 @@ class KreenGraphicsView : public QGraphicsView
     Q_OBJECT
 
 public:
-    KreenGraphicsView(kreen::core::ToolManagerPtr toolmanager);
+    KreenGraphicsView(ToolManagerPtr toolmanager);
 
     /**
      * impl detail for cursor handling
@@ -60,7 +56,7 @@ protected:
     virtual void drawForeground(QPainter * painter, const QRectF & rect) override;
 
 private:
-    kreen::core::ToolManagerPtr _toolManager;
+    ToolManagerPtr _toolManager;
     QGraphicsItem* _helperBaseImageItem;
 };
 

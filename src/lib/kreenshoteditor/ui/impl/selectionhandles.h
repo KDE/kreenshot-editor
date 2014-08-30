@@ -28,7 +28,7 @@
 class QGraphicsScene;
 
 namespace kreen {
-namespace core {
+namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
