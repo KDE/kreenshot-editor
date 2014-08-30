@@ -2,6 +2,7 @@ TODO
 ----
 - implement SelectionHandles
     - best way to make the item resize?
+    - make handles invisible while moving an item
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items
@@ -28,6 +29,8 @@ IDEAS
 
 LATER
 -----
+- bug: selection handles in image operations are blurred (use workaround)
+    - active image operation should not be able to be deselected
 - enable hover visual
     - mouse over: draw a light version of the selection rects
     - maybe: make sure line has a bigger catch area when trying to move

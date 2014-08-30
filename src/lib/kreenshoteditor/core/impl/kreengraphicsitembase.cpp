@@ -18,6 +18,8 @@
  */
 #include "kreengraphicsitembase.h"
 #include "kreengraphicsscene.h"
+#include "selectionhandles.h"
+#include "selectionhandlegraphicsitem.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QFrame>
@@ -36,13 +38,18 @@
 namespace kreen {
 namespace core {
 
-KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item)
+KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen::core::KreenItemPtr item)
 {
-    _item = item;
     _graphicsItem = graphicsItem;
+    _item = item;
 
     _graphicsItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges); // needed for itemChange method
     setSelectableAndMovable(true); // selectable and moveable by default
+}
+
+void KreenGraphicsItemBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles)
+{
+    _selectionHandlesMgr = selectionHandles;
 }
 
 KreenItemPtr KreenGraphicsItemBase::item()
@@ -182,13 +189,22 @@ void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange
 {
     // qDebug() << "itemChangeImpl: " << change;
     if (change == QGraphicsItem::ItemPositionHasChanged) {
-        // qDebug() << "itemChangeImpl: " << change;
-        //QPoint origPos = _graphicsItem->pos().toPoint();
-        //QPoint newPos = value.toPoint();
-        //updateVisualGeometryFromModel();
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemPositionHasChanged(this);
+        }
 
         //qDebug() << "EMIT itemPositionHasChangedSignal(item());";
         emit itemPositionHasChangedSignal(item());
+    }
+    else if (change == QGraphicsItem::ItemSelectedHasChanged) {
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemSelectedHasChanged(this);
+        }
+    }
+    else if (change == QGraphicsItem::ItemSceneHasChanged) {
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemSceneHasChanged(this);
+        }
     }
 }
 
@@ -198,8 +214,9 @@ bool showDebugInfo = false;
 void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)
 {
     if (showDebugInfo) {
-        QString debugInfo = QString("selectable:%1; movable:%2")
+        QString debugInfo = QString("selectable:%1; selected:%2; movable:%3")
         .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsSelectable) > 0)
+        .arg(_graphicsItem->isSelected())
         .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsMovable) > 0);
 
         painter->setPen(Qt::NoPen);

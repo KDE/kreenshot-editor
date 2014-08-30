@@ -78,7 +78,7 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
     // then the item would move because it is selected
     // and all selected items are moved automatically.
     //
-    _manager->setAllItemsWithHandlesMovable(false);
+    _manager->setAllSelectedItemsMovable(false);
     QGraphicsItem::mousePressEvent(event);
 }
 
@@ -98,7 +98,8 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
     }
     else if (change == QGraphicsItem::ItemPositionChange) {
         //
-        // handle movement restrictions
+        // handle movement restrictions; delegate to instrumented Item?
+        // --> TODO change: draw selection handles from within item!!!
         //
         QPointF oldPos = pos();
         QPointF curPos = value.toPointF();

@@ -54,32 +54,28 @@ public:
         //
         if (item->typeId == "rect") {
             kGrItem = new KreenGraphicsRectItem(item);
-            return kGrItem;
         }
         else if (item->typeId == "line") {
             kGrItem = new KreenGraphicsLineItem(item);
-            return kGrItem;
         }
         else if (item->typeId == "ellipse") {
             kGrItem = new KreenGraphicsEllipseItem(item);
-            return kGrItem;
         }
         else if (item->typeId == "text") {
             kGrItem = new KreenGraphicsTextRectItem(item);
-            return kGrItem;
         }
         else if (item->typeId == "obfuscate") {
             kGrItem = new KreenGraphicsObfuscateItem(item);
-            return kGrItem;
         }
         else if (item->typeId == "op-crop") {
             kGrItem = new KreenGraphicsOperationCropItem(item);
-            return kGrItem;
         }
         else {
             qDebug() << "unknown item->typeId: " << item->typeId;
             Q_ASSERT(false);
         }
+
+        return kGrItem;
     }
 
 public:

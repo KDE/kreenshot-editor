@@ -121,8 +121,8 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     Q_ASSERT(_toolManager != nullptr);
 
     // if mouse is over a handle, no new item should be created on mouse press:
-    if (_selectionHandles->isMouseHoveringOnAnyHandle()) {
-        qDebug() << "_selectionHandles->isMouseHoveringOnAnyHandle()";
+    if (_selectionHandles->isAnyHandleUnderMouse()) {
+        qDebug() << "_selectionHandles->isAnyHandleUnderMouse()";
         QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
         return;
     }

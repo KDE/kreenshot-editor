@@ -31,7 +31,12 @@ namespace kreen {
 namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
+class KreenGraphicsItemBase;
 
+/**
+ * GOAL: make this class independent from Kreen-stuff to make it more reusable
+ */
 class SelectionHandles //: public QObject
 {
     //Q_OBJECT
@@ -39,7 +44,7 @@ class SelectionHandles //: public QObject
     friend SelectionHandleGraphicsItem;
 
 public:
-    SelectionHandles(QGraphicsScene* scene);
+    SelectionHandles(KreenGraphicsScenePtr scene);
 
     virtual ~SelectionHandles();
 
@@ -48,18 +53,22 @@ public:
      * True if the user begins to drag a handle.
      * In this case other mouse down actions like create a new item must be prohibited
      */
-    bool isMouseHoveringOnAnyHandle();
+    bool isAnyHandleUnderMouse();
 
-    void createSelectionHandles();
+    void onItemSelectedHasChanged(KreenGraphicsItemBase* kGrItem);
 
-    void redrawSelectionHandles();
-protected:
+    void onItemSceneHasChanged(KreenGraphicsItemBase* kGrItem);
+
+    void onItemPositionHasChanged(KreenGraphicsItemBase* kGrItem);
+
     /**
-     * TMP?
+     * createNewHandles == true: create
+     * createNewHandles == false: update
      */
-    void redrawSelectionHandles(bool createNewHandles);
+    void createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, bool createNewHandles);
 
-    void setAllItemsWithHandlesMovable(bool isMoveable);
+protected:
+    void setAllSelectedItemsMovable(bool isMoveable); // used by friend
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR

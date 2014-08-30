@@ -179,7 +179,7 @@ public:
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto kGrItem = toolManager()->createGraphicsItemFromKreenItem(item);
-            _owner->connect(kGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), _owner, SLOT(slotRedrawSelectionHandles()));
+            kGrItem->setSelectionHandlesMgr(selectionHandles);
             scene()->addItem(kGrItem->graphicsItem());
         }
 
@@ -375,7 +375,7 @@ void MainEditorWidget::slotDocumentCreated()
 {
     qDebug() << "MainEditorWidget::slotDocumentCreated()";
 
-    d->selectionHandles = std::make_shared<SelectionHandles>(d->scene().get()); // needs valid kreenshotEditor
+    d->selectionHandles = std::make_shared<SelectionHandles>(d->scene()); // needs valid kreenshotEditor
 
     auto kreenGrScene = d->kreenshotEditor()->document()->graphicsScene();
     kreenGrScene->setToolManager(d->toolManager());
@@ -423,13 +423,16 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
     // then depending on active or not:
     if (d->imgOpHandling.imageOperationItemActive()) {
         auto kGrItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
-        connect(kGrItem, SIGNAL(itemPositionHasChangedSignal(KreenItemPtr)), this, SLOT(slotRedrawSelectionHandles())); // TODO: this connection is also made for regular items. Maybe use some common code.
+        kGrItem->setSelectionHandlesMgr(d->selectionHandles); // enable selection handles
+
         auto grItem = kGrItem->graphicsItem();
         d->scene()->addItem(grItem);
         d->imgOpHandling.imageOperationGraphicsItem = grItem;
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
+
+        grItemBase->updateVisualGeometryFromModel(); // this has to done before setSelected to get proper rect for selection handles
         grItem->setSelected(true); // selected by default so that the user sees that the area can be resized
-        grItemBase->updateVisualGeometryFromModel();
+
         connect(grItemBase, SIGNAL(operationAcceptedSignal()), this, SLOT(slotImageOperationAccepted()));
         connect(grItemBase, SIGNAL(operationCanceledSignal()), this, SLOT(slotImageOperationCanceled()));
         d->actionImageOperationAccept->setEnabled(true);
@@ -438,7 +441,6 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
 
 void MainEditorWidget::paintEvent(QPaintEvent* event)
 {
-    // QPainter painter(this);
     QWidget::paintEvent(event);
 }
 
@@ -533,7 +535,7 @@ void MainEditorWidget::slotFixSelectableAndMovable()
     // nicht im Draw-Modus
     foreach (auto item, d->scene()->selectedKreenItems()) {
         auto kGrItem = d->scene()->graphicsItemBaseFromItem(item);
-        if (d->toolManager()->chosenTool() == ToolEnum::Select) {
+        if (d->toolManager()->chosenTool() == ToolEnum::Select || d->toolManager()->isImageOperationActive()) {
             kGrItem->setSelectableAndMovable(true);
         }
     }
@@ -583,7 +585,6 @@ void MainEditorWidget::slotUpdateItemsGeometryFromModel()
         }
 
         d->slotUpdateItemsGeometryFromModel();
-        d->selectionHandles->createSelectionHandles();
 
         // emits contentChangedSignal() which triggers slotDocumentContentChanged()
         doc->contentChangedNotificationGroupEnd();
@@ -653,15 +654,7 @@ void MainEditorWidget::slotSceneSelectionChanged()
     qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
     d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
 
-    d->selectionHandles->createSelectionHandles();
-
     emit itemSelectionChanged();
-}
-
-void MainEditorWidget::slotRedrawSelectionHandles()
-{
-    //qDebug() << "SLOT redrawSelectionHandles";
-    d->selectionHandles->redrawSelectionHandles();
 }
 
 void MainEditorWidget::deleteSelectedItems()

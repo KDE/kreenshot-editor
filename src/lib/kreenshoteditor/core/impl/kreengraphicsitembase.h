@@ -21,6 +21,7 @@
 
 #include <kreen/core/kreenitem.h>
 #include <QGraphicsItem>
+#include <vector>
 
 class QPushButton;
 class QAbstractGraphicsShapeItem;
@@ -30,7 +31,10 @@ class QGraphicsSceneMouseEvent;
 namespace kreen {
 namespace core {
 
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+
 class KreenGraphicsScene;
+class SelectionHandleGraphicsItem;
 
 /**
 * Visual representation of a KreenItem
@@ -50,8 +54,14 @@ Q_SIGNALS:
 
 public:
     /**
+     * ctor
      */
     KreenGraphicsItemBase(QGraphicsItem* graphicsItem, KreenItemPtr item);
+
+    /**
+     * if the items should support selection handles, this has to be set
+     */
+    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
 
     KreenItemPtr item();
 
@@ -85,6 +95,12 @@ public:
      * used when creating an item
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
+
+    /**
+     * the selection handles vector to be updated or modified by _selectionHandlesMgr
+     * TODO: make not public
+     */
+    std::vector<SelectionHandleGraphicsItem*> _selectionHandles; // TMP
 public:
     /**
      * WORKAROUND:
@@ -113,7 +129,12 @@ protected:
 
     bool mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* event);
 
-    // TMP (TODO: doc)
+    /**
+     * handles common changes:
+     * - QGraphicsItem::ItemPositionHasChanged
+     * - QGraphicsItem::ItemSelectedHasChanged
+     * - QGraphicsItem::ItemSceneHasChanged
+     */
     void itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
     // TMP
@@ -126,6 +147,7 @@ protected Q_SLOTS:
 
 protected:
     KreenItemPtr _item;
+    SelectionHandlesPtr _selectionHandlesMgr;
 
 private:
     QGraphicsItem* _graphicsItem;

@@ -432,6 +432,11 @@ public:
             QGraphicsItem::mouseReleaseEvent(event);
     }
 
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
+    {
+        afterPaintBaseImpl(painter);
+    }
+
 private:
     QRect modelRectFromGraphicsItem()
     {
@@ -457,8 +462,6 @@ private:
             dimRects.push_back(_dimRect2); // 2
             dimRects.push_back(_dimRect3); // 3
             dimRects.push_back(_dimRect4); // 4
-
-            // updateDimRects(_item->rect()); // later
 
             foreach (auto dimRect, dimRects) {
                 dimRect->setBrush(QBrush(QColor(0, 0, 0, 128)));

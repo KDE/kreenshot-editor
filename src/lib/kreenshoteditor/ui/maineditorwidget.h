@@ -85,7 +85,6 @@ protected Q_SLOTS:
     void slotHandleNewItem(KreenItemPtr item);
 
     void slotSceneSelectionChanged();
-    void slotRedrawSelectionHandles();
 
 protected:
     /**
