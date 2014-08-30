@@ -194,7 +194,7 @@ public:
 
     KreenGraphicsScenePtr scene()
     {
-        return _kreenshotEditor->document()->graphicsScene();
+        return _kreenshotEditor->graphicsScene();
     }
 
     ToolManagerPtr toolManager()
@@ -377,7 +377,7 @@ void MainEditorWidget::slotDocumentCreated()
 
     d->selectionHandles = std::make_shared<SelectionHandles>(d->scene()); // needs valid kreenshotEditor
 
-    auto kreenGrScene = d->kreenshotEditor()->document()->graphicsScene();
+    auto kreenGrScene = d->kreenshotEditor()->graphicsScene();
     kreenGrScene->setToolManager(d->toolManager());
     kreenGrScene->setSelectionHandles(d->selectionHandles);
 
@@ -395,7 +395,7 @@ void MainEditorWidget::slotDocumentCreated()
     // to check if everything is ok (e. g. with multiselection moves)
     connect(d->scene().get(), SIGNAL(mouseReleasedSignal()), this, SLOT(slotUpdateItemsGeometryFromModel()));
 
-    connect(d->scene().get(), SIGNAL(itemCreated(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
+    connect(d->scene().get(), SIGNAL(itemCreatedSignal(KreenItemPtr)), this, SLOT(slotHandleNewItem(KreenItemPtr)));
 
     connect(d->scene().get(), SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
 }

@@ -35,6 +35,7 @@
 #include "core/impl/outputfilenamegenerator.h"
 #include "core/settingsmanager.h"
 #include "ui/settings/preferencesdialog.h"
+#include "ui/impl/kreengraphicsscene.h"
 
 namespace kreen {
 
@@ -75,6 +76,15 @@ public:
         }
 
         auto doc = Document::make_shared(image);
+        scene = kreen::ui::KreenGraphicsScene::make_shared(); // scene is part of the Impl (as well as documentFile which will hold the document)
+        scene->setDocument(doc); // for ObfuscateTool at the moment (todo: refac?)
+        //
+        // used to make "QImage Document::renderToImage()" (see there) work
+        // (because we do not want the KreenGraphicsView be referenced by the Document):
+        //
+        connect(doc.get(), SIGNAL(requestRenderToImageSignal(kreen::core::Document*)),
+                scene.get(), SLOT(slotRequestRenderToImage(kreen::core::Document*)));
+
         documentFile = std::make_shared<DocumentFile>(doc, filename, fileStatus);
         documentFile->setSettingsManager(settingsManager);
 
@@ -196,6 +206,7 @@ public:
 
 public:
     DocumentFilePtr documentFile;
+    KreenGraphicsScenePtr scene;
     OutputFilenameGeneratorPtr outputFilenameGenerator;
     SettingsManagerPtr settingsManager;
 
@@ -332,6 +343,11 @@ DocumentPtr KreenshotEditor::document()
 DocumentFilePtr KreenshotEditor::documentFile()
 {
     return d->documentFile;
+}
+
+KreenGraphicsScenePtr KreenshotEditor::graphicsScene()
+{
+    return d->scene;
 }
 
 MainEditorWidget* KreenshotEditor::mainEditorWidget()

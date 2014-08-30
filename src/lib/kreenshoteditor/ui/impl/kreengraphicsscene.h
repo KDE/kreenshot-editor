@@ -30,10 +30,14 @@
 #include <kreen/core/document.h>
 
 namespace kreen {
+
+namespace core {
+    KREEN_SHAREDPTR_FORWARD_DECL(Document)
+}
+
 namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
-KREEN_SHAREDPTR_FORWARD_DECL(Document)
 KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(RenderVisibilityControl)
@@ -55,10 +59,11 @@ public:
 
     /**
      * to retrieve the base image for the obfuscate tool
+     * TODO: refac this away?
      */
-    void setDocument(kreen::core::Document* document);
+    void setDocument(kreen::core::DocumentPtr document);
 
-    kreen::core::Document* document();
+    kreen::core::DocumentPtr document();
 
     /**
      * for interactive handling
@@ -117,8 +122,12 @@ Q_SIGNALS:
 
     /**
      * this can be a drawn item like rect or an operation op-crop
+     * TODO: doc more
      */
-    void itemCreated(KreenItemPtr item);
+    void itemCreatedSignal(KreenItemPtr item);
+
+public Q_SLOTS:
+    void slotRequestRenderToImage(kreen::core::Document* document);
 
 protected:
     bool isItemForPointToSceneRestriction(KreenItemPtr item);
@@ -141,7 +150,7 @@ protected:
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
 private:
-    kreen::core::Document* _document;
+    kreen::core::DocumentPtr _document;
     ToolManagerPtr _toolManager;
     /**
      * The item that is drawn when user clicks and holds the mouse button and drags. It will be replaced with

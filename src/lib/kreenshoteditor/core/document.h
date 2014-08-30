@@ -28,11 +28,6 @@
 #include <QImage>
 
 namespace kreen {
-
-namespace ui {
-    KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
-}
-
 namespace core {
 
 KREEN_SHAREDPTR_FORWARD_DECL(Document)
@@ -157,16 +152,19 @@ public:
     const QList<KreenItemPtr> items();
 
     /**
-     * TODO: move this away since it is "UI"
-     * (but we would like to able to paint the scene here)?
-     */
-    kreen::ui::KreenGraphicsScenePtr graphicsScene();
-
-    /**
-     * renders the document to a QImage omitting all graphical elements
-     * like selection rects etc
+     * Renders the document to a QImage omitting all graphical elements
+     * like selection rects etc.
+     * Used to save to the document to an image file.
+     * NOTE: this method makes use of decoupled QEventLoop calling and thus does not block the UI
+     * WARN: in order to work correctly certain signals/slots have to be connected in kreenshoteditor.cpp (requestRenderToImageSignal)
      */
     QImage renderToImage();
+
+    /**
+     * see renderToImage()
+     * see requestRenderToImageSignal()
+     */
+    void onRenderToImageComplete(QImage image);
 
     void copyImageToClipboard();
 
@@ -175,6 +173,13 @@ Q_SIGNALS:
      * document's content was changed (add item, remove item, set base image after crop, ...)
      */
     void contentChangedSignal();
+
+    /**
+     * used by "renderToImage()" because the UI renders the final image and we do not want this dependency here
+     */
+    void requestRenderToImageSignal(kreen::core::Document* document);
+
+    // void requestRenderToImageCompleteSignal(); // not needed
 
 private Q_SLOTS:
     /**

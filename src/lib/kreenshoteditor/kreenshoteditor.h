@@ -43,6 +43,7 @@ using namespace core;
 
 namespace ui {
 class MainEditorWidget;
+KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 }
 
 using namespace ui;
@@ -93,6 +94,11 @@ public:
      * documentFile()->document() == document()
      */
     DocumentFilePtr documentFile();
+
+    /**
+     * Scene which is coupled with the document.
+     */
+    KreenGraphicsScenePtr graphicsScene();
 
     /**
      * sets ${YYYY}, ${MM}, ${DD}, ${hh}, ${mm}, ${ss}

@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "kreengraphicsscene.h"
+#include <kreen/core/document.h>
 #include <QMessageBox>
 #include <QDebug>
 #include "toolmanager.h"
@@ -34,12 +35,12 @@ KreenGraphicsScene::KreenGraphicsScene()
     _renderVisibilityControl = RenderVisibilityControl::make_shared();
 }
 
-void KreenGraphicsScene::setDocument(kreen::core::Document* document)
+void KreenGraphicsScene::setDocument(DocumentPtr document)
 {
     _document = document;
 }
 
-kreen::core::Document* KreenGraphicsScene::document()
+DocumentPtr KreenGraphicsScene::document()
 {
     return _document;
 }
@@ -200,6 +201,19 @@ void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mouseMoveEvent(event);
 }
 
+void KreenGraphicsScene::slotRequestRenderToImage(kreen::core::Document* document)
+{
+    qDebug() << "KreenGraphicsScene::slotRequestRenderToImage";
+    QImage image = document->baseImage().copy();
+    Q_ASSERT_X(!image.isNull(), "renderToImage", "image must not be empty otherwise creation of the painter will fail");
+    QPainter painterImage(&image);
+    painterImage.setRenderHint(QPainter::Antialiasing);
+    renderFinalImageOnly(true);
+    render(&painterImage);
+    renderFinalImageOnly(false);
+    document->onRenderToImageComplete(image);
+}
+
 bool KreenGraphicsScene::isItemForPointToSceneRestriction(KreenItemPtr item)
 {
     return item->typeId == "op-crop"; // TODO: op-ripout
@@ -267,7 +281,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         _creatingItem = nullptr;
         if (!grItemBase->item()->rect().isNull()) {
             qDebug() << "emit itemCreated";
-            emit itemCreated(grItemBase->item());
+            emit itemCreatedSignal(grItemBase->item());
             qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
             return;

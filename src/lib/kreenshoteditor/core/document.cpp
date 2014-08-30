@@ -18,14 +18,20 @@
  */
 #include "document.h"
 #include <QImage>
+#include <QDebug>
 #include <QPainter>
 #include <QApplication>
 #include <QClipboard>
 #include <QUndoStack>
-#include "../ui/impl/kreengraphicsscene.h" // TODO: try to remove the UI dependency
+#include <QThread>
 #include "impl/undocommands.h"
 
 namespace kreen {
+
+namespace ui {
+    KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
+}
+
 namespace core {
 
 class Document::Impl
@@ -34,8 +40,6 @@ public:
     Impl(Document* owner)
     {
         _owner = owner;
-        scene = kreen::ui::KreenGraphicsScene::make_shared();
-        scene->setDocument(_owner); // see usages of document()
     }
 
     /**
@@ -97,18 +101,17 @@ public:
     QList<KreenItemPtr> itemsCache;
     bool itemsCacheDirty = true;
 
-    /**
-     * Needed because the Document must know how to draw itself on an image
-     * (see renderToImage()) and screen and bitmap output result should be as similar as possible
-     */
-    KreenGraphicsScenePtr scene = nullptr;
-
     QUndoStack undoStack;
     /**
      * greater than 0 if during a contentChangedNotificationGroup
      */
     int contentChangedNotificationGroupDepth = 0;
     bool contentChangedNotificationGroupRecordUndo = false;
+
+    /**
+     * see renderToImage()
+     */
+    QImage renderToImageResult;
 
 private:
     Document* _owner = nullptr;
@@ -404,21 +407,34 @@ const QList<KreenItemPtr> Document::items()
     return d->itemsCache;
 }
 
-kreen::ui::KreenGraphicsScenePtr Document::graphicsScene()
-{
-    return d->scene;
-}
-
 QImage Document::renderToImage()
 {
-    QImage image = baseImage().copy();
-    Q_ASSERT_X(!image.isNull(), "renderToImage", "image must not be empty otherwise creation of the painter will fail");
-    QPainter painterImage(&image);
-    painterImage.setRenderHint(QPainter::Antialiasing);
-    d->scene->renderFinalImageOnly(true);
-    d->scene->render(&painterImage);
-    d->scene->renderFinalImageOnly(false);
-    return image;
+    // not needed:
+    // see https://quickmediasolutions.com/blog/14/qeventloop-making-asynchronous-tasks-synchronous
+    // see http://developer.nokia.com/community/wiki/How_to_wait_synchronously_for_a_Signal_in_Qt
+
+    d->renderToImageResult = QImage();
+    emit requestRenderToImageSignal(this); // KreenGraphicsScene::slotRequestRenderToImage will be called directly
+
+    // not needed:
+//     while (d->renderToImageResult.isNull()) {
+//          QThread::currentThread()->sleep(100);
+//          qDebug() << "wait 100ms for d->renderToImageResult";
+//     }
+
+    // this does not work (KreenGraphicsScene slot will never be called)
+//     QEventLoop loop;
+//     connect(this, SIGNAL(requestRenderToImageCompleteSignal()), &loop, SLOT(quit()));
+//     loop.exec();
+
+    Q_ASSERT(!d->renderToImageResult.isNull());
+    return d->renderToImageResult;
+}
+
+void Document::onRenderToImageComplete(QImage image)
+{
+    d->renderToImageResult = image;
+    //emit requestRenderToImageCompleteSignal(); // see renderToImage() (not needed here)
 }
 
 void Document::copyImageToClipboard()
