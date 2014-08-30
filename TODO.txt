@@ -1,7 +1,7 @@
 TODO
 ----
 - implement SelectionHandles
-    - make handles invisible while moving or resizing an item!!! --> update handles not needed anymore??
+    - draw item --> resize --> handles become not visible anymore
     - this concept has to redone to also support resizing objects over the flipping point
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
