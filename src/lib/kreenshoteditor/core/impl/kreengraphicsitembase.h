@@ -52,6 +52,12 @@ Q_SIGNALS:
 
     void itemPositionHasChangedSignal(KreenItemPtr item);
 
+//public Q_SLOTS:
+public:
+    void slotHandleStartDrag(); // TODO: cleanup naming
+    void slotHandlePositionHasChanged(QPointF delta); // TODO: cleanup naming
+    SelectionHandleGraphicsItem* _activeHandle = nullptr; // TODO: move this to separate class to be derived from
+
 public:
     /**
      * ctor
@@ -96,6 +102,9 @@ public:
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
 
+    virtual void handleStartDrag() = 0;
+    virtual void handlePositionHasChanged(QPointF delta) = 0;
+
     /**
      * the selection handles vector to be updated or modified by _selectionHandlesMgr
      * TODO: make not public
@@ -120,6 +129,16 @@ protected:
     void configureDropShadow(QPoint offset = QPoint(3, 3), qreal blurRadius = 10);
 
     QRect sceneRect();
+
+    /**
+     * impl for rect based items
+     */
+    void handleStartDragRectImpl(QRectF rect);
+
+    /**
+     * impl for rect based items
+     */
+    void handlePositionHasChangedRectImpl(QPointF delta);
 
     void connectImageOperationAcceptButton(QPushButton* acceptButton);
 
@@ -148,6 +167,8 @@ protected Q_SLOTS:
 protected:
     KreenItemPtr _item;
     SelectionHandlesPtr _selectionHandlesMgr;
+    QRect _startRect; // for rect-base items, todo: move elsewhere?
+    QLine _startLine; // for line-base items, todo: move elsewhere?
 
 private:
     QGraphicsItem* _graphicsItem;

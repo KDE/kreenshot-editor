@@ -65,11 +65,13 @@ public:
      * TODO: let the SelectionHandleGraphicsItem handle the cursors
      *        according to the PositionType (TopLeft, TopBorder, ... see Handle from tikzkit
      */
-    SelectionHandleGraphicsItem* createSelectionHandleItem(QGraphicsItem* instrumentedItem, QRectF rect, const QCursor& cursor)
+    SelectionHandleGraphicsItem* createSelectionHandleItem(KreenGraphicsItemBase* instrumentedItem, QRectF rect, const QCursor& cursor)
     {
-        auto grItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
-        grItem->setCursor(cursor);
-        return grItem;
+        auto handleItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
+//         handleItem->connect(handleItem, SIGNAL(handlePositionHasChangedSignal(SelectionHandleGraphicsItem*, QPointF)),
+//                 instrumentedItem, SLOT(slotHandlePositionHasChanged(SelectionHandleGraphicsItem*, QPointF)));
+        handleItem->setCursor(cursor);
+        return handleItem;
     }
 
     void clearHandlesFromScene(KreenGraphicsItemBase* kGrItem)
@@ -169,32 +171,36 @@ void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, boo
 
 
     if (createNewHandles) {
-        std::vector<SelectionHandleGraphicsItem*>& handles = kGrItem->_selectionHandles;
-        handles.clear();
+        std::vector<SelectionHandleGraphicsItem*>& handlesRef = kGrItem->_selectionHandles;
+        handlesRef.clear();
 
-        handles.push_back(d->createSelectionHandleItem(grItem, r1, d->cursors[1]));
-        handles.push_back(d->createSelectionHandleItem(grItem, r2, d->cursors[2]));
-        handles.push_back(d->createSelectionHandleItem(grItem, r3, d->cursors[3]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r1, d->cursors[1]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r2, d->cursors[2]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r3, d->cursors[3]));
 
-        handles.push_back(d->createSelectionHandleItem(grItem, r4, d->cursors[4]));
-        handles.push_back(d->createSelectionHandleItem(grItem, r6, d->cursors[6]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r4, d->cursors[4]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r6, d->cursors[6]));
 
-        handles.push_back(d->createSelectionHandleItem(grItem, r7, d->cursors[7]));
-        handles.push_back(d->createSelectionHandleItem(grItem, r8, d->cursors[8]));
-        handles.push_back(d->createSelectionHandleItem(grItem, r9, d->cursors[9]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r7, d->cursors[7]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r8, d->cursors[8]));
+        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r9, d->cursors[9]));
     }
     else {
-        std::vector<SelectionHandleGraphicsItem*>& handles = kGrItem->_selectionHandles;
+        std::vector<SelectionHandleGraphicsItem*> handles = kGrItem->_selectionHandles;
 
         int i = 0; // todo later: handle also less handles (e.g. for lines)
-        handles[i++]->setRect(r1);
-        handles[i++]->setRect(r2);
-        handles[i++]->setRect(r3);
-        handles[i++]->setRect(r4);
-        handles[i++]->setRect(r6);
-        handles[i++]->setRect(r7);
-        handles[i++]->setRect(r8);
-        handles[i++]->setRect(r9);
+        SelectionHandleGraphicsItem* handle = nullptr;
+        // exclude kGrItem->_activeHandle to avoid the effect that that handle is additionally moved
+        // TODO: this concept has to redone to also support resizing objects over the flipping point
+        //
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r1); }
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r2); }
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r3); }
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r4); } // sic!
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r6); } // sic!
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r7); }
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r8); }
+        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r9); }
     }
 }
 

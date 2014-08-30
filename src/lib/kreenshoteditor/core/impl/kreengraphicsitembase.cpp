@@ -67,6 +67,17 @@ KreenGraphicsScene* KreenGraphicsItemBase::getScene()
     return (KreenGraphicsScene*)graphicsItem()->scene();
 }
 
+void KreenGraphicsItemBase::slotHandleStartDrag()
+{
+    handleStartDrag();
+}
+
+void KreenGraphicsItemBase::slotHandlePositionHasChanged(QPointF delta)
+{
+    handlePositionHasChanged(delta);
+    _selectionHandlesMgr->createOrUpdateHandles(this, false);
+}
+
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isSelectableAndMovable)
 {
     // qDebug() << "KreenGraphicsItemBase::setMovable: " << isMovable;
@@ -133,6 +144,17 @@ void KreenGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
 QRect KreenGraphicsItemBase::sceneRect()
 {
     return _graphicsItem->scene()->sceneRect().toRect();
+}
+
+void KreenGraphicsItemBase::handleStartDragRectImpl(QRectF rect)
+{
+    _startRect = _item->rect();
+}
+
+void KreenGraphicsItemBase::handlePositionHasChangedRectImpl(QPointF delta)
+{
+    _item->setRect(_startRect.adjusted(0, 0, 0, delta.y()));
+    updateVisualGeometryFromModel();
 }
 
 void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)

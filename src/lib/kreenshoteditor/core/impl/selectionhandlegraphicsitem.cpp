@@ -18,6 +18,7 @@
  */
 #include "selectionhandlegraphicsitem.h"
 #include "selectionhandles.h"
+#include "kreengraphicsitembase.h"
 #include <QRect>
 #include <QCursor>
 #include <QGraphicsScene>
@@ -36,7 +37,7 @@ namespace core {
 //
 // }
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, QGraphicsItem* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, KreenGraphicsItemBase* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
 {
     _manager = manager;
     _instrumentedItem = instrumentedItem;
@@ -79,7 +80,10 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
     // and all selected items are moved automatically.
     //
     _manager->setAllSelectedItemsMovable(false);
+    _startPos = pos();
     QGraphicsItem::mousePressEvent(event);
+    _instrumentedItem->_activeHandle = this;
+    _instrumentedItem->slotHandleStartDrag();
 }
 
 void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -89,14 +93,12 @@ void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* ev
     //   _manager->setAllItemsWithHandlesMovable(true);
     // but see MainEditorWidget::slotFixSelectableAndMovable()
     QGraphicsItem::mouseReleaseEvent(event);
+    _instrumentedItem->_activeHandle = nullptr;
 }
 
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
 {
-    if (change == QGraphicsItem::ItemPositionHasChanged) {
-        emit handlePositionHasChangedSignal();
-    }
-    else if (change == QGraphicsItem::ItemPositionChange) {
+    if (change == QGraphicsItem::ItemPositionChange) {
         //
         // handle movement restrictions; delegate to instrumented Item?
         // --> TODO change: draw selection handles from within item!!!
@@ -106,8 +108,11 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
 
         QPointF newPos(oldPos.x(), curPos.y()); // todo
 
-
         return newPos;
+    }
+    else if (change == QGraphicsItem::ItemPositionHasChanged) {
+        QPointF curPos = pos();
+        _instrumentedItem->slotHandlePositionHasChanged(curPos - _startPos);
     }
 
     return QGraphicsItem::itemChange(change, value);
