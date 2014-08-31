@@ -114,33 +114,34 @@ void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::Position
 
         qreal dx = delta.x();
         qreal dy = delta.y();
+        QRect newRect;
 
         switch (posEnum)
         {
             // case selhandles::Position0_Center: Q_ASSERT(false); return;
             case selhandles::Position1_TopLeft:
-                _item->setRect(_startRect.adjusted(dx, dy, 0, 0));
+                newRect = _startRect.adjusted(dx, dy, 0, 0);
                 break;
             case selhandles::Position2_TopRight:
-                _item->setRect(_startRect.adjusted(0, dy, dx, 0));
+                newRect = _startRect.adjusted(0, dy, dx, 0);
                 break;
             case selhandles::Position3_BottomLeft:
-                _item->setRect(_startRect.adjusted(dx, 0, 0, dy));
+                newRect = _startRect.adjusted(dx, 0, 0, dy);
                 break;
             case selhandles::Position4_BottomRight:
-                _item->setRect(_startRect.adjusted(0, 0, dx, dy));
+                newRect = _startRect.adjusted(0, 0, dx, dy);
                 break;
             case selhandles::Position5_Left:
-                _item->setRect(_startRect.adjusted(dx, 0, 0, 0));
+                newRect = _startRect.adjusted(dx, 0, 0, 0);
                 break;
             case selhandles::Position6_Right:
-                _item->setRect(_startRect.adjusted(0, 0, dx, 0));
+                newRect = _startRect.adjusted(0, 0, dx, 0);
                 break;
             case selhandles::Position7_Top:
-                _item->setRect(_startRect.adjusted(0, dy, 0, 0));
+                newRect = _startRect.adjusted(0, dy, 0, 0);
                 break;
             case selhandles::Position8_Bottom:
-                _item->setRect(_startRect.adjusted(0, 0, 0, dy));
+                newRect = _startRect.adjusted(0, 0, 0, dy);
                 break;
             default:
                 qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBasePositionHasChanged case not handled: " << posEnum;
@@ -148,6 +149,8 @@ void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::Position
                 return;
         }
 
+        newRect = newRect.normalized(); // for when e.g. lower handle is moved over the top edge
+        _item->setRect(newRect);
         updateVisualGeometryFromModel();
     }
     else {

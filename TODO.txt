@@ -2,7 +2,7 @@ TODO
 ----
 - implement SelectionHandles
     - see workaroundIsBlurredOnUnevenHandleWidth
-    - this concept has to redone to also support resizing objects over the flipping point
+    - do handles for line
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items
