@@ -35,29 +35,37 @@ class SelectionHandles::Impl
 {
 public:
     KreenGraphicsScenePtr scene;
-    std::vector<QCursor> cursors;
     bool allRenderVisible = true;
 
 public:
     Impl(SelectionHandles* owner)
     {
         _owner = owner;
+    }
 
-        //
-        // 1   2   3
-        // 4   5   6
-        // 7   8   9
-        //
-        cursors.push_back(Qt::ArrowCursor); // not used
-        cursors.push_back(Qt::SizeFDiagCursor); // 1
-        cursors.push_back(Qt::SizeVerCursor); // 2
-        cursors.push_back(Qt::SizeBDiagCursor); // 3
-        cursors.push_back(Qt::SizeHorCursor); // 4
-        cursors.push_back(Qt::OpenHandCursor); // 5
-        cursors.push_back(Qt::SizeHorCursor); // 6
-        cursors.push_back(Qt::SizeBDiagCursor); // 7
-        cursors.push_back(Qt::SizeVerCursor); // 8
-        cursors.push_back(Qt::SizeFDiagCursor); // 9
+    /**
+    * 1   7   2
+    * 5   0   6
+    * 3   8   4
+    */
+    QCursor cursorFromPositionEnum(PositionEnum posEnum)
+    {
+        switch (posEnum)
+        {
+            case Position0_Center: return Qt::ArrowCursor; // Qt::OpenHandCursor
+            case Position1_TopLeft: return Qt::SizeFDiagCursor;
+            case Position2_TopRight: return Qt::SizeBDiagCursor;
+            case Position3_BottomLeft: return Qt::SizeBDiagCursor;
+            case Position4_BottomRight: return Qt::SizeFDiagCursor;
+            case Position5_Left: return Qt::SizeHorCursor;
+            case Position6_Right: return Qt::SizeHorCursor;
+            case Position7_Top: return Qt::SizeVerCursor;
+            case Position8_Bottom: return Qt::SizeVerCursor;
+        }
+
+        qDebug() << "[ERROR] cursorFromPositionEnum. All cases must be handled.";
+        Q_ASSERT(false);
+        return Qt::ArrowCursor;
     }
 
     /**
@@ -152,56 +160,50 @@ void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, boo
     qreal h2 = floor(h / 2.0);
     auto rect = QRectF(0, 0, hw, hw);
 
-    //
-    // 1   2   3
-    // 4   5   6
-    // 7   8   9
-    //
-    auto r1 = rect.translated(x - hw2, y - hw2); // 1
-    auto r2 = rect.translated(x + w2 - hw2, y - hw2); // 2
-    auto r3 = rect.translated(x + w - hw2, y - hw2); // 3
+    /**
+    * 1   7   2
+    * 5   0   6
+    * 3   8   4
+    */
+    std::vector<PositionEnum> positions;
+    positions.push_back(Position1_TopLeft);
+    positions.push_back(Position2_TopRight);
+    positions.push_back(Position3_BottomLeft);
+    positions.push_back(Position4_BottomRight);
+    positions.push_back(Position5_Left);
+    positions.push_back(Position6_Right);
+    positions.push_back(Position7_Top);
+    positions.push_back(Position8_Bottom);
 
-    auto r4 = rect.translated(x - hw2, y + h2 - hw2); // 4
-    auto r6 = rect.translated(x + w - hw2, y + h2 - hw2); // 6
-
-    auto r7 = rect.translated(x - hw2, y + h - hw2); // 7
-    auto r8 = rect.translated(x + w2 - hw2, y + h - hw2); // 8
-    auto r9 = rect.translated(x + w - hw2, y + h - hw2); // 9
-
+    QMap<PositionEnum, QRectF> posRectMap;
+    // posRectMap.insert(Position0Center)
+    posRectMap.insert(Position1_TopLeft, rect.translated(x - hw2, y - hw2));
+    posRectMap.insert(Position2_TopRight, rect.translated(x + w - hw2, y - hw2));
+    posRectMap.insert(Position3_BottomLeft, rect.translated(x - hw2, y + h - hw2));
+    posRectMap.insert(Position4_BottomRight, rect.translated(x + w - hw2, y + h - hw2));
+    posRectMap.insert(Position5_Left, rect.translated(x - hw2, y + h2 - hw2));
+    posRectMap.insert(Position6_Right, rect.translated(x + w - hw2, y + h2 - hw2));
+    posRectMap.insert(Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
+    posRectMap.insert(Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
 
     if (createNewHandles) {
         std::vector<SelectionHandleGraphicsItem*>& handlesRef = kGrItem->_selectionHandles;
         handlesRef.clear();
 
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r1, d->cursors[1]));
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r2, d->cursors[2]));
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r3, d->cursors[3]));
-
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r4, d->cursors[4]));
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r6, d->cursors[6]));
-
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r7, d->cursors[7]));
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r8, d->cursors[8]));
-        handlesRef.push_back(d->createSelectionHandleItem(kGrItem, r9, d->cursors[9]));
+        foreach (auto posEnum, positions) {
+            // TODO: give the handle also its posEnum
+            handlesRef.push_back(d->createSelectionHandleItem(kGrItem, posRectMap[posEnum], d->cursorFromPositionEnum(posEnum)));
+        }
 
         setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
     }
     else {
         std::vector<SelectionHandleGraphicsItem*> handles = kGrItem->_selectionHandles;
 
-        int i = 0; // todo later: handle also less handles (e.g. for lines)
-        SelectionHandleGraphicsItem* handle = nullptr;
-        // exclude kGrItem->_activeHandle to avoid the effect that that handle is additionally moved
-        // TODO: this concept has to redone to also support resizing objects over the flipping point
-        //
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r1); }
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r2); }
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r3); }
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r4); } // sic!
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r6); } // sic!
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r7); }
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r8); }
-        handle = handles[i++]; if (handle != kGrItem->_activeHandle) { handle->setRect(r9); }
+        int i = 0; // TODO later: handle also less handles (e.g. for lines)
+        foreach (auto posEnum, positions) {
+            handles[i++]->setRect(posRectMap[posEnum]); // TODO: make independent from i
+        }
     }
 }
 
