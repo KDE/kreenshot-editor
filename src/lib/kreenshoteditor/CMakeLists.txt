@@ -26,6 +26,8 @@ set(kreenshoteditor_SOURCES
     core/settingsgroupoutput.cpp
     core/settingsmanager.cpp
 
+    ui/cursors/cursorlightcross.cpp
+
     ui/impl/kreengraphicsitembase.cpp
     ui/impl/kreengraphicsitems.cpp
     ui/impl/kreengraphicsscene.cpp
