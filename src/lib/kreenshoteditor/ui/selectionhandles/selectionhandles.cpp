@@ -84,7 +84,7 @@ SelectionHandles::~SelectionHandles()
 
 void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
 {
-    if (selHandleBase->instrumentedItem()->isSelected()) {
+    if (selHandleBase->selHandleBaseInstrumentedItem()->isSelected()) {
         createOrUpdateHandles(selHandleBase, true);
 
         foreach (auto handleItem, selHandleBase->_selectionHandles) {
@@ -98,7 +98,7 @@ void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBa
 
 void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
 {
-    if (!selHandleBase->instrumentedItem()->scene()) { // check whether item is part of a scene or not
+    if (!selHandleBase->selHandleBaseInstrumentedItem()->scene()) { // check whether item is part of a scene or not
         d->clearHandlesFromScene(selHandleBase); // remove handles if instrumentedItem was removed from scene
     }
 }
@@ -114,7 +114,7 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
 {
     qreal hw = 8.0; // handleWidth;
 
-    auto grItem = selHandleBase->instrumentedItem();
+    auto grItem = selHandleBase->selHandleBaseInstrumentedItem();
 
     // WORKAROUND:
     // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
@@ -200,7 +200,7 @@ bool SelectionHandles::isAnyHandleUnderMouse()
 void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 {
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
-        selHandleItem->instrumentedItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
+        selHandleItem->selHandleBaseInstrumentedItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
     }
 }
 

@@ -93,9 +93,30 @@ void KreenGraphicsItemBase::setSelectable(bool isSelectable)
 //     return list.indexOf(this) < list.indexOf(rhs);
 // }
 
-QGraphicsItem* KreenGraphicsItemBase::instrumentedItem()
+QGraphicsItem* KreenGraphicsItemBase::selHandleBaseInstrumentedItem()
 {
     return graphicsItem();
+}
+
+void KreenGraphicsItemBase::selHandleBaseStartDrag()
+{
+    if (selHandleBaseType() == SelectionHandleBase::HandleType_Rect) {
+        _startRect = _item->rect();
+    }
+    else {
+        qDebug() << "TODO"; // TODO
+    }
+}
+
+void KreenGraphicsItemBase::selHandleBasePositionHasChanged(QPointF delta)
+{
+    if (selHandleBaseType() == SelectionHandleBase::HandleType_Rect) {
+        _item->setRect(_startRect.adjusted(0, 0, 0, delta.y()));
+        updateVisualGeometryFromModel();
+    }
+    else {
+        qDebug() << "TODO"; // TODO
+    }
 }
 
 bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
@@ -138,17 +159,6 @@ void KreenGraphicsItemBase::configureDropShadow(QPoint offset, qreal blurRadius)
 QRect KreenGraphicsItemBase::sceneRect()
 {
     return _graphicsItem->scene()->sceneRect().toRect();
-}
-
-void KreenGraphicsItemBase::handleStartDragRectImpl(QRectF rect)
-{
-    _startRect = _item->rect();
-}
-
-void KreenGraphicsItemBase::handlePositionHasChangedRectImpl(QPointF delta)
-{
-    _item->setRect(_startRect.adjusted(0, 0, 0, delta.y()));
-    updateVisualGeometryFromModel();
 }
 
 void KreenGraphicsItemBase::connectImageOperationAcceptButton(QPushButton* acceptButton)
@@ -203,29 +213,7 @@ bool KreenGraphicsItemBase::mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* 
 
 void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    // qDebug() << "itemChangeImpl: " << change;
-    if (change == QGraphicsItem::ItemPositionHasChanged) {
-        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
-            //qDebug() << "_selectionHandlesMgr->allHandlesRenderVisible()" << _selectionHandlesMgr->allHandlesRenderVisible();
-            _selectionHandlesMgr->onItemPositionHasChanged(this);
-            if (_selectionHandlesMgr->allHandlesRenderVisible()) {
-                _selectionHandlesMgr->setAllHandlesRenderVisible(false); // move an item => hide handles
-            }
-        }
-
-        //qDebug() << "EMIT itemPositionHasChangedSignal(item());";
-        emit itemPositionHasChangedSignal(item());
-    }
-    else if (change == QGraphicsItem::ItemSelectedHasChanged) {
-        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
-            _selectionHandlesMgr->onItemSelectedHasChanged(this);
-        }
-    }
-    else if (change == QGraphicsItem::ItemSceneHasChanged) {
-        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
-            _selectionHandlesMgr->onItemSceneHasChanged(this);
-        }
-    }
+    itemChangeSelHandleBaseImpl(change, value);
 }
 
 // TMP

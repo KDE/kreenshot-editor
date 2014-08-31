@@ -46,6 +46,7 @@ public:
     KreenGraphicsRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -71,16 +72,6 @@ public:
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
-    }
-
-    virtual void handleStartDrag() override
-    {
-        handleStartDragRectImpl(rect());
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        handlePositionHasChangedRectImpl(delta);
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
@@ -110,6 +101,7 @@ public:
     KreenGraphicsEllipseItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -135,16 +127,6 @@ public:
         QPoint scenePos = this->pos().toPoint();
         QRect grRect = this->rect().toRect();
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
-    }
-
-    virtual void handleStartDrag() override
-    {
-        handleStartDragRectImpl(rect());
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        handlePositionHasChangedRectImpl(delta);
     }
 
 //     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override
@@ -181,6 +163,7 @@ public:
     KreenGraphicsLineItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Line);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -205,16 +188,6 @@ public:
         QLine line = this->line().toLine().translated(scenePos); // translate our line to scenePos
         _item->setLine(line);
         this->setPos(0.0, 0.0); // reset QGraphicsItem pos to 0|0 because our model only relies on the line (and not additionally on the pos)
-    }
-
-    virtual void handleStartDrag() override
-    {
-        // todo
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        // todo
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
@@ -242,6 +215,7 @@ public:
     KreenGraphicsTextRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -280,16 +254,6 @@ public:
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-    virtual void handleStartDrag() override
-    {
-        handleStartDragRectImpl(rect());
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        handlePositionHasChangedRectImpl(delta);
-    }
-
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeBaseImpl(change, value);
@@ -317,6 +281,7 @@ public:
     KreenGraphicsObfuscateItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -358,16 +323,6 @@ public:
         _item->setRect(QRect(scenePos.x(), scenePos.y(), grRect.width(), grRect.height()));
     }
 
-    virtual void handleStartDrag() override
-    {
-        handleStartDragRectImpl(rect());
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        handlePositionHasChangedRectImpl(delta);
-    }
-
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value) override
     {
         itemChangeBaseImpl(change, value);
@@ -400,6 +355,7 @@ public:
     KreenGraphicsOperationCropItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
+        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -461,16 +417,6 @@ public:
     {
         qDebug() << "KreenGraphicsOperationCropItem: updateModelFromVisualGeometry";
         _item->setRect(modelRectFromGraphicsItem());
-    }
-
-    virtual void handleStartDrag() override
-    {
-        handleStartDragRectImpl(rect());
-    }
-
-    virtual void handlePositionHasChanged(QPointF delta) override
-    {
-        handlePositionHasChangedRectImpl(delta);
     }
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override

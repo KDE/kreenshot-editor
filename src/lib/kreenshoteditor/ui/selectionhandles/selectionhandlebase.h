@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QRect>
 #include <QLine>
+#include <QGraphicsItem>
 
 class QGraphicsItem;
 
@@ -44,23 +45,41 @@ class SelectionHandleBase //: public QObject
     friend SelectionHandles;
 
 public:
-    void slotHandleStartDrag(); // TODO: cleanup naming
-    void slotHandlePositionHasChanged(QPointF delta); // TODO: cleanup naming
-    SelectionHandleGraphicsItem* _activeHandle = nullptr; // TODO: move this to separate class to be derived from
-
-    /**
-     * if the items should support selection handles, this has to be set
-     */
-    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
+    enum HandlesTypeEnum
+    {
+        HandleType_Rect = 0,
+        HandleType_Line
+    };
 
 public:
     SelectionHandleBase();
 
     virtual ~SelectionHandleBase();
 
+    /**
+     * if the items should support selection handles, this has to be set
+     */
+    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
+
+    void setSelHandleBaseType(HandlesTypeEnum handlesType);
+
+    HandlesTypeEnum selHandleBaseType();
+
+    void itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+
 public:
-    virtual void handleStartDrag() = 0;
-    virtual void handlePositionHasChanged(QPointF delta) = 0;
+    virtual void selHandleBaseStartDrag() = 0;
+    virtual void selHandleBasePositionHasChanged(QPointF delta) = 0;
+
+protected:
+    void handleStartDrag();
+    void handlePositionHasChanged(QPointF delta);
+
+protected:
+    virtual QGraphicsItem* selHandleBaseInstrumentedItem() = 0;
+
+protected:
+    SelectionHandlesPtr _selectionHandlesMgr;
 
     /**
      * the selection handles vector to be updated or modified by _selectionHandlesMgr
@@ -68,13 +87,11 @@ public:
      */
     std::vector<SelectionHandleGraphicsItem*> _selectionHandles; // TMP
 
-protected:
-    virtual QGraphicsItem* instrumentedItem() = 0;
+    SelectionHandleGraphicsItem* _activeHandle = nullptr;
 
-protected:
-    SelectionHandlesPtr _selectionHandlesMgr;
-    QRect _startRect; // for rect-base items, todo: move elsewhere?
-    QLine _startLine; // for line-base items, todo: move elsewhere?
+//private: // todo later: type is fixed right now
+    QRect _startRect; // for rect-base items
+    QLine _startLine; // for line-base items
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR

@@ -123,7 +123,7 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
     d->startPos = pos();
     QGraphicsItem::mousePressEvent(event);
     d->selHandleBase->_activeHandle = this;
-    d->selHandleBase->slotHandleStartDrag();
+    d->selHandleBase->handleStartDrag();
 }
 
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
@@ -147,7 +147,7 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
         }
         QPointF curPos = pos();
         // the client can get more information using _activeHandle? (TODO for posEnum)
-        d->selHandleBase->slotHandlePositionHasChanged(curPos - d->startPos);
+        d->selHandleBase->handlePositionHasChanged(curPos - d->startPos);
     }
 
     return QGraphicsItem::itemChange(change, value);

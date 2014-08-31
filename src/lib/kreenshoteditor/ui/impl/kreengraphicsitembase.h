@@ -51,8 +51,6 @@ Q_SIGNALS:
 
     void operationCanceledSignal();
 
-    void itemPositionHasChangedSignal(kreen::core::KreenItemPtr item);
-
 public:
     /**
      * ctor
@@ -97,7 +95,11 @@ public:
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
 
-    virtual QGraphicsItem* instrumentedItem() override;
+    virtual QGraphicsItem* selHandleBaseInstrumentedItem() override;
+
+    virtual void selHandleBaseStartDrag() override;
+
+    virtual void selHandleBasePositionHasChanged(QPointF delta) override;
 public:
     /**
      * WORKAROUND:
@@ -117,16 +119,6 @@ protected:
     void configureDropShadow(QPoint offset = QPoint(3, 3), qreal blurRadius = 10);
 
     QRect sceneRect();
-
-    /**
-     * impl for rect based items
-     */
-    void handleStartDragRectImpl(QRectF rect);
-
-    /**
-     * impl for rect based items
-     */
-    void handlePositionHasChangedRectImpl(QPointF delta);
 
     void connectImageOperationAcceptButton(QPushButton* acceptButton);
 

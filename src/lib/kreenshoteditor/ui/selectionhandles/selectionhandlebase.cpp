@@ -25,15 +25,16 @@ namespace ui {
 class SelectionHandleBase::Impl
 {
 public:
+    HandlesTypeEnum handlesType;
 
 public:
 
 private:
-
 };
 
 SelectionHandleBase::SelectionHandleBase()
 {
+    KREEN_PIMPL_INIT(SelectionHandleBase);
 }
 
 SelectionHandleBase::~SelectionHandleBase()
@@ -45,18 +46,49 @@ void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHa
     _selectionHandlesMgr = selectionHandles;
 }
 
-void SelectionHandleBase::slotHandleStartDrag()
+void SelectionHandleBase::setSelHandleBaseType(SelectionHandleBase::HandlesTypeEnum handlesType)
 {
-    handleStartDrag();
+    d->handlesType = handlesType;
 }
 
-void SelectionHandleBase::slotHandlePositionHasChanged(QPointF delta)
+SelectionHandleBase::HandlesTypeEnum SelectionHandleBase::selHandleBaseType()
 {
-    handlePositionHasChanged(delta);
+    return d->handlesType;
+}
+
+void SelectionHandleBase::itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+{
+    // qDebug() << "itemChangeImpl: " << change;
+    if (change == QGraphicsItem::ItemPositionHasChanged) {
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemPositionHasChanged(this);
+            if (_selectionHandlesMgr->allHandlesRenderVisible()) {
+                _selectionHandlesMgr->setAllHandlesRenderVisible(false); // move an item => hide handles
+            }
+        }
+    }
+    else if (change == QGraphicsItem::ItemSelectedHasChanged) {
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemSelectedHasChanged(this);
+        }
+    }
+    else if (change == QGraphicsItem::ItemSceneHasChanged) {
+        if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
+            _selectionHandlesMgr->onItemSceneHasChanged(this);
+        }
+    }
+}
+
+void SelectionHandleBase::handleStartDrag()
+{
+    selHandleBaseStartDrag();
+}
+
+void SelectionHandleBase::handlePositionHasChanged(QPointF delta)
+{
+    selHandleBasePositionHasChanged(delta);
     _selectionHandlesMgr->createOrUpdateHandles(this, false);
 }
-
-
 
 }
 }
