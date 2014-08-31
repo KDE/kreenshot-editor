@@ -34,18 +34,14 @@ Component 2: image-editor
         - dropdown menu (show basic properties as string like line width, color etc)
 - set (including an optional cursor) and get image
 
-DEV
----
-Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
-
-Create new header guard UUI:
-$ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", "_"))'
-
 BUGS
 ----
-- BUG: resize the main window requires the user to click the editor widget to restore the cursor to normal
-    nothing goes until it was clicked
-- item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
+- Since the beginning:
+    Resize the main window requires the user to click the editor widget to restore the cursor to normal.
+    No mouse events are handled until mouse click.
+- Blurring of lines and selection handles:
+    item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
+- see TODO.txt
 
 QUESTIONS
 ---------
@@ -58,6 +54,14 @@ QUESTIONS
 - statt QScrollView kann man auch bei QGraphicsScene.setSceneRect verwenden. Was ist besser?
 - prepare-include-files.sh: does it makes sense to distinguish between KREEN_CORE_EXPORT and KREEN_UI_EXPORT???
 - restrict drawing outside scene rect; clip, clipping (currently solved with workaround)
+
+DEVELOPMENT
+-----------
+Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.png
+
+Create new header guard UUI:
+$ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", ""))'
+
 
 Related tools
 -------------

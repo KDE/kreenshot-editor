@@ -16,40 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_b000eb02145d11e4bace002454dd224f
-#define UUID_b000eb02145d11e4bace002454dd224f
+#ifndef UUID_619f1e7e30f111e48c94002454dd224f
+#define UUID_619f1e7e30f111e48c94002454dd224f
 
-#include <kreen/util/exportutil.h>
 #include <kreen/util/pimplutil.h>
 #include <QString>
-#include <QUrl>
-#include <QProcess>
 #include <QObject>
 
+class QGraphicsScene;
+
 namespace kreen {
-namespace core {
+namespace ui {
+
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+class SelectionHandleGraphicsItem;
 
 /**
- * additions to QDesktopServices
+ *
  */
-class KREEN_DECL_EXPORT DesktopServices : public QObject
+class SelectionHandleBase //: public QObject
 {
-    Q_OBJECT
-public:
-    DesktopServices();
+    //Q_OBJECT
 
-    virtual ~DesktopServices();
+    friend SelectionHandleGraphicsItem;
 
 public:
-    /**
-     * Selects the given file in the filemanager (works only for dolphin).
-     * If the url is a directory it is also selected instead of entered.
-     */
-    static void selectInFilemanager(QString filename);
 
-protected Q_SLOTS:
-//     void slotProcessStarted();
-//     void slotProcessError(QProcess::ProcessError error);
+public:
+    SelectionHandleBase();
+
+    virtual ~SelectionHandleBase();
+
+public:
+
+protected:
+
+private:
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 }

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_312a0756_1a8d_11e4_8d2e_002454dd224f
-#define UUID_312a0756_1a8d_11e4_8d2e_002454dd224f
+#ifndef UUID_312a07561a8d11e48d2e002454dd224f
+#define UUID_312a07561a8d11e48d2e002454dd224f
 
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractGraphicsShapeItem>

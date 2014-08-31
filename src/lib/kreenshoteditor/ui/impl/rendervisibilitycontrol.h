@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_83dcfe08_2c1d_11e4_b317_002454dd224f
-#define UUID_83dcfe08_2c1d_11e4_b317_002454dd224f
+#ifndef UUID_83dcfe082c1d11e4b317002454dd224f
+#define UUID_83dcfe082c1d11e4b317002454dd224f
 
 #include "../../util/sharedptrutil.h"
 #include <QSet>

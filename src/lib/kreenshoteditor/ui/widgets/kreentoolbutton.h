@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_KreenToolButton_H
-#define UUID_KreenToolButton_H
+#ifndef UUID_c855290630f111e4a6e3002454dd224f
+#define UUID_c855290630f111e4a6e3002454dd224f
 
 #include <kreen/util/exportutil.h>
 #include <QWidget>

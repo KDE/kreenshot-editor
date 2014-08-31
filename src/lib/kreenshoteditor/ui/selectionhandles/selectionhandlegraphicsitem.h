@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_selectionhandlegraphicsitem_h
-#define UUID_selectionhandlegraphicsitem_h
+#ifndef UUID_c10df3b230f111e4b8f5002454dd224f
+#define UUID_c10df3b230f111e4b8f5002454dd224f
 
 #include <kreen/util/pimplutil.h>
 #include <QString>

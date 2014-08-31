@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_689145c4_1a7e_11e4_b715_002454dd224f
-#define UUID_689145c4_1a7e_11e4_b715_002454dd224f
+#ifndef UUID_689145c41a7e11e4b715002454dd224f
+#define UUID_689145c41a7e11e4b715002454dd224f
 
 #include "../../util/sharedptrutil.h"
 #include <QUndoCommand>

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
-#define UUID_2acf85fc_1a8d_11e4_aab7_002454dd224f
+#ifndef UUID_2acf85fc1a8d11e4aab7002454dd224f
+#define UUID_2acf85fc1a8d11e4aab7002454dd224f
 
 #include <kreen/core/kreenitem.h>
 #include <QGraphicsItem>
