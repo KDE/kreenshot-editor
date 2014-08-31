@@ -366,7 +366,7 @@ public:
 
     virtual void updateVisualGeometryFromModel() override
     {
-        qDebug() << "KreenGraphicsOperationCropItem: updateVisualGeometryFromModel";
+        // qDebug() << "KreenGraphicsOperationCropItem: updateVisualGeometryFromModel";
 
         QRect itemRect = _item->rect(); // in KreenItems the position is coded in the rect's top/left coordinate
         // here we translate it into QGraphicsItems way:
@@ -389,12 +389,9 @@ public:
             auto widgetProxy = new QGraphicsProxyWidget(this);
             widgetProxy->setWidget(frame);
             _interactionWidget = widgetProxy;
-
-            // causes crash on wild clicking (when interacting with widget) because of model update on mouse release
-            // TODO: 2014-06-18: seems not to be an issue anymore...
-            //_interactionWidget->setPos(-_interactionWidget->widget()->width(), -_interactionWidget->widget()->height());
-            _interactionWidget->setPos(itemRect.width(), itemRect.height());
         }
+
+        _interactionWidget->setPos(itemRect.width(), itemRect.height());
 
         updateDimRects(itemRect);
     }

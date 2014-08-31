@@ -536,8 +536,17 @@ void MainEditorWidget::slotFixSelectableAndMovable()
     foreach (auto item, d->scene()->selectedKreenItems()) {
         auto kGrItem = d->scene()->graphicsItemBaseFromItem(item);
         if (d->toolManager()->chosenTool() == ToolEnum::Select || d->toolManager()->isImageOperationActive()) {
+            qDebug() << "  kGrItem->setSelectableAndMovable(true);";
             kGrItem->setSelectableAndMovable(true);
         }
+    }
+
+    // image operation always stays selected and fix visibility of selection handles
+    if (d->imgOpHandling.imageOperationItemActive()) {
+        qDebug() << "  d->imgOpHandling.imageOperationGraphicsItem->setSelected(true);";
+        // TODO: "false, true" to fix visiblity of selection handles is not very nice. Find out a better way.
+        d->imgOpHandling.imageOperationGraphicsItem->setSelected(false);
+        d->imgOpHandling.imageOperationGraphicsItem->setSelected(true);
     }
 }
 
@@ -563,6 +572,8 @@ void MainEditorWidget::slotUpdateItemsGeometryFromModel()
             relevantItems << item;
         }
     }
+
+    qDebug() << "  relevantItems count:" << relevantItems.count();
 
     // find if any change has happend:
     //
