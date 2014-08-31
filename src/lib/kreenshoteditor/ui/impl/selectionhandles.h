@@ -20,7 +20,6 @@
 #define UUID_c01b9a44c6643c4eb71e9b4b53b9b71f
 
 #include <kreen/util/pimplutil.h>
-#include "selectionhandlegraphicsitem.h"
 #include <QString>
 #include <QObject>
 #include <map>
@@ -33,6 +32,7 @@ namespace ui {
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 class KreenGraphicsItemBase;
+class SelectionHandleGraphicsItem;
 
 /**
  * GOAL: make this class independent from Kreen-stuff to make it more reusable

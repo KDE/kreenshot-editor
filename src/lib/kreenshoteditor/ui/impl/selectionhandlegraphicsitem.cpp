@@ -35,16 +35,44 @@ class SelectionHandleGraphicsItem::Impl
 {
 public:
     SelectionHandles* manager = nullptr;
+    SelectionHandles::PositionEnum posEnum;
     KreenGraphicsItemBase* instrumentedItem = nullptr;
     QPointF startPos;
     bool renderVisible = true;
+
+public:
+    /**
+    * 1   7   2
+    * 5   0   6
+    * 3   8   4
+    */
+    QCursor cursorFromPositionEnum(SelectionHandles::PositionEnum posEnum)
+    {
+        switch (posEnum)
+        {
+            case SelectionHandles::Position0_Center: return Qt::ArrowCursor; // Qt::OpenHandCursor
+            case SelectionHandles::Position1_TopLeft: return Qt::SizeFDiagCursor;
+            case SelectionHandles::Position2_TopRight: return Qt::SizeBDiagCursor;
+            case SelectionHandles::Position3_BottomLeft: return Qt::SizeBDiagCursor;
+            case SelectionHandles::Position4_BottomRight: return Qt::SizeFDiagCursor;
+            case SelectionHandles::Position5_Left: return Qt::SizeHorCursor;
+            case SelectionHandles::Position6_Right: return Qt::SizeHorCursor;
+            case SelectionHandles::Position7_Top: return Qt::SizeVerCursor;
+            case SelectionHandles::Position8_Bottom: return Qt::SizeVerCursor;
+        }
+
+        qDebug() << "[ERROR] cursorFromPositionEnum. All cases must be handled.";
+        Q_ASSERT(false);
+        return Qt::ArrowCursor;
+    }
 };
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, KreenGraphicsItemBase* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(kreen::ui::SelectionHandles* manager, kreen::ui::SelectionHandles::PositionEnum posEnum, kreen::ui::KreenGraphicsItemBase* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
 {
     KREEN_PIMPL_INIT(SelectionHandleGraphicsItem);
 
     d->manager = manager;
+    d->posEnum = posEnum;
     d->instrumentedItem = instrumentedItem;
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -52,11 +80,18 @@ SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manag
 
     setBrush(QBrush(Qt::black));
     setPen(Qt::NoPen);
+
+    setCursor(d->cursorFromPositionEnum(posEnum));
 }
 
 SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 {
 
+}
+
+SelectionHandles::PositionEnum SelectionHandleGraphicsItem::posEnum()
+{
+    return d->posEnum;
 }
 
 void SelectionHandleGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
@@ -111,6 +146,7 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
             d->manager->setAllHandlesRenderVisible(false); // move a handle => hide handles
         }
         QPointF curPos = pos();
+        // the client can get more information using _activeHandle? (TODO for posEnum)
         d->instrumentedItem->slotHandlePositionHasChanged(curPos - d->startPos);
     }
 

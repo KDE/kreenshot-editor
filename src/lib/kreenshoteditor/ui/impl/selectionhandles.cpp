@@ -43,44 +43,6 @@ public:
         _owner = owner;
     }
 
-    /**
-    * 1   7   2
-    * 5   0   6
-    * 3   8   4
-    */
-    QCursor cursorFromPositionEnum(PositionEnum posEnum)
-    {
-        switch (posEnum)
-        {
-            case Position0_Center: return Qt::ArrowCursor; // Qt::OpenHandCursor
-            case Position1_TopLeft: return Qt::SizeFDiagCursor;
-            case Position2_TopRight: return Qt::SizeBDiagCursor;
-            case Position3_BottomLeft: return Qt::SizeBDiagCursor;
-            case Position4_BottomRight: return Qt::SizeFDiagCursor;
-            case Position5_Left: return Qt::SizeHorCursor;
-            case Position6_Right: return Qt::SizeHorCursor;
-            case Position7_Top: return Qt::SizeVerCursor;
-            case Position8_Bottom: return Qt::SizeVerCursor;
-        }
-
-        qDebug() << "[ERROR] cursorFromPositionEnum. All cases must be handled.";
-        Q_ASSERT(false);
-        return Qt::ArrowCursor;
-    }
-
-    /**
-     * creates a new SelectionHandleGraphicsItem including cursor and move event handling
-     *
-     * TODO: let the SelectionHandleGraphicsItem handle the cursors
-     *        according to the PositionType (TopLeft, TopBorder, ... see Handle from tikzkit
-     */
-    SelectionHandleGraphicsItem* createSelectionHandleItem(KreenGraphicsItemBase* instrumentedItem, QRectF rect, const QCursor& cursor)
-    {
-        auto handleItem = new SelectionHandleGraphicsItem(_owner, instrumentedItem, rect);
-        handleItem->setCursor(cursor);
-        return handleItem;
-    }
-
     void clearHandlesFromScene(KreenGraphicsItemBase* kGrItem)
     {
         foreach (auto handleItem, kGrItem->_selectionHandles) {
@@ -191,8 +153,7 @@ void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, boo
         handlesRef.clear();
 
         foreach (auto posEnum, positions) {
-            // TODO: give the handle also its posEnum
-            handlesRef.push_back(d->createSelectionHandleItem(kGrItem, posRectMap[posEnum], d->cursorFromPositionEnum(posEnum)));
+            handlesRef.push_back(new SelectionHandleGraphicsItem(this, posEnum, kGrItem, posRectMap[posEnum]));
         }
 
         setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc

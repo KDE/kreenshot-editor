@@ -22,13 +22,12 @@
 #include <kreen/util/pimplutil.h>
 #include <QString>
 #include <QGraphicsRectItem>
+#include "selectionhandles.h"
 
 namespace kreen {
 namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
-class MainEditorWidgetImpl;
-class SelectionHandles;
 class KreenGraphicsItemBase;
 
 class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
@@ -38,9 +37,11 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     friend SelectionHandles;
 
 public:
-    SelectionHandleGraphicsItem(SelectionHandles* manager, KreenGraphicsItemBase* instrumentedItem, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, KreenGraphicsItemBase* instrumentedItem, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
+
+    SelectionHandles::PositionEnum posEnum();
 
 protected:
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
