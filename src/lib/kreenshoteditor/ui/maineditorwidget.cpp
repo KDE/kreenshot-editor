@@ -375,7 +375,7 @@ void MainEditorWidget::slotDocumentCreated()
 {
     qDebug() << "MainEditorWidget::slotDocumentCreated()";
 
-    d->selectionHandles = std::make_shared<SelectionHandles>(d->scene()); // needs valid kreenshotEditor
+    d->selectionHandles = std::make_shared<SelectionHandles>(d->scene().get()); // needs valid kreenshotEditor
 
     auto kreenGrScene = d->kreenshotEditor()->graphicsScene();
     kreenGrScene->setToolManager(d->toolManager());

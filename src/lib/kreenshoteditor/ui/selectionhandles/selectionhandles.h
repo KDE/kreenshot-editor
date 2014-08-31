@@ -30,8 +30,6 @@ namespace kreen {
 namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
-KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
-class KreenGraphicsItemBase;
 class SelectionHandleBase;
 class SelectionHandleGraphicsItem;
 
@@ -64,7 +62,7 @@ public:
     };
 
 public:
-    SelectionHandles(KreenGraphicsScenePtr scene);
+    SelectionHandles(QGraphicsScene* scene);
 
     virtual ~SelectionHandles();
 
@@ -75,11 +73,11 @@ public:
      */
     bool isAnyHandleUnderMouse();
 
-    void onItemSelectedHasChanged(KreenGraphicsItemBase* kGrItem);
+    void onItemSelectedHasChanged(SelectionHandleBase* selHandleBase);
 
-    void onItemSceneHasChanged(KreenGraphicsItemBase* kGrItem);
+    void onItemSceneHasChanged(SelectionHandleBase* selHandleBase);
 
-    void onItemPositionHasChanged(KreenGraphicsItemBase* kGrItem);
+    void onItemPositionHasChanged(SelectionHandleBase* selHandleBase);
 
     /**
      * createNewHandles == true: create

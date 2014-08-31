@@ -21,12 +21,12 @@
 #include <QCursor>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include <QGraphicsItem>
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
-#include "../impl/kreengraphicsscene.h" // todo: remove this dependency if possible
-#include "../impl/kreengraphicsitembase.h" // todo: remove this dependency if possible
 #include "selectionhandlegraphicsitem.h"
+#include "selectionhandlebase.h"
 
 namespace kreen {
 namespace ui {
@@ -34,7 +34,7 @@ namespace ui {
 class SelectionHandles::Impl
 {
 public:
-    KreenGraphicsScenePtr scene;
+    QGraphicsScene* scene;
     bool allRenderVisible = true;
 
 public:
@@ -43,12 +43,27 @@ public:
         _owner = owner;
     }
 
-    void clearHandlesFromScene(KreenGraphicsItemBase* kGrItem)
+    void clearHandlesFromScene(SelectionHandleBase* selHandleBase)
     {
-        foreach (auto handleItem, kGrItem->_selectionHandles) {
+        foreach (auto handleItem, selHandleBase->_selectionHandles) {
             scene->removeItem(handleItem);
         }
-        kGrItem->_selectionHandles.clear();
+        selHandleBase->_selectionHandles.clear();
+    }
+
+    QList<SelectionHandleBase*> selectedSelHandleItems()
+    {
+        QList<SelectionHandleBase*> result;
+
+        foreach (auto grItem, scene->selectedItems()) {
+
+            auto item = dynamic_cast<SelectionHandleBase*>(grItem);
+            if (item != nullptr) {
+                result.append(item);
+            }
+        }
+
+        return result;
     }
 
 private:
@@ -56,7 +71,7 @@ private:
 };
 
 
-SelectionHandles::SelectionHandles(KreenGraphicsScenePtr scene) {
+SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
     qDebug() << "SelectionHandles::ctor";
     KREEN_PIMPL_INIT_THIS(SelectionHandles);
     d->scene = scene;
@@ -67,31 +82,31 @@ SelectionHandles::~SelectionHandles()
     qDebug() << "SelectionHandles destructor";
 }
 
-void SelectionHandles::onItemSelectedHasChanged(KreenGraphicsItemBase* kGrItem)
+void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
 {
-    if (kGrItem->graphicsItem()->isSelected()) {
-        createOrUpdateHandles(kGrItem, true);
+    if (selHandleBase->instrumentedItem()->isSelected()) {
+        createOrUpdateHandles(selHandleBase, true);
 
-        foreach (auto handleItem, kGrItem->_selectionHandles) {
+        foreach (auto handleItem, selHandleBase->_selectionHandles) {
             d->scene->addItem(handleItem);
         }
     }
     else {
-        d->clearHandlesFromScene(kGrItem);
+        d->clearHandlesFromScene(selHandleBase);
     }
 }
 
-void SelectionHandles::onItemSceneHasChanged(KreenGraphicsItemBase* kGrItem)
+void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
 {
-    if (!kGrItem->graphicsItem()->scene()) {
-        d->clearHandlesFromScene(kGrItem); // remove handles if instrumentedItem was removed from scene
+    if (!selHandleBase->instrumentedItem()->scene()) { // check whether item is part of a scene or not
+        d->clearHandlesFromScene(selHandleBase); // remove handles if instrumentedItem was removed from scene
     }
 }
 
-void SelectionHandles::onItemPositionHasChanged(KreenGraphicsItemBase* kGrItem)
+void SelectionHandles::onItemPositionHasChanged(SelectionHandleBase* selHandleBase)
 {
-    if (kGrItem->_selectionHandles.size() > 0) { // update if handles are present
-        createOrUpdateHandles(kGrItem, false);
+    if (selHandleBase->_selectionHandles.size() > 0) { // update if handles are present
+        createOrUpdateHandles(selHandleBase, false);
     }
 }
 
@@ -171,8 +186,8 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
 
 bool SelectionHandles::isAnyHandleUnderMouse()
 {
-    foreach (auto grItem, d->scene->selectedKreenGraphicsItems()) {
-        foreach (auto handleItem, grItem->_selectionHandles) {
+    foreach (auto selHandleItem, d->selectedSelHandleItems()) {
+        foreach (auto handleItem, selHandleItem->_selectionHandles) {
             if (handleItem->isUnderMouse()) {
                 return true;
             }
@@ -184,8 +199,8 @@ bool SelectionHandles::isAnyHandleUnderMouse()
 
 void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 {
-    foreach (auto kGrItem, d->scene->selectedKreenGraphicsItems()) {
-        kGrItem->graphicsItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
+    foreach (auto selHandleItem, d->selectedSelHandleItems()) {
+        selHandleItem->instrumentedItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
     }
 }
 
@@ -193,8 +208,8 @@ void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
 {
     qDebug() << "SelectionHandles::setAllHandlesRenderVisible:" << isVisible;
 
-    foreach (auto grItem, d->scene->selectedKreenGraphicsItems()) {
-        foreach (auto handleItem, grItem->_selectionHandles) {
+    foreach (auto selHandleItem, d->selectedSelHandleItems()) {
+        foreach (auto handleItem, selHandleItem->_selectionHandles) {
             handleItem->setRenderVisible(isVisible);
             handleItem->update(); // otherwise only the current's item handles disappear or the handles do not disappear at all when moving items
         }

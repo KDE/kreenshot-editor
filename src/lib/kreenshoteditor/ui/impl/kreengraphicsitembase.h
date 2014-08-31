@@ -35,7 +35,6 @@ namespace ui {
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 
 class KreenGraphicsScene;
-class SelectionHandleGraphicsItem;
 
 /**
 * Visual representation of a KreenItem
@@ -75,7 +74,7 @@ public:
      */
     KreenGraphicsScene* getScene();
 
-    SelectionHandleBase* asSelectionHandleBase();
+    // SelectionHandleBase* asSelectionHandleBase();
 
     /**
      * selectable and moveable

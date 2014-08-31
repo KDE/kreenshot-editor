@@ -62,10 +62,10 @@ KreenGraphicsScene* KreenGraphicsItemBase::getScene()
     return (KreenGraphicsScene*)graphicsItem()->scene();
 }
 
-SelectionHandleBase* KreenGraphicsItemBase::asSelectionHandleBase()
-{
-    return dynamic_cast<SelectionHandleBase*>(this);
-}
+// SelectionHandleBase* KreenGraphicsItemBase::asSelectionHandleBase()
+// {
+//     return dynamic_cast<SelectionHandleBase*>(this);
+// }
 
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isSelectableAndMovable)
 {
