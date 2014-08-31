@@ -22,8 +22,8 @@
 #include <QDebug>
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
-#include "selectionhandlegraphicsitem.h"
-#include "selectionhandles.h"
+#include "../selectionhandles/selectionhandlegraphicsitem.h"
+#include "../selectionhandles/selectionhandles.h"
 #include "rendervisibilitycontrol.h"
 
 namespace kreen {

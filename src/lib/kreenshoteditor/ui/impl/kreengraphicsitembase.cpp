@@ -18,8 +18,8 @@
  */
 #include "kreengraphicsitembase.h"
 #include "kreengraphicsscene.h"
-#include "selectionhandles.h"
-#include "selectionhandlegraphicsitem.h"
+#include "../selectionhandles/selectionhandles.h"
+#include "../selectionhandles/selectionhandlegraphicsitem.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QFrame>

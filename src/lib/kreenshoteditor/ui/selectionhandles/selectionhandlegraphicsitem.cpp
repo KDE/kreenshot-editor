@@ -18,7 +18,7 @@
  */
 #include "selectionhandlegraphicsitem.h"
 #include "selectionhandles.h"
-#include "kreengraphicsitembase.h"
+#include "../impl/kreengraphicsitembase.h" // TODO: remove this dependency
 #include <QRect>
 #include <QCursor>
 #include <QGraphicsScene>

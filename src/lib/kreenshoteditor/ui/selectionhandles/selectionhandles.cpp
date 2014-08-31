@@ -24,8 +24,8 @@
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
-#include "kreengraphicsscene.h" // todo: remove this dependency if possible
-#include "kreengraphicsitembase.h" // todo: remove this dependency if possible
+#include "../impl/kreengraphicsscene.h" // todo: remove this dependency if possible
+#include "../impl/kreengraphicsitembase.h" // todo: remove this dependency if possible
 #include "selectionhandlegraphicsitem.h"
 
 namespace kreen {

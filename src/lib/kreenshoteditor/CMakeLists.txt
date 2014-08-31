@@ -31,8 +31,9 @@ set(kreenshoteditor_SOURCES
     ui/impl/kreengraphicsscene.cpp
     ui/impl/kreengraphicsview.cpp
     ui/impl/rendervisibilitycontrol.cpp
-    ui/impl/selectionhandlegraphicsitem.cpp
-    ui/impl/selectionhandles.cpp
+
+    ui/selectionhandles/selectionhandlegraphicsitem.cpp
+    ui/selectionhandles/selectionhandles.cpp
 
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp

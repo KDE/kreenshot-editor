@@ -38,7 +38,7 @@
 #include "impl/kreengraphicsscene.h"
 #include "impl/toolmanager.h"
 #include "impl/kreengraphicsview.h"
-#include "impl/selectionhandles.h"
+#include "selectionhandles/selectionhandles.h"
 
 namespace kreen {
 namespace ui {
