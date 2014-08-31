@@ -90,7 +90,7 @@
   </widget>
   <widget class="QDockWidget" name="containerToolbox">
    <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::AllDockWidgetAreas</set>
@@ -347,6 +347,15 @@
      <width>58</width>
      <height>70</height>
     </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>70</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable</set>
    </property>
    <property name="windowTitle">
     <string>Edit properties for selected item(s):</string>

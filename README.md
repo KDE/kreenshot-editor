@@ -72,5 +72,9 @@ These Linux tools have similar image editor capabilities:
 
 Thanks to contributors
 ----------------------
-- Code from Tikzkit (https://projects.kde.org/projects/playground/graphics/tikzkit)
-
+- Tikzkit
+    source code and discussions with the author gave valuable inspirations
+    https://projects.kde.org/projects/playground/graphics/tikzkit
+- kolourpaint
+    took the light cross cursor
+    http://www.kde.org/applications/graphics/kolourpaint/
