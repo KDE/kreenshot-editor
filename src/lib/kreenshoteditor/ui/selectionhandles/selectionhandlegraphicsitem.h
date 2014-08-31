@@ -28,7 +28,6 @@ namespace kreen {
 namespace ui {
 
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandleGraphicsItem)
-class KreenGraphicsItemBase;
 
 class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
 {
@@ -37,7 +36,7 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     friend SelectionHandles;
 
 public:
-    SelectionHandleGraphicsItem(SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, KreenGraphicsItemBase* instrumentedItem, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 

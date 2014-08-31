@@ -18,7 +18,7 @@
  */
 #include "selectionhandlegraphicsitem.h"
 #include "selectionhandles.h"
-#include "../impl/kreengraphicsitembase.h" // TODO: remove this dependency
+#include "selectionhandlebase.h"
 #include <QRect>
 #include <QCursor>
 #include <QGraphicsScene>
@@ -36,7 +36,7 @@ class SelectionHandleGraphicsItem::Impl
 public:
     SelectionHandles* manager = nullptr;
     SelectionHandles::PositionEnum posEnum;
-    KreenGraphicsItemBase* instrumentedItem = nullptr;
+    SelectionHandleBase* selHandleBase = nullptr;
     QPointF startPos;
     bool renderVisible = true;
 
@@ -67,13 +67,13 @@ public:
     }
 };
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(kreen::ui::SelectionHandles* manager, kreen::ui::SelectionHandles::PositionEnum posEnum, kreen::ui::KreenGraphicsItemBase* instrumentedItem, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(kreen::ui::SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect) : QGraphicsRectItem(rect)
 {
     KREEN_PIMPL_INIT(SelectionHandleGraphicsItem);
 
     d->manager = manager;
     d->posEnum = posEnum;
-    d->instrumentedItem = instrumentedItem;
+    d->selHandleBase = selHandleBase;
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
@@ -122,8 +122,8 @@ void SelectionHandleGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* even
     d->manager->setAllSelectedItemsMovable(false);
     d->startPos = pos();
     QGraphicsItem::mousePressEvent(event);
-    d->instrumentedItem->_activeHandle = this;
-    d->instrumentedItem->slotHandleStartDrag();
+    d->selHandleBase->_activeHandle = this;
+    d->selHandleBase->slotHandleStartDrag();
 }
 
 QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, const QVariant& value)
@@ -142,12 +142,12 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
 //     }
 //     else
     if (change == QGraphicsItem::ItemPositionHasChanged) {
-        if (d->instrumentedItem->_activeHandle && d->renderVisible) {
+        if (d->selHandleBase->_activeHandle && d->renderVisible) {
             d->manager->setAllHandlesRenderVisible(false); // move a handle => hide handles
         }
         QPointF curPos = pos();
         // the client can get more information using _activeHandle? (TODO for posEnum)
-        d->instrumentedItem->slotHandlePositionHasChanged(curPos - d->startPos);
+        d->selHandleBase->slotHandlePositionHasChanged(curPos - d->startPos);
     }
 
     return QGraphicsItem::itemChange(change, value);
@@ -160,7 +160,7 @@ void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* ev
     //   d->manager->setAllItemsWithHandlesMovable(true);
     // but see MainEditorWidget::slotFixSelectableAndMovable()
     QGraphicsItem::mouseReleaseEvent(event);
-    d->instrumentedItem->_activeHandle = nullptr;
+    d->selHandleBase->_activeHandle = nullptr;
     d->manager->setAllHandlesRenderVisible(true);
 }
 

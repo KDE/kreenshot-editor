@@ -47,11 +47,6 @@ KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen:
     setSelectableAndMovable(true); // selectable and moveable by default
 }
 
-void KreenGraphicsItemBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles)
-{
-    _selectionHandlesMgr = selectionHandles;
-}
-
 kreen::core::KreenItemPtr KreenGraphicsItemBase::item()
 {
     return _item;
@@ -67,15 +62,9 @@ KreenGraphicsScene* KreenGraphicsItemBase::getScene()
     return (KreenGraphicsScene*)graphicsItem()->scene();
 }
 
-void KreenGraphicsItemBase::slotHandleStartDrag()
+SelectionHandleBase* KreenGraphicsItemBase::asSelectionHandleBase()
 {
-    handleStartDrag();
-}
-
-void KreenGraphicsItemBase::slotHandlePositionHasChanged(QPointF delta)
-{
-    handlePositionHasChanged(delta);
-    _selectionHandlesMgr->createOrUpdateHandles(this, false);
+    return dynamic_cast<SelectionHandleBase*>(this);
 }
 
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isSelectableAndMovable)
@@ -103,6 +92,11 @@ void KreenGraphicsItemBase::setSelectable(bool isSelectable)
 //     auto list = rhs->getScene()->kreenGraphicsItems();
 //     return list.indexOf(this) < list.indexOf(rhs);
 // }
+
+QGraphicsItem* KreenGraphicsItemBase::instrumentedItem()
+{
+    return graphicsItem();
+}
 
 bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
 {

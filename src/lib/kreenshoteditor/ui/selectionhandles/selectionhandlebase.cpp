@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "selectionhandlebase.h"
+#include "selectionhandles.h"
 
 namespace kreen {
 namespace ui {
@@ -38,6 +39,24 @@ SelectionHandleBase::SelectionHandleBase()
 SelectionHandleBase::~SelectionHandleBase()
 {
 }
+
+void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles)
+{
+    _selectionHandlesMgr = selectionHandles;
+}
+
+void SelectionHandleBase::slotHandleStartDrag()
+{
+    handleStartDrag();
+}
+
+void SelectionHandleBase::slotHandlePositionHasChanged(QPointF delta)
+{
+    handlePositionHasChanged(delta);
+    _selectionHandlesMgr->createOrUpdateHandles(this, false);
+}
+
+
 
 }
 }

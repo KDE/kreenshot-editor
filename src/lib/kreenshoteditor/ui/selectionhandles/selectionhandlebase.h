@@ -22,8 +22,10 @@
 #include <kreen/util/pimplutil.h>
 #include <QString>
 #include <QObject>
+#include <QRect>
+#include <QLine>
 
-class QGraphicsScene;
+class QGraphicsItem;
 
 namespace kreen {
 namespace ui {
@@ -39,8 +41,17 @@ class SelectionHandleBase //: public QObject
     //Q_OBJECT
 
     friend SelectionHandleGraphicsItem;
+    friend SelectionHandles;
 
 public:
+    void slotHandleStartDrag(); // TODO: cleanup naming
+    void slotHandlePositionHasChanged(QPointF delta); // TODO: cleanup naming
+    SelectionHandleGraphicsItem* _activeHandle = nullptr; // TODO: move this to separate class to be derived from
+
+    /**
+     * if the items should support selection handles, this has to be set
+     */
+    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
 
 public:
     SelectionHandleBase();
@@ -48,8 +59,22 @@ public:
     virtual ~SelectionHandleBase();
 
 public:
+    virtual void handleStartDrag() = 0;
+    virtual void handlePositionHasChanged(QPointF delta) = 0;
+
+    /**
+     * the selection handles vector to be updated or modified by _selectionHandlesMgr
+     * TODO: make not public
+     */
+    std::vector<SelectionHandleGraphicsItem*> _selectionHandles; // TMP
 
 protected:
+    virtual QGraphicsItem* instrumentedItem() = 0;
+
+protected:
+    SelectionHandlesPtr _selectionHandlesMgr;
+    QRect _startRect; // for rect-base items, todo: move elsewhere?
+    QLine _startLine; // for line-base items, todo: move elsewhere?
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR

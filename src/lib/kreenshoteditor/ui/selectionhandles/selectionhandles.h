@@ -32,6 +32,7 @@ namespace ui {
 KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsScene)
 class KreenGraphicsItemBase;
+class SelectionHandleBase;
 class SelectionHandleGraphicsItem;
 
 /**
@@ -84,7 +85,7 @@ public:
      * createNewHandles == true: create
      * createNewHandles == false: update
      */
-    void createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, bool createNewHandles);
+    void createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles);
 
     /**
      * WARN: isVisible is a cached value because we do not want to iterate over all handles all over again

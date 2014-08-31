@@ -95,21 +95,22 @@ void SelectionHandles::onItemPositionHasChanged(KreenGraphicsItemBase* kGrItem)
     }
 }
 
-void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, bool createNewHandles)
+void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
 {
     qreal hw = 8.0; // handleWidth;
+
+    auto grItem = selHandleBase->instrumentedItem();
 
     // WORKAROUND:
     // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
     //                     the underlying item is also blurred
     //                     WTF-->the black selection rects get also blurred
 
-    if (kGrItem->workaroundIsBlurredOnUnevenHandleWidth()) {
-        qDebug() << "INFO: workaround used";
-        hw--;
-    }
-
-    auto grItem = kGrItem->graphicsItem();
+    // TODO: bring back in later
+//     if (grItem->workaroundIsBlurredOnUnevenHandleWidth()) {
+//         qDebug() << "INFO: workaround used";
+//         hw--;
+//     }
 
     qreal hw2 = hw / 2.0;
 
@@ -149,17 +150,17 @@ void SelectionHandles::createOrUpdateHandles(KreenGraphicsItemBase* kGrItem, boo
     posRectMap.insert(Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
 
     if (createNewHandles) {
-        std::vector<SelectionHandleGraphicsItem*>& handlesRef = kGrItem->_selectionHandles;
+        std::vector<SelectionHandleGraphicsItem*>& handlesRef = selHandleBase->_selectionHandles;
         handlesRef.clear();
 
         foreach (auto posEnum, positions) {
-            handlesRef.push_back(new SelectionHandleGraphicsItem(this, posEnum, kGrItem, posRectMap[posEnum]));
+            handlesRef.push_back(new SelectionHandleGraphicsItem(this, posEnum, selHandleBase, posRectMap[posEnum]));
         }
 
         setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
     }
     else {
-        std::vector<SelectionHandleGraphicsItem*> handles = kGrItem->_selectionHandles;
+        std::vector<SelectionHandleGraphicsItem*> handles = selHandleBase->_selectionHandles;
 
         int i = 0; // TODO later: handle also less handles (e.g. for lines)
         foreach (auto posEnum, positions) {

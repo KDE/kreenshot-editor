@@ -22,6 +22,7 @@
 #include <kreen/core/kreenitem.h>
 #include <QGraphicsItem>
 #include <vector>
+#include "../selectionhandles/selectionhandlebase.h"
 
 class QPushButton;
 class QAbstractGraphicsShapeItem;
@@ -39,7 +40,7 @@ class SelectionHandleGraphicsItem;
 /**
 * Visual representation of a KreenItem
 */
-class KreenGraphicsItemBase : public QObject
+class KreenGraphicsItemBase : public QObject, public SelectionHandleBase
 {
     // QObject to have signal/slots
     Q_OBJECT
@@ -48,15 +49,10 @@ public:
 
 Q_SIGNALS:
     void operationAcceptedSignal();
+
     void operationCanceledSignal();
 
     void itemPositionHasChangedSignal(kreen::core::KreenItemPtr item);
-
-//public Q_SLOTS:
-public:
-    void slotHandleStartDrag(); // TODO: cleanup naming
-    void slotHandlePositionHasChanged(QPointF delta); // TODO: cleanup naming
-    SelectionHandleGraphicsItem* _activeHandle = nullptr; // TODO: move this to separate class to be derived from
 
 public:
     /**
@@ -65,10 +61,8 @@ public:
     KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen::core::KreenItemPtr item);
 
     /**
-     * if the items should support selection handles, this has to be set
+     * associated KreenItem
      */
-    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
-
     kreen::core::KreenItemPtr item();
 
     /**
@@ -80,6 +74,8 @@ public:
      * return the KreenGraphicsScene* belonging to the grItem by casting the result of scene()
      */
     KreenGraphicsScene* getScene();
+
+    SelectionHandleBase* asSelectionHandleBase();
 
     /**
      * selectable and moveable
@@ -102,14 +98,7 @@ public:
      */
     virtual void updateVisualGeometryFromPoints(QPoint startPoint, QPoint endPoint) = 0;
 
-    virtual void handleStartDrag() = 0;
-    virtual void handlePositionHasChanged(QPointF delta) = 0;
-
-    /**
-     * the selection handles vector to be updated or modified by _selectionHandlesMgr
-     * TODO: make not public
-     */
-    std::vector<SelectionHandleGraphicsItem*> _selectionHandles; // TMP
+    virtual QGraphicsItem* instrumentedItem() override;
 public:
     /**
      * WORKAROUND:
@@ -166,9 +155,6 @@ protected Q_SLOTS:
 
 protected:
     kreen::core::KreenItemPtr _item;
-    SelectionHandlesPtr _selectionHandlesMgr;
-    QRect _startRect; // for rect-base items, todo: move elsewhere?
-    QLine _startLine; // for line-base items, todo: move elsewhere?
 
 private:
     QGraphicsItem* _graphicsItem;
