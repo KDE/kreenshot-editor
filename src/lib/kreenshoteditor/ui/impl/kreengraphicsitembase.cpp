@@ -215,7 +215,7 @@ void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange
             //qDebug() << "_selectionHandlesMgr->allHandlesRenderVisible()" << _selectionHandlesMgr->allHandlesRenderVisible();
             _selectionHandlesMgr->onItemPositionHasChanged(this);
             if (_selectionHandlesMgr->allHandlesRenderVisible()) {
-                _selectionHandlesMgr->setAllHandlesRenderVisible(false);
+                _selectionHandlesMgr->setAllHandlesRenderVisible(false); // move an item => hide handles
             }
         }
 
@@ -240,14 +240,15 @@ bool showDebugInfo = false;
 void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)
 {
     if (showDebugInfo) {
-        QString debugInfo = QString("selectable:%1; selected:%2; movable:%3")
+        QString debugInfo = QString("id:%1; selectable:%2; selected:%3; movable:%4")
+        .arg(item()->id())
         .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsSelectable) > 0)
         .arg(_graphicsItem->isSelected())
         .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsMovable) > 0);
 
         painter->setPen(Qt::NoPen);
         painter->setBrush(QBrush(Qt::white));
-        painter->drawRect(0, 0, 200, 20);
+        painter->drawRect(0, 0, 300, 20);
         painter->setPen(Qt::black);
         painter->drawText(0, 10, debugInfo);
     }

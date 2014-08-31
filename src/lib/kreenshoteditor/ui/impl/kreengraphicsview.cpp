@@ -98,7 +98,7 @@ void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos, bool leftButtonDown
 
 void KreenGraphicsView::enterEvent(QEvent* event)
 {
-    qDebug() << "KreenGraphicsView::enterEvent";
+    qDebug() << "KreenGraphicsView::enterEvent / setFocus()";
     // for not to have to click once before one can start moving items
     this->setFocus();
     QGraphicsView::enterEvent(event);

@@ -307,7 +307,7 @@ void MainWindow::slotHelpAboutDnd()
 
 void MainWindow::slotUpdateDocumentFileStatus()
 {
-    qDebug() << "MainWindow::slotUpdateDocumentFileStatus()";
+    // qDebug() << "MainWindow::slotUpdateDocumentFileStatus()";
 
     QString fileStatusPrefix;
 

@@ -88,16 +88,33 @@ QList<KreenItemPtr> KreenGraphicsScene::selectedKreenItems()
 void KreenGraphicsScene::saveCurrentKreenItemsSelection()
 {
     _savedSelection = selectedKreenItems();
+    qDebug() << "KreenGraphicsScene::saveCurrentKreenItemsSelection(), count=" << _savedSelection.count();
 }
 
 void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
 {
+    qDebug() << "KreenGraphicsScene::restoreSavedKreenItemsSelection_1, count=" << _savedSelection.count();
+
+    int count = 0;
     foreach (auto kreenItem, _savedSelection) {
         auto kGrItem = graphicsItemBaseFromItem(kreenItem);
         if (kGrItem != nullptr) { // item might be deleted already (e. g. after Undo)
+            //qDebug() << "   item id=" << kGrItem->item()->id();
+
+            // for case: "An items was just created and then resized using a handle"
+            // ... createSceneFromModel() will be called
+            // ... updateItemsSelectableAndMovableFromChosenTool() will be called
+            // then: because we have still Draw item tool active the updateItemsSelectableAndMovableFromChosenTool() makes
+            //       the items NOT selectable
+            // Thus, we have to make them selectable in order to make the setSelected(true) work.
+            kGrItem->setSelectable(true);
+
             kGrItem->graphicsItem()->setSelected(true);
+            count++;
         }
     }
+
+    //qDebug() << "   restored: " << count;
 }
 
 void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
@@ -122,6 +139,7 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     Q_ASSERT(_toolManager != nullptr);
 
     // if mouse is over a handle, no new item should be created on mouse press:
+    //
     if (_selectionHandles->isAnyHandleUnderMouse()) {
         qDebug() << "_selectionHandles->isAnyHandleUnderMouse()";
         QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
@@ -136,41 +154,48 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         KreenItemPtr item;
 
         if (tool == Select) {
-            // do nothing
+            _creatingItem = nullptr; // not item to be created
         }
         else if (tool == DrawRect) {
             item = KreenItem::create("rect");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            this->addItem(_creatingItem);
         }
         else if (tool == DrawEllipse) {
             item = KreenItem::create("ellipse");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            this->addItem(_creatingItem);
         }
         else if (tool == DrawLine) {
             item = KreenItem::create("line");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            this->addItem(_creatingItem);
         }
 //         else if (tool == DrawText) {
 //             item = KreenItem::create("text");
 //             _creatingItem = _toolManager->createGraphicsItemFromKreenItem...(item);
-//             this->addItem(_creatingItem);
 //         }
         else if (tool == DrawObfuscate) {
             item = KreenItem::create("obfuscate");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            this->addItem(_creatingItem);
         }
         else if (tool == OperationCrop) {
             item = KreenItem::create("op-crop");
             _creatingItem = _toolManager->createGraphicsItemFromKreenItem(item)->graphicsItem();
-            this->addItem(_creatingItem);
         }
         else {
             qDebug() << "Unknown tool: " << tool;
             Q_ASSERT(false);
+        }
+
+        if (_creatingItem) {
+
+            // corner case:
+            // 1. create one new itemCreated
+            // 2. create another new item and begin dragging within the first one
+            // The following loop will prevent the first one from staying selected
+            foreach(auto kGrItem, kreenGraphicsItems()) {
+                kGrItem->setSelectableAndMovable(false);
+            }
+
+            this->addItem(_creatingItem); // add the new item to scene
         }
 
         if (item && isItemForPointToSceneRestriction(item)) {
@@ -238,15 +263,11 @@ void KreenGraphicsScene::restrictPointToScene(QPoint* pt)
     }
 }
 
-/**
-    * all corresponding graphics items for all KreenItems (including op- items like crop or rip out!)
-    */
 QList<KreenGraphicsItemBase*> KreenGraphicsScene::kreenGraphicsItems()
 {
     QList<KreenGraphicsItemBase*> list;
 
     foreach(auto grItem, this->items()) {
-
         auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(grItem);
         if (grItemBase != nullptr) { // there might also be other items
             list << grItemBase;

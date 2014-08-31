@@ -49,6 +49,9 @@ public:
     void setCursorFromChosenTool(QPoint* pos = nullptr, bool leftButtonDown = false);
 
 protected:
+    /**
+     * used for WORKAROUND, see impl
+     */
     virtual void enterEvent(QEvent* event) override;
 
     virtual void mouseMoveEvent(QMouseEvent* event) override;

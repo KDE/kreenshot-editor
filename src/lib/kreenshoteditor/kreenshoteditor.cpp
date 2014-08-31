@@ -311,7 +311,7 @@ void KreenshotEditor::slotRequestToolBySenderAction()
 
 void KreenshotEditor::createNewDocument(QImage image/*, QString filename*/)
 {
-    qDebug() << "KreenshotEditor::createNewDocument";
+    //qDebug() << "KreenshotEditor::createNewDocument";
     d->outputFilenameGenerator->initCaptureTime(); // set time to current for new document (with or without default image; todo: this might change in the future)
     d->createNewDocument(image, QString());
 }
@@ -619,7 +619,7 @@ void KreenshotEditor::slotEditDeleteSelectedItems()
 
 void KreenshotEditor::slotEditDeleteSelectedItemsActionEnabledUpdate()
 {
-    qDebug() << "slotEditDeleteSelectedItemsActionEnabledUpdate";
+    // qDebug() << "slotEditDeleteSelectedItemsActionEnabledUpdate";
     d->actionEditItemDelete->setEnabled(mainEditorWidget()->selectedItemsCount() > 0);
 }
 

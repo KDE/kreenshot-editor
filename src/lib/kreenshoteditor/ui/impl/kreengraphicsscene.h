@@ -88,7 +88,7 @@ public:
     QList<KreenGraphicsItemBase*> kreenGraphicsItems();
 
     /**
-     * returns the corresponding KreenGraphicsItemBase* for item or nullptr if not found
+     * Returns the corresponding KreenGraphicsItemBase* (by id()) for item or nullptr if not found
      */
     KreenGraphicsItemBase* graphicsItemBaseFromItem(KreenItemPtr item);
 

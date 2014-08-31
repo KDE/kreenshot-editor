@@ -108,7 +108,7 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
 //     else
     if (change == QGraphicsItem::ItemPositionHasChanged) {
         if (d->instrumentedItem->_activeHandle && d->renderVisible) {
-            d->manager->setAllHandlesRenderVisible(false);
+            d->manager->setAllHandlesRenderVisible(false); // move a handle => hide handles
         }
         QPointF curPos = pos();
         d->instrumentedItem->slotHandlePositionHasChanged(curPos - d->startPos);

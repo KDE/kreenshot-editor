@@ -140,7 +140,7 @@ public:
     {
         QRect baseRect = kreenshotEditor()->document()->baseImage().rect();
 
-        qDebug() << "createSceneFromModel(). baseRect=" << baseRect;
+        qDebug() << "MainEditorWidget::Impl::createSceneFromModel() / baseRect=" << baseRect;
 
         // save the current item selection if any
         //
@@ -184,7 +184,7 @@ public:
         }
 
         slotUpdateItemsGeometryFromModel();
-        updateItemsBehaviourFromChosenTool();
+        updateItemsSelectableAndMovableFromChosenTool();
 
         scene()->restoreSavedKreenItemsSelection_1();
     }
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * E. g. if "Select" tool is selected then items are movable. Otherwise not.
+     * If "Select" tool is selected then items are movable. Otherwise not.
      */
-    void updateItemsBehaviourFromChosenTool()
+    void updateItemsSelectableAndMovableFromChosenTool()
     {
         foreach(auto grItemBase, scene()->kreenGraphicsItems()) {
             grItemBase->setSelectableAndMovable(toolManager()->chosenTool() == ToolEnum::Select);
@@ -402,7 +402,7 @@ void MainEditorWidget::slotDocumentCreated()
 
 void MainEditorWidget::slotDocumentContentChanged()
 {
-    qDebug() << "MainEditorWidget::slotDocumentContentChanged()";
+    // qDebug() << "MainEditorWidget::slotDocumentContentChanged()";
     d->createSceneFromModel();
 }
 
@@ -515,7 +515,7 @@ void MainEditorWidget::requestTool(QString toolId)
     }
 
     d->toolManager()->setChosenTool(toolEnum, this);
-    d->updateItemsBehaviourFromChosenTool();
+    d->updateItemsSelectableAndMovableFromChosenTool();
 
     // remove current image operation if another tool is selected
     if (!toolId.startsWith("op-")) {
@@ -543,7 +543,7 @@ void MainEditorWidget::slotFixSelectableAndMovable()
 
 void MainEditorWidget::slotUpdateItemsGeometryFromModel()
 {
-    qDebug() << "slotUpdateItemsGeometryFromModel";
+    qDebug() << "MainEditorWidget::slotUpdateItemsGeometryFromModel";
 
     // NOTE that slotUpdateItemsGeometryFromModel() is currently
     // always called when the mouse button is released.
@@ -649,10 +649,11 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 
 void MainEditorWidget::slotSceneSelectionChanged()
 {
-    qDebug() << "sceneSelectionChanged() " << d->scene()->selectedItems();
+    qDebug() << "sceneSelectionChanged(), count=" << d->scene()->selectedItems().count();
 
-    qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
-    d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
+    // TODO
+    //qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
+    //d->graphicsView->unsetCursor(); // DETAIL: to have the cursor correct on the selection handle without having to move the mouse
 
     emit itemSelectionChanged();
 }

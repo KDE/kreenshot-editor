@@ -64,7 +64,7 @@ public:
 
     bool contentChangedNotificationGroupActive()
     {
-        qDebug() << "contentChangedNotificationGroupActive" << contentChangedNotificationGroupDepth;
+        // qDebug() << "contentChangedNotificationGroupActive" << contentChangedNotificationGroupDepth;
         return contentChangedNotificationGroupDepth > 0;
     }
 
@@ -155,7 +155,7 @@ void Document::setBaseImage(QImage image, bool recordUndo)
         d->undoStack.push(new SetBaseImageCmd(this, image)); // this will call setBaseImage with recordUndo=false
     }
     else {
-        qDebug() << "Document::setBaseImage: d->baseImage = image";
+        //qDebug() << "Document::setBaseImage: d->baseImage = image";
         d->baseImage = image;
     }
 }
