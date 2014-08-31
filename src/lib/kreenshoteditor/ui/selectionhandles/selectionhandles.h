@@ -23,6 +23,7 @@
 #include <QString>
 #include <QObject>
 #include <map>
+#include "selectionhandlestypes.h"
 
 class QGraphicsScene;
 
@@ -41,25 +42,6 @@ class SelectionHandles //: public QObject
     //Q_OBJECT
 
     friend SelectionHandleGraphicsItem;
-
-public:
-    /**
-    * 1   7   2
-    * 5   0   6
-    * 3   8   4
-    */
-    enum PositionEnum
-    {
-        Position0_Center = 0,
-        Position1_TopLeft = 1,
-        Position2_TopRight = 2,
-        Position3_BottomLeft = 3,
-        Position4_BottomRight = 4,
-        Position5_Left = 5,
-        Position6_Right = 6,
-        Position7_Top = 7,
-        Position8_Bottom = 8
-    };
 
 public:
     SelectionHandles(QGraphicsScene* scene);

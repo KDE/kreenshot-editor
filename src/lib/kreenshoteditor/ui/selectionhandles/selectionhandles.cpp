@@ -143,26 +143,26 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
     * 5   0   6
     * 3   8   4
     */
-    std::vector<PositionEnum> positions;
-    positions.push_back(Position1_TopLeft);
-    positions.push_back(Position2_TopRight);
-    positions.push_back(Position3_BottomLeft);
-    positions.push_back(Position4_BottomRight);
-    positions.push_back(Position5_Left);
-    positions.push_back(Position6_Right);
-    positions.push_back(Position7_Top);
-    positions.push_back(Position8_Bottom);
+    std::vector<selhandles::PositionEnum> positions;
+    positions.push_back(selhandles::Position1_TopLeft);
+    positions.push_back(selhandles::Position2_TopRight);
+    positions.push_back(selhandles::Position3_BottomLeft);
+    positions.push_back(selhandles::Position4_BottomRight);
+    positions.push_back(selhandles::Position5_Left);
+    positions.push_back(selhandles::Position6_Right);
+    positions.push_back(selhandles::Position7_Top);
+    positions.push_back(selhandles::Position8_Bottom);
 
-    QMap<PositionEnum, QRectF> posRectMap;
+    QMap<selhandles::PositionEnum, QRectF> posRectMap;
     // posRectMap.insert(Position0Center)
-    posRectMap.insert(Position1_TopLeft, rect.translated(x - hw2, y - hw2));
-    posRectMap.insert(Position2_TopRight, rect.translated(x + w - hw2, y - hw2));
-    posRectMap.insert(Position3_BottomLeft, rect.translated(x - hw2, y + h - hw2));
-    posRectMap.insert(Position4_BottomRight, rect.translated(x + w - hw2, y + h - hw2));
-    posRectMap.insert(Position5_Left, rect.translated(x - hw2, y + h2 - hw2));
-    posRectMap.insert(Position6_Right, rect.translated(x + w - hw2, y + h2 - hw2));
-    posRectMap.insert(Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
-    posRectMap.insert(Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
+    posRectMap.insert(selhandles::Position1_TopLeft, rect.translated(x - hw2, y - hw2));
+    posRectMap.insert(selhandles::Position2_TopRight, rect.translated(x + w - hw2, y - hw2));
+    posRectMap.insert(selhandles::Position3_BottomLeft, rect.translated(x - hw2, y + h - hw2));
+    posRectMap.insert(selhandles::Position4_BottomRight, rect.translated(x + w - hw2, y + h - hw2));
+    posRectMap.insert(selhandles::Position5_Left, rect.translated(x - hw2, y + h2 - hw2));
+    posRectMap.insert(selhandles::Position6_Right, rect.translated(x + w - hw2, y + h2 - hw2));
+    posRectMap.insert(selhandles::Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
+    posRectMap.insert(selhandles::Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
 
     if (createNewHandles) {
         std::vector<SelectionHandleGraphicsItem*>& handlesRef = selHandleBase->_selectionHandles;

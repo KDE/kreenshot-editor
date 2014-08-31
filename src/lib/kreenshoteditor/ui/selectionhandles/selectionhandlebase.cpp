@@ -18,6 +18,7 @@
  */
 #include "selectionhandlebase.h"
 #include "selectionhandles.h"
+#include "selectionhandlegraphicsitem.h"
 
 namespace kreen {
 namespace ui {
@@ -25,7 +26,7 @@ namespace ui {
 class SelectionHandleBase::Impl
 {
 public:
-    HandlesTypeEnum handlesType;
+    selhandles::HandleTypeEnum handlesType;
 
 public:
 
@@ -46,12 +47,12 @@ void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHa
     _selectionHandlesMgr = selectionHandles;
 }
 
-void SelectionHandleBase::setSelHandleBaseType(SelectionHandleBase::HandlesTypeEnum handlesType)
+void SelectionHandleBase::setSelHandleBaseType(selhandles::HandleTypeEnum handlesType)
 {
     d->handlesType = handlesType;
 }
 
-SelectionHandleBase::HandlesTypeEnum SelectionHandleBase::selHandleBaseType()
+selhandles::HandleTypeEnum SelectionHandleBase::selHandleBaseType()
 {
     return d->handlesType;
 }
@@ -86,7 +87,7 @@ void SelectionHandleBase::handleStartDrag()
 
 void SelectionHandleBase::handlePositionHasChanged(QPointF delta)
 {
-    selHandleBasePositionHasChanged(delta);
+    selHandleBasePositionHasChanged(_activeHandle->posEnum(), delta);
     _selectionHandlesMgr->createOrUpdateHandles(this, false);
 }
 

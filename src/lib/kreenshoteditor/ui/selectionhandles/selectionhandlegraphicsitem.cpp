@@ -35,7 +35,7 @@ class SelectionHandleGraphicsItem::Impl
 {
 public:
     SelectionHandles* manager = nullptr;
-    SelectionHandles::PositionEnum posEnum;
+    selhandles::PositionEnum posEnum;
     SelectionHandleBase* selHandleBase = nullptr;
     QPointF startPos;
     bool renderVisible = true;
@@ -46,19 +46,19 @@ public:
     * 5   0   6
     * 3   8   4
     */
-    QCursor cursorFromPositionEnum(SelectionHandles::PositionEnum posEnum)
+    QCursor cursorFromPositionEnum(selhandles::PositionEnum posEnum)
     {
         switch (posEnum)
         {
-            case SelectionHandles::Position0_Center: return Qt::ArrowCursor; // Qt::OpenHandCursor
-            case SelectionHandles::Position1_TopLeft: return Qt::SizeFDiagCursor;
-            case SelectionHandles::Position2_TopRight: return Qt::SizeBDiagCursor;
-            case SelectionHandles::Position3_BottomLeft: return Qt::SizeBDiagCursor;
-            case SelectionHandles::Position4_BottomRight: return Qt::SizeFDiagCursor;
-            case SelectionHandles::Position5_Left: return Qt::SizeHorCursor;
-            case SelectionHandles::Position6_Right: return Qt::SizeHorCursor;
-            case SelectionHandles::Position7_Top: return Qt::SizeVerCursor;
-            case SelectionHandles::Position8_Bottom: return Qt::SizeVerCursor;
+            case selhandles::Position0_Center: return Qt::ArrowCursor; // Qt::OpenHandCursor
+            case selhandles::Position1_TopLeft: return Qt::SizeFDiagCursor;
+            case selhandles::Position2_TopRight: return Qt::SizeBDiagCursor;
+            case selhandles::Position3_BottomLeft: return Qt::SizeBDiagCursor;
+            case selhandles::Position4_BottomRight: return Qt::SizeFDiagCursor;
+            case selhandles::Position5_Left: return Qt::SizeHorCursor;
+            case selhandles::Position6_Right: return Qt::SizeHorCursor;
+            case selhandles::Position7_Top: return Qt::SizeVerCursor;
+            case selhandles::Position8_Bottom: return Qt::SizeVerCursor;
         }
 
         qDebug() << "[ERROR] cursorFromPositionEnum. All cases must be handled.";
@@ -67,7 +67,7 @@ public:
     }
 };
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(kreen::ui::SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect) : QGraphicsRectItem(rect)
 {
     KREEN_PIMPL_INIT(SelectionHandleGraphicsItem);
 
@@ -89,7 +89,7 @@ SelectionHandleGraphicsItem::~SelectionHandleGraphicsItem()
 
 }
 
-SelectionHandles::PositionEnum SelectionHandleGraphicsItem::posEnum()
+selhandles::PositionEnum SelectionHandleGraphicsItem::posEnum()
 {
     return d->posEnum;
 }

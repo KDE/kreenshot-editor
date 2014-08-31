@@ -23,6 +23,7 @@
 #include <QString>
 #include <QGraphicsRectItem>
 #include "selectionhandles.h"
+#include "selectionhandlestypes.h"
 
 namespace kreen {
 namespace ui {
@@ -36,11 +37,11 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
     friend SelectionHandles;
 
 public:
-    SelectionHandleGraphicsItem(SelectionHandles* manager, SelectionHandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandles* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 
-    SelectionHandles::PositionEnum posEnum();
+    selhandles::PositionEnum posEnum();
 
 protected:
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

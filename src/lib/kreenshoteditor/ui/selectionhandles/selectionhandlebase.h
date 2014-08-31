@@ -25,6 +25,7 @@
 #include <QRect>
 #include <QLine>
 #include <QGraphicsItem>
+#include "selectionhandlestypes.h"
 
 class QGraphicsItem;
 
@@ -45,13 +46,6 @@ class SelectionHandleBase //: public QObject
     friend SelectionHandles;
 
 public:
-    enum HandlesTypeEnum
-    {
-        HandleType_Rect = 0,
-        HandleType_Line
-    };
-
-public:
     SelectionHandleBase();
 
     virtual ~SelectionHandleBase();
@@ -61,15 +55,15 @@ public:
      */
     void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
 
-    void setSelHandleBaseType(HandlesTypeEnum handlesType);
+    void setSelHandleBaseType(selhandles::HandleTypeEnum handlesType);
 
-    HandlesTypeEnum selHandleBaseType();
+    selhandles::HandleTypeEnum selHandleBaseType();
 
     void itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
 public:
     virtual void selHandleBaseStartDrag() = 0;
-    virtual void selHandleBasePositionHasChanged(QPointF delta) = 0;
+    virtual void selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) = 0;
 
 protected:
     void handleStartDrag();

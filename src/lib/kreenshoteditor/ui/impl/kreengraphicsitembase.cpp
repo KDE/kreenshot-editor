@@ -100,7 +100,7 @@ QGraphicsItem* KreenGraphicsItemBase::selHandleBaseInstrumentedItem()
 
 void KreenGraphicsItemBase::selHandleBaseStartDrag()
 {
-    if (selHandleBaseType() == SelectionHandleBase::HandleType_Rect) {
+    if (selHandleBaseType() == selhandles::HandleType_ResizeRect) {
         _startRect = _item->rect();
     }
     else {
@@ -108,10 +108,46 @@ void KreenGraphicsItemBase::selHandleBaseStartDrag()
     }
 }
 
-void KreenGraphicsItemBase::selHandleBasePositionHasChanged(QPointF delta)
+void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta)
 {
-    if (selHandleBaseType() == SelectionHandleBase::HandleType_Rect) {
-        _item->setRect(_startRect.adjusted(0, 0, 0, delta.y()));
+    if (selHandleBaseType() == selhandles::HandleType_ResizeRect) {
+
+        qreal dx = delta.x();
+        qreal dy = delta.y();
+
+        switch (posEnum)
+        {
+            // case selhandles::Position0_Center: Q_ASSERT(false); return;
+            case selhandles::Position1_TopLeft:
+                _item->setRect(_startRect.adjusted(dx, dy, 0, 0));
+                break;
+            case selhandles::Position2_TopRight:
+                _item->setRect(_startRect.adjusted(0, dy, dx, 0));
+                break;
+            case selhandles::Position3_BottomLeft:
+                _item->setRect(_startRect.adjusted(dx, 0, 0, dy));
+                break;
+            case selhandles::Position4_BottomRight:
+                _item->setRect(_startRect.adjusted(0, 0, dx, dy));
+                break;
+            case selhandles::Position5_Left:
+                _item->setRect(_startRect.adjusted(dx, 0, 0, 0));
+                break;
+            case selhandles::Position6_Right:
+                _item->setRect(_startRect.adjusted(0, 0, dx, 0));
+                break;
+            case selhandles::Position7_Top:
+                _item->setRect(_startRect.adjusted(0, dy, 0, 0));
+                break;
+            case selhandles::Position8_Bottom:
+                _item->setRect(_startRect.adjusted(0, 0, 0, dy));
+                break;
+            default:
+                qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBasePositionHasChanged case not handled: " << posEnum;
+                Q_ASSERT(false);
+                return;
+        }
+
         updateVisualGeometryFromModel();
     }
     else {

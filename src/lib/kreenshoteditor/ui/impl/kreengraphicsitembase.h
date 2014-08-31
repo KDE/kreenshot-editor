@@ -99,7 +99,7 @@ public:
 
     virtual void selHandleBaseStartDrag() override;
 
-    virtual void selHandleBasePositionHasChanged(QPointF delta) override;
+    virtual void selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) override;
 public:
     /**
      * WORKAROUND:

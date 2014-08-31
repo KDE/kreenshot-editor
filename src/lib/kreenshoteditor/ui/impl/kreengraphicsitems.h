@@ -46,7 +46,7 @@ public:
     KreenGraphicsRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
+        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -101,7 +101,7 @@ public:
     KreenGraphicsEllipseItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
+        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -163,7 +163,7 @@ public:
     KreenGraphicsLineItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Line);
+        setSelHandleBaseType(selhandles::HandleType_ResizeLine);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -215,7 +215,7 @@ public:
     KreenGraphicsTextRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
+        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -281,7 +281,7 @@ public:
     KreenGraphicsObfuscateItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
+        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -355,7 +355,7 @@ public:
     KreenGraphicsOperationCropItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(SelectionHandleBase::HandleType_Rect);
+        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
