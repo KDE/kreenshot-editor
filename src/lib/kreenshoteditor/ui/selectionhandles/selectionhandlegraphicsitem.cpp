@@ -59,6 +59,8 @@ public:
             case selhandles::Position6_Right: return Qt::SizeHorCursor;
             case selhandles::Position7_Top: return Qt::SizeVerCursor;
             case selhandles::Position8_Bottom: return Qt::SizeVerCursor;
+            case selhandles::Position_LineEnd: return Qt::OpenHandCursor; // Qt::SizeAllCursor
+            case selhandles::Position_LineStart: return Qt::OpenHandCursor; // Qt::SizeAllCursor
         }
 
         qDebug() << "[ERROR] cursorFromPositionEnum. All cases must be handled.";

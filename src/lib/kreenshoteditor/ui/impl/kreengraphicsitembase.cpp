@@ -104,7 +104,7 @@ void KreenGraphicsItemBase::selHandleBaseStartDrag()
         _startRect = _item->rect();
     }
     else {
-        qDebug() << "TODO"; // TODO
+        _startLine = _item->line();
     }
 }
 

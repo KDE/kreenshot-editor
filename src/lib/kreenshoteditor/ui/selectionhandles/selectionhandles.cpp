@@ -129,40 +129,61 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
 
     qreal hw2 = hw / 2.0;
 
-    auto baseRect = grItem->sceneBoundingRect();
-    qreal x = baseRect.x();
-    qreal y = baseRect.y();
-    qreal w = baseRect.width();
-    qreal h = baseRect.height();
-    qreal w2 = floor(w / 2.0);
-    qreal h2 = floor(h / 2.0);
-    auto rect = QRectF(0, 0, hw, hw);
-
     /**
-    * 1   7   2
+    * 1   7   2  (for rects)
     * 5   0   6
     * 3   8   4
     */
-    std::vector<selhandles::PositionEnum> positions;
-    positions.push_back(selhandles::Position1_TopLeft);
-    positions.push_back(selhandles::Position2_TopRight);
-    positions.push_back(selhandles::Position3_BottomLeft);
-    positions.push_back(selhandles::Position4_BottomRight);
-    positions.push_back(selhandles::Position5_Left);
-    positions.push_back(selhandles::Position6_Right);
-    positions.push_back(selhandles::Position7_Top);
-    positions.push_back(selhandles::Position8_Bottom);
+    std::vector<selhandles::PositionEnum> positions; // positions that will be used; the ORDER is important when updating existing handles
+    QMap<selhandles::PositionEnum, QRectF> posRectMap; // map posistion --> rect of the handle at this position
 
-    QMap<selhandles::PositionEnum, QRectF> posRectMap;
-    // posRectMap.insert(Position0Center)
-    posRectMap.insert(selhandles::Position1_TopLeft, rect.translated(x - hw2, y - hw2));
-    posRectMap.insert(selhandles::Position2_TopRight, rect.translated(x + w - hw2, y - hw2));
-    posRectMap.insert(selhandles::Position3_BottomLeft, rect.translated(x - hw2, y + h - hw2));
-    posRectMap.insert(selhandles::Position4_BottomRight, rect.translated(x + w - hw2, y + h - hw2));
-    posRectMap.insert(selhandles::Position5_Left, rect.translated(x - hw2, y + h2 - hw2));
-    posRectMap.insert(selhandles::Position6_Right, rect.translated(x + w - hw2, y + h2 - hw2));
-    posRectMap.insert(selhandles::Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
-    posRectMap.insert(selhandles::Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
+    if (selHandleBase->selHandleBaseType() == selhandles::HandleType_ResizeRect) {
+        auto baseRect = grItem->sceneBoundingRect();
+        qreal x = baseRect.x();
+        qreal y = baseRect.y();
+        qreal w = baseRect.width();
+        qreal h = baseRect.height();
+        qreal w2 = floor(w / 2.0);
+        qreal h2 = floor(h / 2.0);
+        auto rect = QRectF(0, 0, hw, hw);
+
+        positions.push_back(selhandles::Position1_TopLeft);
+        positions.push_back(selhandles::Position2_TopRight);
+        positions.push_back(selhandles::Position3_BottomLeft);
+        positions.push_back(selhandles::Position4_BottomRight);
+        positions.push_back(selhandles::Position5_Left);
+        positions.push_back(selhandles::Position6_Right);
+        positions.push_back(selhandles::Position7_Top);
+        positions.push_back(selhandles::Position8_Bottom);
+
+        posRectMap.insert(selhandles::Position1_TopLeft, rect.translated(x - hw2, y - hw2));
+        posRectMap.insert(selhandles::Position2_TopRight, rect.translated(x + w - hw2, y - hw2));
+        posRectMap.insert(selhandles::Position3_BottomLeft, rect.translated(x - hw2, y + h - hw2));
+        posRectMap.insert(selhandles::Position4_BottomRight, rect.translated(x + w - hw2, y + h - hw2));
+        posRectMap.insert(selhandles::Position5_Left, rect.translated(x - hw2, y + h2 - hw2));
+        posRectMap.insert(selhandles::Position6_Right, rect.translated(x + w - hw2, y + h2 - hw2));
+        posRectMap.insert(selhandles::Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
+        posRectMap.insert(selhandles::Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
+    }
+    else if (selHandleBase->selHandleBaseType() == selhandles::HandleType_ResizeLine) {
+        positions.push_back(selhandles::Position_LineStart);
+        positions.push_back(selhandles::Position_LineEnd);
+
+        // TMP
+        auto baseRect = grItem->sceneBoundingRect();
+        qreal x = baseRect.x();
+        qreal y = baseRect.y();
+        qreal w = baseRect.width();
+        qreal h = baseRect.height();
+        auto rect = QRectF(0, 0, hw, hw);
+
+        posRectMap.insert(selhandles::Position_LineStart, rect.translated(x - hw2, y - hw2));
+        posRectMap.insert(selhandles::Position_LineEnd, rect.translated(x + w - hw2, y + h - hw2));
+    }
+    else {
+        qDebug() << "[ERROR] SelectionHandles::createOrUpdateHandles";
+        Q_ASSERT(false);
+    }
 
     if (createNewHandles) {
         std::vector<SelectionHandleGraphicsItem*>& handlesRef = selHandleBase->_selectionHandles;
@@ -177,9 +198,9 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
     else {
         std::vector<SelectionHandleGraphicsItem*> handles = selHandleBase->_selectionHandles;
 
-        int i = 0; // TODO later: handle also less handles (e.g. for lines)
+        int i = 0; // todo later: make independent from i
         foreach (auto posEnum, positions) {
-            handles[i++]->setRect(posRectMap[posEnum]); // TODO: make independent from i
+            handles[i++]->setRect(posRectMap[posEnum]);
         }
     }
 }

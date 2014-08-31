@@ -39,7 +39,10 @@ enum HandleTypeEnum
 */
 enum PositionEnum
 {
+    // not used yet:
     Position0_Center = 0,
+
+    // for resizing rect-based items:
     Position1_TopLeft = 1,
     Position2_TopRight = 2,
     Position3_BottomLeft = 3,
@@ -47,7 +50,11 @@ enum PositionEnum
     Position5_Left = 5,
     Position6_Right = 6,
     Position7_Top = 7,
-    Position8_Bottom = 8
+    Position8_Bottom = 8,
+
+    // for changing line-based items:
+    Position_LineStart = 20,
+    Position_LineEnd = 21
 };
 
 }

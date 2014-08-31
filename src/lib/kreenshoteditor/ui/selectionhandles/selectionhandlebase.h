@@ -36,7 +36,9 @@ KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
 class SelectionHandleGraphicsItem;
 
 /**
- *
+ * Base class for "instrumented items", i.e., QGraphicsItems that should
+ * be decorated with selection handles.
+ * The class is multi-inheritance-friendly.
  */
 class SelectionHandleBase //: public QObject
 {

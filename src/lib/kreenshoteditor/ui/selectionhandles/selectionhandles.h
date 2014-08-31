@@ -35,26 +35,28 @@ class SelectionHandleBase;
 class SelectionHandleGraphicsItem;
 
 /**
- * GOAL: make this class independent from Kreen-stuff to make it more reusable
+ * TODO: rename to SelectionHandlesMgr
  */
 class SelectionHandles //: public QObject
 {
     //Q_OBJECT
 
     friend SelectionHandleGraphicsItem;
+    friend SelectionHandleBase;
 
 public:
     SelectionHandles(QGraphicsScene* scene);
 
     virtual ~SelectionHandles();
 
-public:
     /**
      * True if the user begins to drag a handle.
-     * In this case other mouse down actions like create a new item must be prohibited
+     * In this case other mouse down actions like "create a new item" must (can) be prohibited
+     * by the client code.
      */
     bool isAnyHandleUnderMouse();
 
+protected: // see friend classes
     void onItemSelectedHasChanged(SelectionHandleBase* selHandleBase);
 
     void onItemSceneHasChanged(SelectionHandleBase* selHandleBase);
@@ -62,6 +64,8 @@ public:
     void onItemPositionHasChanged(SelectionHandleBase* selHandleBase);
 
     /**
+     * selHandleBase: the instrumented item which the handles should be created or updated for
+     *
      * createNewHandles == true: create
      * createNewHandles == false: update
      */
