@@ -316,6 +316,9 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
     emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
+
+    // to support "hide selection handles when mouse button is down" (search for this to see more code, e. g. in SelectionHandleGraphicsItem::paint)
+    update();
 }
 
 void KreenGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
