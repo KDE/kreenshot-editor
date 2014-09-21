@@ -62,6 +62,10 @@ Debug with: $ kreenshot-editor ~/Pictures/screenshots/2014-05-04_Screenshot-1.pn
 Create new header guard UUI:
 $ python -c 'import uuid; print("UUID_" + str(uuid.uuid1()).replace("-", ""))'
 
+Example to run a install prefixed build:
+    #!/bin/bash
+    LD_LIBRARY_PATH=~/dev/src/kreenshot-editor/build-release/install/usr/lib64:$LD_LIBRARY_PATH
+    ~/dev/src/kreenshot-editor/build-release/install/usr/bin/kreenshot-editor $@
 
 Related tools
 -------------

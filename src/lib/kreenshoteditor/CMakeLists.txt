@@ -67,6 +67,19 @@ target_link_libraries(kreenshoteditor
      Qt5::Network
 )
 
+# see http://public.kitware.com/pipermail/cmake/2013-July/055375.html
+# [CMake] How can I place a 64bit library build into /usr/lib64?
+get_property(LIB64__ GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS)
+if(LIB64__)
+    set(LIB_SUFFIX 64)
+else()
+    set(LIB_SUFFIX "")
+endif()
+
+install(TARGETS kreenshoteditor
+  LIBRARY DESTINATION lib${LIB_SUFFIX}
+)
+
 message("[INFO] lib/kreenshoteditor/end")
 
 # kate: indent-width 4; replace-tabs on;

@@ -69,6 +69,12 @@ add_subdirectory(lib/kreenshoteditor)
 
 ##### end: header file handling #####
 
+# see http://www.cmake.org/Wiki/CMake:Install_Commands
+# and lib/kreenshoteditor/CMakeLists.txt
+install(TARGETS kreenshot-editor
+  RUNTIME DESTINATION bin
+)
+
 message("[INFO] src/end")
 
 # kate: indent-width 4; replace-tabs on;
