@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QGuiApplication>
+#include <QPainter>
 
 namespace kreen {
 namespace ui {
@@ -169,15 +170,15 @@ void SelectionHandleGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* ev
 
 void SelectionHandleGraphicsItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (d->renderVisible
+    painter->save();
+    painter->setRenderHint(QPainter::Antialiasing, false); // this avoids blurring on certain conditions
 
-        // "hide selection handles when mouse button is down" (search for this to see more code to make this work)
-        // todo: desired behaviour "show selection only after mouse button is released and not right after mouse press" should be
-        //   implemented with less force (globally asking for mouse button state seems a bit like a hammer)
-        && QGuiApplication::mouseButtons() == Qt::NoButton) {
+    if (d->renderVisible) {
 
         QGraphicsRectItem::paint(painter, option, widget);
     }
+
+    painter->restore();
 }
 
 void SelectionHandleGraphicsItem::setRenderVisible(bool visible)

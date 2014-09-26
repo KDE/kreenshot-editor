@@ -114,6 +114,9 @@ void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
         }
     }
 
+    // to let the selection handles reappear after undo/redo
+    _selectionHandles->setHandlesVisible(true);
+
     //qDebug() << "   restored: " << count;
 }
 
@@ -137,6 +140,13 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     qDebug() << "MyQGraphicsScene::mousePressEvent";
     Q_ASSERT(_toolManager != nullptr);
+
+    // todo: move this to the selection handles class itself?
+    // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
+    // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
+    if (event->modifiers() == Qt::NoModifier) {
+        _selectionHandles->setHandlesVisible(false);
+    }
 
     // if mouse is over a handle, no new item should be created on mouse press:
     //
@@ -305,6 +315,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             emit itemCreatedSignal(grItemBase->item());
             qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
+            _selectionHandles->setHandlesVisible(true); // make handles visible also when a new item was created
             return;
         }
         else {
@@ -317,8 +328,8 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
     emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
 
-    // to support "hide selection handles when mouse button is down" (search for this to see more code, e. g. in SelectionHandleGraphicsItem::paint)
-    update();
+    _selectionHandles->setHandlesVisible(true);
+    update(); // redraw complete scene (still needed for selection handles?)
 }
 
 void KreenGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)

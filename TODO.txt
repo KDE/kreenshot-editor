@@ -1,8 +1,11 @@
 TODO
 ----
 - implement SelectionHandles
-    - see workaroundIsBlurredOnUnevenHandleWidth
+    - see: auto baseRect = grItem->sceneBoundingRect(); // TODO: how to do it with lines? Make extra class?
+    - see // todo: move this to the selection handles class itself?
+    - see workaroundIsBlurredOnUnevenHandleWidth: can be removed!!!
     - do handles for line
+- more of "myOption.state &= !QStyle::State_Selected;"
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items

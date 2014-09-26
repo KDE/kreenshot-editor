@@ -22,6 +22,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
@@ -35,6 +36,7 @@ class SelectionHandles::Impl
 {
 public:
     QGraphicsScene* scene;
+    QGraphicsView* view;
     bool allRenderVisible = true;
 
 public:
@@ -71,10 +73,13 @@ private:
 };
 
 
-SelectionHandles::SelectionHandles(QGraphicsScene* scene) {
+SelectionHandles::SelectionHandles(QGraphicsScene* scene, QGraphicsView* view) {
     qDebug() << "SelectionHandles::ctor";
     KREEN_PIMPL_INIT_THIS(SelectionHandles);
     d->scene = scene;
+    d->view = view;
+
+    connect(view, SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)), this, SLOT(slotRubberBandChanged(QRect, QPointF, QPointF)));
 }
 
 SelectionHandles::~SelectionHandles()
@@ -138,7 +143,7 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
     QMap<selhandles::PositionEnum, QRectF> posRectMap; // map posistion --> rect of the handle at this position
 
     if (selHandleBase->selHandleBaseType() == selhandles::HandleType_ResizeRect) {
-        auto baseRect = grItem->sceneBoundingRect();
+        auto baseRect = grItem->sceneBoundingRect(); // TODO: how to do it with lines? Make extra class?
         qreal x = baseRect.x();
         qreal y = baseRect.y();
         qreal w = baseRect.width();
@@ -190,10 +195,14 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
         handlesRef.clear();
 
         foreach (auto posEnum, positions) {
-            handlesRef.push_back(new SelectionHandleGraphicsItem(this, posEnum, selHandleBase, posRectMap[posEnum]));
+            auto selHandleItem = new SelectionHandleGraphicsItem(this, posEnum, selHandleBase, posRectMap[posEnum]);
+            // create as "render invisible" to avoid showing the handle
+            // if the item is added to the selection before the mouse button is released
+            selHandleItem->setRenderVisible(false);
+            handlesRef.push_back(selHandleItem);
         }
 
-        setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
+        //setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
     }
     else {
         std::vector<SelectionHandleGraphicsItem*> handles = selHandleBase->_selectionHandles;
@@ -216,6 +225,11 @@ bool SelectionHandles::isAnyHandleUnderMouse()
     }
 
     return false;
+}
+
+void SelectionHandles::setHandlesVisible(bool visible)
+{
+    setAllHandlesRenderVisible(visible);
 }
 
 void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
@@ -242,6 +256,12 @@ void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
 bool SelectionHandles::allHandlesRenderVisible()
 {
     return d->allRenderVisible;
+}
+
+void SelectionHandles::slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
+{
+    // show selection handles when rubber band is active
+    setAllHandlesRenderVisible(!rubberBandRect.isEmpty());
 }
 
 }

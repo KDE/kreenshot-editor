@@ -18,13 +18,14 @@
  */
 #include "kreengraphicsview.h"
 #include "toolmanager.h"
+#include "../selectionhandles/selectionhandles.h"
 
 namespace kreen {
 namespace ui {
 
 using namespace kreen::core;
 
-KreenGraphicsView::KreenGraphicsView(ToolManagerPtr toolmanager)
+KreenGraphicsView::KreenGraphicsView(kreen::ui::ToolManagerPtr toolmanager)
 {
     _toolManager = toolmanager;
 
@@ -147,7 +148,6 @@ void KreenGraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
 
     QGraphicsView::drawForeground(painter, rect); // draw foreground if it is set
 }
-
 
 }
 }

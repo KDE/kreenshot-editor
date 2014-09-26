@@ -21,6 +21,7 @@
 #include "rendervisibilitycontrol.h"
 #include <QGraphicsView>
 #include <QLabel>
+#include <QStyleOptionGraphicsItem>
 
 namespace kreen {
 namespace ui {
@@ -55,7 +56,10 @@ void KreenGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphi
 //     }
 
     // TODO see Rect: reimpl this method to suppress selection marquee
-    QGraphicsEllipseItem::paint(painter, option, widget);
+    // http://www.qtcentre.org/threads/15089-QGraphicsView-change-selected-rectangle-style
+    QStyleOptionGraphicsItem myOption = (*option);
+    myOption.state &= !QStyle::State_Selected;
+    QGraphicsEllipseItem::paint(painter, &myOption, widget);
 }
 
 //int NOT_RENDER = 0; // almost works

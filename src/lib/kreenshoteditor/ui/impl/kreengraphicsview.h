@@ -28,8 +28,9 @@
 
 namespace kreen {
 namespace ui {
-KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
+
 KREEN_SHAREDPTR_FORWARD_DECL(KreenGraphicsView)
+KREEN_SHAREDPTR_FORWARD_DECL(ToolManager)
 
 class KreenGraphicsView : public QGraphicsView
 {

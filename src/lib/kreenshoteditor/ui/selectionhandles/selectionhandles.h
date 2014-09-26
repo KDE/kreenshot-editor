@@ -26,6 +26,7 @@
 #include "selectionhandlestypes.h"
 
 class QGraphicsScene;
+class QGraphicsView;
 
 namespace kreen {
 namespace ui {
@@ -37,15 +38,15 @@ class SelectionHandleGraphicsItem;
 /**
  * TODO: rename to SelectionHandlesMgr
  */
-class SelectionHandles //: public QObject
+class SelectionHandles : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 
     friend SelectionHandleGraphicsItem;
     friend SelectionHandleBase;
 
 public:
-    SelectionHandles(QGraphicsScene* scene);
+    SelectionHandles(QGraphicsScene* scene, QGraphicsView* view);
 
     virtual ~SelectionHandles();
 
@@ -55,6 +56,8 @@ public:
      * by the client code.
      */
     bool isAnyHandleUnderMouse();
+
+    void setHandlesVisible(bool visible);
 
 protected: // see friend classes
     void onItemSelectedHasChanged(SelectionHandleBase* selHandleBase);
@@ -83,6 +86,10 @@ protected: // see friend classes
 
 protected:
     void setAllSelectedItemsMovable(bool isMoveable); // used by friend
+
+protected Q_SLOTS:
+    // to show selection handles when doing a rubber band selection
+    void slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint);
 
 private:
     KREEN_PIMPL_DEFINE_D_PTR
