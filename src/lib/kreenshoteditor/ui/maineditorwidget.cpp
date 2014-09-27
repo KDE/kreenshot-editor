@@ -125,7 +125,7 @@ public:
         // graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
         // graphicsView->ensureVisible(0, 0, 1, 1);
 
-        createSceneFromModel();
+        refreshSceneFromModel();
 
         // cancel current img op or anything else
         // also prevents some bugs from happening when opening a new document
@@ -136,11 +136,11 @@ public:
      * (Re)create the scene to reflect the current kreenshotEditor->document().
      * Saves and restores the selected items.
      */
-    void createSceneFromModel()
+    void refreshSceneFromModel()
     {
         QRect baseRect = kreenshotEditor()->document()->baseImage().rect();
 
-        qDebug() << "MainEditorWidget::Impl::createSceneFromModel() / baseRect=" << baseRect;
+        qDebug() << "MainEditorWidget::Impl::refreshSceneFromModel() / baseRect=" << baseRect;
 
         // save the current item selection if any
         //
@@ -192,6 +192,9 @@ public:
 //     std::map<ItemPtr, bool> mouseOverMap; // TODO later
 //     const int mouseOverMargin = 2; // TODO later
 
+    /**
+     * _kreenshotEditor->graphicsScene();
+     */
     KreenGraphicsScenePtr scene()
     {
         return _kreenshotEditor->graphicsScene();
@@ -377,7 +380,7 @@ void MainEditorWidget::slotDocumentCreated()
 
     d->selectionHandles = std::make_shared<SelectionHandles>(d->scene().get(), d->graphicsView.get());
 
-    auto kreenGrScene = d->kreenshotEditor()->graphicsScene();
+    auto kreenGrScene = d->scene();
     kreenGrScene->setToolManager(d->toolManager());
     kreenGrScene->setSelectionHandles(d->selectionHandles);
 
@@ -403,7 +406,7 @@ void MainEditorWidget::slotDocumentCreated()
 void MainEditorWidget::slotDocumentContentChanged()
 {
     // qDebug() << "MainEditorWidget::slotDocumentContentChanged()";
-    d->createSceneFromModel();
+    d->refreshSceneFromModel();
 }
 
 void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationItem)
@@ -618,7 +621,7 @@ void MainEditorWidget::slotImageOperationAcceptedDecoupled()
 
     // would causes crash in mouse event if not called in the decoupled method
     // TODO: is above statement still true?
-    d->createSceneFromModel();
+    d->refreshSceneFromModel();
 
     requestTool("select"); // go to Select after an image operation
 }
