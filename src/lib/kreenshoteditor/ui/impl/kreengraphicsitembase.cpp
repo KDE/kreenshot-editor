@@ -116,11 +116,12 @@ void KreenGraphicsItemBase::selHandleBase_startDrag()
 
 void KreenGraphicsItemBase::selHandleBase_positionHasChanged(selhandles::PositionEnum posEnum, QPointF delta)
 {
+    qreal dx = delta.x();
+    qreal dy = delta.y();
+
     if (selHandleBase_type() == selhandles::HandleType_ResizeRect) {
 
-        qreal dx = delta.x();
-        qreal dy = delta.y();
-        QRect newRect;
+        QRect newRect; // model
 
         switch (posEnum)
         {
@@ -160,7 +161,25 @@ void KreenGraphicsItemBase::selHandleBase_positionHasChanged(selhandles::Positio
         updateVisualGeometryFromModel();
     }
     else if (selHandleBase_type() == selhandles::HandleType_ResizeLine) {
-        qDebug() << "TODO"; // TODO
+        QLine newLine; // model
+
+        switch (posEnum)
+        {
+            // case selhandles::Position0_Center: Q_ASSERT(false); return;
+            case selhandles::Position_LineStart:
+                newLine = QLine(_startLine.x1() + dx, _startLine.y1() + dy, _startLine.x2(), _startLine.y2());
+                break;
+            case selhandles::Position_LineEnd:
+                newLine = QLine(_startLine.x1(), _startLine.y1(), _startLine.x2() + dx, _startLine.y2() + dy);
+                break;
+            default:
+                qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBasePositionHasChanged case not handled: " << posEnum;
+                Q_ASSERT(false);
+                return;
+        }
+
+        _item->setLine(newLine);
+        updateVisualGeometryFromModel();
     }
     else {
         qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBasePositionHasChanged() not impl.";

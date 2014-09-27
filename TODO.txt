@@ -1,9 +1,8 @@
 TODO
 ----
-- implement SelectionHandles
-    - see: auto baseRect = grItem->sceneBoundingRect(); // TODO: how to do it with lines? Make extra class?
-    - do handles for line
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
+- SelectionHandles
+    - change cursor to cross when resizing
 - enable more item properties (see item.h/cpp)
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking
