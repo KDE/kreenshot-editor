@@ -407,6 +407,7 @@ void MainEditorWidget::slotDocumentCreated()
 void MainEditorWidget::slotDocumentContentChanged()
 {
     // qDebug() << "MainEditorWidget::slotDocumentContentChanged()";
+    setSceneImageOperationItem(nullptr); // remove image operation item
     d->refreshSceneFromModel();
 }
 
@@ -545,10 +546,12 @@ void MainEditorWidget::slotFixSelectableAndMovable()
         }
     }
 
-    // image operation always stays selected and fix visibility of selection handles
+    // image operation always stays selected
+    // (and fix visibility of selection handles which currently fixes this bug:
+    //   "bug with crop: resizing show that there is some kind of a double handling (handles move away)"
+    //   todo later: do something about this kind of workaround)
     if (d->imgOpHandling.imageOperationItemActive()) {
         qDebug() << "  d->imgOpHandling.imageOperationGraphicsItem->setSelected(true);";
-        // TODO: "false, true" to fix visiblity of selection handles is not very nice. Find out a better way.
         d->imgOpHandling.imageOperationGraphicsItem->setSelected(false);
         d->imgOpHandling.imageOperationGraphicsItem->setSelected(true);
     }
