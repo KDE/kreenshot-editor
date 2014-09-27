@@ -121,6 +121,11 @@ bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent
     return false;
 }
 
+void SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()
+{
+    setHandlesVisible(true);
+}
+
 void SelectionHandlesMgr::onItemSelectedHasChanged(kreen::ui::SelectionHandleBase* instrItem)
 {
     d->assertInit();

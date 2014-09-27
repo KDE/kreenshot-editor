@@ -65,7 +65,7 @@ public:
      * Handles the handle visibility on mouse down depending on Ctrl modifier.
      * Returns true if a handle is under the mouse.
      *
-     * Usage example:
+     * Usage example: call at the beginning of the event method:
      * void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
      *
      *   if (_selectionHandlesMgr->onScene_mousePressEvent_Enter(event)) {
@@ -77,6 +77,12 @@ public:
      *
      */
     bool onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent* event);
+
+    /**
+     * Handles the handle visibility.
+     * Call it at the beginning of the event method.
+     */
+    void onScene_mouseReleaseEvent_Enter();
 
     void setHandlesVisible(bool visible);
 

@@ -295,6 +295,8 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     qDebug() << "MyQGraphicsScene::mouseReleaseEvent enter";
 
+    _selectionHandlesMgr->onScene_mouseReleaseEvent_Enter();
+
     if (_creatingItem != nullptr) {
         // remove this temporary item from the scene because we will add it to the document
         this->removeItem(_creatingItem);
@@ -308,7 +310,6 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             emit itemCreatedSignal(grItemBase->item());
             qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
-            _selectionHandlesMgr->setHandlesVisible(true); // make handles visible also when a new item was created
             return;
         }
         else {
@@ -320,8 +321,6 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
     emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
-
-    _selectionHandlesMgr->setHandlesVisible(true);
     update(); // redraw complete scene (still needed for selection handles?)
 }
 
