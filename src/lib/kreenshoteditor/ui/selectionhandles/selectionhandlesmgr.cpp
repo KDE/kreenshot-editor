@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "selectionhandles.h"
+#include "selectionhandlesmgr.h"
 #include <QRect>
 #include <QCursor>
 #include <QGraphicsScene>
@@ -32,7 +32,7 @@
 namespace kreen {
 namespace ui {
 
-class SelectionHandles::Impl
+class SelectionHandlesMgr::Impl
 {
 public:
     QGraphicsScene* scene = nullptr;
@@ -40,7 +40,7 @@ public:
     bool allRenderVisible = true;
 
 public:
-    Impl(SelectionHandles* owner)
+    Impl(SelectionHandlesMgr* owner)
     {
         _owner = owner;
     }
@@ -77,15 +77,15 @@ public:
     }
 
 private:
-    SelectionHandles* _owner = nullptr;
+    SelectionHandlesMgr* _owner = nullptr;
 };
 
 
-SelectionHandles::SelectionHandles() {
-    KREEN_PIMPL_INIT_THIS(SelectionHandles);
+SelectionHandlesMgr::SelectionHandlesMgr() {
+    KREEN_PIMPL_INIT_THIS(SelectionHandlesMgr);
 }
 
-void SelectionHandles::setSceneAndView(QGraphicsScene* scene, QGraphicsView* view)
+void SelectionHandlesMgr::setSceneAndView(QGraphicsScene* scene, QGraphicsView* view)
 {
     d->scene = scene;
     d->view = view;
@@ -93,11 +93,11 @@ void SelectionHandles::setSceneAndView(QGraphicsScene* scene, QGraphicsView* vie
     connect(view, SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)), this, SLOT(slotRubberBandChanged(QRect, QPointF, QPointF)));
 }
 
-SelectionHandles::~SelectionHandles()
+SelectionHandlesMgr::~SelectionHandlesMgr()
 {
 }
 
-void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
 {
     d->assertInit();
 
@@ -113,7 +113,7 @@ void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBa
     }
 }
 
-void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
 {
     d->assertInit();
 
@@ -122,7 +122,7 @@ void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
     }
 }
 
-void SelectionHandles::onItemPositionHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemPositionHasChanged(SelectionHandleBase* selHandleBase)
 {
     d->assertInit();
 
@@ -131,7 +131,7 @@ void SelectionHandles::onItemPositionHasChanged(SelectionHandleBase* selHandleBa
     }
 }
 
-void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
+void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
 {
     d->assertInit();
 
@@ -232,7 +232,7 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
     }
 }
 
-bool SelectionHandles::isAnyHandleUnderMouse()
+bool SelectionHandlesMgr::isAnyHandleUnderMouse()
 {
     d->assertInit();
 
@@ -247,14 +247,14 @@ bool SelectionHandles::isAnyHandleUnderMouse()
     return false;
 }
 
-void SelectionHandles::setHandlesVisible(bool visible)
+void SelectionHandlesMgr::setHandlesVisible(bool visible)
 {
     d->assertInit();
 
     setAllHandlesRenderVisible(visible);
 }
 
-void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
+void SelectionHandlesMgr::setAllSelectedItemsMovable(bool isMoveable)
 {
     d->assertInit();
 
@@ -263,7 +263,7 @@ void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
     }
 }
 
-void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
+void SelectionHandlesMgr::setAllHandlesRenderVisible(bool isVisible)
 {
     d->assertInit();
 
@@ -279,14 +279,14 @@ void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
     d->allRenderVisible = isVisible;
 }
 
-bool SelectionHandles::allHandlesRenderVisible()
+bool SelectionHandlesMgr::allHandlesRenderVisible()
 {
     d->assertInit();
 
     return d->allRenderVisible;
 }
 
-void SelectionHandles::slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
+void SelectionHandlesMgr::slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
 {
     // show selection handles when rubber band is active
     setAllHandlesRenderVisible(!rubberBandRect.isEmpty());

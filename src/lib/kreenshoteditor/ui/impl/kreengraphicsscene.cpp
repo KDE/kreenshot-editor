@@ -23,7 +23,7 @@
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "../selectionhandles/selectionhandlegraphicsitem.h"
-#include "../selectionhandles/selectionhandles.h"
+#include "../selectionhandles/selectionhandlesmgr.h"
 #include "rendervisibilitycontrol.h"
 
 namespace kreen {
@@ -50,9 +50,9 @@ void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
     _toolManager = toolManager;
 }
 
-void KreenGraphicsScene::setSelectionHandles(SelectionHandlesPtr selectionHandles)
+void KreenGraphicsScene::setSelectionHandles(kreen::ui::SelectionHandlesMgrPtr selectionHandlesMgr)
 {
-    _selectionHandles = selectionHandles;
+    _selectionHandlesMgr = selectionHandlesMgr;
 }
 
 QList<KreenGraphicsItemBase*> KreenGraphicsScene::selectedKreenGraphicsItems()
@@ -115,7 +115,7 @@ void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
     }
 
     // to let the selection handles reappear after undo/redo
-    _selectionHandles->setHandlesVisible(true);
+    _selectionHandlesMgr->setHandlesVisible(true);
 
     //qDebug() << "   restored: " << count;
 }
@@ -145,12 +145,12 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
     // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
     if (event->modifiers() == Qt::NoModifier) {
-        _selectionHandles->setHandlesVisible(false);
+        _selectionHandlesMgr->setHandlesVisible(false);
     }
 
     // if mouse is over a handle, no new item should be created on mouse press:
     //
-    if (_selectionHandles->isAnyHandleUnderMouse()) {
+    if (_selectionHandlesMgr->isAnyHandleUnderMouse()) {
         qDebug() << "_selectionHandles->isAnyHandleUnderMouse()";
         QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
         return;
@@ -315,7 +315,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             emit itemCreatedSignal(grItemBase->item());
             qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
-            _selectionHandles->setHandlesVisible(true); // make handles visible also when a new item was created
+            _selectionHandlesMgr->setHandlesVisible(true); // make handles visible also when a new item was created
             return;
         }
         else {
@@ -328,7 +328,7 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
     emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
 
-    _selectionHandles->setHandlesVisible(true);
+    _selectionHandlesMgr->setHandlesVisible(true);
     update(); // redraw complete scene (still needed for selection handles?)
 }
 

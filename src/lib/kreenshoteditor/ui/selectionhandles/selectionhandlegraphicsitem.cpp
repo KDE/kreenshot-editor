@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "selectionhandlegraphicsitem.h"
-#include "selectionhandles.h"
+#include "selectionhandlesmgr.h"
 #include "selectionhandlebase.h"
 #include <QRect>
 #include <QCursor>
@@ -36,7 +36,7 @@ namespace ui {
 class SelectionHandleGraphicsItem::Impl
 {
 public:
-    SelectionHandles* manager = nullptr;
+    SelectionHandlesMgr* manager = nullptr;
     selhandles::PositionEnum posEnum;
     SelectionHandleBase* selHandleBase = nullptr;
     QPointF startPos;
@@ -71,7 +71,7 @@ public:
     }
 };
 
-SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandles* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect) : QGraphicsRectItem(rect)
+SelectionHandleGraphicsItem::SelectionHandleGraphicsItem(SelectionHandlesMgr* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect) : QGraphicsRectItem(rect)
 {
     KREEN_PIMPL_INIT(SelectionHandleGraphicsItem);
 

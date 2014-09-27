@@ -32,7 +32,7 @@ class QGraphicsSceneMouseEvent;
 namespace kreen {
 namespace ui {
 
-KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandlesMgr)
 
 class KreenGraphicsScene;
 

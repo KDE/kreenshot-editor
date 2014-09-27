@@ -22,7 +22,7 @@
 #include <kreen/util/pimplutil.h>
 #include <QString>
 #include <QGraphicsRectItem>
-#include "selectionhandles.h"
+#include "selectionhandlesmgr.h"
 #include "selectionhandlestypes.h"
 
 namespace kreen {
@@ -34,10 +34,10 @@ class SelectionHandleGraphicsItem : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT // QObject to have signal/slots
 
-    friend SelectionHandles;
+    friend SelectionHandlesMgr;
 
 public:
-    SelectionHandleGraphicsItem(SelectionHandles* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect);
+    SelectionHandleGraphicsItem(SelectionHandlesMgr* manager, selhandles::PositionEnum posEnum, SelectionHandleBase* selHandleBase, QRectF rect);
 
     virtual ~SelectionHandleGraphicsItem();
 

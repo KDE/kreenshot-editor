@@ -17,7 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include "selectionhandlebase.h"
-#include "selectionhandles.h"
+#include "selectionhandlesmgr.h"
 #include "selectionhandlegraphicsitem.h"
 
 namespace kreen {
@@ -42,9 +42,9 @@ SelectionHandleBase::~SelectionHandleBase()
 {
 }
 
-void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles)
+void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr)
 {
-    _selectionHandlesMgr = selectionHandles;
+    _selectionHandlesMgr = selectionHandlesMgr;
 }
 
 void SelectionHandleBase::setSelHandleBaseType(selhandles::HandleTypeEnum handlesType)

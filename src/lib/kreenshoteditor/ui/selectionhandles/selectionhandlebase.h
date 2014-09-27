@@ -32,7 +32,7 @@ class QGraphicsItem;
 namespace kreen {
 namespace ui {
 
-KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandlesMgr)
 class SelectionHandleGraphicsItem;
 
 /**
@@ -45,7 +45,7 @@ class SelectionHandleBase //: public QObject
     //Q_OBJECT
 
     friend SelectionHandleGraphicsItem;
-    friend SelectionHandles;
+    friend SelectionHandlesMgr;
 
 public:
     SelectionHandleBase();
@@ -55,7 +55,7 @@ public:
     /**
      * if the items should support selection handles, this has to be set
      */
-    void setSelectionHandlesMgr(SelectionHandlesPtr selectionHandles);
+    void setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr);
 
     void setSelHandleBaseType(selhandles::HandleTypeEnum handlesType);
 
@@ -75,7 +75,7 @@ protected:
     virtual QGraphicsItem* selHandleBaseInstrumentedItem() = 0;
 
 protected:
-    SelectionHandlesPtr _selectionHandlesMgr;
+    SelectionHandlesMgrPtr _selectionHandlesMgr;
 
     /**
      * the selection handles vector to be updated or modified by _selectionHandlesMgr

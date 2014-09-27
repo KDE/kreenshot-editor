@@ -31,14 +31,14 @@ class QGraphicsView;
 namespace kreen {
 namespace ui {
 
-KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandles)
+KREEN_SHAREDPTR_FORWARD_DECL(SelectionHandlesMgr)
 class SelectionHandleBase;
 class SelectionHandleGraphicsItem;
 
 /**
- * TODO: rename to SelectionHandlesMgr
+ * Manager class for the selection handles
  */
-class SelectionHandles : public QObject
+class SelectionHandlesMgr : public QObject
 {
     Q_OBJECT
 
@@ -46,9 +46,9 @@ class SelectionHandles : public QObject
     friend SelectionHandleBase;
 
 public:
-    SelectionHandles();
+    SelectionHandlesMgr();
 
-    virtual ~SelectionHandles();
+    virtual ~SelectionHandlesMgr();
 
     /**
      * todo later: only one of the two parameters should be enough

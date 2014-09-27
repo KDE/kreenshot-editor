@@ -36,7 +36,7 @@ set(kreenshoteditor_SOURCES
 
     ui/selectionhandles/selectionhandlebase.cpp
     ui/selectionhandles/selectionhandlegraphicsitem.cpp
-    ui/selectionhandles/selectionhandles.cpp
+    ui/selectionhandles/selectionhandlesmgr.cpp
 
     ui/settings/pageoutput.cpp
     ui/settings/preferencesdialog.cpp

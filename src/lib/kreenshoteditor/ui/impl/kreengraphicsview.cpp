@@ -18,7 +18,6 @@
  */
 #include "kreengraphicsview.h"
 #include "toolmanager.h"
-#include "../selectionhandles/selectionhandles.h"
 
 namespace kreen {
 namespace ui {

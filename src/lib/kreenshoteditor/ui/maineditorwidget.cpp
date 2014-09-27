@@ -38,7 +38,7 @@
 #include "impl/kreengraphicsscene.h"
 #include "impl/toolmanager.h"
 #include "impl/kreengraphicsview.h"
-#include "selectionhandles/selectionhandles.h"
+#include "selectionhandles/selectionhandlesmgr.h"
 
 namespace kreen {
 namespace ui {
@@ -81,7 +81,7 @@ public:
     KreenGraphicsViewPtr graphicsView;
     QGraphicsPixmapItem* baseImageSceneItem = nullptr;
     ImageOperationHandling imgOpHandling;
-    SelectionHandlesPtr selectionHandles;
+    SelectionHandlesMgrPtr selectionHandlesMgr;
     QAction* actionImageOperationAccept = nullptr;
 
 private:
@@ -91,7 +91,7 @@ public:
     Impl(MainEditorWidget* owner)
     {
         _owner = owner;
-        selectionHandles = std::make_shared<SelectionHandles>();
+        selectionHandlesMgr = std::make_shared<SelectionHandlesMgr>();
     }
 
     void init(KreenshotEditorPtr kreenshotEditor_)
@@ -180,7 +180,7 @@ public:
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto kGrItem = toolManager()->createGraphicsItemFromKreenItem(item);
-            kGrItem->setSelectionHandlesMgr(selectionHandles); // todo: swap this by creating a register method
+            kGrItem->setSelectionHandlesMgr(selectionHandlesMgr); // todo: swap this by creating a register method
             scene()->addItem(kGrItem->graphicsItem());
         }
 
@@ -379,11 +379,11 @@ void MainEditorWidget::slotDocumentCreated()
 {
     qDebug() << "MainEditorWidget::slotDocumentCreated()";
 
-    d->selectionHandles->setSceneAndView(d->scene().get(), d->graphicsView.get());
+    d->selectionHandlesMgr->setSceneAndView(d->scene().get(), d->graphicsView.get());
 
     auto kreenGrScene = d->scene();
     kreenGrScene->setToolManager(d->toolManager());
-    kreenGrScene->setSelectionHandles(d->selectionHandles);
+    kreenGrScene->setSelectionHandles(d->selectionHandlesMgr);
 
     connect(d->kreenshotEditor()->document().get(), SIGNAL(contentChangedSignal()),
             this, SLOT(slotDocumentContentChanged()));
@@ -427,7 +427,7 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
     // then depending on active or not:
     if (d->imgOpHandling.imageOperationItemActive()) {
         auto kGrItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
-        kGrItem->setSelectionHandlesMgr(d->selectionHandles); // enable selection handles
+        kGrItem->setSelectionHandlesMgr(d->selectionHandlesMgr); // enable selection handles
 
         auto grItem = kGrItem->graphicsItem();
         d->scene()->addItem(grItem);
