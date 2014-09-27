@@ -31,12 +31,19 @@
 #include <QAbstractGraphicsShapeItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
+#include <QStyleOptionGraphicsItem>
 #include <QPainter>
+#include <QStyle>
 #include <cmath>
 #include <algorithm>
 
 namespace kreen {
 namespace ui {
+
+///////////////////////////////////////////////
+// TMP
+bool showDebugInfo = false;
+///////////////////////////////////////////////
 
 KreenGraphicsItemBase::KreenGraphicsItemBase(QGraphicsItem* graphicsItem, kreen::core::KreenItemPtr item)
 {
@@ -61,11 +68,6 @@ KreenGraphicsScene* KreenGraphicsItemBase::getScene()
 {
     return (KreenGraphicsScene*)graphicsItem()->scene();
 }
-
-// SelectionHandleBase* KreenGraphicsItemBase::asSelectionHandleBase()
-// {
-//     return dynamic_cast<SelectionHandleBase*>(this);
-// }
 
 void KreenGraphicsItemBase::setSelectableAndMovable(bool isSelectableAndMovable)
 {
@@ -246,12 +248,18 @@ void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange
     itemChangeSelHandleBaseImpl(change, value);
 }
 
-// TMP
-bool showDebugInfo = false;
+QStyleOptionGraphicsItem KreenGraphicsItemBase::copyWithStateSelectedDisabled(const QStyleOptionGraphicsItem* option)
+{
+    // see http://www.qtcentre.org/threads/15089-QGraphicsView-change-selected-rectangle-style
+    QStyleOptionGraphicsItem myOption = (*option);
+    myOption.state &= !QStyle::State_Selected;
+    return myOption;
+}
 
 void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)
 {
     if (showDebugInfo) {
+        painter->save();
         QString debugInfo = QString("id:%1; selectable:%2; selected:%3; movable:%4")
         .arg(item()->id())
         .arg((_graphicsItem->flags() & QGraphicsItem::ItemIsSelectable) > 0)
@@ -263,6 +271,7 @@ void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)
         painter->drawRect(0, 0, 300, 20);
         painter->setPen(Qt::black);
         painter->drawText(0, 10, debugInfo);
+        painter->restore();
     }
 }
 

@@ -72,8 +72,6 @@ public:
      */
     KreenGraphicsScene* getScene();
 
-    // SelectionHandleBase* asSelectionHandleBase();
-
     /**
      * selectable and moveable
      */
@@ -131,6 +129,12 @@ protected:
      * - QGraphicsItem::ItemSceneHasChanged
      */
     void itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+
+    /**
+     * to disable built-in marquee rect
+     * see http://www.qtcentre.org/threads/15089-QGraphicsView-change-selected-rectangle-style
+     */
+    QStyleOptionGraphicsItem copyWithStateSelectedDisabled(const QStyleOptionGraphicsItem* option);
 
     // TMP
     void afterPaintBaseImpl(QPainter* painter);

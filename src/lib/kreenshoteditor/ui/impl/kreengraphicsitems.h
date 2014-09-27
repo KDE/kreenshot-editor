@@ -200,6 +200,8 @@ public:
         if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
 };
 
 class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
@@ -264,6 +266,8 @@ public:
         if (mouseReleaseEventBaseImpl(event))
             QGraphicsItem::mouseReleaseEvent(event);
     }
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
 };
 
 class KreenGraphicsObfuscateItem : public QGraphicsRectItem, public KreenGraphicsItemBase

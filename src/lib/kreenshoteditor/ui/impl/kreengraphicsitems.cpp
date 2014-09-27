@@ -36,15 +36,8 @@ void KreenGraphicsRectItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     // QGraphicsRectItem::paint(painter, option, widget);
     // see src/qt5/qtbase/src/widgets/graphicsview/qgraphicsitem.cpp
 
-    Q_UNUSED(widget);
-    //painter->save();
-    painter->setPen(pen());
-    painter->setBrush(brush());
-    painter->drawRect(rect());
-    //painter->restore();
-
-    // omit the selected rect of original source code because we draw it ourselves
-
+    auto option2 = copyWithStateSelectedDisabled(option);
+    QGraphicsRectItem::paint(painter, &option2, widget);
     afterPaintBaseImpl(painter);
 }
 
@@ -55,11 +48,24 @@ void KreenGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphi
 //         return;
 //     }
 
-    // TODO see Rect: reimpl this method to suppress selection marquee
     // http://www.qtcentre.org/threads/15089-QGraphicsView-change-selected-rectangle-style
-    QStyleOptionGraphicsItem myOption = (*option);
-    myOption.state &= !QStyle::State_Selected;
-    QGraphicsEllipseItem::paint(painter, &myOption, widget);
+    auto option2 = copyWithStateSelectedDisabled(option);
+    QGraphicsEllipseItem::paint(painter, &option2, widget);
+    afterPaintBaseImpl(painter);
+}
+
+void KreenGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+    auto option2 = copyWithStateSelectedDisabled(option);
+    QGraphicsLineItem::paint(painter, &option2, widget);
+    afterPaintBaseImpl(painter);
+}
+
+void KreenGraphicsTextRectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+    auto option2 = copyWithStateSelectedDisabled(option);
+    QGraphicsRectItem::paint(painter, &option2, widget);
+    afterPaintBaseImpl(painter);
 }
 
 //int NOT_RENDER = 0; // almost works
