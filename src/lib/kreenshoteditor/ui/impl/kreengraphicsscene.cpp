@@ -50,7 +50,7 @@ void KreenGraphicsScene::setToolManager(ToolManagerPtr toolManager)
     _toolManager = toolManager;
 }
 
-void KreenGraphicsScene::setSelectionHandles(kreen::ui::SelectionHandlesMgrPtr selectionHandlesMgr)
+void KreenGraphicsScene::setSelectionHandlesMgr(kreen::ui::SelectionHandlesMgrPtr selectionHandlesMgr)
 {
     _selectionHandlesMgr = selectionHandlesMgr;
 }
@@ -205,6 +205,9 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 kGrItem->setSelectableAndMovable(false);
             }
 
+            // (interesting: if the internals of SelectionHandlesMgr would not use
+            //  std::enable_shared_from_this than this will cause a crash,
+            //  this comment can be remove later)
             this->addItem(_creatingItem); // add the new item to scene
         }
 

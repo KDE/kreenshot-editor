@@ -85,6 +85,10 @@ SelectionHandlesMgr::SelectionHandlesMgr() {
     KREEN_PIMPL_INIT_THIS(SelectionHandlesMgr);
 }
 
+SelectionHandlesMgr::~SelectionHandlesMgr()
+{
+}
+
 void SelectionHandlesMgr::setSceneAndView(QGraphicsScene* scene, QGraphicsView* view)
 {
     d->scene = scene;
@@ -93,41 +97,42 @@ void SelectionHandlesMgr::setSceneAndView(QGraphicsScene* scene, QGraphicsView* 
     connect(view, SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)), this, SLOT(slotRubberBandChanged(QRect, QPointF, QPointF)));
 }
 
-SelectionHandlesMgr::~SelectionHandlesMgr()
+void SelectionHandlesMgr::registerItem(SelectionHandleBase* instrItem)
 {
+    instrItem->setSelectionHandlesMgr(shared_from_this());
 }
 
-void SelectionHandlesMgr::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemSelectedHasChanged(kreen::ui::SelectionHandleBase* instrItem)
 {
     d->assertInit();
 
-    if (selHandleBase->selHandleBaseInstrumentedItem()->isSelected()) {
-        createOrUpdateHandles(selHandleBase, true);
+    if (instrItem->selHandleBaseInstrumentedItem()->isSelected()) {
+        createOrUpdateHandles(instrItem, true);
 
-        foreach (auto handleItem, selHandleBase->_selectionHandles) {
+        foreach (auto handleItem, instrItem->_selectionHandles) {
             d->scene->addItem(handleItem);
         }
     }
     else {
-        d->clearHandlesFromScene(selHandleBase);
+        d->clearHandlesFromScene(instrItem);
     }
 }
 
-void SelectionHandlesMgr::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemSceneHasChanged(kreen::ui::SelectionHandleBase* instrItem)
 {
     d->assertInit();
 
-    if (!selHandleBase->selHandleBaseInstrumentedItem()->scene()) { // check whether item is part of a scene or not
-        d->clearHandlesFromScene(selHandleBase); // remove handles if instrumentedItem was removed from scene
+    if (!instrItem->selHandleBaseInstrumentedItem()->scene()) { // check whether item is part of a scene or not
+        d->clearHandlesFromScene(instrItem); // remove handles if instrumentedItem was removed from scene
     }
 }
 
-void SelectionHandlesMgr::onItemPositionHasChanged(SelectionHandleBase* selHandleBase)
+void SelectionHandlesMgr::onItemPositionHasChanged(kreen::ui::SelectionHandleBase* instrItem)
 {
     d->assertInit();
 
-    if (selHandleBase->_selectionHandles.size() > 0) { // update if handles are present
-        createOrUpdateHandles(selHandleBase, false);
+    if (instrItem->_selectionHandles.size() > 0) { // update if handles are present
+        createOrUpdateHandles(instrItem, false);
     }
 }
 
@@ -256,7 +261,7 @@ void SelectionHandlesMgr::setAllHandlesRenderVisible(bool isVisible)
 {
     d->assertInit();
 
-    qDebug() << "SelectionHandles::setAllHandlesRenderVisible:" << isVisible;
+    qDebug() << "SelectionHandlesMgr::setAllHandlesRenderVisible:" << isVisible;
 
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
         foreach (auto handleItem, selHandleItem->_selectionHandles) {

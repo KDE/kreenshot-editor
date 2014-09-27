@@ -42,7 +42,7 @@ SelectionHandleBase::~SelectionHandleBase()
 {
 }
 
-void SelectionHandleBase::setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr)
+void SelectionHandleBase::setSelectionHandlesMgr(kreen::ui::SelectionHandlesMgrPtr selectionHandlesMgr)
 {
     _selectionHandlesMgr = selectionHandlesMgr;
 }

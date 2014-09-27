@@ -38,7 +38,7 @@ class SelectionHandleGraphicsItem;
 /**
  * Manager class for the selection handles
  */
-class SelectionHandlesMgr : public QObject
+class SelectionHandlesMgr : public QObject, public std::enable_shared_from_this<SelectionHandlesMgr>
 {
     Q_OBJECT
 
@@ -56,6 +56,11 @@ public:
     void setSceneAndView(QGraphicsScene* scene, QGraphicsView* view);
 
     /**
+     * items that should support selection handles, are registered with this method
+     */
+    void registerItem(SelectionHandleBase* instrItem);
+
+    /**
      * True if the user begins to drag a handle.
      * In this case other mouse down actions like "create a new item" must (can) be prohibited
      * by the client code.
@@ -65,11 +70,11 @@ public:
     void setHandlesVisible(bool visible);
 
 protected: // see friend classes
-    void onItemSelectedHasChanged(SelectionHandleBase* selHandleBase);
+    void onItemSelectedHasChanged(SelectionHandleBase* instrItem);
 
-    void onItemSceneHasChanged(SelectionHandleBase* selHandleBase);
+    void onItemSceneHasChanged(SelectionHandleBase* instrItem);
 
-    void onItemPositionHasChanged(SelectionHandleBase* selHandleBase);
+    void onItemPositionHasChanged(SelectionHandleBase* instrItem);
 
     /**
      * selHandleBase: the instrumented item which the handles should be created or updated for

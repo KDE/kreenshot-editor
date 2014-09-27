@@ -52,11 +52,6 @@ public:
 
     virtual ~SelectionHandleBase();
 
-    /**
-     * if the items should support selection handles, this has to be set
-     */
-    void setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr);
-
     void setSelHandleBaseType(selhandles::HandleTypeEnum handlesType);
 
     selhandles::HandleTypeEnum selHandleBaseType();
@@ -70,6 +65,11 @@ public:
 protected:
     void handleStartDrag();
     void handlePositionHasChanged(QPointF delta);
+
+    /**
+     * if the items should support selection handles, this has to be set, see SelectionHandlesMgr::registerItem
+     */
+    void setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr);
 
 protected:
     virtual QGraphicsItem* selHandleBaseInstrumentedItem() = 0;

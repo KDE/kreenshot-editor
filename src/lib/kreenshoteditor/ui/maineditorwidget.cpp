@@ -180,7 +180,7 @@ public:
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto kGrItem = toolManager()->createGraphicsItemFromKreenItem(item);
-            kGrItem->setSelectionHandlesMgr(selectionHandlesMgr); // todo: swap this by creating a register method
+            selectionHandlesMgr->registerItem(kGrItem);
             scene()->addItem(kGrItem->graphicsItem());
         }
 
@@ -383,7 +383,7 @@ void MainEditorWidget::slotDocumentCreated()
 
     auto kreenGrScene = d->scene();
     kreenGrScene->setToolManager(d->toolManager());
-    kreenGrScene->setSelectionHandles(d->selectionHandlesMgr);
+    kreenGrScene->setSelectionHandlesMgr(d->selectionHandlesMgr);
 
     connect(d->kreenshotEditor()->document().get(), SIGNAL(contentChangedSignal()),
             this, SLOT(slotDocumentContentChanged()));
@@ -427,7 +427,7 @@ void MainEditorWidget::setSceneImageOperationItem(KreenItemPtr imageOperationIte
     // then depending on active or not:
     if (d->imgOpHandling.imageOperationItemActive()) {
         auto kGrItem = d->toolManager()->createGraphicsItemFromKreenItem(imageOperationItem);
-        kGrItem->setSelectionHandlesMgr(d->selectionHandlesMgr); // enable selection handles
+        d->selectionHandlesMgr->registerItem(kGrItem); // enable selection handles
 
         auto grItem = kGrItem->graphicsItem();
         d->scene()->addItem(grItem);

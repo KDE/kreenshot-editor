@@ -73,7 +73,7 @@ public:
     /**
      * for disabling creating of new items if mouse is over a selection handle
      */
-    void setSelectionHandles(SelectionHandlesMgrPtr selectionHandlesMgr);
+    void setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr);
 
     /**
      * When image is saved to file things like crop operation tool or selection rects
