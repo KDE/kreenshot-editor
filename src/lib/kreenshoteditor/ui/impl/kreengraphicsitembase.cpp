@@ -158,15 +158,6 @@ void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::Position
     }
 }
 
-bool KreenGraphicsItemBase::workaroundIsBlurredOnUnevenHandleWidth()
-{
-    if (_item->lineStyle() != nullptr && _item->lineStyle()->width % 2 == 1) { // uneven
-        return true; // special handling for uneven line widths needed
-        // there are probably more cases
-    }
-    return false;
-}
-
 void KreenGraphicsItemBase::configurePen(QAbstractGraphicsShapeItem* grItem)
 {
     // items that want to configure these properties will have them otherwise it is programming error (prototype pattern)

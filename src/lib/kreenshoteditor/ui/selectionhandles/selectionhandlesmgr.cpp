@@ -139,17 +139,6 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
 
     auto grItem = selHandleBase->selHandleBaseInstrumentedItem();
 
-    // WORKAROUND:
-    // handle width, TODO: why? even or uneven numbers: these or those items will have blurred rects
-    //                     the underlying item is also blurred
-    //                     WTF-->the black selection rects get also blurred
-
-    // TODO: bring back in later
-//     if (grItem->workaroundIsBlurredOnUnevenHandleWidth()) {
-//         qDebug() << "INFO: workaround used";
-//         hw--;
-//     }
-
     qreal hw2 = hw / 2.0;
 
     /**

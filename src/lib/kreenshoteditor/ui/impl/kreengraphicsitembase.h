@@ -101,10 +101,6 @@ public:
 
     virtual void selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) override;
 public:
-    /**
-     * WORKAROUND:
-     */
-    bool workaroundIsBlurredOnUnevenHandleWidth();
 
 protected:
     /**
