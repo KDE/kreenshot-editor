@@ -26,6 +26,7 @@
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 #include "selectionhandlegraphicsitem.h"
 #include "selectionhandlebase.h"
 
@@ -100,6 +101,24 @@ void SelectionHandlesMgr::setSceneAndView(QGraphicsScene* scene, QGraphicsView* 
 void SelectionHandlesMgr::registerItem(SelectionHandleBase* instrItem)
 {
     instrItem->setSelectionHandlesMgr(shared_from_this());
+}
+
+bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent* event)
+{
+    // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
+    // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
+    if (event->modifiers() == Qt::NoModifier) {
+        setHandlesVisible(false);
+    }
+
+    // if mouse is over a handle, no new item should be created on mouse press:
+    //
+    if (isAnyHandleUnderMouse()) {
+        qDebug() << "SelectionHandlesMgr::isAnyHandleUnderMouse()";
+        return true;
+    }
+
+    return false;
 }
 
 void SelectionHandlesMgr::onItemSelectedHasChanged(kreen::ui::SelectionHandleBase* instrItem)

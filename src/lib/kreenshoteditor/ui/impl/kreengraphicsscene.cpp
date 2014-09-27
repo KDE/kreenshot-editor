@@ -141,17 +141,7 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     qDebug() << "MyQGraphicsScene::mousePressEvent";
     Q_ASSERT(_toolManager != nullptr);
 
-    // todo: move this to the selection handles class itself?
-    // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
-    // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
-    if (event->modifiers() == Qt::NoModifier) {
-        _selectionHandlesMgr->setHandlesVisible(false);
-    }
-
-    // if mouse is over a handle, no new item should be created on mouse press:
-    //
-    if (_selectionHandlesMgr->isAnyHandleUnderMouse()) {
-        qDebug() << "_selectionHandles->isAnyHandleUnderMouse()";
+    if (_selectionHandlesMgr->onScene_mousePressEvent_Enter(event)) {
         QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
         return;
     }

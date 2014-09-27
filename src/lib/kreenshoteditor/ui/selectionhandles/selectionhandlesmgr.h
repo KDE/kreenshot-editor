@@ -27,6 +27,7 @@
 
 class QGraphicsScene;
 class QGraphicsView;
+class QGraphicsSceneMouseEvent;
 
 namespace kreen {
 namespace ui {
@@ -61,11 +62,21 @@ public:
     void registerItem(SelectionHandleBase* instrItem);
 
     /**
-     * True if the user begins to drag a handle.
-     * In this case other mouse down actions like "create a new item" must (can) be prohibited
-     * by the client code.
+     * Handles the handle visibility on mouse down depending on Ctrl modifier.
+     * Returns true if a handle is under the mouse.
+     *
+     * Usage example:
+     * void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+     *
+     *   if (_selectionHandlesMgr->onScene_mousePressEvent_Enter(event)) {
+     *     QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
+     *     return;
+     *   }
+     *   ...
+     * }
+     *
      */
-    bool isAnyHandleUnderMouse();
+    bool onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent* event);
 
     void setHandlesVisible(bool visible);
 
@@ -96,6 +107,14 @@ protected: // see friend classes
 
 protected:
     void setAllSelectedItemsMovable(bool isMoveable); // used by friend
+
+private:
+    /**
+     * True if the user begins to drag a handle.
+     * In this case other mouse down actions like "create a new item" must (can) be prohibited
+     * by the client code. See onScene_mousePressEvent_Enter
+     */
+    bool isAnyHandleUnderMouse();
 
 protected Q_SLOTS:
     // to show selection handles when doing a rubber band selection
