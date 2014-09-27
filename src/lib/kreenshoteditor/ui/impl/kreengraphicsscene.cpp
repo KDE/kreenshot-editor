@@ -114,9 +114,6 @@ void KreenGraphicsScene::restoreSavedKreenItemsSelection_1()
         }
     }
 
-    // to let the selection handles reappear after undo/redo
-    _selectionHandlesMgr->setHandlesVisible(true);
-
     //qDebug() << "   restored: " << count;
 }
 

@@ -84,8 +84,6 @@ public:
      */
     void onScene_mouseReleaseEvent_Enter();
 
-    void setHandlesVisible(bool visible);
-
 protected: // see friend classes
     void onItemSelectedHasChanged(SelectionHandleBase* instrItem);
 
@@ -102,12 +100,7 @@ protected: // see friend classes
     void createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles);
 
     /**
-     * WARN: isVisible is a cached value because we do not want to iterate over all handles all over again
-     */
-    bool allHandlesRenderVisible();
-
-    /**
-     * WARN: isVisible is a cached value
+     * sets the render visibility of all handles
      */
     void setAllHandlesRenderVisible(bool isVisible);
 
@@ -123,6 +116,10 @@ private:
     bool isAnyHandleUnderMouse();
 
 protected Q_SLOTS:
+    // to show selection handles in situaionts where selectiong was changed
+    // todo: remove because seems to be not needed
+    void slotSceneSelectionChanged();
+
     // to show selection handles when doing a rubber band selection
     void slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint);
 

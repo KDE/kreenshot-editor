@@ -39,6 +39,7 @@ public:
     QGraphicsScene* scene = nullptr;
     QGraphicsView* view = nullptr;
     bool allRenderVisible = true;
+    bool mouseIsDown = false;
 
 public:
     Impl(SelectionHandlesMgr* owner)
@@ -94,6 +95,10 @@ void SelectionHandlesMgr::setSceneAndView(QGraphicsScene* scene, QGraphicsView* 
 {
     d->scene = scene;
     d->view = view;
+
+    disconnect(d->scene, 0, this, 0);
+    connect(d->scene, SIGNAL(selectionChanged()), this, SLOT(slotSceneSelectionChanged()));
+
     disconnect(d->view, 0, this, 0); // qt doc "3. Disconnect a specific receiver"
     connect(view, SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)), this, SLOT(slotRubberBandChanged(QRect, QPointF, QPointF)));
 }
@@ -105,10 +110,12 @@ void SelectionHandlesMgr::registerItem(SelectionHandleBase* instrItem)
 
 bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent* event)
 {
+    d->mouseIsDown = true;
+
     // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
     // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
     if (event->modifiers() == Qt::NoModifier) {
-        setHandlesVisible(false);
+        setAllHandlesRenderVisible(false);
     }
 
     // if mouse is over a handle, no new item should be created on mouse press:
@@ -123,7 +130,9 @@ bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent
 
 void SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()
 {
-    setHandlesVisible(true);
+    d->mouseIsDown = false;
+    // qDebug() << "...............SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()";
+    setAllHandlesRenderVisible(true);
 }
 
 void SelectionHandlesMgr::onItemSelectedHasChanged(kreen::ui::SelectionHandleBase* instrItem)
@@ -162,6 +171,8 @@ void SelectionHandlesMgr::onItemPositionHasChanged(kreen::ui::SelectionHandleBas
 
 void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
 {
+    // qDebug() << "...........SelectionHandlesMgr::createOrUpdateHandles, createNewHandles = " << createNewHandles;
+
     d->assertInit();
 
     qreal hw = 8.0; // handleWidth;
@@ -232,13 +243,13 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
 
         foreach (auto posEnum, positions) {
             auto selHandleItem = new SelectionHandleGraphicsItem(this, posEnum, selHandleBase, posRectMap[posEnum]);
-            // create as "render invisible" to avoid showing the handle
-            // if the item is added to the selection before the mouse button is released
-            selHandleItem->setRenderVisible(false);
+            if (d->mouseIsDown) {
+                // create as "render invisible" to avoid showing the handle
+                // if the item is added to the selection before the mouse button is released
+                selHandleItem->setRenderVisible(false);
+            }
             handlesRef.push_back(selHandleItem);
         }
-
-        //setAllHandlesRenderVisible(true); // set all visible to true because isVisible is a cached value, see doc
     }
     else {
         std::vector<SelectionHandleGraphicsItem*> handles = selHandleBase->_selectionHandles;
@@ -265,13 +276,6 @@ bool SelectionHandlesMgr::isAnyHandleUnderMouse()
     return false;
 }
 
-void SelectionHandlesMgr::setHandlesVisible(bool visible)
-{
-    d->assertInit();
-
-    setAllHandlesRenderVisible(visible);
-}
-
 void SelectionHandlesMgr::setAllSelectedItemsMovable(bool isMoveable)
 {
     d->assertInit();
@@ -285,23 +289,20 @@ void SelectionHandlesMgr::setAllHandlesRenderVisible(bool isVisible)
 {
     d->assertInit();
 
-    qDebug() << "SelectionHandlesMgr::setAllHandlesRenderVisible:" << isVisible;
+    // qDebug() << "..SelectionHandlesMgr::setAllHandlesRenderVisible:" << isVisible;
 
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
         foreach (auto handleItem, selHandleItem->_selectionHandles) {
             handleItem->setRenderVisible(isVisible);
-            handleItem->update(); // otherwise only the current's item handles disappear or the handles do not disappear at all when moving items
         }
     }
 
     d->allRenderVisible = isVisible;
 }
 
-bool SelectionHandlesMgr::allHandlesRenderVisible()
+void SelectionHandlesMgr::slotSceneSelectionChanged()
 {
-    d->assertInit();
-
-    return d->allRenderVisible;
+    //setAllHandlesRenderVisible(true); // not needed
 }
 
 void SelectionHandlesMgr::slotRubberBandChanged(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)

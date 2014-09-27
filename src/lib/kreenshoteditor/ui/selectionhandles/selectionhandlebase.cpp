@@ -63,9 +63,7 @@ void SelectionHandleBase::itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsIte
     if (change == QGraphicsItem::ItemPositionHasChanged) {
         if (_selectionHandlesMgr) { // only if _selectionHandlesMgr is set (which is not, e.g., for creating items)
             _selectionHandlesMgr->onItemPositionHasChanged(this);
-            if (_selectionHandlesMgr->allHandlesRenderVisible()) {
-                _selectionHandlesMgr->setAllHandlesRenderVisible(false); // move an item => hide handles
-            }
+            _selectionHandlesMgr->setAllHandlesRenderVisible(false); // move an item => hide handles
         }
     }
     else if (change == QGraphicsItem::ItemSelectedHasChanged) {

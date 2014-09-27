@@ -183,7 +183,12 @@ void SelectionHandleGraphicsItem::paint(QPainter* painter, const QStyleOptionGra
 
 void SelectionHandleGraphicsItem::setRenderVisible(bool visible)
 {
-    d->renderVisible = visible;
+    if (d->renderVisible != visible) {
+        d->renderVisible = visible;
+        update(); // otherwise - when updating all handles -
+                  // only the current's item handles disappear
+                  // or the handles do not disappear at all when moving items
+    }
 }
 
 }
