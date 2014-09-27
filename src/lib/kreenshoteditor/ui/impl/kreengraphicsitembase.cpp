@@ -100,19 +100,23 @@ QGraphicsItem* KreenGraphicsItemBase::selHandleBaseInstrumentedItem()
     return graphicsItem();
 }
 
-void KreenGraphicsItemBase::selHandleBaseStartDrag()
+void KreenGraphicsItemBase::selHandleBase_startDrag()
 {
-    if (selHandleBaseType() == selhandles::HandleType_ResizeRect) {
+    if (selHandleBase_type() == selhandles::HandleType_ResizeRect) {
         _startRect = _item->rect();
     }
-    else {
+    else if (selHandleBase_type() == selhandles::HandleType_ResizeLine) {
         _startLine = _item->line();
+    }
+    else {
+        qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBaseStartDrag() not impl.";
+        Q_ASSERT(false);
     }
 }
 
-void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta)
+void KreenGraphicsItemBase::selHandleBase_positionHasChanged(selhandles::PositionEnum posEnum, QPointF delta)
 {
-    if (selHandleBaseType() == selhandles::HandleType_ResizeRect) {
+    if (selHandleBase_type() == selhandles::HandleType_ResizeRect) {
 
         qreal dx = delta.x();
         qreal dy = delta.y();
@@ -155,8 +159,12 @@ void KreenGraphicsItemBase::selHandleBasePositionHasChanged(selhandles::Position
         _item->setRect(newRect);
         updateVisualGeometryFromModel();
     }
-    else {
+    else if (selHandleBase_type() == selhandles::HandleType_ResizeLine) {
         qDebug() << "TODO"; // TODO
+    }
+    else {
+        qDebug() << "[ERROR] KreenGraphicsItemBase::selHandleBasePositionHasChanged() not impl.";
+        Q_ASSERT(false);
     }
 }
 
@@ -245,7 +253,7 @@ bool KreenGraphicsItemBase::mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* 
 
 void KreenGraphicsItemBase::itemChangeBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    itemChangeSelHandleBaseImpl(change, value);
+    selHandleBase_itemChangeImpl(change, value);
 }
 
 QStyleOptionGraphicsItem KreenGraphicsItemBase::copyWithStateSelectedDisabled(const QStyleOptionGraphicsItem* option)

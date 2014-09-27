@@ -46,7 +46,7 @@ public:
     KreenGraphicsRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
+        selHandleBase_setType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -101,7 +101,7 @@ public:
     KreenGraphicsEllipseItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
+        selHandleBase_setType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -156,7 +156,7 @@ public:
     KreenGraphicsLineItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeLine);
+        selHandleBase_setType(selhandles::HandleType_ResizeLine);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -210,7 +210,7 @@ public:
     KreenGraphicsTextRectItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
+        selHandleBase_setType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -278,7 +278,7 @@ public:
     KreenGraphicsObfuscateItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
+        selHandleBase_setType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override
@@ -352,7 +352,7 @@ public:
     KreenGraphicsOperationCropItem(KreenItemPtr item) : KreenGraphicsItemBase(this, item)
     {
         initAndConfigureFromModel();
-        setSelHandleBaseType(selhandles::HandleType_ResizeRect);
+        selHandleBase_setType(selhandles::HandleType_ResizeRect);
     }
 
     virtual void initAndConfigureFromModel() override

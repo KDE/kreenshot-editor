@@ -95,9 +95,9 @@ public:
 
     virtual QGraphicsItem* selHandleBaseInstrumentedItem() override;
 
-    virtual void selHandleBaseStartDrag() override;
+    virtual void selHandleBase_startDrag() override;
 
-    virtual void selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) override;
+    virtual void selHandleBase_positionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) override;
 public:
 
 protected:

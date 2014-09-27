@@ -169,17 +169,15 @@ void SelectionHandlesMgr::onItemPositionHasChanged(kreen::ui::SelectionHandleBas
     }
 }
 
-void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
+void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* instrItem, bool createNewHandles)
 {
     // qDebug() << "...........SelectionHandlesMgr::createOrUpdateHandles, createNewHandles = " << createNewHandles;
 
     d->assertInit();
 
     qreal hw = 8.0; // handleWidth;
-
-    auto grItem = selHandleBase->selHandleBaseInstrumentedItem();
-
-    qreal hw2 = hw / 2.0;
+    qreal hw2 = hw / 2.0; // handleWidth / 2
+    auto rect = QRectF(0, 0, hw, hw); // used below as base rect to be translated
 
     /**
     * 1   7   2  (for rects)
@@ -189,15 +187,15 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
     std::vector<selhandles::PositionEnum> positions; // positions that will be used; the ORDER is important when updating existing handles
     QMap<selhandles::PositionEnum, QRectF> posRectMap; // map posistion --> rect of the handle at this position
 
-    if (selHandleBase->selHandleBaseType() == selhandles::HandleType_ResizeRect) {
-        auto baseRect = grItem->sceneBoundingRect(); // TODO: how to do it with lines? Make extra class?
+    if (instrItem->selHandleBase_type() == selhandles::HandleType_ResizeRect) {
+        auto grItem = instrItem->selHandleBaseInstrumentedItem();
+        auto baseRect = grItem->sceneBoundingRect();
         qreal x = baseRect.x();
         qreal y = baseRect.y();
         qreal w = baseRect.width();
         qreal h = baseRect.height();
         qreal w2 = floor(w / 2.0);
         qreal h2 = floor(h / 2.0);
-        auto rect = QRectF(0, 0, hw, hw);
 
         positions.push_back(selhandles::Position1_TopLeft);
         positions.push_back(selhandles::Position2_TopRight);
@@ -217,20 +215,19 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
         posRectMap.insert(selhandles::Position7_Top, rect.translated(x + w2 - hw2, y - hw2));
         posRectMap.insert(selhandles::Position8_Bottom, rect.translated(x + w2 - hw2, y + h - hw2));
     }
-    else if (selHandleBase->selHandleBaseType() == selhandles::HandleType_ResizeLine) {
+    else if (instrItem->selHandleBase_type() == selhandles::HandleType_ResizeLine) {
         positions.push_back(selhandles::Position_LineStart);
         positions.push_back(selhandles::Position_LineEnd);
 
-        // TMP
-        auto baseRect = grItem->sceneBoundingRect();
-        qreal x = baseRect.x();
-        qreal y = baseRect.y();
-        qreal w = baseRect.width();
-        qreal h = baseRect.height();
-        auto rect = QRectF(0, 0, hw, hw);
+        auto baseLine = instrItem->selHandleBase_sceneLine();
 
-        posRectMap.insert(selhandles::Position_LineStart, rect.translated(x - hw2, y - hw2));
-        posRectMap.insert(selhandles::Position_LineEnd, rect.translated(x + w - hw2, y + h - hw2));
+        qreal x1 = baseLine.x1();
+        qreal y1 = baseLine.y1();
+        qreal x2 = baseLine.x2();
+        qreal y2 = baseLine.y2();
+
+        posRectMap.insert(selhandles::Position_LineStart, rect.translated(x1 - hw2, y1 - hw2));
+        posRectMap.insert(selhandles::Position_LineEnd, rect.translated(x2 - hw2, y2 - hw2));
     }
     else {
         qDebug() << "[ERROR] SelectionHandles::createOrUpdateHandles";
@@ -238,11 +235,11 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
     }
 
     if (createNewHandles) {
-        std::vector<SelectionHandleGraphicsItem*>& handlesRef = selHandleBase->_selectionHandles;
+        std::vector<SelectionHandleGraphicsItem*>& handlesRef = instrItem->_selectionHandles;
         handlesRef.clear();
 
         foreach (auto posEnum, positions) {
-            auto selHandleItem = new SelectionHandleGraphicsItem(this, posEnum, selHandleBase, posRectMap[posEnum]);
+            auto selHandleItem = new SelectionHandleGraphicsItem(this, posEnum, instrItem, posRectMap[posEnum]);
             if (d->mouseIsDown) {
                 // create as "render invisible" to avoid showing the handle
                 // if the item is added to the selection before the mouse button is released
@@ -252,7 +249,7 @@ void SelectionHandlesMgr::createOrUpdateHandles(SelectionHandleBase* selHandleBa
         }
     }
     else {
-        std::vector<SelectionHandleGraphicsItem*> handles = selHandleBase->_selectionHandles;
+        std::vector<SelectionHandleGraphicsItem*> handles = instrItem->_selectionHandles;
 
         int i = 0; // todo later: make independent from i
         foreach (auto posEnum, positions) {

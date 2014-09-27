@@ -19,6 +19,7 @@
 #include "selectionhandlebase.h"
 #include "selectionhandlesmgr.h"
 #include "selectionhandlegraphicsitem.h"
+#include <QDebug>
 
 namespace kreen {
 namespace ui {
@@ -47,17 +48,17 @@ void SelectionHandleBase::setSelectionHandlesMgr(kreen::ui::SelectionHandlesMgrP
     _selectionHandlesMgr = selectionHandlesMgr;
 }
 
-void SelectionHandleBase::setSelHandleBaseType(selhandles::HandleTypeEnum handlesType)
+void SelectionHandleBase::selHandleBase_setType(selhandles::HandleTypeEnum handlesType)
 {
     d->handlesType = handlesType;
 }
 
-selhandles::HandleTypeEnum SelectionHandleBase::selHandleBaseType()
+selhandles::HandleTypeEnum SelectionHandleBase::selHandleBase_type()
 {
     return d->handlesType;
 }
 
-void SelectionHandleBase::itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+void SelectionHandleBase::selHandleBase_itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     // qDebug() << "itemChangeImpl: " << change;
     if (change == QGraphicsItem::ItemPositionHasChanged) {
@@ -78,14 +79,25 @@ void SelectionHandleBase::itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsIte
     }
 }
 
+QLineF SelectionHandleBase::selHandleBase_sceneLine()
+{
+    auto grLineItem = dynamic_cast<QGraphicsLineItem*>(this);
+    if (grLineItem) {
+        return grLineItem->line();
+    }
+
+    qDebug() << "SelectionHandleBase::selHandleBase_sceneLine() IMPL ERROR";
+    Q_ASSERT(false);
+}
+
 void SelectionHandleBase::handleStartDrag()
 {
-    selHandleBaseStartDrag();
+    selHandleBase_startDrag();
 }
 
 void SelectionHandleBase::handlePositionHasChanged(QPointF delta)
 {
-    selHandleBasePositionHasChanged(_activeHandle->posEnum(), delta);
+    selHandleBase_positionHasChanged(_activeHandle->posEnum(), delta);
     _selectionHandlesMgr->createOrUpdateHandles(this, false);
 }
 

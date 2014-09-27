@@ -52,17 +52,23 @@ public:
 
     virtual ~SelectionHandleBase();
 
-    void setSelHandleBaseType(selhandles::HandleTypeEnum handlesType);
+    void selHandleBase_setType(selhandles::HandleTypeEnum handlesType);
 
-    selhandles::HandleTypeEnum selHandleBaseType();
+    selhandles::HandleTypeEnum selHandleBase_type();
 
-    void itemChangeSelHandleBaseImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+    void selHandleBase_itemChangeImpl(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
 
 public:
-    virtual void selHandleBaseStartDrag() = 0;
-    virtual void selHandleBasePositionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) = 0;
+    virtual void selHandleBase_startDrag() = 0;
+    virtual void selHandleBase_positionHasChanged(selhandles::PositionEnum posEnum, QPointF delta) = 0;
+    /**
+     * return the line of the line based graphics item,
+     * e.g. for QGraphicsLineItem it is line().
+     * For QGraphicsLineItem there is a default implementation provided
+     */
+    virtual QLineF selHandleBase_sceneLine();
 
-protected:
+private: // see friend classes
     void handleStartDrag();
     void handlePositionHasChanged(QPointF delta);
 
@@ -71,10 +77,9 @@ protected:
      */
     void setSelectionHandlesMgr(SelectionHandlesMgrPtr selectionHandlesMgr);
 
-protected:
     virtual QGraphicsItem* selHandleBaseInstrumentedItem() = 0;
 
-protected:
+protected: // see friend classes
     SelectionHandlesMgrPtr _selectionHandlesMgr;
 
     /**
@@ -86,6 +91,7 @@ protected:
     SelectionHandleGraphicsItem* _activeHandle = nullptr;
 
 //private: // todo later: type is fixed right now
+    // model start for delta calc, assuming the model has int (not float) type:
     QRect _startRect; // for rect-base items
     QLine _startLine; // for line-base items
 
