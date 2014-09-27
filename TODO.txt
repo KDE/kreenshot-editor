@@ -5,6 +5,7 @@ TODO
     - see // todo: move this to the selection handles class itself?
     - see workaroundIsBlurredOnUnevenHandleWidth: can be removed!!!
     - TODO: rename to SelectionHandlesMgr
+    - kGrItem->setSelectionHandlesMgr(selectionHandles); // todo: swap this by creating a register method
     - do handles for line
 - more of "myOption.state &= !QStyle::State_Selected;"
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/

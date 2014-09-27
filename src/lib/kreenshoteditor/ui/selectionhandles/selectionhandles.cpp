@@ -35,8 +35,8 @@ namespace ui {
 class SelectionHandles::Impl
 {
 public:
-    QGraphicsScene* scene;
-    QGraphicsView* view;
+    QGraphicsScene* scene = nullptr;
+    QGraphicsView* view = nullptr;
     bool allRenderVisible = true;
 
 public:
@@ -68,27 +68,39 @@ public:
         return result;
     }
 
+    void assertInit()
+    {
+        if (scene == nullptr || view == nullptr) {
+            qDebug() << "setSceneAndView";
+            Q_ASSERT(false);
+        }
+    }
+
 private:
     SelectionHandles* _owner = nullptr;
 };
 
 
-SelectionHandles::SelectionHandles(QGraphicsScene* scene, QGraphicsView* view) {
-    qDebug() << "SelectionHandles::ctor";
+SelectionHandles::SelectionHandles() {
     KREEN_PIMPL_INIT_THIS(SelectionHandles);
+}
+
+void SelectionHandles::setSceneAndView(QGraphicsScene* scene, QGraphicsView* view)
+{
     d->scene = scene;
     d->view = view;
-
+    disconnect(d->view, 0, this, 0); // qt doc "3. Disconnect a specific receiver"
     connect(view, SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)), this, SLOT(slotRubberBandChanged(QRect, QPointF, QPointF)));
 }
 
 SelectionHandles::~SelectionHandles()
 {
-    qDebug() << "SelectionHandles destructor";
 }
 
 void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBase)
 {
+    d->assertInit();
+
     if (selHandleBase->selHandleBaseInstrumentedItem()->isSelected()) {
         createOrUpdateHandles(selHandleBase, true);
 
@@ -103,6 +115,8 @@ void SelectionHandles::onItemSelectedHasChanged(SelectionHandleBase* selHandleBa
 
 void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
 {
+    d->assertInit();
+
     if (!selHandleBase->selHandleBaseInstrumentedItem()->scene()) { // check whether item is part of a scene or not
         d->clearHandlesFromScene(selHandleBase); // remove handles if instrumentedItem was removed from scene
     }
@@ -110,6 +124,8 @@ void SelectionHandles::onItemSceneHasChanged(SelectionHandleBase* selHandleBase)
 
 void SelectionHandles::onItemPositionHasChanged(SelectionHandleBase* selHandleBase)
 {
+    d->assertInit();
+
     if (selHandleBase->_selectionHandles.size() > 0) { // update if handles are present
         createOrUpdateHandles(selHandleBase, false);
     }
@@ -117,6 +133,8 @@ void SelectionHandles::onItemPositionHasChanged(SelectionHandleBase* selHandleBa
 
 void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase, bool createNewHandles)
 {
+    d->assertInit();
+
     qreal hw = 8.0; // handleWidth;
 
     auto grItem = selHandleBase->selHandleBaseInstrumentedItem();
@@ -216,6 +234,8 @@ void SelectionHandles::createOrUpdateHandles(SelectionHandleBase* selHandleBase,
 
 bool SelectionHandles::isAnyHandleUnderMouse()
 {
+    d->assertInit();
+
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
         foreach (auto handleItem, selHandleItem->_selectionHandles) {
             if (handleItem->isUnderMouse()) {
@@ -229,11 +249,15 @@ bool SelectionHandles::isAnyHandleUnderMouse()
 
 void SelectionHandles::setHandlesVisible(bool visible)
 {
+    d->assertInit();
+
     setAllHandlesRenderVisible(visible);
 }
 
 void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 {
+    d->assertInit();
+
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
         selHandleItem->selHandleBaseInstrumentedItem()->setFlag(QGraphicsItem::ItemIsMovable, isMoveable);
     }
@@ -241,6 +265,8 @@ void SelectionHandles::setAllSelectedItemsMovable(bool isMoveable)
 
 void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
 {
+    d->assertInit();
+
     qDebug() << "SelectionHandles::setAllHandlesRenderVisible:" << isVisible;
 
     foreach (auto selHandleItem, d->selectedSelHandleItems()) {
@@ -255,6 +281,8 @@ void SelectionHandles::setAllHandlesRenderVisible(bool isVisible)
 
 bool SelectionHandles::allHandlesRenderVisible()
 {
+    d->assertInit();
+
     return d->allRenderVisible;
 }
 

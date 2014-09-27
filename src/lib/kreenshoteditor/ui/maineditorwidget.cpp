@@ -91,6 +91,7 @@ public:
     Impl(MainEditorWidget* owner)
     {
         _owner = owner;
+        selectionHandles = std::make_shared<SelectionHandles>();
     }
 
     void init(KreenshotEditorPtr kreenshotEditor_)
@@ -179,7 +180,7 @@ public:
         foreach (KreenItemPtr item, kreenshotEditor()->document()->items()) {
 
             auto kGrItem = toolManager()->createGraphicsItemFromKreenItem(item);
-            kGrItem->setSelectionHandlesMgr(selectionHandles);
+            kGrItem->setSelectionHandlesMgr(selectionHandles); // todo: swap this by creating a register method
             scene()->addItem(kGrItem->graphicsItem());
         }
 
@@ -378,7 +379,7 @@ void MainEditorWidget::slotDocumentCreated()
 {
     qDebug() << "MainEditorWidget::slotDocumentCreated()";
 
-    d->selectionHandles = std::make_shared<SelectionHandles>(d->scene().get(), d->graphicsView.get());
+    d->selectionHandles->setSceneAndView(d->scene().get(), d->graphicsView.get());
 
     auto kreenGrScene = d->scene();
     kreenGrScene->setToolManager(d->toolManager());

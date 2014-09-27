@@ -46,9 +46,14 @@ class SelectionHandles : public QObject
     friend SelectionHandleBase;
 
 public:
-    SelectionHandles(QGraphicsScene* scene, QGraphicsView* view);
+    SelectionHandles();
 
     virtual ~SelectionHandles();
+
+    /**
+     * todo later: only one of the two parameters should be enough
+     */
+    void setSceneAndView(QGraphicsScene* scene, QGraphicsView* view);
 
     /**
      * True if the user begins to drag a handle.
