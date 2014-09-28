@@ -29,13 +29,21 @@ public:
     /**
      * see id()
      */
-    int _id = -1;
+    int id = -1;
 
     int zValue = -1;
 
-    QRect _rect;
-    QLine _line;
+    QRect rect;
+    QLine line;
 
+    /**
+     * Holds all properties which are applicable to the item
+     * of given type (see typeId).
+     * E.g., for a line item the text property is not applicable and
+     * therefore not part of the vector. This is useful for
+     * editing an item: the editor knows for which properties an editor
+     * should be shown
+     */
     std::vector<ItemPropertyPtr> _properties;
 };
 
@@ -69,25 +77,25 @@ KreenItemPtr KreenItem::deepCopy()
 bool KreenItem::deepEquals(kreen::core::KreenItemPtr other)
 {
     // TODO: not complete yet
-    
-    return d->_id == other->d->_id
+
+    return d->id == other->d->id
            && d->zValue == other->d->zValue
            && typeId == other->typeId
-           && d->_rect == other->d->_rect
-           && d->_line == other->d->_line
+           && d->rect == other->d->rect
+           && d->line == other->d->line
            && d->_properties == other->d->_properties
            ;
 }
 
 int KreenItem::id()
 {
-    return d->_id;
+    return d->id;
 }
 
 int KreenItem::setId(int id)
 {
-    int oldId = d->_id;
-    d->_id = id;
+    int oldId = d->id;
+    d->id = id;
     return oldId;
 }
 
@@ -176,35 +184,35 @@ KreenItemPtr KreenItem::create(QString typeId)
 
 void KreenItem::setRect(QRect rect)
 {
-    d->_rect = rect;
+    d->rect = rect;
 }
 
 QRect KreenItem::rect()
 {
-    if (d->_line.isNull())
-        return d->_rect;
+    if (d->line.isNull())
+        return d->rect;
     else
-        return QRect(d->_line.p1(), d->_line.p2());
+        return QRect(d->line.p1(), d->line.p2());
 }
 
 void KreenItem::setLine(QLine line)
 {
     qDebug() << "KreenItem::setLine: " << line;
-    d->_line = line;
+    d->line = line;
 }
 
 QLine KreenItem::line()
 {
-    return d->_line;
+    return d->line;
 }
 
 void KreenItem::translate(int dx, int dy)
 {
-    if (d->_line.isNull()) {
-        d->_rect.translate(dx, dy);
+    if (d->line.isNull()) {
+        d->rect.translate(dx, dy);
     }
     else {
-        d->_line.translate(dx, dy);
+        d->line.translate(dx, dy);
     }
 }
 
