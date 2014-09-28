@@ -124,7 +124,8 @@ public:
      * greater than 0 if during a contentChangedNotificationGroup
      */
     int contentChangedNotificationGroupDepth = 0;
-    bool contentChangedNotificationGroupRecordUndo = false;
+    // no default value because value is only valid if contentChangedNotificationGroupDepth > 0
+    bool contentChangedNotificationGroupRecordUndo;
 
     /**
      * see renderToImage()
@@ -216,6 +217,10 @@ bool Document::canRedo()
 
 void Document::contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText)
 {
+    if (d->contentChangedNotificationGroupDepth > 0) { // 2nd or xth call
+        Q_ASSERT(d->contentChangedNotificationGroupRecordUndo == recordUndo);
+    }
+
     d->contentChangedNotificationGroupDepth++;
     d->contentChangedNotificationGroupRecordUndo = recordUndo;
 
@@ -231,10 +236,11 @@ void Document::contentChangedNotificationGroupEnd()
 
     if (d->contentChangedNotificationGroupRecordUndo) {
         d->undoStack.endMacro();
-        d->contentChangedNotificationGroupRecordUndo = false;
     }
 
-    emit contentChangedSignal();
+    if (d->contentChangedNotificationGroupDepth == 0) {
+        emit contentChangedSignal();
+    }
 }
 
 // int Document::contentHashTransient()
@@ -306,7 +312,7 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
  *   lowerToBottom b: b.stackBefore(item_at(min))
  *   raiseToTop b:    b.stackBefore(item_at(max)); item_at(max).stackBefore(b)
  */
-void Document::itemStackLowerStep(KreenItemPtr item_in, bool recordUndo)
+void Document::itemStackLowerStep(KreenItemPtr item_in)
 {
     Q_ASSERT(d->itemMap.contains(item_in->id()));
 

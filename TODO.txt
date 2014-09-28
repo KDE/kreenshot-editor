@@ -6,11 +6,16 @@ TODO
 - enable more item properties (see item.h/cpp)
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking
+    - remove from toolbar
+    - obfuscate should be always at bottom
+    - todo: later: when multiple items are selected and lowered, the lowering never stops because items get swaped
+    - Factor out Editing actions into separate class?
+    // TODO: are all selected items raisable? Move all this to new class EditingMgr
+    // TODO: are all selected items lowerable?
+    - icons
 - add context menu to select tools
-    - plus z order stuff
-        - obfuscate should be always behind
 - add handles for rect resizing and line repositioning (as extra class)
-    - Ctrl for propertional
+    - Ctrl for proportional
 - draw arrow (use QPainterPath from TikzKit)
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 - move crop tool: should respect image boundaries!!!

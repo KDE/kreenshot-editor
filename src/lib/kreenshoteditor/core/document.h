@@ -82,6 +82,7 @@ public:
      * Use it to suppress emitting of contentChangedSignal during
      * a composite operation.
      * The contentChangedSignal will not be called until contentChangedNotificationGroupEnd() is called.
+     * For nested calls recordUndo must be the same.
      */
     void contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText = QString());
 
@@ -123,7 +124,7 @@ public:
      * Lowers the item in the stack one step.
      * Invocation is ignored when item is already lowest.
      */
-    void itemStackLowerStep(KreenItemPtr item, bool recordUndo = true);
+    void itemStackLowerStep(KreenItemPtr item);
 
     /**
      * returns true if the given item's properties have changed compared

@@ -667,7 +667,7 @@ void MainEditorWidget::slotHandleNewItem(KreenItemPtr item)
 
 void MainEditorWidget::slotSceneSelectionChanged()
 {
-    qDebug() << "sceneSelectionChanged(), count=" << d->scene()->selectedItems().count();
+    // qDebug() << "sceneSelectionChanged(), count=" << d->scene()->selectedItems().count();
 
     // TODO
     //qDebug() << "[DEBUG] d->graphicsView->unsetCursor() (does not work yet). See comment in code.";
@@ -678,11 +678,12 @@ void MainEditorWidget::slotSceneSelectionChanged()
 
 void MainEditorWidget::deleteSelectedItems()
 {
-    QList<KreenItemPtr> toBeDeleted = d->scene()->selectedKreenItems();
+    QList<KreenItemPtr> selectedItems = d->scene()->selectedKreenItems();
 
     d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
-        true, QString("Delete %1 item(s)").arg(toBeDeleted.length()));
-    foreach (auto item, toBeDeleted) {
+        true, QString("Delete %1 item(s)").arg(selectedItems.length()));
+
+    foreach (auto item, selectedItems) {
         if (!item->isImageOperation()) { // not the image operation
             d->kreenshotEditor()->document()->deleteItem(item);
         }
@@ -710,11 +711,17 @@ int MainEditorWidget::selectedItemsCount()
 void MainEditorWidget::lowerStepSelectedItems()
 {
     auto selectedItems = d->scene()->selectedKreenItems();
+
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupBegin(
+        true, QString("Lower %1 item(s) one step").arg(selectedItems.length()));
+
     foreach (auto item, selectedItems) {
         if (!item->isImageOperation()) { // not the image operation
             d->kreenshotEditor()->document()->itemStackLowerStep(item);
         }
     }
+
+    d->kreenshotEditor()->document()->contentChangedNotificationGroupEnd();
 }
 
 void MainEditorWidget::raiseStepSelectedItems()
