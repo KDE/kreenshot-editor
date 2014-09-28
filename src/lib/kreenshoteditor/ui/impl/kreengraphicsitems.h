@@ -221,7 +221,7 @@ public:
         configurePen(this);
         // TODO: configure font etc
 
-        auto textGrItem = new QGraphicsTextItem(_item->text->text, this); // create to parent
+        auto textGrItem = new QGraphicsTextItem(_item->text()->text, this); // create to parent
         textGrItem->setPos(5, 5);
 
         // later

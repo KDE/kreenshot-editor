@@ -34,6 +34,7 @@ KREEN_SHAREDPTR_FORWARD_DECL(ItemProperty)
 KREEN_SHAREDPTR_FORWARD_DECL(LineColorProperty)
 KREEN_SHAREDPTR_FORWARD_DECL(LineStyleProperty)
 KREEN_SHAREDPTR_FORWARD_DECL(DropShadowProperty)
+KREEN_SHAREDPTR_FORWARD_DECL(TextProperty)
 
 class RectStyleProperty;
 class FillProperty;
@@ -67,6 +68,8 @@ public:
      */
     KreenItem(QString typeId);
 
+    KreenItem(const KreenItem& other);
+
     virtual ~KreenItem();
 
     /**
@@ -75,7 +78,8 @@ public:
     KreenItemPtr deepCopy();
 
     /**
-     * todo: not complete yet
+     * compares two items, used for undo/redo
+     * TODO: not complete yet
      */
     bool deepEquals(KreenItemPtr other);
 
@@ -88,6 +92,16 @@ public:
      * To be used only internally by the Document. Returns the old id.
      */
     int setId(int id);
+
+    /**
+     * For stacking order. Should be invoked by the document only
+     */
+    int zValue();
+
+    /**
+     * For stacking order. Should be invoked by the document only
+     */
+    void setZValue(int z);
 
     /**
      * typeId.startsWith("op-")
@@ -129,43 +143,24 @@ public:
 public:
     QString typeId;
 
+    //
     // not everything applies for every itemType
     // what is not possible is null
+    //
 
     LineColorPropertyPtr lineColor();
     LineStylePropertyPtr lineStyle(); // dotted, dashed, solid, width
     DropShadowPropertyPtr dropShadow(); // color, blur, offset
-    RectStyleProperty* rectStyle; // rounded or not (applies also to the text rect if not null)
-    FillProperty* fillColor; // fill color, percent opacity
-    std::shared_ptr<TextProperty> text; // text string, autowrap, font, size, color, (for border see lineColor), valign, halign
-    ObfuscateProperty* obfuscateStyle; // pixelize size, blur radius
-    ArrowProperty* arrowFront; // size of arrow (or start just with mere existence, size controlled by lineStyle)
-    ArrowProperty* arrowBack;
-    ImageProperty* image; // image data (e. g. the cursor)
+    ////RectStyleProperty* rectStyle; // rounded or not (applies also to the text rect if not null)
+    ////FillProperty* fillColor; // fill color, percent opacity
+    TextPropertyPtr text(); // text string, autowrap, font, size, color, (for border see lineColor), valign, halign
+    ////ObfuscateProperty* obfuscateStyle; // pixelize size, blur radius
+    ////ArrowProperty* arrowFront; // size of arrow (or start just with mere existence, size controlled by lineStyle)
+    ////ArrowProperty* arrowBack;
+    ////ImageProperty* image; // image data (e. g. the cursor)
 
 private:
-
-private:
-    /**
-     * see id()
-     */
-    int _id = -1;
-
-    QRect _rect;
-    QLine _line;
-
-    std::vector<ItemPropertyPtr> _properties;
-};
-
-class TextProperty
-{
-public:
-    static std::shared_ptr<TextProperty> create() {
-        return std::make_shared<TextProperty>();
-    }
-
-public:
-    QString text;
+    KREEN_PIMPL_DEFINE_D_PTR
 };
 
 class ItemProperty
@@ -201,6 +196,14 @@ public:
     DropShadowProperty() : ItemProperty("dropShadow") { }
 public:
     bool enabled;
+};
+
+class TextProperty : public ItemProperty
+{
+public:
+    TextProperty() : ItemProperty("text") { }
+public:
+    QString text;
 };
 
 }

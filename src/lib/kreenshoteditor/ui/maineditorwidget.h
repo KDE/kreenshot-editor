@@ -44,11 +44,16 @@ public:
     MainEditorWidget(KreenshotEditorPtr kreenshotEditor);
     virtual ~MainEditorWidget();
 
-    /**
-     */
+    void selectAllItems();
+
     void deleteSelectedItems();
 
-    void selectAllItems();
+    // TODO: are all selected items raisable? Move all this to new class EditingMgr
+    // TODO: are all selected items lowerable?
+
+    void lowerStepSelectedItems();
+
+    void raiseStepSelectedItems();
 
     /**
      * tmp

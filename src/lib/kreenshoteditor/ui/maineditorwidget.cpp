@@ -707,5 +707,20 @@ int MainEditorWidget::selectedItemsCount()
     return d->scene()->selectedItems().size();
 }
 
+void MainEditorWidget::lowerStepSelectedItems()
+{
+    auto selectedItems = d->scene()->selectedKreenItems();
+    foreach (auto item, selectedItems) {
+        if (!item->isImageOperation()) { // not the image operation
+            d->kreenshotEditor()->document()->itemStackLowerStep(item);
+        }
+    }
+}
+
+void MainEditorWidget::raiseStepSelectedItems()
+{
+    // TODO
+}
+
 }
 }

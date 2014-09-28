@@ -86,8 +86,26 @@ public:
         }
     }
 
+    int maxZValue() {
+        if (_owner->items().empty()) {
+            return -1;
+        }
+
+        return _owner->items().last()->zValue();
+    }
+
 public:
+    /**
+     * base/background image that also defines the dimensions of the editing area
+     */
     QImage baseImage;
+
+    /**
+     * All items of the document.
+     * map item id --> Item
+     * With QMap, the items are always sorted by key.
+     * The z-order is determined by an attribute of KreenItem
+     */
     QMap<int, KreenItemPtr> itemMap;
 
     /**
@@ -96,7 +114,7 @@ public:
     int idGenerator = 0;
 
     /**
-     * holds the latest copy of the items of itemMap
+     * holds the latest copy of the items of itemMap, sorted by z-order
      */
     QList<KreenItemPtr> itemsCache;
     bool itemsCacheDirty = true;
@@ -244,7 +262,7 @@ void Document::addItem(KreenItemPtr item, bool recordUndo)
         if (item->id() == -1) { // only create new id if not in recordUndo mode
             int newId = ++(d->idGenerator);
             item->setId(newId); // caller will see the given id
-
+            item->setZValue(d->maxZValue() + 1);
         }
         d->itemMap.insert(item->id(), item->deepCopy()); // store (add or replace) item including id in the map
         d->itemsCacheDirty = true;
@@ -270,6 +288,46 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
         Q_ASSERT(d->itemMap.remove(item->id()) == 1);
         d->itemsCacheDirty = true;
         d->contentChangedNotificationGroupMethodLeave();
+    }
+}
+
+/*
+ * example: a (lowest)   b   c   d (top-most)
+ *
+ * with stackBefore (not used):
+ *   lower b:         b.stackBefore(item_at(index(b)-1))
+ *   raise b:         item_at(index(b)+1).stackBefore(b)
+ *   lowerToBottom b: b.stackBefore(item_at(min))
+ *   raiseToTop b:    b.stackBefore(item_at(max)); item_at(max).stackBefore(b)
+ *
+ * with z value:
+ *   lower b:         swap z value (a, b)
+ *   raise b:         item_at(index(b)+1).stackBefore(b)
+ *   lowerToBottom b: b.stackBefore(item_at(min))
+ *   raiseToTop b:    b.stackBefore(item_at(max)); item_at(max).stackBefore(b)
+ */
+void Document::itemStackLowerStep(KreenItemPtr item_in, bool recordUndo)
+{
+    Q_ASSERT(d->itemMap.contains(item_in->id()));
+
+    KreenItemPtr prev_item = nullptr;
+
+    foreach (auto item, items()) { // ordered by z
+        if (item->id() == item_in->id()) {
+            if (prev_item == nullptr) {
+                break;
+            }
+            else {
+                contentChangedNotificationGroupBegin(true, "itemStackLower");
+                item->setZValue(item->zValue() - 1);
+                prev_item->setZValue(prev_item->zValue() + 1);
+                applyItemPropertyChanges(item);
+                applyItemPropertyChanges(prev_item);
+                contentChangedNotificationGroupEnd();
+                break;
+            }
+        }
+        prev_item = item;
     }
 }
 
@@ -350,8 +408,7 @@ void Document::addDemoItems()
         auto item = KreenItem::create("text");
         item->setRect(QRect(10, 120, 200, 40));
         item->lineColor()->color = Qt::gray;
-        item->text = TextProperty::create();
-        item->text->text = "Hello from the document";
+        item->text()->text = "Hello from the document";
         addItem(item);
     }
 
@@ -359,8 +416,7 @@ void Document::addDemoItems()
         auto item = KreenItem::create("text");
         item->setRect(QRect(10, 420, 150, 40));
         item->lineColor()->color = Qt::magenta;
-        item->text = TextProperty::create();
-        item->text->text = "TODO: apply attributes; fill shape; multiline; edit text";
+        item->text()->text = "TODO: apply attributes; fill shape; multiline; edit text";
         addItem(item);
     }
 
@@ -397,7 +453,11 @@ const QList<KreenItemPtr> Document::items()
     if (d->itemsCacheDirty) {
         d->itemsCache.clear();
 
-        foreach(auto item, d->itemMap.values()) {
+        auto items = d->itemMap.values();
+        // sort by z value
+        std::sort(items.begin(), items.end(),
+                    [](KreenItemPtr a, KreenItemPtr b) { return a->zValue() < b->zValue(); });
+        foreach(auto item, items) {
             d->itemsCache.append(item->deepCopy()); // deep copy!
         }
 

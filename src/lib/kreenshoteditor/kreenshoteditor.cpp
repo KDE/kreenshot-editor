@@ -223,6 +223,10 @@ public:
     QAction* actionDocumentOpenWithDefaultImageViewer;
     // edit actions:
     QAction* actionEditSelectAll;
+    QAction* actionEditLowerStep;
+    QAction* actionEditRaiseStep;
+    QAction* actionEditLowerBottom;
+    QAction* actionEditRaiseTop;
     QAction* actionEditItemDelete;
     QAction* actionEditUndo;
     QAction* actionEditRedo;
@@ -413,6 +417,14 @@ QStringList KreenshotEditor::allActionIds()
         //
         d->actionEditSelectAll = d->newAction("edit-objects-select-all", QIcon::fromTheme("edit-select-all"), tr("Select All"), this, QKeySequence(tr("Ctrl+A")));
         connect(d->actionEditSelectAll, SIGNAL(triggered()), this, SLOT(slotEditSelectAll()));
+
+        // item stacking order (Home: raise to top, End: raise to bottom, PageUp: raise, PageDown: lower
+        //
+        d->actionEditLowerStep = d->newAction("edit-objects-lower-step", QIcon::fromTheme("todo"), tr("Lower"), this, QKeySequence(tr("PgDown")));
+        connect(d->actionEditLowerStep, SIGNAL(triggered()), this, SLOT(slotEditLowerStep()));
+
+        d->actionEditRaiseStep = d->newAction("edit-objects-raise-step", QIcon::fromTheme("todo"), tr("Raise"), this, QKeySequence(tr("PgUp")));
+        connect(d->actionEditRaiseStep, SIGNAL(triggered()), this, SLOT(slotEditRaiseStep()));
 
         d->actionEditItemDelete = d->newAction("edit-objects-delete", QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
         d->actionEditItemDelete->setEnabled(false);
@@ -626,6 +638,16 @@ void KreenshotEditor::slotEditDeleteSelectedItemsActionEnabledUpdate()
 void KreenshotEditor::slotEditSelectAll()
 {
     mainEditorWidget()->selectAllItems();
+}
+
+void KreenshotEditor::slotEditLowerStep()
+{
+    mainEditorWidget()->lowerStepSelectedItems();
+}
+
+void KreenshotEditor::slotEditRaiseStep()
+{
+    mainEditorWidget()->raiseStepSelectedItems();
 }
 
 }

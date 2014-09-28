@@ -23,6 +23,22 @@
 namespace kreen {
 namespace core {
 
+class KreenItem::Impl
+{
+public:
+    /**
+     * see id()
+     */
+    int _id = -1;
+
+    int zValue = -1;
+
+    QRect _rect;
+    QLine _line;
+
+    std::vector<ItemPropertyPtr> _properties;
+};
+
 KreenItemPtr KreenItem::make_shared(QString typeId)
 {
     return std::make_shared<KreenItem>(typeId);
@@ -30,7 +46,13 @@ KreenItemPtr KreenItem::make_shared(QString typeId)
 
 KreenItem::KreenItem(QString typeId)
 {
+    KREEN_PIMPL_INIT(KreenItem)
     this->typeId = typeId;
+}
+
+KreenItem::KreenItem(const KreenItem& other) : KreenItem(other.typeId)
+{
+    d = std::make_shared<KreenItem::Impl>(*other.d); // make copy of d ptr
 }
 
 KreenItem::~KreenItem()
@@ -48,24 +70,35 @@ bool KreenItem::deepEquals(kreen::core::KreenItemPtr other)
 {
     // TODO: not complete yet
     
-    return _id == other->_id
+    return d->_id == other->d->_id
+           && d->zValue == other->d->zValue
            && typeId == other->typeId
-           && _rect == other->_rect
-           && _line == other->_line
-           && _properties == other->_properties
+           && d->_rect == other->d->_rect
+           && d->_line == other->d->_line
+           && d->_properties == other->d->_properties
            ;
 }
 
 int KreenItem::id()
 {
-    return _id;
+    return d->_id;
 }
 
 int KreenItem::setId(int id)
 {
-    int oldId = _id;
-    _id = id;
+    int oldId = d->_id;
+    d->_id = id;
     return oldId;
+}
+
+int KreenItem::zValue()
+{
+    return d->zValue;
+}
+
+void KreenItem::setZValue(int z)
+{
+    d->zValue = z;
 }
 
 bool KreenItem::isImageOperation()
@@ -78,9 +111,9 @@ KreenItemPtr KreenItem::create(QString typeId)
     auto item = KreenItem::make_shared(typeId);
 
     if (typeId == "rect") {
-        item->_properties.push_back(std::make_shared<LineColorProperty>());
-        item->_properties.push_back(std::make_shared<LineStyleProperty>());
-        item->_properties.push_back(std::make_shared<DropShadowProperty>());
+        item->d->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->d->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->d->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::red;
         item->lineStyle()->width = 2;
@@ -88,9 +121,9 @@ KreenItemPtr KreenItem::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "ellipse") {
-        item->_properties.push_back(std::make_shared<LineColorProperty>());
-        item->_properties.push_back(std::make_shared<LineStyleProperty>());
-        item->_properties.push_back(std::make_shared<DropShadowProperty>());
+        item->d->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->d->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->d->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::black;
         item->lineStyle()->width = 2;
@@ -98,9 +131,9 @@ KreenItemPtr KreenItem::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "line") {
-        item->_properties.push_back(std::make_shared<LineColorProperty>());
-        item->_properties.push_back(std::make_shared<LineStyleProperty>());
-        item->_properties.push_back(std::make_shared<DropShadowProperty>());
+        item->d->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->d->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->d->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::green;
         item->lineStyle()->width = 2;
@@ -108,10 +141,11 @@ KreenItemPtr KreenItem::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "text") {
-        item->_properties.push_back(std::make_shared<LineColorProperty>());
-        item->_properties.push_back(std::make_shared<LineStyleProperty>());
-        item->_properties.push_back(std::make_shared<DropShadowProperty>());
-        // TODO: fillColor, text
+        item->d->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->d->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->d->_properties.push_back(std::make_shared<DropShadowProperty>());
+        item->d->_properties.push_back(std::make_shared<TextProperty>());
+        // TODO: fillColor
 
         item->lineColor()->color = Qt::black; // TODO: or transparent for "no border rect"
         item->lineStyle()->width = 2;
@@ -120,9 +154,9 @@ KreenItemPtr KreenItem::create(QString typeId)
         item->dropShadow()->enabled = true;
     }
     else if (typeId == "obfuscate") {
-        item->_properties.push_back(std::make_shared<LineColorProperty>());
-        item->_properties.push_back(std::make_shared<LineStyleProperty>());
-        item->_properties.push_back(std::make_shared<DropShadowProperty>());
+        item->d->_properties.push_back(std::make_shared<LineColorProperty>());
+        item->d->_properties.push_back(std::make_shared<LineStyleProperty>());
+        item->d->_properties.push_back(std::make_shared<DropShadowProperty>());
 
         item->lineColor()->color = Qt::black;
         item->lineStyle()->width = 1;
@@ -142,35 +176,35 @@ KreenItemPtr KreenItem::create(QString typeId)
 
 void KreenItem::setRect(QRect rect)
 {
-    _rect = rect;
+    d->_rect = rect;
 }
 
 QRect KreenItem::rect()
 {
-    if (_line.isNull())
-        return _rect;
+    if (d->_line.isNull())
+        return d->_rect;
     else
-        return QRect(_line.p1(), _line.p2());
+        return QRect(d->_line.p1(), d->_line.p2());
 }
 
 void KreenItem::setLine(QLine line)
 {
     qDebug() << "KreenItem::setLine: " << line;
-    _line = line;
+    d->_line = line;
 }
 
 QLine KreenItem::line()
 {
-    return _line;
+    return d->_line;
 }
 
 void KreenItem::translate(int dx, int dy)
 {
-    if (_line.isNull()) {
-        _rect.translate(dx, dy);
+    if (d->_line.isNull()) {
+        d->_rect.translate(dx, dy);
     }
     else {
-        _line.translate(dx, dy);
+        d->_line.translate(dx, dy);
     }
 }
 
@@ -185,17 +219,22 @@ ItemPropertyPtr propFromVectorOrNull(QString propName, std::vector<ItemPropertyP
 
 LineColorPropertyPtr KreenItem::lineColor()
 {
-    return std::static_pointer_cast<LineColorProperty>(propFromVectorOrNull("lineColor", _properties));
+    return std::static_pointer_cast<LineColorProperty>(propFromVectorOrNull("lineColor", d->_properties));
 }
 
 LineStylePropertyPtr KreenItem::lineStyle()
 {
-    return std::static_pointer_cast<LineStyleProperty>(propFromVectorOrNull("lineStyle", _properties));
+    return std::static_pointer_cast<LineStyleProperty>(propFromVectorOrNull("lineStyle", d->_properties));
 }
 
 DropShadowPropertyPtr KreenItem::dropShadow()
 {
-    return std::static_pointer_cast<DropShadowProperty>(propFromVectorOrNull("dropShadow", _properties));
+    return std::static_pointer_cast<DropShadowProperty>(propFromVectorOrNull("dropShadow", d->_properties));
+}
+
+TextPropertyPtr KreenItem::text()
+{
+    return std::static_pointer_cast<TextProperty>(propFromVectorOrNull("text", d->_properties));
 }
 
 }

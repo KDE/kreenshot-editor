@@ -107,6 +107,8 @@ public:
      * A unique id will be generated and be available through the id() method.
      * If the id of the given item is not the default (-1) an assertion will fail.
      * But if recordUndo is false the id will be used to replace the given item.
+     *
+     * (impl NOTE on z value: will be ignored and stacked on top)
      */
     void addItem(KreenItemPtr item, bool recordUndo = true);
 
@@ -116,6 +118,12 @@ public:
      * Differences in the content of the document's and the given item will be ignored (for now).
      */
     void deleteItem(KreenItemPtr item, bool recordUndo = true);
+
+    /**
+     * Lowers the item in the stack one step.
+     * Invocation is ignored when item is already lowest.
+     */
+    void itemStackLowerStep(KreenItemPtr item, bool recordUndo = true);
 
     /**
      * returns true if the given item's properties have changed compared
@@ -149,6 +157,9 @@ public:
      */
     void addDemoItems();
 
+    /**
+     * all items sorted by z order
+     */
     const QList<KreenItemPtr> items();
 
     /**

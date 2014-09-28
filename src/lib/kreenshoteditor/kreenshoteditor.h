@@ -226,6 +226,9 @@ protected Q_SLOTS:
 
     void slotEditSelectAll();
 
+    void slotEditLowerStep();
+    void slotEditRaiseStep();
+
     // tool action slots:
     void slotRequestToolBySenderAction();
 

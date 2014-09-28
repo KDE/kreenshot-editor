@@ -64,9 +64,14 @@ public:
         // fill edit actions
         //
         QStringList editActions;
-        editActions << "edit-objects-select-all" << "edit-objects-delete"; // all edit actions
+        editActions << "edit-objects-select-all"
+                    << "edit-objects-lower-step"
+                    << "edit-objects-raise-step"
+                    << "edit-objects-delete"; // all edit actions
         insertEditActionsForPlaceholder(ui->menuEdit, ui->actionEditActionsPlaceholder, editActions);
-        editActions.removeAll("edit-objects-select-all"); // in the toolbar we don't want to have all items, so we remove this one
+
+        // in the toolbar we don't want to have all items, so we remove this one
+        editActions.removeAll("edit-objects-select-all");
         insertEditActionsForPlaceholder(ui->toolBar_Main, ui->actionEditActionsPlaceholder, editActions);
 
         //
