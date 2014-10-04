@@ -112,17 +112,20 @@ bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent
 {
     d->mouseIsDown = true;
 
-    // Set handle visibility to false but only if no keyboard modifier like Ctrl is pressed.
-    // Because it looks strange when Ctrl selection more items and the handles disappear while clicking around
-    if (event->modifiers() == Qt::NoModifier) {
-        setAllHandlesRenderVisible(false);
-    }
-
     // if mouse is over a handle, no new item should be created on mouse press:
     //
     if (isAnyHandleUnderMouse()) {
         qDebug() << "SelectionHandlesMgr::isAnyHandleUnderMouse()";
         return true;
+    }
+    else {
+        // Set handle visibility to false but only if no keyboard modifier like Ctrl (to multiselect items)
+        // is pressed and no handle is under mouse.
+        // Reason: it would look strange when user Ctrl selects more items and the handles disappear while clicking around.
+        // Furthermore: when click on handle and release without moving special actions can be triggered
+        if (event->modifiers() == Qt::NoModifier) {
+            setAllHandlesRenderVisible(false);
+        }
     }
 
     return false;
