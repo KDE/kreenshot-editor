@@ -49,7 +49,8 @@ LATER
 - new: KreenColorButton with transparency handling etc
 - crop img op and SelectionHandles
     - see see MainEditorWidget::slotFixSelectableAndMovable(): // TODO: "false, true" to fix visiblity of selection handles is not very nice. Find out a better way.
-- remove default QGraphicsItem selection marquee
+- // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget
+    - to find bug: cursors sticks to be the resize cursor when resizing main window
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
 - PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
     be an own widget and show also description

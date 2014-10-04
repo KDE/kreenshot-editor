@@ -106,7 +106,7 @@ void KreenGraphicsView::enterEvent(QEvent* event)
     // after having resized the main window where the cursors sticks to be the resize cursor
     // until the mouse was clicked or moved outside the main window.
     // Actually nothing works against the resizing cursor bug.
-    // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget
+    // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget)
     this->setFocus();
 }
 
