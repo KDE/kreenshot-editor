@@ -20,6 +20,7 @@
 #include "kreengraphicsscene.h"
 #include "../selectionhandles/selectionhandlesmgr.h"
 #include "../selectionhandles/selectionhandlegraphicsitem.h"
+#include <util/qtworkarounds.h>
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QFrame>
@@ -286,16 +287,26 @@ QStyleOptionGraphicsItem KreenGraphicsItemBase::copyWithStateSelectedDisabled(co
 
 void KreenGraphicsItemBase::contextMenuEventImpl(QGraphicsSceneContextMenuEvent* contextMenuEvent)
 {
-// //     return;
-// //
-// //     if (!contextMenuEvent->isAccepted()) {
-// //         contextMenuEvent->accept();
-// //         QMenu menu;
-// //         menu.addAction(new QAction("Action AAA 1", this));
-// //         menu.addAction(new QAction("Action AAA 2", this));
-// //         menu.addAction(new QAction("Action AAA 3", this));
-// //         menu.exec(contextMenuEvent->screenPos());
-// //     }
+    if (!contextMenuEvent->isAccepted()) {
+        contextMenuEvent->accept();
+        QMenu menu;
+        auto a1 = new QAction("Action AAA 1", nullptr);
+        auto a2 = new QAction("Action AAA 2", nullptr);
+        auto a3 = new QAction("Action AAA 3", nullptr);
+
+        connect(a1, SIGNAL(triggered()), this, SLOT(slotTest()));
+
+        menu.addAction(a1);
+        menu.addAction(a2);
+        menu.addAction(a3);
+        menu.exec(contextMenuEvent->screenPos());
+
+        // with this in place, after dismissing the context menu (by e.g. clicking an menu item)
+        // and the mouse is not over the item anymore, the cursor will NOT change back to the
+        // "size all" cursor (which only goes away by moving the mouse). So we "move" the mouse
+        // and it never appears at the first place.
+        WORKAROUND_sendFakeMouseEvent(contextMenuEvent);
+    }
 }
 
 void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)

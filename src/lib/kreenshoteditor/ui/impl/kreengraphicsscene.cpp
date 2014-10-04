@@ -139,8 +139,14 @@ void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     Q_ASSERT(_toolManager != nullptr);
 
     if (event->button() != Qt::LeftButton) {
-        QGraphicsScene::mousePressEvent(event);
+        // WORKAROUND,
+        // see http://www.qtcentre.org/threads/36953-QGraphicsItem-deselected-on-contextMenuEvent
+        // and https://bugreports.qt-project.org/browse/QTBUG-10138 "Right click context menu in Graphics View clears rubberband selection."
+        // and my comment https://bugreports.qt-project.org/browse/QTBUG-21943
+        event->accept();
+        //QGraphicsScene::mousePressEvent(event); // this MUST not be called in this case
         return;
+        // see also where WORKAROUND_sendFakeMouseEvent is used to fix cursor bugs
     }
 
     qDebug() << "MyQGraphicsScene::mousePressEvent with left button";
@@ -233,6 +239,44 @@ void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mouseMoveEvent(event);
 }
 
+void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsScene::mouseReleaseEvent(event);
+        return;
+    }
+
+    qDebug() << "MyQGraphicsScene::mouseReleaseEvent with left button";
+
+    _selectionHandlesMgr->onScene_mouseReleaseEvent_Enter();
+
+    if (_creatingItem != nullptr) {
+        // remove this temporary item from the scene because we will add it to the document
+        this->removeItem(_creatingItem);
+
+        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(_creatingItem);
+        grItemBase->updateModelFromVisualGeometry();
+
+        _creatingItem = nullptr;
+        if (!grItemBase->item()->rect().isNull()) {
+            qDebug() << "emit itemCreated";
+            emit itemCreatedSignal(grItemBase->item());
+            qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
+            QGraphicsScene::mouseReleaseEvent(event);
+            return;
+        }
+        else {
+            qDebug() << "rect is null, discard";
+        }
+    }
+
+    QGraphicsScene::mouseReleaseEvent(event);
+
+    qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
+    emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
+    update(); // redraw complete scene (still needed for selection handles?)
+}
+
 void KreenGraphicsScene::slotRequestRenderToImage(kreen::core::Document* document)
 {
     qDebug() << "KreenGraphicsScene::slotRequestRenderToImage";
@@ -295,44 +339,6 @@ KreenGraphicsItemBase* KreenGraphicsScene::graphicsItemBaseFromItem(KreenItemPtr
     return nullptr;
 }
 
-void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    if (event->button() != Qt::LeftButton) {
-        QGraphicsScene::mouseReleaseEvent(event);
-        return;
-    }
-
-    qDebug() << "MyQGraphicsScene::mouseReleaseEvent with left button";
-
-    _selectionHandlesMgr->onScene_mouseReleaseEvent_Enter();
-
-    if (_creatingItem != nullptr) {
-        // remove this temporary item from the scene because we will add it to the document
-        this->removeItem(_creatingItem);
-
-        auto grItemBase = dynamic_cast<KreenGraphicsItemBase*>(_creatingItem);
-        grItemBase->updateModelFromVisualGeometry();
-
-        _creatingItem = nullptr;
-        if (!grItemBase->item()->rect().isNull()) {
-            qDebug() << "emit itemCreated";
-            emit itemCreatedSignal(grItemBase->item());
-            qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
-            QGraphicsScene::mouseReleaseEvent(event);
-            return;
-        }
-        else {
-            qDebug() << "rect is null, discard";
-        }
-    }
-
-    QGraphicsScene::mouseReleaseEvent(event);
-
-    qDebug() << "emit MyQGraphicsScene::mouseReleasedSignal";
-    emit mouseReleasedSignal(); // used to update from model to have instant visual feedback if something is wrong with model/view mappine
-    update(); // redraw complete scene (still needed for selection handles?)
-}
-
 void KreenGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
     qDebug() << "KreenGraphicsScene::dragEnterEvent";
@@ -367,16 +373,14 @@ void KreenGraphicsScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* contex
 
     QGraphicsScene::contextMenuEvent(contextMenuEvent);
 
-// //     return;
-// //
-// //     if (!contextMenuEvent->isAccepted()) {
-// //         contextMenuEvent->accept();
-// //         QMenu menu;
-// //         menu.addAction(new QAction("Action 1", this));
-// //         menu.addAction(new QAction("Action 2", this));
-// //         menu.addAction(new QAction("Action 3", this));
-// //         menu.exec(contextMenuEvent->screenPos());
-// //     }
+    if (!contextMenuEvent->isAccepted()) {
+        contextMenuEvent->accept();
+        QMenu menu;
+        menu.addAction(new QAction("Action 1", this));
+        menu.addAction(new QAction("Action 2", this));
+        menu.addAction(new QAction("Action 3", this));
+        menu.exec(contextMenuEvent->screenPos());
+    }
 }
 
 }

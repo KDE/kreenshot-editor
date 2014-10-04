@@ -1,5 +1,6 @@
 TODO
 ----
+- use workaround_sendFakeMouseEvent for other context menu and for enterEvent
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items

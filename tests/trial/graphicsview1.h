@@ -16,27 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include <QObject>
-#include <QDebug>
-#include <QString>
-#include <QApplication>
-#include <QThread>
-#include <QGraphicsView>
-#include "widgets/mainwindow1.h"
-#include "trial/graphicsview1.h"
-#include <array>
+#ifndef GRAPHICSVIEW1_H
+#define GRAPHICSVIEW1_H
 
-/**
- * opens a window that lets you interactively test custom widgets
- */
-int main(int argc, char *argv[])
-{
-    QApplication app(argc, argv);
-    MainWindow1 w;
-    w.show();
+class QGraphicsView;
 
-    auto graphicsView = createTrialGraphicsView();
-    graphicsView->show();
+QGraphicsView* createTrialGraphicsView();
 
-    app.exec();
-};
+#endif // GRAPHICSVIEW1_H
