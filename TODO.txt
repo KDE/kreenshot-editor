@@ -12,8 +12,6 @@ TODO
     // TODO: are all selected items lowerable?
     - icons
 - add context menu to select tools
-- add handles for rect resizing and line repositioning (as extra class)
-    - Ctrl for proportional
 - draw arrow (use QPainterPath from TikzKit)
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 - move crop tool: should respect image boundaries!!!
@@ -34,7 +32,9 @@ IDEAS
 
 LATER
 -----
-- bug: selection handles in image operations are blurred (use workaround)
+- selection handles
+    - Ctrl for proportional
+    - see also qDebug() << "...handle was just clicked without moving... TODO: toggle proportional mode";
 - enable hover visual
     - mouse over: draw a light version of the selection rects
     - maybe: make sure line has a bigger catch area when trying to move

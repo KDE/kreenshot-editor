@@ -40,6 +40,7 @@ public:
     QGraphicsView* view = nullptr;
     bool allRenderVisible = true;
     bool mouseIsDown = false;
+    bool movedWhileMouseDown = false;
 
 public:
     Impl(SelectionHandlesMgr* owner)
@@ -111,6 +112,7 @@ void SelectionHandlesMgr::registerItem(SelectionHandleBase* instrItem)
 bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent* event)
 {
     d->mouseIsDown = true;
+    d->movedWhileMouseDown = false;
 
     // if mouse is over a handle, no new item should be created on mouse press:
     //
@@ -133,8 +135,16 @@ bool SelectionHandlesMgr::onScene_mousePressEvent_Enter(QGraphicsSceneMouseEvent
 
 void SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()
 {
+    // qDebug() << "SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()";
+
+    if (d->mouseIsDown && !d->movedWhileMouseDown) {
+        qDebug() << "...handle was just clicked without moving... TODO: toggle proportional mode";
+
+        // TODO
+    }
+
     d->mouseIsDown = false;
-    // qDebug() << "...............SelectionHandlesMgr::onScene_mouseReleaseEvent_Enter()";
+    d->movedWhileMouseDown = false;
     setAllHandlesRenderVisible(true);
 }
 
@@ -298,6 +308,13 @@ void SelectionHandlesMgr::setAllHandlesRenderVisible(bool isVisible)
     }
 
     d->allRenderVisible = isVisible;
+}
+
+void SelectionHandlesMgr::notifyHandleWasMoved()
+{
+    if (d->mouseIsDown) {
+        d->movedWhileMouseDown = true;
+    }
 }
 
 void SelectionHandlesMgr::slotSceneSelectionChanged()

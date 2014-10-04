@@ -152,6 +152,7 @@ QVariant SelectionHandleGraphicsItem::itemChange(GraphicsItemChange change, cons
         QPointF curPos = pos();
         // the client can get more information using _activeHandle? (TODO for posEnum)
         d->selHandleBase->handlePositionHasChanged(curPos - d->startPos);
+        d->manager->notifyHandleWasMoved();
     }
 
     return QGraphicsItem::itemChange(change, value);

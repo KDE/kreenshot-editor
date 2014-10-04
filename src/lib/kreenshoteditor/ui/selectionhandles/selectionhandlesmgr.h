@@ -104,6 +104,12 @@ protected: // see friend classes
      */
     void setAllHandlesRenderVisible(bool isVisible);
 
+    /**
+     * To let the manager know if the handle was moved between mouse down and up.
+     * Used to trigger special action on handle click (mouse down, up)
+     */
+    void notifyHandleWasMoved();
+
 protected:
     void setAllSelectedItemsMovable(bool isMoveable); // used by friend
 
