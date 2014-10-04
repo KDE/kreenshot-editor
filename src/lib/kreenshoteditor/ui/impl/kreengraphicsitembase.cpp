@@ -305,7 +305,7 @@ void KreenGraphicsItemBase::contextMenuEventImpl(QGraphicsSceneContextMenuEvent*
         // and the mouse is not over the item anymore, the cursor will NOT change back to the
         // "size all" cursor (which only goes away by moving the mouse). So we "move" the mouse
         // and it never appears at the first place.
-        WORKAROUND_sendFakeMouseEvent(contextMenuEvent);
+        WORKAROUNDS::sendFakeMouseEvent(contextMenuEvent);
     }
 }
 

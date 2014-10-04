@@ -28,16 +28,19 @@
 #include <QApplication>
 #include <QGraphicsSceneContextMenuEvent>
 
-/**
- * code taken from main.cpp of this bug: https://bugreports.qt-project.org/browse/QTBUG-21943
- * bug also reported at the same spot, see also my comment there about jumping items
- */
-void WORKAROUND_sendFakeMouseEvent(QGraphicsSceneContextMenuEvent* contextMenuEvent)
-{
-    // Sending a mouse move seems to workarount the Qt bug
-    QPoint p = contextMenuEvent->widget()->mapFromGlobal(contextMenuEvent->screenPos());
-    QMouseEvent mouseEvent(QEvent::MouseMove, p, Qt::NoButton, Qt::NoButton, contextMenuEvent->modifiers());
-    QApplication::sendEvent(contextMenuEvent->widget(), &mouseEvent);
-}
+class WORKAROUNDS {
+public:
+    /**
+     * code taken from main.cpp of this bug: https://bugreports.qt-project.org/browse/QTBUG-21943
+     * bug also reported at the same spot, see also my comment there about jumping items
+     */
+    static void sendFakeMouseEvent(QGraphicsSceneContextMenuEvent* contextMenuEvent)
+    {
+        // Sending a mouse move seems to workarount the Qt bug
+        QPoint p = contextMenuEvent->widget()->mapFromGlobal(contextMenuEvent->screenPos());
+        QMouseEvent mouseEvent(QEvent::MouseMove, p, Qt::NoButton, Qt::NoButton, contextMenuEvent->modifiers());
+        QApplication::sendEvent(contextMenuEvent->widget(), &mouseEvent);
+    }
+};
 
 #endif // QTWORKAROUNDS_H

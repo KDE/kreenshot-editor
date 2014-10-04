@@ -26,6 +26,7 @@
 #include "../selectionhandles/selectionhandlegraphicsitem.h"
 #include "../selectionhandles/selectionhandlesmgr.h"
 #include "rendervisibilitycontrol.h"
+#include <util/qtworkarounds.h>
 
 namespace kreen {
 namespace ui {
@@ -241,12 +242,7 @@ void KreenGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
 void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (event->button() != Qt::LeftButton) {
-        QGraphicsScene::mouseReleaseEvent(event);
-        return;
-    }
-
-    qDebug() << "MyQGraphicsScene::mouseReleaseEvent with left button";
+    qDebug() << "MyQGraphicsScene::mouseReleaseEvent with any button";
 
     _selectionHandlesMgr->onScene_mouseReleaseEvent_Enter();
 
@@ -380,6 +376,11 @@ void KreenGraphicsScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* contex
         menu.addAction(new QAction("Action 2", this));
         menu.addAction(new QAction("Action 3", this));
         menu.exec(contextMenuEvent->screenPos());
+
+        // makes sure if the mouse is released after menu item triggering
+        // over a graphicsitem that the cursor changes immediately to "size all"
+        // and not only after moving the mouse
+        WORKAROUNDS::sendFakeMouseEvent(contextMenuEvent);
     }
 }
 
