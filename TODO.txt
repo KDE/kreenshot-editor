@@ -1,8 +1,6 @@
 TODO
 ----
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
-- SelectionHandles
-    - change cursor to cross when resizing
 - enable more item properties (see item.h/cpp)
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking
@@ -90,4 +88,5 @@ LATER
 - ? load default image from a resource
 - ? click on empty space should choose Select tool
 - ? use m4 to generate settings class
-- ? use #pragma once? (non-standard) / replace it as soon as someone sees a problem
+- ? SelectionHandles
+    - change cursor to cross when resizing

@@ -149,6 +149,8 @@ protected:
 
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* contextMenuEvent) override;
+
 private:
     kreen::core::DocumentPtr _document;
     ToolManagerPtr _toolManager;

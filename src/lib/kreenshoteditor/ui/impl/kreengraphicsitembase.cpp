@@ -34,6 +34,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 #include <QStyle>
+#include <QMenu>
 #include <cmath>
 #include <algorithm>
 
@@ -281,6 +282,20 @@ QStyleOptionGraphicsItem KreenGraphicsItemBase::copyWithStateSelectedDisabled(co
     QStyleOptionGraphicsItem myOption = (*option);
     myOption.state &= !QStyle::State_Selected;
     return myOption;
+}
+
+void KreenGraphicsItemBase::contextMenuEventImpl(QGraphicsSceneContextMenuEvent* contextMenuEvent)
+{
+// //     return;
+// //
+// //     if (!contextMenuEvent->isAccepted()) {
+// //         contextMenuEvent->accept();
+// //         QMenu menu;
+// //         menu.addAction(new QAction("Action AAA 1", this));
+// //         menu.addAction(new QAction("Action AAA 2", this));
+// //         menu.addAction(new QAction("Action AAA 3", this));
+// //         menu.exec(contextMenuEvent->screenPos());
+// //     }
 }
 
 void KreenGraphicsItemBase::afterPaintBaseImpl(QPainter* painter)

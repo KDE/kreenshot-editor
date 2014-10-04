@@ -80,19 +80,10 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 };
 
 class KreenGraphicsEllipseItem : public QGraphicsEllipseItem, public KreenGraphicsItemBase
@@ -135,19 +126,10 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 };
 
 class KreenGraphicsLineItem : public QGraphicsLineItem, public KreenGraphicsItemBase
@@ -189,19 +171,10 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 };
 
 class KreenGraphicsTextRectItem : public QGraphicsRectItem, public KreenGraphicsItemBase
@@ -255,19 +228,10 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 };
 
 class KreenGraphicsObfuscateItem : public QGraphicsRectItem, public KreenGraphicsItemBase
@@ -331,19 +295,10 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 };
 
 class KreenGraphicsOperationCropItem : public QGraphicsRectItem, public KreenGraphicsItemBase
@@ -422,22 +377,13 @@ public:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mousePressEventBaseImpl(event))
-            QGraphicsItem::mousePressEvent(event);
-    }
-
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override
-    {
-        if (mouseReleaseEventBaseImpl(event))
-            QGraphicsItem::mouseReleaseEvent(event);
-    }
-
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override
     {
         afterPaintBaseImpl(painter);
     }
+
+protected:
+    KREENGRAPHICSITEMBASE_DEFAULTIMPLS
 
 private:
     QRect modelRectFromGraphicsItem()

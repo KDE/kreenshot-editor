@@ -20,6 +20,7 @@
 #include <kreen/core/document.h>
 #include <QMessageBox>
 #include <QDebug>
+#include <QMenu>
 #include "toolmanager.h"
 #include "kreengraphicsitems.h"
 #include "../selectionhandles/selectionhandlegraphicsitem.h"
@@ -135,8 +136,14 @@ void KreenGraphicsScene::renderFinalImageOnly(bool finalOnly)
 
 void KreenGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    qDebug() << "MyQGraphicsScene::mousePressEvent";
     Q_ASSERT(_toolManager != nullptr);
+
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsScene::mousePressEvent(event);
+        return;
+    }
+
+    qDebug() << "MyQGraphicsScene::mousePressEvent with left button";
 
     if (_selectionHandlesMgr->onScene_mousePressEvent_Enter(event)) {
         QGraphicsScene::mousePressEvent(event); // the handle items should receive the mousePressEvent
@@ -284,13 +291,18 @@ KreenGraphicsItemBase* KreenGraphicsScene::graphicsItemBaseFromItem(KreenItemPtr
             return kreenGraphicsItemBase;
         }
     }
-    
+
     return nullptr;
 }
 
 void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    qDebug() << "MyQGraphicsScene::mouseReleaseEvent enter";
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsScene::mouseReleaseEvent(event);
+        return;
+    }
+
+    qDebug() << "MyQGraphicsScene::mouseReleaseEvent with left button";
 
     _selectionHandlesMgr->onScene_mouseReleaseEvent_Enter();
 
@@ -347,6 +359,24 @@ void KreenGraphicsScene::drawBackground(QPainter* painter, const QRectF& rect)
 //     //qDebug() << "KreenGraphicsScene::drawBackground";
 //     _renderVisibilityControl->initPainting(); // todo remove later
     QGraphicsScene::drawBackground(painter, rect);
+}
+
+void KreenGraphicsScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* contextMenuEvent)
+{
+    qDebug() << "KreenGraphicsScene::contextMenuEvent";
+
+    QGraphicsScene::contextMenuEvent(contextMenuEvent);
+
+// //     return;
+// //
+// //     if (!contextMenuEvent->isAccepted()) {
+// //         contextMenuEvent->accept();
+// //         QMenu menu;
+// //         menu.addAction(new QAction("Action 1", this));
+// //         menu.addAction(new QAction("Action 2", this));
+// //         menu.addAction(new QAction("Action 3", this));
+// //         menu.exec(contextMenuEvent->screenPos());
+// //     }
 }
 
 }

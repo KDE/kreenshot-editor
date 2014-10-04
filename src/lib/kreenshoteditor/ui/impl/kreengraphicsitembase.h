@@ -24,6 +24,28 @@
 #include <vector>
 #include "../selectionhandles/selectionhandlebase.h"
 
+/**
+ * to be put in the protected section of derived items
+ */
+#define KREENGRAPHICSITEMBASE_DEFAULTIMPLS \
+virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override \
+{ \
+    if (mousePressEventBaseImpl(event)) \
+        QGraphicsItem::mousePressEvent(event); \
+} \
+\
+virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override \
+{ \
+    if (mouseReleaseEventBaseImpl(event)) \
+        QGraphicsItem::mouseReleaseEvent(event); \
+} \
+\
+virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* contextMenuEvent) override \
+{ \
+    QGraphicsItem::contextMenuEvent(contextMenuEvent); \
+    contextMenuEventImpl(contextMenuEvent); \
+} \
+
 class QPushButton;
 class QAbstractGraphicsShapeItem;
 class QGraphicsLineItem;
@@ -118,9 +140,17 @@ protected:
 
     void connectImageOperationCancelButton(QPushButton* button);
 
+    /**
+     * returns true when QGraphicsItem::mousePressEvent should be called
+     */
     bool mousePressEventBaseImpl(QGraphicsSceneMouseEvent* event);
 
+    /**
+     * returns true when QGraphicsItem::mouseReleaseEvent should be called
+     */
     bool mouseReleaseEventBaseImpl(QGraphicsSceneMouseEvent* event);
+
+    void contextMenuEventImpl(QGraphicsSceneContextMenuEvent* contextMenuEvent);
 
     /**
      * handles common changes:
