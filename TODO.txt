@@ -1,6 +1,5 @@
 TODO
 ----
-- use workaround_sendFakeMouseEvent for other context menu and for enterEvent
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items
@@ -75,6 +74,8 @@ LATER
         [NEW] ...
         *  ... (see mainwindow.cpp)
 - "Open last file storage location" or "Open storage location"
+- see // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget
+    - wegen KreenGraphicsView::enterEvent
 - Drag source for image in toolbar
     - this can currently been achieved by lauching default viewer (Ctrl+Alt+L) and use drag source from there
 - DND:

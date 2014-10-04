@@ -98,10 +98,16 @@ void KreenGraphicsView::setCursorFromChosenTool(QPoint* pos, bool leftButtonDown
 
 void KreenGraphicsView::enterEvent(QEvent* event)
 {
-    qDebug() << "KreenGraphicsView::enterEvent / setFocus()";
-    // for not to have to click once before one can start moving items
-    this->setFocus();
+    qDebug() << "KreenGraphicsView::enterEvent / setFocus() / workaround";
+
     QGraphicsView::enterEvent(event);
+
+    // WORKAROUND for not to have to click once before one can start moving items
+    // after having resized the main window where the cursors sticks to be the resize cursor
+    // until the mouse was clicked or moved outside the main window.
+    // Actually nothing works against the resizing cursor bug.
+    // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget
+    this->setFocus();
 }
 
 void KreenGraphicsView::mouseMoveEvent(QMouseEvent* event)
