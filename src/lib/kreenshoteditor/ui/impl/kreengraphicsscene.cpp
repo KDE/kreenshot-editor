@@ -259,6 +259,10 @@ void KreenGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             emit itemCreatedSignal(grItemBase->item());
             qDebug() << "QGraphicsScene::mouseReleaseEvent(event) call";
             QGraphicsScene::mouseReleaseEvent(event);
+            // this makes sure the cursor changes to the "resize cursor"
+            // immediately to show the user that using the handle is immediately possible
+            // after creating an item
+            WORKAROUNDS::sendFakeMouseEvent(event);
             return;
         }
         else {
