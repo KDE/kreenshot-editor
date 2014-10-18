@@ -97,7 +97,8 @@ mkdir build
 #  tests
 cd build
 # see also http://www.cmake.org/Wiki/CMake_Useful_Variables for information about CMAKE_BUILD_TYPE
-cmake -DCMAKE_BUILD_TYPE=Release ..
+# we need to set CMAKE_INSTALL_PREFIX because otherwise it installs to /usr/local
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
 make
 
 
@@ -120,34 +121,38 @@ rm -rf %{buildroot}
 #            <The default user id>,
 #            <The default group id>,
 #            <The default permissions, or "mode" for directories.>)
-%defattr(-,root,root,-)
-/usr/local/bin/
-/usr/local/lib64/
-/usr/local/share/kreenshot-editor/
-#%%{_bindir}/abc
-#%%{_datadir}/def
+# %%defattr(-,root,root,-) # causes warning in combination with standard dirs /usr/lib64, /usr/bin, /usr/share
+
+# warning standard-dir-owned-by-package /usr/bin
+# solved by:
+%_bindir
+# see also http://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch09s07.html (Built-in macros)
+
+# warning standard-dir-owned-by-package /usr/lib64
+# solved by:
+%_libdir
+
+# /usr/share/kreenshot-editor/
+%_datadir
+
 #%%doc /usr/share/doc/kreenshot-editor
 ##%%doc /usr/share/doc/kreenshot-editor/changelog.gz
 %doc COPYING.LIB
 
 
 %changelog
-# ...
+# ... TODO
 
-# [   89s] RPMLINT report:
-# [   89s] ===============
-# [   91s] kreenshot-editor.x86_64: W: suse-filelist-forbidden-fhs23 /usr/local is not allowed in FHS 2.3
-# [   91s] see http://www.pathname.com/fhs/ for a better location
-# [   91s]
-# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/local/lib64
-# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/local/bin
-# [   91s] This package owns a directory that is part of the standard hierarchy, which
-# [   91s] can lead to default directory permissions or ownerships being changed to
-# [   91s] something non-standard.
-# [   91s]
-# [   91s] kreenshot-editor.x86_64: W: no-changelogname-tag
-# [   91s] kreenshot-editor.src: W: no-changelogname-tag
-# [   91s] There is no changelog. Please insert a '%changelog' section heading in your
-# [   91s] spec file and prepare your changes file using e.g. the 'osc vc' command.
-# [   91s]
-# [   91s] 2 packages and 0 specfiles checked; 0 errors, 5 warnings.
+# [    8s] compilation terminated.
+# [    8s] src/lib/kreenshoteditor/CMakeFiles/kreenshoteditor.dir/build.make:64: recipe for target 'src/lib/kreenshoteditor/CMakeFiles/kreenshoteditor.dir/core/impl/outputfilenamegenerator.cpp.o' failed
+# [    8s] make[2]: *** [src/lib/kreenshoteditor/CMakeFiles/kreenshoteditor.dir/core/impl/outputfilenamegenerator.cpp.o] Error 1
+# [    8s] CMakeFiles/Makefile2:194: recipe for target 'src/lib/kreenshoteditor/CMakeFiles/kreenshoteditor.dir/all' failed
+# [    8s] make[1]: *** [src/lib/kreenshoteditor/CMakeFiles/kreenshoteditor.dir/all] Error 2
+# [    8s] Makefile:127: recipe for target 'all' failed
+# [    8s] make: *** [all] Error 2
+# [    8s] error: Bad exit status from /var/tmp/rpm-tmp.meqWG9 (%build)
+# [    8s]
+# [    8s]
+# [    8s] RPM build errors:
+# [    8s]     Bad exit status from /var/tmp/rpm-tmp.meqWG9 (%build)
+

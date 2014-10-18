@@ -55,6 +55,11 @@ Build locally using osc
 -----------------------
 Building locally means check if spec file is ready to be published.
 
+FIRST..
+    of all create a tar.gz snapshot of the current source and place it next to the spec file.
+    Adapt the Source0 tag in the spec file if necessary.
+    TODO: automate this.
+
 E.g. build for openSUSE_13.1 and for the x86_64 platform:
 
     $ cd kreenshot-editor
