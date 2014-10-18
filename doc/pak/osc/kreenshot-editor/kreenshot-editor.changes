@@ -1,0 +1,17 @@
+-------------------------------------------------------------------
+Sat Oct 18 18:49:00 UTC 2014 - codestruct@posteo.org
+
+- initial packaging for kreenshot-editor
+  + still working out some package warnings
+
+-------------------------------------------------------------------
+Tue Apr 22 20:54:26 UTC 2013 - your@email.com
+
+- level 1 bullet point; long descriptions
+  should wrap
+  + level 2 bullet point; long descriptions
+    should wrap
+  + another l2 bullet point
+- another l1 bullet point
+- see https://en.opensuse.org/openSUSE:Creating_a_changes_file_%28RPM%29
+  how to write the changes file

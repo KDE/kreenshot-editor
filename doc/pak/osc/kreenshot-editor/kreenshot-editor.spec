@@ -137,53 +137,6 @@ rm -rf %{buildroot}
 %doc COPYING.LIB
 
 
+# not provided here
 %changelog
-# ... TODO
 
-# [   89s] RPMLINT report:
-# [   89s] ===============
-# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/lib64
-# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/bin
-# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/share
-# [   91s] This package owns a directory that is part of the standard hierarchy, which
-# [   91s] can lead to default directory permissions or ownerships being changed to
-# [   91s] something non-standard.
-# [   91s]
-# [   91s] kreenshot-editor.x86_64: W: no-manual-page-for-binary kreenshot-editor
-# [   91s] Each executable in standard binary directories should have a man page.
-# [   91s]
-# [   91s] kreenshot-editor.x86_64: W: no-changelogname-tag
-# [   91s] kreenshot-editor.src: W: no-changelogname-tag
-# [   91s] There is no changelog. Please insert a '%changelog' section heading in your
-# [   91s] spec file and prepare your changes file using e.g. the 'osc vc' command.
-# [   91s]
-# [   91s] kreenshot-editor.src:153: W: macro-in-comment %build)
-# [   91s] kreenshot-editor.src:157: W: macro-in-comment %build)
-# [   91s] There is a unescaped macro after a shell style comment in the specfile. Macros
-# [   91s] are expanded everywhere, so check if it can cause a problem in this case and
-# [   91s] escape the macro with another leading % if appropriate.
-# [   91s]
-# [   91s] kreenshot-editor.src:153: W: macro-in-%changelog %build)
-# [   91s] kreenshot-editor.src:157: W: macro-in-%changelog %build)
-# [   91s] Macros are expanded in %changelog too, which can in unfortunate cases lead to
-# [   91s] the package not building at all, or other subtle unexpected conditions that
-# [   91s] affect the build.  Even when that doesn't happen, the expansion results in
-# [   91s] possibly "rewriting history" on subsequent package revisions and generally odd
-# [   91s] entries eg. in source rpms, which is rarely wanted.  Avoid use of macros in
-# [   91s] %changelog altogether, or use two '%'s to escape them, like '%%foo'.
-# [   91s]
-# [   91s] kreenshot-editor.src:128: W: files-attr-not-set
-# [   91s] kreenshot-editor.src:133: W: files-attr-not-set
-# [   91s] kreenshot-editor.src:136: W: files-attr-not-set
-# [   91s] kreenshot-editor.src:140: W: files-attr-not-set
-# [   91s] A file or a directory entry in a %files section does not have attributes set
-# [   91s] which may result in unexpected file permissions and thus security issues in
-# [   91s] the resulting binary package depending on the build environment and rpmbuild
-# [   91s] version (typically < 4.4).  Add default attributes using %defattr before it in
-# [   91s] the %files section, or use per entry %attr's.
-# [   91s]
-# [   91s] 2 packages and 0 specfiles checked; 0 errors, 14 warnings.
-# [   91s]
-# [   91s]
-# [   91s] catgroove.swingsite finished "build kreenshot-editor.spec" at Sat Oct 18 15:27:05 UTC 2014.
-# [   91s]
