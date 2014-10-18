@@ -1,6 +1,11 @@
 TODO
 ----
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
+- FIX rpm build
+    see: add_dependencies(kreenshot-editor prepare-include-files)
+    causes the osc build fail on the first attempt when build dir is clean
+    quick solution: move the generated-include dir and the cmake statement to the lib dir because it needed only there
+    (other solution: remove the script completely)
 - enable more item properties (see item.h/cpp)
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking

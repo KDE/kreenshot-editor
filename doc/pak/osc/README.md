@@ -1,6 +1,11 @@
 Use the openSUSE build service (OSC)
 ====================================
 
+Note that with default settings osc uses space on the / partition when building and installing packages.
+The default build root dirs are:
+/var/tmp/build-root/
+/var/tmp/build-root32/
+
 One time init (already done)
 ----------------------------
 1.  Create package at build.opensuse.org via Web frontend
@@ -59,3 +64,6 @@ E.g. build for openSUSE_13.1 and for the x86_64 platform:
 This takes a while to download all the packages. Luckily they will be cached.
 You will need the root password which is used to create some sandbox environment.
 So your root directory will not be polluted.
+
+Depending on the chosen configuration the build directory is located here:
+/var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/BUILD/kreenshot-editor-0.01/
