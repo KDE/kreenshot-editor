@@ -41,6 +41,10 @@ COMMIT A LOCAL CHANGE:
     $ cd kreenshot-editor
 Change something.
     $ osc commit --message="minor fix"
+Add or remove file
+    $ osc add *
+    $ osc remove ... # or via Web interface
+    $ osc commit ...
 Sending    kreenshot-editor.spec
 Transmitting file data .
 Committed revision 2.

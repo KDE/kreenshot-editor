@@ -23,7 +23,9 @@
 # Date        Author           Changelog
 # ----        ------           ---------
 # 2014-10-18  Gregor Mi        init
-#
+# TODO:
+#   add screenshot to http://software.opensuse.org/
+#   specify Requires tag?
 
 # The Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
@@ -53,20 +55,15 @@ BuildRequires:  cmake >= 2.8.11
 # openSUSE_13.1 comes with version 5.1.1
 # openSUSE_Factory                 5.3.x
 BuildRequires:  libqt5-qtbase-devel >= 5.2
-#BuildRequires:  boost-devel >= 1.53
-#BuildRequires:  wxWidgets-2_9-devel
-#BuildRequires:  wxWidgets-devel
-#BuildRequires:  wxWidgets-wxcontainer-devel
-#BuildRequires:  wxWidgets-2_9-wxcontainer-devel
 #PreReq:         %%fillup_prereq
 
 
 %description
 kreenshot-editor is an application for screenshot image editing.
+Still INCUBATING, more info here: http://kreenshot.wordpress.com
 Features:
 * draw basic shapes like rectangle, ellipse, line, arrow etc.
 * highlight, obfuscate or crop rectangular regions
-* all items are movable and resizable after they have been placed
 * undo/redo
 * command line interface
 * import from clipboard
