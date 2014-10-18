@@ -92,7 +92,7 @@ Features:
 #  src/
 #  tests/
 #  CMakeLists.txt
-#  COPYING.LIB
+#  COPYING
 #  ...
 
 # BUILDDIR=`pwd`
@@ -152,9 +152,8 @@ rm -rf %{buildroot}
 # /usr/share/kreenshot-editor/
 %_datadir/%{name}
 
-# todo? %%doc /usr/share/doc/kreenshot-editor
-## todo? %%doc /usr/share/doc/kreenshot-editor/changelog.gz
-%doc COPYING.LIB
+# goes to /usr/share/doc/packages/kreenshot-editor/
+%doc AUTHORS COPYING README ChangeLog
 
 
 # not provided here
