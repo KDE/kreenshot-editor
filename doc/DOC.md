@@ -1,11 +1,33 @@
 kreenshot-editor Documentation
 ==============================
+This document is the entry point for the kreenshot-editor documentation.
 
-This document describes the content of the kreenshot documentation folder.
+About kreenshot-editor
+----------------------
+See ../README.md for how to build and run the application. Also known bugs and open questions are listed there.
+
+TODO...
+
+Component 1: main-application
+`````````````````````````````
+- command line options to give image and optionally captured cursor
+- show editor-component
+
+Component 2: image-editor
+`````````````````````````
+- display image
+- edit image
+- [TODO] show toolbars for editing
+    - define toolbars by creating "prototype items" with default settings
+    - make it possible for each toolbar entry to save the current configuration
+        - dropdown menu (show basic properties as string like line width, color etc)
+- set (including an optional cursor) and get image
 
 
-pak
----
+The following sections describe the content of the kreenshot documentation folder.
+
+./pak/
+------
 This folder contains an example package for the openSUSE build service (osc).
 Two goals are achieved:
 
@@ -19,8 +41,8 @@ Two goals are achieved:
 More on how to use the openSUSE build service see pak/osc/README.md
 
 
-kreenshot-editor-local-debug.sh
--------------------------------
+./kreenshot-editor-local-debug.sh
+---------------------------------
 When installing kreenshot-editor locally using
 
     # TODO...
