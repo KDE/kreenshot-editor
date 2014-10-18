@@ -11,27 +11,10 @@ OPEN ISSUES
 see:
 [   91s] RPMLINT report:
 [   91s] ===============
-[   93s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/lib64
-[   93s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/bin
-[   93s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/share
-[   93s] This package owns a directory that is part of the standard hierarchy, which
-[   93s] can lead to default directory permissions or ownerships being changed to
-[   93s] something non-standard.
-[   93s]
 [   93s] kreenshot-editor.x86_64: W: no-manual-page-for-binary kreenshot-editor
 [   93s] Each executable in standard binary directories should have a man page.
 [   93s]
-[   93s] kreenshot-editor.src:125: W: files-attr-not-set
-[   93s] kreenshot-editor.src:130: W: files-attr-not-set
-[   93s] kreenshot-editor.src:133: W: files-attr-not-set
-[   93s] kreenshot-editor.src:137: W: files-attr-not-set
-[   93s] A file or a directory entry in a %files section does not have attributes set
-[   93s] which may result in unexpected file permissions and thus security issues in
-[   93s] the resulting binary package depending on the build environment and rpmbuild
-[   93s] version (typically < 4.4).  Add default attributes using %defattr before it in
-[   93s] the %files section, or use per entry %attr's.
-[   93s]
-[   93s] 2 packages and 0 specfiles checked; 0 errors, 8 warnings.
+[   93s] 2 packages and 0 specfiles checked; 0 errors, 1 warnings.
 
 
 One time init (already done)

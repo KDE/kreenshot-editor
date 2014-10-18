@@ -33,7 +33,7 @@
 #
 Name:           kreenshot-editor
 Summary:        Screenshot image editing
-Version:        0.01
+Version:        0.02
 Release:        0
 License:        LGPL-2.0+
 Group:          Productivity/Graphics
@@ -46,9 +46,7 @@ Source0:        kreenshot-editor-aff3428.tar.gz
 #
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
 # "The BuildRoot tag should always be used, even if newer rpms override it anyway. The preferred path is %%{_tmppath}/%%{name}-%%{version}-build."
-# TODO: use this instead of just build
-#BuildRoot:      %%{_tmppath}/%%{name}-%%{version}-build
-BuildRoot:      build
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  unzip
 BuildRequires:  gcc-c++ >= 4.8
 BuildRequires:  cmake >= 2.8.11
@@ -86,23 +84,41 @@ Features:
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
 #    NOTE that the %%{buildroot} is cleaned automatically
 #    because %%clean is called interally
-mkdir build
+
+# `pwd`, e.g. /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/BUILD/kreenshot-editor-0.02/
+# contains the unpacked sources
 # so directory structure now looks like this:
-#  build (new)
-#  doc
-#  src
-#  tests
+#  doc/
+#  src/
+#  tests/
+#  CMakeLists.txt
+#  COPYING.LIB
+#  ...
+
+# BUILDDIR=`pwd`
+# %%{buildroot}: e.g. /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/BUILDROOT/kreenshot-editor-0.02-0.x86_64/
+# does not work, causes ERROR:
+#      RPATH "/home/abuild/rpmbuild/BUILDROOT/kreenshot-editor-0.02-0.x86_64/src/lib/kreenshoteditor" on /home/abuild/rpmbuild/BUILDROOT/kreenshot-editor-0.02-0.x86_64/tests/TestCore is not allowed
+# later when doing the %%files section
+# cd %%{buildroot}
+
+# e.g. /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/BUILD/kreenshot-editor-0.02/build/
+mkdir build
 cd build
+
 # see also http://www.cmake.org/Wiki/CMake_Useful_Variables for information about CMAKE_BUILD_TYPE
 # we need to set CMAKE_INSTALL_PREFIX because otherwise it installs to /usr/local
+# cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr $BUILDDIR # does not work, see above
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+
 make
 
 
 %install
+# cd %%{buildroot} # does not work, see strange RPATH error above
 cd build
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
-#     "%%make_install is a macro available starting rpm-4.10. It is equivalent to `make install DESTDIR="%%{?buildroot}"`."
+#     "%%make_install is a macro available starting rpm-4.10. It is equivalent to `make install DESTDIR="%%{buildroot}"`."
 %make_install
 
 
@@ -118,22 +134,26 @@ rm -rf %{buildroot}
 #            <The default user id>,
 #            <The default group id>,
 #            <The default permissions, or "mode" for directories.>)
-# %%defattr(-,root,root,-) # causes warning in combination with standard dirs /usr/lib64, /usr/bin, /usr/share
+# %%defattr(-,root,root,-) # example
+# values taken from https://build.opensuse.org/package/view_file/KDE:Qt5/libqt5-qtbase/libqt5-qtbase.spec
+%defattr(-,root,root,755)
+# fixes warnings:
+#   kreenshot-editor.src:125: W: files-attr-not-set
 
 # warning standard-dir-owned-by-package /usr/bin
-# solved by:
-%_bindir
+# solved by adding specific filename (name expands to kreenshot-editor which is set above with Tag Name):
+%_bindir/%{name}
 # see also http://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch09s07.html (Built-in macros)
+# and https://en.opensuse.org/openSUSE:Packaging_checks#standard-dir-owned-by-package
 
-# warning standard-dir-owned-by-package /usr/lib64
-# solved by:
-%_libdir
+# note: without dash
+%_libdir/libkreenshoteditor.so
 
 # /usr/share/kreenshot-editor/
-%_datadir
+%_datadir/%{name}
 
-#%%doc /usr/share/doc/kreenshot-editor
-##%%doc /usr/share/doc/kreenshot-editor/changelog.gz
+# todo? %%doc /usr/share/doc/kreenshot-editor
+## todo? %%doc /usr/share/doc/kreenshot-editor/changelog.gz
 %doc COPYING.LIB
 
 
