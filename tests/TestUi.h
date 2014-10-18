@@ -24,6 +24,7 @@
 #include <QString>
 #include <QTest>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include "lib/kreenshoteditor/ui/settings/pageoutput.h"
 #include "lib/kreenshoteditor/ui/settings/pageoutputimpl.h"
 
@@ -91,6 +92,27 @@ private slots:
 
         auto icon3 = QIcon::fromTheme("document-new");
         QCOMPARE(icon3.isNull(), false);
+
+        // It seems that custom icons in the theme directories are not the right way.
+        // QUESTION: is this true? Even if the file is located in one of the $XDG_DATA_DIRS in the
+        // correct hicolor location the icon is still null. Is this intened?
+        auto icon4 = QIcon::fromTheme("kreen-copy-image-to-clipboard");
+        QCOMPARE(icon4.isNull(), true);
+    }
+
+    /**
+     * Works only if XDG_DATA_DIRS contains kreenshot-editor/src/XDG_DATA_DIR.
+     * e.g. XDG_DATA_DIRS=/absolutepath/src/kreenshot-editor/src/XDG_DATA_DIR:$XDG_DATA_DIRS
+     * or when using kdevelop: Run --> Configure Launches, setup Environment variables, the
+     * original $XDG_DATA_DIRS must be expanded manually,
+     * e.g. /absolutepath/src/kreenshot-editor/src/XDG_DATA_DIR:/usr/share
+     */
+    void IconsInStandardPath()
+    {
+        qDebug() << QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        QString fullpath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kreenshot-editor/icons/hicolor/48x48/actions/kreen-copy-filename-to-clipboard.png");
+        qDebug() << fullpath;
+        QCOMPARE(fullpath.isEmpty(), false);
     }
 };
 

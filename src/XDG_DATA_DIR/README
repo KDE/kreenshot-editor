@@ -1,0 +1,2 @@
+XDG_DATA_DIR usually is /usr/share/
+see $ echo $XDG_DATA_DIRS

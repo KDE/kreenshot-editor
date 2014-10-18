@@ -29,6 +29,7 @@
 #include <QStringList>
 #include <QDragEnterEvent>
 #include <QMimeData>
+#include <QStandardPaths>
 #include "ui/maineditorwidget.h"
 #include "core/document.h"
 #include "core/documentfile.h"
@@ -129,6 +130,13 @@ public:
         actionIdToActionMap.insert(actionId, action);
 
         return action;
+    }
+
+    static QIcon iconFromAppHicolor48(QString iconname)
+    {
+        QString fullpath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                  QString("kreenshot-editor/icons/hicolor/48x48/actions/%0.png").arg(iconname));
+        return QIcon(fullpath);
     }
 
     /**
@@ -400,16 +408,16 @@ QStringList KreenshotEditor::allActionIds()
         d->actionDocumentSaveAs = d->newAction("document-save-as", QIcon::fromTheme("document-save-as"), tr("Save as..."), this, QKeySequence(tr("Ctrl+Shift+S")));
         connect(d->actionDocumentSaveAs, SIGNAL(triggered()), this, SLOT(slotDocumentSaveAs()));
 
-        d->actionDocumentCopyImageToClipboard = d->newAction("document-image-to-clipboard", QIcon::fromTheme("todo"), tr("Copy image to clipboard"), this, QKeySequence(tr("Ctrl+Shift+C")));
+        d->actionDocumentCopyImageToClipboard = d->newAction("document-image-to-clipboard", KreenshotEditor::Impl::iconFromAppHicolor48("kreen-copy-image-to-clipboard"), tr("Copy image to clipboard"), this, QKeySequence(tr("Ctrl+Shift+C")));
         connect(d->actionDocumentCopyImageToClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentCopyImageToClipboard()));
 
-        d->actionDocumentCopyFilenameToClipboard = d->newAction("document-filename-to-clipboard", QIcon::fromTheme("todo"), tr("Copy filename to clipboard"), this, QKeySequence(tr("Ctrl+Alt+C")));
+        d->actionDocumentCopyFilenameToClipboard = d->newAction("document-filename-to-clipboard", KreenshotEditor::Impl::iconFromAppHicolor48("kreen-copy-filename-to-clipboard"), tr("Copy filename to clipboard"), this, QKeySequence(tr("Ctrl+Alt+C")));
         connect(d->actionDocumentCopyFilenameToClipboard, SIGNAL(triggered()), this, SLOT(slotDocumentCopyFilenameToClipboard()));
 
-        d->actionDocumentSelectInFilemanager = d->newAction("document-file-select-in-filemanager", QIcon::fromTheme("todo"), tr("Select in file manager"), this, QKeySequence(tr("Ctrl+Alt+S")));
+        d->actionDocumentSelectInFilemanager = d->newAction("document-file-select-in-filemanager", QIcon::fromTheme("document-open-folder"), tr("Select in file manager"), this, QKeySequence(tr("Ctrl+Alt+S")));
         connect(d->actionDocumentSelectInFilemanager, SIGNAL(triggered()), this, SLOT(slotDocumentSelectInFilemanager()));
 
-        d->actionDocumentOpenWithDefaultImageViewer = d->newAction("document-launch-default-viewer", QIcon::fromTheme("todo"), tr("Launch default image viewer"), this, QKeySequence(tr("Ctrl+Alt+L")));
+        d->actionDocumentOpenWithDefaultImageViewer = d->newAction("document-launch-default-viewer", QIcon::fromTheme("document-preview"), tr("Launch default image viewer"), this, QKeySequence(tr("Ctrl+Alt+L")));
         connect(d->actionDocumentOpenWithDefaultImageViewer, SIGNAL(triggered()), this, SLOT(slotDocumentLaunchDefaultViewer()));
 
         //
@@ -420,10 +428,10 @@ QStringList KreenshotEditor::allActionIds()
 
         // item stacking order (Home: raise to top, End: raise to bottom, PageUp: raise, PageDown: lower
         //
-        d->actionEditLowerStep = d->newAction("edit-objects-lower-step", QIcon::fromTheme("todo"), tr("Lower"), this, QKeySequence(tr("PgDown")));
+        d->actionEditLowerStep = d->newAction("edit-objects-lower-step", QIcon::fromTheme("arrow-down"), tr("Lower"), this, QKeySequence(tr("PgDown")));
         connect(d->actionEditLowerStep, SIGNAL(triggered()), this, SLOT(slotEditLowerStep()));
 
-        d->actionEditRaiseStep = d->newAction("edit-objects-raise-step", QIcon::fromTheme("todo"), tr("Raise"), this, QKeySequence(tr("PgUp")));
+        d->actionEditRaiseStep = d->newAction("edit-objects-raise-step", QIcon::fromTheme("arrow-up"), tr("Raise"), this, QKeySequence(tr("PgUp")));
         connect(d->actionEditRaiseStep, SIGNAL(triggered()), this, SLOT(slotEditRaiseStep()));
 
         d->actionEditItemDelete = d->newAction("edit-objects-delete", QIcon::fromTheme("edit-delete"), tr("Delete"), this, QKeySequence(tr("Del")));
