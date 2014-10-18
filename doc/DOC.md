@@ -1,5 +1,7 @@
 kreenshot-editor Documentation
 ==============================
+Screenshot image editing.
+
 This document is the entry point for the kreenshot-editor documentation.
 
 About kreenshot-editor

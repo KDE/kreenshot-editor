@@ -1,7 +1,7 @@
 kreenshot-editor
 ================
 
-kreenshot-editor is incubating.
+Screenshot image editing.
 
 More documentation can be found in doc/DOC.md.
 

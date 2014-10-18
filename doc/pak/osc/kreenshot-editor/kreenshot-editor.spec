@@ -154,8 +154,9 @@ rm -rf %{buildroot}
 
 # goes to /usr/share/doc/packages/kreenshot-editor/
 %doc AUTHORS COPYING README ChangeLog
+# taken from https://build.opensuse.org/package/view_file/Education/xplanet/xplanet.spec
+%doc %{_mandir}/man1/%{name}.1%{ext_man}
 
 
-# not provided here
+# kreenshot-editor.changes
 %changelog
-
