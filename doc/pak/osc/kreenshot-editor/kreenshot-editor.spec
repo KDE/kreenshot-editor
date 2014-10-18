@@ -25,7 +25,7 @@
 # 2014-10-18  Gregor Mi        init
 #
 
-# This Name must match the openSUSE build service package name
+# The Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
 # in order to get a properly filled download page
 Name:           kreenshot-editor
