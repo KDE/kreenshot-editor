@@ -36,11 +36,9 @@ Component 2: image-editor
 
 BUGS
 ----
-- Since the beginning:
-    Resize the main window requires the user to click the editor widget to restore the cursor to normal.
-    No mouse events are handled until mouse click.
-- Blurring of lines and selection handles:
-    item->lineStyle()->width = 3; // TODO: if this number is uneven, then the item AND the black selection handles become blurred!
+- Resize the main window requires the user to click the editor widget to restore the cursor to normal.
+  => No mouse events are handled until mouse click.
+  Happens since the beginning of the project
 - see TODO.txt
 
 QUESTIONS

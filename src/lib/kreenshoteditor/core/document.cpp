@@ -480,7 +480,9 @@ QImage Document::renderToImage()
     // see http://developer.nokia.com/community/wiki/How_to_wait_synchronously_for_a_Signal_in_Qt
 
     d->renderToImageResult = QImage();
-    emit requestRenderToImageSignal(this); // KreenGraphicsScene::slotRequestRenderToImage will be called directly
+    // KreenGraphicsScene::slotRequestRenderToImage will be called directly.
+    // But it must be connected (see KreenshotEditor::Impl::createNewDocument)
+    emit requestRenderToImageSignal(this);
 
     // not needed:
 //     while (d->renderToImageResult.isNull()) {

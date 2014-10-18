@@ -28,6 +28,7 @@
 #include "lib/kreenshoteditor/core/documentfile.h"
 #include "lib/kreenshoteditor/core/impl/outputfilenamegenerator.h"
 #include "lib/kreenshoteditor/core/settingsmanager.h"
+#include "lib/kreenshoteditor/ui/impl/kreengraphicsscene.h" // needed as long as we do scene rendering in the UI
 
 using namespace kreen::core;
 
@@ -58,6 +59,13 @@ private slots:
         qDebug() << file.absoluteFilePath(); // this will be relative build/tests
 
         auto doc = Document::make_shared(QImage(inputImage1Filename));
+        // currently needed to connect scene with document to make docFile.save() work
+        // BEGIN
+        auto scene = kreen::ui::KreenGraphicsScene::make_shared();
+        connect(doc.get(), SIGNAL(requestRenderToImageSignal(kreen::core::Document*)),
+                scene.get(), SLOT(slotRequestRenderToImage(kreen::core::Document*)));
+        // END
+
         QString filename = "./testdata/output_docfile1.png";
         DocumentFile docFile(doc, filename, DocumentFile::FileStatus_NotCreated);
         docFile.setSettingsManager(settingsManager);
@@ -81,6 +89,13 @@ private slots:
     void DocumentFile_init_modifydoc_saveas()
     {
         auto doc = Document::make_shared(QImage(inputImage1Filename));
+        // currently needed to connect scene with document to make docFile.save() work
+        // BEGIN
+        auto scene = kreen::ui::KreenGraphicsScene::make_shared();
+        connect(doc.get(), SIGNAL(requestRenderToImageSignal(kreen::core::Document*)),
+                scene.get(), SLOT(slotRequestRenderToImage(kreen::core::Document*)));
+        // END
+
         DocumentFile docFile(doc, inputImage1Filename, DocumentFile::FileStatus_NotCreated);
         docFile.setSettingsManager(settingsManager);
 
@@ -119,7 +134,6 @@ private slots:
         qDebug() << "[CHECK VISUALLY]:";
         qDebug() << gen.resultingFilename("~/Pictures/screenshots/${YYYY}-${MM}-${DD}_${hh}-${mm}-${ss}_${description_}.png");
         qDebug() << gen.resultingFilename("${description}, ${hostname}, ${user}");
-
     }
 };
 
