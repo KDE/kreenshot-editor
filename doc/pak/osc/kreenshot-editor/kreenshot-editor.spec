@@ -24,7 +24,6 @@
 # ----        ------           ---------
 # 2014-10-18  Gregor Mi        init
 # TODO:
-#   * add screenshot to http://software.opensuse.org/
 #   * specify Requires tag for runtime?
 
 # The Name must match the openSUSE build service package name
