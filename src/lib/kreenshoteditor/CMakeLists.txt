@@ -75,6 +75,7 @@ if(LIB64__)
 else()
     set(LIB_SUFFIX "")
 endif()
+message("[DEBUG] LIB_SUFFIX=${LIB_SUFFIX}")
 
 ##### START: header file handling #####
 #####
