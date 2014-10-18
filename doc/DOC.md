@@ -1,7 +1,7 @@
 kreenshot-editor Documentation
 ==============================
 
-This document describes the content of the kreenshot-documentation folder.
+This document describes the content of the kreenshot documentation folder.
 
 
 pak
@@ -13,6 +13,8 @@ Two goals are achieved:
     See pak/osc/kreenshot-editor/kreenshot-editor.spec
 
 2.  Provide a package for openSUSE which can be downloaded here: http://software.opensuse.org/package/kreenshot-editor
+
+3.  Try out building on different target platforms (e.g. i586 or x86_64)
 
 More on how to use the openSUSE build service see pak/osc/README.md
 
@@ -29,4 +31,4 @@ then this script shows which variables must be set to make it run properly.
 
 About this document
 -------------------
-Written in CommonMark http://commonmark.org/
+written in CommonMark http://commonmark.org/

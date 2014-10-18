@@ -29,7 +29,7 @@
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
 # in order to get a properly filled download page
 Name:           kreenshot-editor
-Summary:        Screenshot image editor
+Summary:        Screenshot image editing
 Version:        0.01
 Release:        0
 License:        LGPL-2.0+
@@ -38,11 +38,17 @@ Url:            http://kreenshot.wordpress.com
 Source0:        kreenshot-editor-9b7793f.tar.gz
 #Source1:        ChangeLog
 #Patch0:         0001-progress_indicator.cpp-fix-by-using-wxString-ctor.patch
+
+# see https://en.opensuse.org/openSUSE:Specfile_guidelines
+# "The BuildRoot tag should always be used, even if newer rpms override it anyway. The preferred path is %{_tmppath}/%{name}-%{version}-build."
+# TODO: use this instead of just build
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRoot:      build
 BuildRequires:  unzip
 BuildRequires:  gcc-c++ >= 4.8
 BuildRequires:  cmake >= 2.8.11
+# openSUSE_13.1 comes with version 5.1.1
+# openSUSE_Factory                 5.3.x
 BuildRequires:  libqt5-qtbase-devel >= 5.2
 #BuildRequires:  boost-devel >= 1.53
 #BuildRequires:  wxWidgets-2_9-devel
@@ -52,9 +58,15 @@ BuildRequires:  libqt5-qtbase-devel >= 5.2
 #PreReq:         %fillup_prereq
 
 %description
-abc
-def
-ghi
+kreenshot-editor is an application for screenshot image editing.
+Features:
+* draw basic shapes like rectangle, ellipse, line, arrow etc.
+* highlight, obfuscate or crop rectangular regions
+* all items are movable and resizable after they have been placed
+* undo/redo
+* command line interface
+* import from clipboard
+* default output directory with configurable filename pattern
 
 %prep
 %setup -q -c %{name}-%{version}
@@ -68,16 +80,28 @@ ghi
 ####%{__cp} %{S:1} .
 
 %build
+# see https://en.opensuse.org/openSUSE:Specfile_guidelines
+#    NOTE that the %{buildroot} is cleaned automatically
+#    because %clean is called interally
 mkdir build
+# so directory structure now looks like this:
+#  build (new)
+#  doc
+#  src
+#  tests
 cd build
-cmake ..
+# see also http://www.cmake.org/Wiki/CMake_Useful_Variables for information about CMAKE_BUILD_TYPE
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 
 %install
-# cd FreeFileSync/Source
-# %make_install
+# we are still in the build dir (?)
+# see https://en.opensuse.org/openSUSE:Specfile_guidelines
+#     "%make_install is a macro available starting rpm-4.10. It is equivalent to `make install DESTDIR="%{?buildroot}"`."
+%make_install
 
 %clean
+# see "Removing the buildroot" on https://en.opensuse.org/openSUSE:Specfile_guidelines
 rm -rf %{buildroot}
 
 %files

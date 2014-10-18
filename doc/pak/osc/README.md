@@ -53,4 +53,9 @@ Building locally means check if spec file is ready to be published.
 E.g. build for openSUSE_13.1 and for the x86_64 platform:
 
     $ cd kreenshot-editor
-    $ osc build openSUSE_13.1 x86_64
+    $ osc build openSUSE_13.1 x86_64     # provides only libqt5-qtbase-devel 5.1 but we need 5.2 or greater
+    $ osc build openSUSE_Factory x86_64
+
+This takes a while to download all the packages. Luckily they will be cached.
+You will need the root password which is used to create some sandbox environment.
+So your root directory will not be polluted.
