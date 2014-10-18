@@ -76,6 +76,8 @@ else()
     set(LIB_SUFFIX "")
 endif()
 message("[DEBUG] LIB_SUFFIX=${LIB_SUFFIX}")
+message("[DEBUG] test env var XDG_DATA_DIRS=$ENV{XDG_DATA_DIRS}")
+message("[DEBUG] test env var BUILD_ARCH (from osc)=$ENV{BUILD_ARCH}")
 
 ##### START: header file handling #####
 #####
