@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sat Oct 18 23:31:00 UTC 2014 - codestruct@posteo.org
+
+- fixed all warnings
+  + build for 64 and 32 bit
+
+-------------------------------------------------------------------
 Sat Oct 18 18:49:00 UTC 2014 - codestruct@posteo.org
 
 - initial packaging for kreenshot-editor
