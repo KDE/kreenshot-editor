@@ -16,7 +16,7 @@ message("[INFO] CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}")
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/src
-  ${CMAKE_SOURCE_DIR}/src/generated-include
+  ${CMAKE_SOURCE_DIR}/src/lib/kreenshoteditor/generated-include
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 

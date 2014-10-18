@@ -76,6 +76,22 @@ else()
     set(LIB_SUFFIX "")
 endif()
 
+##### START: header file handling #####
+#####
+    # http://stackoverflow.com/questions/15972898/cmake-how-to-run-a-add-custom-command-before-everything-else
+    message("[INFO] src/lib/kreenshoteditor add_custom_target: prepare-include-files")
+    add_custom_target(prepare-include-files
+        # COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/mk_config_h.py ${CMAKE_CURRENT_BINARY_DIR}/config.h
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/prepare-include-files.sh generated-include WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+
+        # when outside add_custom_target use execute_process but this is only run when cmake is configuring:
+        # http://stackoverflow.com/questions/1438535/how-to-run-a-command-at-compile-with-in-makefile-generated-by-cmake
+        # execute_process(COMMAND echo "Hallo")
+    )
+    add_dependencies(kreenshoteditor prepare-include-files)
+#####
+##### END: header file handling #####
+
 install(TARGETS kreenshoteditor
   LIBRARY DESTINATION lib${LIB_SUFFIX}
 )

@@ -17,13 +17,13 @@ fi
 # find header files and copy them to target dir
 HEADER_SRC_ARR=() # define array
 HEADER_TRT_ARR=() # define array
-HEADER_SRC_ARR[0]=lib/kreenshoteditor/kreenshoteditor.h
+HEADER_SRC_ARR[0]=kreenshoteditor.h
 HEADER_TRT_ARR[0]=kreen
-HEADER_SRC_ARR[1]=lib/kreenshoteditor/core
+HEADER_SRC_ARR[1]=core
 HEADER_TRT_ARR[1]=kreen/core
-HEADER_SRC_ARR[2]=lib/kreenshoteditor/ui
+HEADER_SRC_ARR[2]=ui
 HEADER_TRT_ARR[2]=kreen/ui
-HEADER_SRC_ARR[3]=lib/kreenshoteditor/util
+HEADER_SRC_ARR[3]=util
 HEADER_TRT_ARR[3]=kreen/util
 for i in 0 1 2 3 ; do
     HEADER_SRC=${HEADER_SRC_ARR[$i]}
