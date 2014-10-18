@@ -25,7 +25,7 @@
 # 2014-10-18  Gregor Mi        init
 # TODO:
 #   add screenshot to http://software.opensuse.org/
-#   specify Requires tag?
+#   specify Requires tag for runtime?
 
 # The Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
@@ -33,12 +33,12 @@
 #
 Name:           kreenshot-editor
 Summary:        Screenshot image editing
-Version:        0.02
+Version:        0.03
 Release:        0
 License:        LGPL-2.0+
 Group:          Productivity/Graphics
 Url:            http://kreenshot.wordpress.com
-Source0:        kreenshot-editor-aff3428.tar.gz
+Source0:        kreenshot-editor-%{version}.tar.gz
 #Source1:        ChangeLog
 #Patch0:         0001-progress_indicator.cpp-fix-by-using-wxString-ctor.patch
 #
