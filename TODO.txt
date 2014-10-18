@@ -1,11 +1,6 @@
 TODO
 ----
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
-- FIX rpm build
-    see: add_dependencies(kreenshot-editor prepare-include-files)
-    causes the osc build fail on the first attempt when build dir is clean
-    quick solution: move the generated-include dir and the cmake statement to the lib dir because it needed only there
-    (other solution: remove the script completely)
 - enable more item properties (see item.h/cpp)
 - key movement of items
 - Home, End, PageUp, PageDown: item stacking
@@ -69,6 +64,9 @@ LATER
     - show message flash, when done (or KMessageBox, "show never again")
     - plus: provide drag source for DND
 - Open last save location
+- header file handling
+    see: add_dependencies(kreenshot-editor prepare-include-files) / prepare-include-files.sh
+    remove the script completely with a better solution
 - lib: provide different kinds of mainwidget
    - with or without toolbar
    - with some predefined stuff etc.
