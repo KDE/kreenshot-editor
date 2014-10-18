@@ -76,8 +76,12 @@ else()
     set(LIB_SUFFIX "")
 endif()
 message("[DEBUG] LIB_SUFFIX=${LIB_SUFFIX}")
-message("[DEBUG] test env var XDG_DATA_DIRS=$ENV{XDG_DATA_DIRS}")
-message("[DEBUG] test env var BUILD_ARCH (from osc)=$ENV{BUILD_ARCH}")
+message("[DEBUG] env var XDG_DATA_DIRS=$ENV{XDG_DATA_DIRS}")
+message("[DEBUG] env var from spec file KREEN_SPEC_ARCH=$ENV{KREEN_SPEC_ARCH}")
+if ("$ENV{KREEN_SPEC_ARCH}" STREQUAL "i386") # see export KREEN_SPEC_ARCH=%{_arch} in spec file
+    set(LIB_SUFFIX "")
+endif()
+message("[DEBUG] after WORKAROUND LIB_SUFFIX=${LIB_SUFFIX}")
 
 ##### START: header file handling #####
 #####

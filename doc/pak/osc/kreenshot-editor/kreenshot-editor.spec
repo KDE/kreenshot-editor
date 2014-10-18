@@ -106,6 +106,12 @@ Features:
 mkdir build
 cd build
 
+# To see the current list of macros, put a %%dump at the start of your spec file.
+# see http://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch09s07s02.html
+# WORKAROUND (see LIB_SUFFIX in CMakeLists.txt, how to do it more nicely?)
+export KREEN_SPEC_ARCH=%{_arch}
+echo KREEN_SPEC_ARCH=$MY_SPEC_ARCH
+
 # see also http://www.cmake.org/Wiki/CMake_Useful_Variables for information about CMAKE_BUILD_TYPE
 # we need to set CMAKE_INSTALL_PREFIX because otherwise it installs to /usr/local
 # cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr $BUILDDIR # does not work, see above
