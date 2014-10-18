@@ -60,6 +60,7 @@ BuildRequires:  libqt5-qtbase-devel >= 5.2
 #BuildRequires:  wxWidgets-2_9-wxcontainer-devel
 #PreReq:         %%fillup_prereq
 
+
 %description
 kreenshot-editor is an application for screenshot image editing.
 Features:
@@ -71,6 +72,7 @@ Features:
 * import from clipboard
 * default output directory with configurable filename pattern
 
+
 %prep
 %setup -q -c %{name}-%{version}
 %define _use_internal_dependency_generator 0
@@ -81,6 +83,7 @@ Features:
 
 ####???
 ####%%{__cp} %%{S:1} .
+
 
 %build
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
@@ -97,24 +100,54 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 
+
 %install
 cd build
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
 #     "%%make_install is a macro available starting rpm-4.10. It is equivalent to `make install DESTDIR="%%{?buildroot}"`."
 %make_install
 
+
 %clean
 # see "Removing the buildroot" on https://en.opensuse.org/openSUSE:Specfile_guidelines
 rm -rf %{buildroot}
 
+
 # to avoid "error: Installed (but unpackaged) file(s) found"
-rm -rf %{buildroot}
 %files
-#%%defattr(-,root,root,-)
+# see http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-files-list-directives.html
+# %%defattr(<The default permissions, or "mode" for files>,
+#            <The default user id>,
+#            <The default group id>,
+#            <The default permissions, or "mode" for directories.>)
+%defattr(-,root,root,-)
+/usr/local/bin/
+/usr/local/lib64/
+/usr/local/share/kreenshot-editor/
 #%%{_bindir}/abc
 #%%{_datadir}/def
 #%%doc /usr/share/doc/kreenshot-editor
 ##%%doc /usr/share/doc/kreenshot-editor/changelog.gz
 %doc COPYING.LIB
 
+
 %changelog
+# ...
+
+# [   89s] RPMLINT report:
+# [   89s] ===============
+# [   91s] kreenshot-editor.x86_64: W: suse-filelist-forbidden-fhs23 /usr/local is not allowed in FHS 2.3
+# [   91s] see http://www.pathname.com/fhs/ for a better location
+# [   91s]
+# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/local/lib64
+# [   91s] kreenshot-editor.x86_64: W: standard-dir-owned-by-package /usr/local/bin
+# [   91s] This package owns a directory that is part of the standard hierarchy, which
+# [   91s] can lead to default directory permissions or ownerships being changed to
+# [   91s] something non-standard.
+# [   91s]
+# [   91s] kreenshot-editor.x86_64: W: no-changelogname-tag
+# [   91s] kreenshot-editor.src: W: no-changelogname-tag
+# [   91s] There is no changelog. Please insert a '%changelog' section heading in your
+# [   91s] spec file and prepare your changes file using e.g. the 'osc vc' command.
+# [   91s]
+# [   91s] 2 packages and 0 specfiles checked; 0 errors, 5 warnings.
