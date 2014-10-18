@@ -3,6 +3,8 @@ kreenshot-editor
 
 kreenshot-editor is incubating.
 
+More documentation can be found in doc/DOC.md.
+
 Build
 -----
 # EITHER: for development (Debug, local install prefix):

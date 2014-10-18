@@ -1,28 +1,41 @@
+# This file is part of the kreenshot-editor project.
+#
+# Copyright (C) 2014 by Gregor Mi <codestruct@posteo.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 or the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
+#
+
 #
 # spec file for package kreenshot-editor
 #
-# Copyright (c) 2014 Gregor Mi
-#
-# TODO
-#
 
-# Date    Author           Changelog
-# ----    ------           ---------
-
+# Date        Author           Changelog
+# ----        ------           ---------
+# 2014-10-18  Gregor Mi        init
 #
-
 
 # This Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
-# in order to a properly filled download page
+# in order to get a properly filled download page
 Name:           kreenshot-editor
 Summary:        Screenshot image editor
-Version:        0.001
+Version:        0.01
 Release:        0
 License:        LGPL-2.0+
 Group:          Productivity/Graphics
 Url:            http://kreenshot.wordpress.com
-Source0:        kreenshot-editor-6af544a.tar.gz
+Source0:        kreenshot-editor-9b7793f.tar.gz
 #Source1:        ChangeLog
 #Patch0:         0001-progress_indicator.cpp-fix-by-using-wxString-ctor.patch
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -76,4 +89,3 @@ rm -rf %{buildroot}
 %doc COPYING.LIB
 
 %changelog
-
