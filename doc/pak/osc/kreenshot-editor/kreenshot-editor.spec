@@ -24,8 +24,8 @@
 # ----        ------           ---------
 # 2014-10-18  Gregor Mi        init
 # TODO:
-#   add screenshot to http://software.opensuse.org/
-#   specify Requires tag for runtime?
+#   * add screenshot to http://software.opensuse.org/
+#   * specify Requires tag for runtime?
 
 # The Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
@@ -120,6 +120,17 @@ cd build
 # see https://en.opensuse.org/openSUSE:Specfile_guidelines
 #     "%%make_install is a macro available starting rpm-4.10. It is equivalent to `make install DESTDIR="%%{buildroot}"`."
 %make_install
+# installs to /home/abuild/rpmbuild/BUILDROOT/kreenshot-editor-0.03-0.x86_64/usr/
+
+# potential error in %%files when installing manpage:
+# File not found: /home/abuild/rpmbuild/BUILDROOT/kreenshot-editor-0.03-0.x86_64/usr/share/man/man1/kreenshot-editor.1.gz
+# quick fix, todo: looks not so nice,
+#   if causes errors later, just remove the man page stuff and live with the RPMLINT warning that there is no man page:
+cd ..
+gzip %{name}.1
+TARGETMANFILE=%{name}.1%{ext_man}
+mkdir --parents %{buildroot}%{_mandir}/man1
+cp $TARGETMANFILE %{buildroot}%{_mandir}/man1/$TARGETMANFILE
 
 
 %clean
@@ -154,7 +165,10 @@ rm -rf %{buildroot}
 
 # goes to /usr/share/doc/packages/kreenshot-editor/
 %doc AUTHORS COPYING README ChangeLog
-# taken from https://build.opensuse.org/package/view_file/Education/xplanet/xplanet.spec
+
+# %%doc part taken from https://build.opensuse.org/package/view_file/Education/xplanet/xplanet.spec
+# but this causes some hassle, see %%install section
+# see also http://www.cyberciti.biz/faq/linux-unix-creating-a-manpage/
 %doc %{_mandir}/man1/%{name}.1%{ext_man}
 
 

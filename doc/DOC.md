@@ -42,6 +42,8 @@ Two goals are achieved:
 
 More on how to use the openSUSE build service see pak/osc/README.md
 
+Use the pak/osc/master-to-source.sh to quickly create the source tarball for openSUSE build service.
+
 
 ./kreenshot-editor-local-debug.sh
 ---------------------------------

@@ -6,17 +6,6 @@ The default build root dirs are:
 /var/tmp/build-root/
 /var/tmp/build-root32/
 
-OPEN ISSUES
------------
-see:
-[   91s] RPMLINT report:
-[   91s] ===============
-[   93s] kreenshot-editor.x86_64: W: no-manual-page-for-binary kreenshot-editor
-[   93s] Each executable in standard binary directories should have a man page.
-[   93s]
-[   93s] 2 packages and 0 specfiles checked; 0 errors, 1 warnings.
-
-
 One time init (already done)
 ----------------------------
 1.  Create package at build.opensuse.org via Web frontend
@@ -88,3 +77,13 @@ So your root directory will not be polluted.
 
 Depending on the chosen configuration the build directory is located here:
 /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/BUILD/kreenshot-editor-0.01/
+
+Result
+------
+...
+[   90s] RPMLINT report:
+[   90s] ===============
+[   92s] 2 packages and 0 specfiles checked; 0 errors, 0 warnings.
+...
+/var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/SRPMS/kreenshot-editor-0.03-0.src.rpm
+/var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/RPMS/x86_64/kreenshot-editor-0.03-0.x86_64.rpm
