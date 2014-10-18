@@ -1,6 +1,5 @@
 TODO
 ----
-- BUG: in Release configuration undoing a created item does not work!
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items
@@ -33,6 +32,8 @@ IDEAS
 
 LATER
 -----
+- remove all remaining catch blocks
+    - see: ScopeGuard, see http://channel9.msdn.com/Shows/Going+Deep/C-and-Beyond-2012-Andrei-Alexandrescu-Systematic-Error-Handling-in-C
 - selection handles
     - Ctrl for proportional
     - see also qDebug() << "...handle was just clicked without moving... TODO: toggle proportional mode";

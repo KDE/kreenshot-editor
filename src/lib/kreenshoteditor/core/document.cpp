@@ -291,7 +291,8 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
         d->undoStack.push(new DeleteItemCmd(this, item));
     }
     else {
-        Q_ASSERT(d->itemMap.remove(item->id()) == 1);
+        int removedCount = d->itemMap.remove(item->id()); // in Release build we will have a unused-variable warning
+        Q_ASSERT(removedCount == 1);
         d->itemsCacheDirty = true;
         d->contentChangedNotificationGroupMethodLeave();
     }
