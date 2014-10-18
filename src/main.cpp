@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
 
     auto kreenshotEditor = kreen::KreenshotEditor::make_shared();
 
+    kreenshotEditor->performSelfTest();
+
     kreenshotEditor->setCaptureTime();
     kreenshotEditor->setDescription(arguments.description);
     // TODO later: set pattern from command line (--output-file-pattern)

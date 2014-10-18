@@ -179,6 +179,11 @@ public:
     void showAboutDialog(QWidget* parent);
 
     /**
+     * checks if app data is installed correctly and shows messagebox if not
+     */
+    void performSelfTest();
+
+    /**
      * To be called in the dragEnterEvent method of the mainwindow.
      */
     void dragEnterEventMainWindow(QDragEnterEvent* event);

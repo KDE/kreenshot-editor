@@ -132,10 +132,13 @@ public:
         return action;
     }
 
+    /**
+     * todo later: replace with something more standard
+     */
     static QIcon iconFromAppHicolor48(QString iconname)
     {
         QString fullpath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                  QString("kreenshot-editor/icons/hicolor/48x48/actions/%0.png").arg(iconname));
+                           QString("kreenshot-editor/icons/hicolor/48x48/actions/%0.png").arg(iconname));
         return QIcon(fullpath);
     }
 
@@ -516,6 +519,21 @@ void KreenshotEditor::showAboutDialog(QWidget* parent)
 {
     QMessageBox::information(parent, tr("About kreenshot-editor"),
                              tr("kreenshot-editor - screenshot image editing\n\n(c) 2014 by Gregor Mi\n\nIRC contact: #kreenshot-editor on irc.freenode.net\n\nBug reports go to codestruct@posteo.org\n(until offical issue tracker is initialized)\n\nWebsite: http://kreenshot.wordpress.com"));
+}
+
+void kreen::KreenshotEditor::performSelfTest()
+{
+    QString fullpath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kreenshot-editor/kreenshot-editor.txt");
+    if (!QFile::exists(fullpath)) {
+        QMessageBox::warning(nullptr, tr("Self test failed"), this->tr("GenericDataLocation/kreenshot-editor/kreenshot-editor.txt not found.\n\
+\n\
+This means either that /usr/share/kreenshot-editor/ is not present or in general \
+that $XDG_DATA_DIRS does not contain the path which holds the basepath to kreenshot-editor/kreenshot-editor.txt.\n\
+\n\
+For development: in the source code this directory is located here: src/XDG_DATA_DIR. So setup the environment variable $XDG_DATA_DIRS accordingly.\n\
+\n\
+As a result some icons might be missing."));
+    }
 }
 
 void KreenshotEditor::slotDocumentFileStatusChanged()
