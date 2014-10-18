@@ -75,6 +75,11 @@ install(TARGETS kreenshot-editor
   RUNTIME DESTINATION bin
 )
 
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/XDG_DATA_DIR/kreenshot-editor
+    DESTINATION share
+    PATTERN ".*" EXCLUDE
+)
+
 message("[INFO] src/end")
 
 # kate: indent-width 4; replace-tabs on;

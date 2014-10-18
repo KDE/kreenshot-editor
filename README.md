@@ -16,8 +16,11 @@ $ make
 
 Run
 ---
-in directory build:
+in build directory:
 $ ./src/kreenshot-editor
+
+via helper script to test local installation:
+$ ./doc/kreenshot-editor-local-debug.sh
 
 Component 1: main-application
 -----------------------------

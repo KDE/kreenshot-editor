@@ -88,6 +88,7 @@ QLineF SelectionHandleBase::selHandleBase_sceneLine()
 
     qDebug() << "SelectionHandleBase::selHandleBase_sceneLine() IMPL ERROR";
     Q_ASSERT(false);
+    return QLineF(); // return empty line in Release build (which will lead to a bug if this happens)
 }
 
 void SelectionHandleBase::handleStartDrag()

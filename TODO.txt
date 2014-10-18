@@ -1,5 +1,6 @@
 TODO
 ----
+- BUG: in Release configuration undoing a created item does not work!
 - see /home/gregor/kdesrc/kde/kdegraphics/kolourpaint/cursors/
 - enable more item properties (see item.h/cpp)
 - key movement of items
@@ -52,6 +53,8 @@ LATER
 - // TODO: make  a simple example to find the cause (maybe because we use MainEditorWidget
     - to find bug: cursors sticks to be the resize cursor when resizing main window
 - cmake for testdata: file(COPY yourDir DESTINATION yourDestination)
+- cmake fix warning:
+      Policy CMP0028 is not set: Double colon in target name means ALIAS or ...
 - PageOutput Settings: file format combobox should use setModel(), QAbstractItemModel,
     be an own widget and show also description
 - OpenSuseBuild service
