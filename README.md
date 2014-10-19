@@ -57,18 +57,51 @@ Example to run a install prefixed build:
 
 Related tools
 -------------
-These Linux tools have similar image editor capabilities:
-- greenshot (.NET) - the inspirational source for kreenshot-editor
-- shutter (Perl)
-- hotshots (QT)
+- greenshot (.NET) - the inspirational source for kreenshot-editor, Windows only
 
-Thanks to contributors
-----------------------
-- Tikzkit
-    source code and discussions with the author gave valuable inspirations
-    https://projects.kde.org/projects/playground/graphics/tikzkit
-- kolourpaint
-    took the light cross cursor
-    http://www.kde.org/applications/graphics/kolourpaint/
-- many more
+Linux tools that have similar image editor capabilities:
+- shutter   (Perl)
+- hotshots  (QT)
 
+Linux screenshot tools without own image editor:
+- ksnapshot (QT)
+
+THANKS
+------
+First thanks goes to the contributors that are listed in the AUTHORS file.
+
+Apart from that I consulted the source code of several applications
+to look at coding and packaging details:
+
+- tikzkit - source code and discussions with the author gave valuable input
+            https://projects.kde.org/projects/playground/graphics/tikzkit
+- kolourpaint - took the light cross cursor
+                http://www.kde.org/applications/graphics/kolourpaint/
+- kdevelop - how to use icons and primary dev env
+- GammaRay - how to use icons
+             http://www.kdab.com/kdab-products/gammaray/
+- xplanet - spec file writing
+
+Throughout the source code of kreenshot-editor you will find hyperlinks to
+internet resources like blogs, mailing list entries or forum posts that
+help to solve the specific problem.
+
+At last, the following applications and tools helped to develop kreenshot-editor
+- kdevelop - the dev env of choice
+- kate - for its great highlighting magic
+- Thunderbird - doing mails
+- Firefox - browse the web
+- ksnapshot - making screenshots
+- shutter - making screenshots
+- dolphin - shifting files
+- KDE itself with plasma
+- krusader - for icon browsing
+- clementine - the louder the music the better the code
+- KDiskFree - looking for space during packaging
+- KSysGuard
+- osc - openSUSE build service tool
+- yakuake and konsole
+- git-cola
+- GitExtensions - https://github.com/gitextensions/gitextensions
+- Inkscape - graphics
+- QT assistant
