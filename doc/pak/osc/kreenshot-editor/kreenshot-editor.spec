@@ -23,8 +23,6 @@
 # Date        Author           Changelog
 # ----        ------           ---------
 # 2014-10-18  Gregor Mi        init
-# TODO:
-#   * specify Requires tag for runtime?
 
 # The Name must match the openSUSE build service package name
 # (see for example https://build.opensuse.org/package/show/home:codeminister/FreeFileSync)
@@ -52,8 +50,12 @@ BuildRequires:  cmake >= 2.8.11
 # openSUSE_13.1 comes with version 5.1.1
 # openSUSE_Factory                 5.3.x
 BuildRequires:  libqt5-qtbase-devel >= 5.2
+
 #PreReq:         %%fillup_prereq
 
+# Requires will mostly be determined by rpm automatically
+# but sometimes it needs help, e.g. with required package versions
+Requires: libqt5-qtbase >= 5.2
 
 %description
 kreenshot-editor is an application for screenshot image editing.
