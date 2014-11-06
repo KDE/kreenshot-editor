@@ -26,13 +26,21 @@ IDEAS
 - Arrow/line, 4 buttons in props toolbar for arrow top: none, start, end, both
 - Replacement for Imageviewer:
     Select no tool: zoom to fit. Any tool or Select: zoom 100%, show edit toolbar
+- halbrunder Pfeil für Vertauschungen
 - rounded rect
         //painter.setPen(QPen(Qt::darkGreen, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
         //painter.drawRoundRect(100, 200, 100, 200, 10, 10);
 
 LATER
 -----
-- RPM: Fix all RPMLINT report warnings
+- add "Treat as new" to the file menu (scenario: opened via command line but want to save to the default location)
+- Include build information in excecutable (or data file)
+    - application version
+        - version.h
+            - local-build oder ähnlich
+    - Architecture
+    - hostname of build machine
+- package: provide desktop file with app icon
 - remove all remaining catch blocks
     - see: ScopeGuard, see http://channel9.msdn.com/Shows/Going+Deep/C-and-Beyond-2012-Andrei-Alexandrescu-Systematic-Error-Handling-in-C
 - selection handles

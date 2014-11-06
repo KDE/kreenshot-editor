@@ -60,11 +60,11 @@ Related tools
 - greenshot (.NET) - the inspirational source for kreenshot-editor, Windows only
 
 Linux tools that have similar image editor capabilities:
-- shutter   (Perl)
-- hotshots  (QT)
+- shutter   (Perl)  http://shutter-project.org/
+- hotshots  (QT)    http://sourceforge.net/projects/hotshots/
 
 Linux screenshot tools without own image editor:
-- ksnapshot (QT)
+- ksnapshot (QT)    https://www.kde.org/applications/graphics/ksnapshot/
 
 THANKS
 ------

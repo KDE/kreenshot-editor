@@ -88,8 +88,20 @@ Result
 /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/SRPMS/kreenshot-editor-0.03-0.src.rpm
 /var/tmp/build-root/openSUSE_Factory-x86_64/home/abuild/rpmbuild/RPMS/x86_64/kreenshot-editor-0.03-0.x86_64.rpm
 
+
 How to add a screenshot to the software.opensuse.org page?
 ----------------------------------------------------------
 This is done via http://screenshots.debian.net
 (found here http://www.digitalflow.de/blog/2012/04/new-package-search-on-software-opensuse-org/)
 Go to http://screenshots.debian.net/upload and upload it. todo: package not listed yet, so cannot upload.
+
+
+Find out requirements of a package
+----------------------------------
+$ rpm -qpR {.rpm-file}
+(from http://www.cyberciti.biz/faq/how-do-i-find-what-dependencies-a-rpm-file-has/)
+or
+$ rpm -qR {package-name}
+
+$ zypper info --requires kreenshot-editor
+(from https://forums.opensuse.org/showthread.php/457264-Finding-package-dependencies-with-zypper)
