@@ -5,6 +5,9 @@ Screenshot image editing.
 
 More documentation can be found in doc/DOC.md.
 
+Website: http://feinstaub.github.io/kreenshot-editor
+Central source code repository: https://projects.kde.org/projects/playground/graphics/kreenshot-editor
+
 Quick Build
 -----------
 # EITHER: for development (Debug, local install prefix):
@@ -61,47 +64,44 @@ Related tools
 
 Linux tools that have similar image editor capabilities:
 - shutter   (Perl)  http://shutter-project.org/
-- hotshots  (QT)    http://sourceforge.net/projects/hotshots/
+- hotshots  (QT)    http://sourceforge.net/projects/hotshots/ http://thehive.xbee.net/index.php?module=pages&func=display&pageid=31
 
 Linux screenshot tools without own image editor:
 - ksnapshot (QT)    https://www.kde.org/applications/graphics/ksnapshot/
 
+More:
+- Lookit for Ubunto http://pmeyhoefer.de/blog/lookit-einfaches-und-leichtgewichtiges-screenshot-tool-fur-ubuntu/
+- http://lifehacker.com/5889994/the-best-screen-capture-tool-for-linux
+
 THANKS
 ------
-First thanks goes to the contributors that are listed in the AUTHORS file.
+See the list contributors in the AUTHORS file.
 
-Apart from that I consulted the source code of several applications
-to look at coding and packaging details:
+Apart from that the source code of several applications were consulted
+for coding and packaging details:
 
-- tikzkit - source code and discussions with the author gave valuable input
-            https://projects.kde.org/projects/playground/graphics/tikzkit
+- tikzkit     - source code and discussions with the author gave valuable input
+                https://projects.kde.org/projects/playground/graphics/tikzkit
 - kolourpaint - took the light cross cursor
                 http://www.kde.org/applications/graphics/kolourpaint/
-- kdevelop - how to use icons and primary dev env
-- GammaRay - how to use icons
-             http://www.kdab.com/kdab-products/gammaray/
-- xplanet - spec file writing
+- kdevelop    - how to use icons and primary dev env
+- GammaRay    - how to use icons
+                http://www.kdab.com/kdab-products/gammaray/
+- xplanet     - spec file writing
+(last updated 2015-01-04)
 
 Throughout the source code of kreenshot-editor you will find hyperlinks to
 internet resources like blogs, mailing list entries or forum posts that
 help to solve the specific problem.
 
 At last, the following applications and tools helped to develop kreenshot-editor
-- kdevelop - the dev env of choice
-- kate - for its great highlighting magic
-- Thunderbird - doing mails
-- Firefox - browse the web
+- kdevelop - the IDE
+- kate/ktexteditor - great code highlighting features
 - ksnapshot - making screenshots
 - shutter - making screenshots
 - dolphin - shifting files
-- KDE itself with plasma
-- krusader - for icon browsing
-- clementine - the louder the music the better the code
-- KDiskFree - looking for space during packaging
-- KSysGuard
+- krusader - icon browsing
 - osc - openSUSE build service tool
-- yakuake and konsole
 - git-cola
 - GitExtensions - https://github.com/gitextensions/gitextensions
 - Inkscape - graphics
-- QT assistant
