@@ -35,6 +35,18 @@ class Impl; \
 typedef std::shared_ptr<Impl> ImplPtr; \
 ImplPtr d;
 
+/**
+ * QT style d_ptr definition
+ *
+ * Needs:
+ * - class class Document::Private { ... }; in impl
+ * - : d_ptr(new Private) in owner class ctor
+ * - define d when needed with Q_D();
+ */
+#define KREEN_Q_DECLARE_PRIVATE \
+class Private; \
+Private* const d_ptr; \
+Q_DECLARE_PRIVATE(); \
 
 /**
  * call this as first line in the ctor

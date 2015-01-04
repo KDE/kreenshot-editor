@@ -200,10 +200,11 @@ private Q_SLOTS:
     void slotContentChangedSignalEmitter();
 
 private:
-    KREEN_PIMPL_DEFINE_D_PTR
+    KREEN_Q_DECLARE_PRIVATE
 };
 
 }
 }
 
 #endif
+

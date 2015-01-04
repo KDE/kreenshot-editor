@@ -15,7 +15,6 @@ TODO
 - draw arrow (use QPainterPath from TikzKit)
 - The QGraphicsProxyWidget class provides a proxy layer for embedding a QWidget in a QGraphicsScene
 - move crop tool: should respect image boundaries!!!
-- undo should restore selection
 
 IDEAS
 -----

@@ -34,12 +34,11 @@ namespace ui {
 
 namespace core {
 
-class Document::Impl
+class Document::Private
 {
 public:
-    Impl(Document* owner)
+    Private(Document* q) : q_ptr(q)
     {
-        _owner = owner;
     }
 
     /**
@@ -82,16 +81,16 @@ public:
     void contentChangedNotificationGroupMethodLeave()
     {
         if (!contentChangedNotificationGroupActive()) {
-            emit _owner->contentChangedSignal();
+            emit q_ptr->contentChangedSignal();
         }
     }
 
     int maxZValue() {
-        if (_owner->items().empty()) {
+        if (q_ptr->items().empty()) {
             return -1;
         }
 
-        return _owner->items().last()->zValue();
+        return q_ptr->items().last()->zValue();
     }
 
 public:
@@ -133,7 +132,7 @@ public:
     QImage renderToImageResult;
 
 private:
-    Document* _owner = nullptr;
+    Document* q_ptr = nullptr;
 };
 
 DocumentPtr Document::make_shared(QImage baseImage)
@@ -141,12 +140,12 @@ DocumentPtr Document::make_shared(QImage baseImage)
     return std::make_shared<Document>(baseImage);
 }
 
-Document::Document(QImage baseImage)
+Document::Document(QImage baseImage) : d_ptr(new Private(this))
 {
-    KREEN_PIMPL_INIT_THIS(Document)
+    Q_D();
 
     if (baseImage.isNull()) {
-        baseImage = Document::Impl::createDefaultImage();
+        baseImage = Document::Private::createDefaultImage();
     }
 
     setBaseImage(baseImage, false);
@@ -160,16 +159,18 @@ Document::Document(QImage baseImage)
 
 Document::~Document()
 {
-
+    delete d_ptr;
 }
 
 QImage Document::baseImage()
 {
+    Q_D();
     return d->baseImage;
 }
 
 void Document::setBaseImage(QImage image, bool recordUndo)
 {
+    Q_D();
     if (recordUndo) {
         d->undoStack.push(new SetBaseImageCmd(this, image)); // this will call setBaseImage with recordUndo=false
     }
@@ -181,16 +182,19 @@ void Document::setBaseImage(QImage image, bool recordUndo)
 
 bool Document::isClean()
 {
+    Q_D();
     return d->undoStack.isClean();
 }
 
 void Document::setClean()
 {
+    Q_D();
     d->undoStack.setClean();
 }
 
 void Document::undo()
 {
+    Q_D();
     contentChangedNotificationGroupBegin(false);
     qDebug() << "Document::undo(), " << d->undoStack.undoText();
     d->undoStack.undo();
@@ -199,6 +203,7 @@ void Document::undo()
 
 void Document::redo()
 {
+    Q_D();
     contentChangedNotificationGroupBegin(false);
     qDebug() << "Document::redo(), " << d->undoStack.redoText();
     d->undoStack.redo();
@@ -207,16 +212,19 @@ void Document::redo()
 
 bool Document::canUndo()
 {
+    Q_D();
     return d->undoStack.canUndo();
 }
 
 bool Document::canRedo()
 {
+    Q_D();
     return d->undoStack.canRedo();
 }
 
 void Document::contentChangedNotificationGroupBegin(bool recordUndo, QString undoMacroText)
 {
+    Q_D();
     if (d->contentChangedNotificationGroupDepth > 0) { // 2nd or xth call
         Q_ASSERT(d->contentChangedNotificationGroupRecordUndo == recordUndo);
     }
@@ -232,6 +240,9 @@ void Document::contentChangedNotificationGroupBegin(bool recordUndo, QString und
 void Document::contentChangedNotificationGroupEnd()
 {
     Q_ASSERT(d->contentChangedNotificationGroupDepth > 0);
+
+    Q_D();
+
     d->contentChangedNotificationGroupDepth--;
 
     if (d->contentChangedNotificationGroupRecordUndo) {
@@ -250,6 +261,8 @@ void Document::contentChangedNotificationGroupEnd()
 
 void Document::addItem(KreenItemPtr item, bool recordUndo)
 {
+    Q_D();
+
     qDebug() << "Document::addItem(KreenItemPtr item, bool recordUndo)" << item.get() << recordUndo;
     //d->contentChangedNotificationGroupMethodEnter(recordUndo);
 
@@ -286,6 +299,8 @@ void Document::deleteItem(KreenItemPtr item, bool recordUndo)
 {
     //d->contentChangedNotificationGroupMethodEnter(recordUndo);
     Q_ASSERT(d->itemMap.contains(item->id()));
+
+    Q_D();
 
     if (recordUndo) {
         d->undoStack.push(new DeleteItemCmd(this, item));
@@ -341,6 +356,7 @@ void Document::itemStackLowerStep(KreenItemPtr item_in)
 bool Document::hasItemPropertiesChanged(KreenItemPtr item)
 {
     Q_ASSERT(d->itemMap.contains(item->id()));
+    Q_D();
     auto docItem = d->itemMap[item->id()];
     return !item->deepEquals(docItem);
 }
@@ -348,6 +364,7 @@ bool Document::hasItemPropertiesChanged(KreenItemPtr item)
 bool Document::applyItemPropertyChanges(KreenItemPtr item, bool recordUndo)
 {
     Q_ASSERT(d->itemMap.contains(item->id()));
+    Q_D();
 
     if (!hasItemPropertiesChanged(item)) {
         qDebug() << "[INFO] Document::applyItemPropertyChanges items are equal. Return false";
@@ -457,6 +474,8 @@ void Document::imageOpCrop(QRect rect)
 
 const QList<KreenItemPtr> Document::items()
 {
+    Q_D();
+
     if (d->itemsCacheDirty) {
         d->itemsCache.clear();
 
@@ -476,6 +495,8 @@ const QList<KreenItemPtr> Document::items()
 
 QImage Document::renderToImage()
 {
+    Q_D();
+
     // not needed:
     // see https://quickmediasolutions.com/blog/14/qeventloop-making-asynchronous-tasks-synchronous
     // see http://developer.nokia.com/community/wiki/How_to_wait_synchronously_for_a_Signal_in_Qt
@@ -502,6 +523,8 @@ QImage Document::renderToImage()
 
 void Document::onRenderToImageComplete(QImage image)
 {
+    Q_D();
+
     d->renderToImageResult = image;
     //emit requestRenderToImageCompleteSignal(); // see renderToImage() (not needed here)
 }
