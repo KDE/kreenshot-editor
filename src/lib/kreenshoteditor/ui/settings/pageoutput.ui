@@ -90,7 +90,7 @@
       <string>The following placeholders can be used for the filename pattern
 and for the output directory. If used for the latter it is possible
 to create a folder structure like ~/screenshots/${YYYY}. Note, that
-non-exising folders will be created silently.
+non-existing folders will be created silently.
 
 (Changes to these settings take effect immediately only for not-yet-created files.)
 

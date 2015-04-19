@@ -33,7 +33,6 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
 #include <QStyleOptionGraphicsItem>
-#include <QPainter>
 #include <QStyle>
 #include <QMenu>
 #include <cmath>

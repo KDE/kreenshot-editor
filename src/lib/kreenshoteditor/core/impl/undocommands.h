@@ -24,7 +24,7 @@
 #include <QImage>
 
 /**
- * This file contains serveral QUndoCommand derivates
+ * This file contains several QUndoCommand derivates
  */
 namespace kreen {
 namespace core {
