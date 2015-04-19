@@ -76,6 +76,7 @@ More:
 THANKS
 ------
 See the list contributors in the AUTHORS file.
+If you did some contribution feel free to add yourself to this list.
 
 Apart from that the source code of several applications were consulted
 for coding and packaging details:
@@ -105,3 +106,4 @@ At last, the following applications and tools helped to develop kreenshot-editor
 - git-cola
 - GitExtensions - https://github.com/gitextensions/gitextensions
 - Inkscape - graphics
+- ...
