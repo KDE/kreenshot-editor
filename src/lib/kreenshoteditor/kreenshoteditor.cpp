@@ -518,7 +518,7 @@ void KreenshotEditor::showPreferencesDialog(QWidget* parent)
 void KreenshotEditor::showAboutDialog(QWidget* parent)
 {
     QMessageBox::information(parent, tr("About kreenshot-editor"),
-                             tr("kreenshot-editor - screenshot image editing\n\n(c) 2014 by Gregor Mi\n\nIRC contact: #kreenshot-editor on irc.freenode.net\n\nBug reports go to codestruct@posteo.org\n(until offical issue tracker is initialized)\n\nWebsite: http://kreenshot.wordpress.com"));
+                             tr("kreenshot-editor - screenshot image editing\n\n(c) 2014 by Gregor Mi\n\nIRC contact: #kreenshot-editor on irc.freenode.net\n\nBug reports go to codestruct@posteo.org\n(until official issue tracker is initialized)\n\nWebsite: http://kreenshot.wordpress.com"));
 }
 
 void kreen::KreenshotEditor::performSelfTest()
