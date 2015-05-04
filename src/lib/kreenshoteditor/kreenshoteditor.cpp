@@ -166,7 +166,7 @@ public:
     void handleSaveImageError(QWidget* parent, ErrorStatus errorStatus)
     {
         if (!errorStatus.isEmpty()) {
-            QMessageBox::warning(parent, parent->tr("Error saving image"), errorStatus);
+            QMessageBox::warning(parent, tr("Error saving image"), errorStatus);
         }
     }
 
@@ -184,14 +184,14 @@ public:
     {
         int response;
         if (_owner->isDocumentFileNotCreated()) {
-            response = QMessageBox::information(_owner->mainEditorWidget(), _owner->tr("Document modified / No file for document"),
-                                                QString(_owner->tr("The current document is not saved to a file.\nYou can save it to the predefined filename now, discard the changes or cancel the current action.")),
+            response = QMessageBox::information(_owner->mainEditorWidget(), tr("Document modified / No file for document"),
+                                                QString(tr("The current document is not saved to a file.\nYou can save it to the predefined filename now, discard the changes or cancel the current action.")),
                                                 QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                                 QMessageBox::Save);
         }
         else if (!_owner->document()->isClean()) {
-            response = QMessageBox::information(_owner->mainEditorWidget(), _owner->tr("Document modified"),
-                                                QString(_owner->tr("The current document changes are not saved to a file.\nYou can save it now, discard the changes or cancel the current action.")),
+            response = QMessageBox::information(_owner->mainEditorWidget(), tr("Document modified"),
+                                                QString(tr("The current document changes are not saved to a file.\nYou can save it now, discard the changes or cancel the current action.")),
                                                 QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                                 QMessageBox::Save);
         }
@@ -521,11 +521,11 @@ void KreenshotEditor::showAboutDialog(QWidget* parent)
                              tr("kreenshot-editor - screenshot image editing\n\n(c) 2014 by Gregor Mi\n\nIRC contact: #kreenshot-editor on irc.freenode.net\n\nBug reports go to codestruct@posteo.org\n(until official issue tracker is initialized)\n\nWebsite: http://kreenshot.wordpress.com"));
 }
 
-void kreen::KreenshotEditor::performSelfTest()
+void KreenshotEditor::performSelfTest()
 {
     QString fullpath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kreenshot-editor/kreenshot-editor.txt");
     if (!QFile::exists(fullpath)) {
-        QMessageBox::warning(nullptr, tr("Self test failed"), this->tr("GenericDataLocation/kreenshot-editor/kreenshot-editor.txt not found.\n\
+        QMessageBox::warning(nullptr, tr("Self test failed"), tr("GenericDataLocation/kreenshot-editor/kreenshot-editor.txt not found.\n\
 \n\
 This means either that /usr/share/kreenshot-editor/ is not present or in general \
 that $XDG_DATA_DIRS does not contain the path which holds the basepath to kreenshot-editor/kreenshot-editor.txt.\n\

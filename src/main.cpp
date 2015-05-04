@@ -22,6 +22,9 @@
 #include <QDebug>
 #include "ui/mainwindow.h"
 #include <kreen/kreenshoteditor.h>
+#include <QTranslator>
+#include <QLocale>
+#include <QLibraryInfo>
 
 #include <iostream>
 #include <stdexcept>
@@ -44,6 +47,20 @@ int main(int argc, char *argv[])
 {
     const QString version = "0.1";
     QApplication app(argc, argv);
+
+    QTranslator qtTranslator;
+    qtTranslator.load(QLatin1String("qt_") + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QLatin1String localeSuffix("/locale");
+    QString localeName(QLatin1String("kreenshot_editor_") +
+                       (qgetenv("KDE_LANG") == "x-test" ? QLatin1String("x_test") : QLocale::system().name()));
+
+    QTranslator appSystemTranslator;
+    appSystemTranslator.load(localeName, localeSuffix);
+    app.installTranslator(&appSystemTranslator);
+
     QCoreApplication::setApplicationVersion(version);
     auto arguments = parseArgumentsOrExit(app);
 
@@ -85,41 +102,41 @@ Arguments parseArgumentsOrExit(QApplication& app)
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.setApplicationDescription("screenshot image editing, (c) 2014");
+    parser.setApplicationDescription(QObject::tr("screenshot image editing, (c) 2014"));
 
-    parser.addPositionalArgument("image", tr("Filename (i.e. with or without path) of primary image to be loaded. If file does not exist, default image data will be used."),
-                                 tr("[filename]")); // optional
+    parser.addPositionalArgument("image", QObject::tr("Filename (i.e. with or without path) of primary image to be loaded. If file does not exist, default image data will be used."),
+                                 QObject::tr("[filename]")); // optional
 
     QCommandLineOption newFromFileOption(QStringList() << "new-from-file",
-                                        tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically. Not allowed with --new-from-clipboard."));
+                                        QObject::tr("Image data of the given primary image filename which will be used as base image for a new document. A default filename will be proposed automatically. Not allowed with --new-from-clipboard."));
     parser.addOption(newFromFileOption);
 
     QCommandLineOption newFromClipboardOption(QStringList() << "new-from-clipboard",
-                                              tr("Like --new-from-file but takes the image data from the clipboard (image data or filename of image). If no valid image data present a default image will be used. Not allowed with --new-from-file. Positional image filename argument not allowed."));
+                                              QObject::tr("Like --new-from-file but takes the image data from the clipboard (image data or filename of image). If no valid image data present a default image will be used. Not allowed with --new-from-file. Positional image filename argument not allowed."));
     parser.addOption(newFromClipboardOption);
 
     QCommandLineOption image2Option(QStringList() << "image2",
-                                    tr("Filename (i.e. with or without path) of secondary image to be inserted as object, e. g. the captured mouse cursor."),
-                                    tr("filename"));
+                                    QObject::tr("Filename (i.e. with or without path) of secondary image to be inserted as object, e. g. the captured mouse cursor."),
+                                    QObject::tr("filename"));
     parser.addOption(image2Option);
 
     QCommandLineOption image2xOption(QStringList() << "image2x",
-                                     tr("X coordinate in pixel of the upper left corner of the secondary image provided by --image2. Default value is 0."),
-                                     tr("number"));
+                                     QObject::tr("X coordinate in pixel of the upper left corner of the secondary image provided by --image2. Default value is 0."),
+                                     QObject::tr("number"));
     parser.addOption(image2xOption);
 
     QCommandLineOption image2yOption(QStringList() << "image2y",
-                                     tr("Y coordinate, see --image2x."),
-                                     tr("number"));
+                                     QObject::tr("Y coordinate, see --image2x."),
+                                     QObject::tr("number"));
     parser.addOption(image2yOption);
 
     QCommandLineOption descriptionOption(QStringList() << "description",
-                                         tr("Description, e. g. window title of the captured window."),
-                                         tr("text"));
+                                         QObject::tr("Description, e. g. window title of the captured window."),
+                                         QObject::tr("text"));
     parser.addOption(descriptionOption);
 
     QCommandLineOption addDemoItemsOption(QStringList() << "add-demo-items",
-                                         tr("Adds a set of demo items to the loaded image."));
+                                         QObject::tr("Adds a set of demo items to the loaded image."));
     parser.addOption(addDemoItemsOption);
 
     parser.process(app);
@@ -151,7 +168,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
         if (!image2xStr.isEmpty()) {
             bool ok;
             image2x = image2xStr.toInt(&ok);
-            if (!ok) throw std::runtime_error(tr("Wrong argument (cannot parse x value)").toUtf8().constData());
+            if (!ok) throw std::runtime_error(QObject::tr("Wrong argument (cannot parse x value)").toUtf8().constData());
         }
         qDebug() << "  image2x:" << image2x;
 
@@ -161,7 +178,7 @@ Arguments parseArgumentsOrExit(QApplication& app)
         if (!image2yStr.isEmpty()) {
             bool ok;
             image2y = image2yStr.toInt(&ok);
-            if (!ok) throw std::runtime_error(tr("Wrong argument (cannot parse y value)").toUtf8().constData());
+            if (!ok) throw std::runtime_error(QObject::tr("Wrong argument (cannot parse y value)").toUtf8().constData());
         }
         qDebug() << "  image2y:" << image2y;
 
@@ -180,19 +197,19 @@ Arguments parseArgumentsOrExit(QApplication& app)
         // check for invalid combinations
         //
         if (arguments.newFromClipboard && arguments.newFromFile) {
-            throw std::runtime_error(tr("--new-from-file not allowed together with --new-from-clipboard.").toUtf8().constData());
+            throw std::runtime_error(QObject::tr("--new-from-file not allowed together with --new-from-clipboard.").toUtf8().constData());
         }
 
         if (arguments.newFromFile && arguments.baseImagePath.isEmpty()) {
-            throw std::runtime_error(tr("Positional image filename argument is required for --new-from-file.").toUtf8().constData());
+            throw std::runtime_error(QObject::tr("Positional image filename argument is required for --new-from-file.").toUtf8().constData());
         }
 
         if (arguments.newFromClipboard && !arguments.baseImagePath.isEmpty()) {
-            throw std::runtime_error(tr("Positional image filename argument not allowed together with --new-from-clipboard.").toUtf8().constData());
+            throw std::runtime_error(QObject::tr("Positional image filename argument not allowed together with --new-from-clipboard.").toUtf8().constData());
         }
     }
     catch (const std::runtime_error& e) {
-        std::cout << tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;
+        std::cout << QObject::tr("Error with command line usage: ").toUtf8().constData() << e.what() << std::endl << std::endl;
         parser.showHelp(1); // exits application
     }
 
